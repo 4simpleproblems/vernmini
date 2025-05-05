@@ -8,7 +8,26 @@
     <link rel="shortcut icon" type="image/jpg" href="logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-    <style>
+    
+    <!-- CUSTOMIZABLE CSS - Easy to modify styles -->
+    <style id="custom-styles">
+      /* Base Elements */
+      :root {
+        --bg-color: #1a1a1a;
+        --text-color: #fff;
+        --navbar-bg: rgba(25, 25, 25, 0.8);
+        --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        --button-bg: rgba(35, 35, 35, 0.8);
+        --button-hover-bg: rgba(50, 50, 50, 0.9);
+        --search-bg: rgba(20, 20, 20, 0.8);
+        --search-focus-bg: rgba(45, 45, 45, 0.9);
+        --search-focus-shadow: 0 0 0 3px rgba(100, 100, 100, 0.5);
+        --iframe-bg: #000;
+        --footer-text-color: #fff;
+        --font-family-main: 'Roboto Mono', monospace;
+        --font-family-alt: 'Open Sans', sans-serif;
+      }
+
       html, body {
         margin: 0;
         padding: 0;
@@ -17,22 +36,27 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        font-family: 'Roboto Mono', monospace;
-        background-color: #1a1a1a;
-        color: #fff;
+        font-family: var(--font-family-main);
+        background-color: var(--bg-color);
+        color: var(--text-color);
       }
+      
       body {
         display: flex;
         flex-direction: column;
       }
+      
+      /* Navigation Bar */
       #nav-bar {
         display: flex;
         align-items: center;
         padding: 12px;
-        background-color: rgba(25, 25, 25, 0.8);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        background-color: var(--navbar-bg);
+        box-shadow: var(--navbar-shadow);
       }
-      .home-button {
+      
+      /* Buttons */
+      .nav-button {
         width: 38px;
         height: 38px;
         display: flex;
@@ -40,91 +64,90 @@
         justify-content: center;
         margin-right: 10px;
         border-radius: 50%;
-        background-color: rgba(35, 35, 35, 0.8);
+        background-color: var(--button-bg);
         cursor: pointer;
-        color: #fff;
+        color: var(--text-color);
         transition: background-color 0.2s, color 0.2s;
       }
-      .home-button:hover {
-        background-color: rgba(50, 50, 50, 0.9);
-        color: #fff;
+      
+      .nav-button:hover {
+        background-color: var(--button-hover-bg);
       }
+      
+      .fullscreen-button {
+        margin-left: 10px;
+        margin-right: 0;
+      }
+      
+      /* Search Bar */
       #search-bar {
         flex: 1;
         height: 40px;
         border-radius: 30px;
         border: none;
-        background-color: rgba(20, 20, 20, 0.8);
-        color: #fff;
+        background-color: var(--search-bg);
+        color: var(--text-color);
         padding: 0 18px;
         font-size: 15px;
       }
+      
       #search-bar:focus {
         outline: none;
-        background-color: rgba(45, 45, 45, 0.9);
-        box-shadow: 0 0 0 3px rgba(100, 100, 100, 0.5);
+        background-color: var(--search-focus-bg);
+        box-shadow: var(--search-focus-shadow);
       }
-      .fullscreen-button {
-        width: 38px;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 10px;
-        border-radius: 50%;
-        background-color: rgba(35, 35, 35, 0.8);
-        cursor: pointer;
-        color: #fff;
-        transition: background-color 0.2s, color 0.2s;
-      }
-      .fullscreen-button:hover {
-        background-color: rgba(50, 50, 50, 0.9);
-        color: #fff;
-      }
+      
+      /* Content Area */
       #content-area {
         flex: 1;
         width: 100%;
         border: none;
-        background-color: #000;
+        background-color: var(--iframe-bg);
         transition: all 0.4s cubic-bezier(.4,0,.2,1);
-        /* Start state */
         position: relative;
         z-index: 1;
         box-shadow: 0 0 0 0 #0000;
       }
-      /* Fullscreen animation states */
+      
+      /* Fullscreen Animation States */
       .animating-to-fullscreen {
         transform: scale(1.05);
         opacity: 0.7;
         box-shadow: 0 0 40px 10px #000a;
       }
+      
       .fullscreen-iframe {
         position: fixed !important;
         top: 0; left: 0;
         width: 100vw !important;
         height: 100vh !important;
         z-index: 9999;
-        background: #000;
+        background: var(--iframe-bg);
         transform: scale(1);
         opacity: 1;
         box-shadow: 0 0 40px 10px #000a;
       }
+      
       .animating-to-normal {
         transform: scale(0.95);
         opacity: 0.7;
         box-shadow: 0 0 40px 10px #000a;
       }
+      
+      /* Footer */
       .footer-label {
         position: fixed;
         bottom: 0;
         left: 0;
         margin: 1rem;
-        font-family: 'Roboto Mono', monospace;
+        font-family: var(--font-family-main);
         font-size: 0.9rem;
-        color: #fff;
+        color: var(--footer-text-color);
         text-decoration: none;
         z-index: 1000;
       }
+      
+      /* Background Canvas */
       canvas {
         position: fixed;
         top: 0;
@@ -138,11 +161,11 @@
   <body>
     <canvas id="canvas"></canvas>
     <div id="nav-bar">
-      <div class="home-button" id="home-button" title="Home">
+      <div class="nav-button" id="home-button" title="Home">
         <i class="fas fa-home"></i>
       </div>
-      <input type="text" id="search-bar" placeholder="Search Google or type a URL">
-      <div class="fullscreen-button" id="fullscreen-button" title="Toggle Fullscreen">
+      <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
+      <div class="nav-button fullscreen-button" id="fullscreen-button" title="Toggle Fullscreen">
         <i class="fas fa-expand"></i>
       </div>
     </div>
@@ -162,6 +185,7 @@
           console.error("Failed to register service worker:", err);
         }
       }
+      
       // Navigate to URL
       function navigateTo(url) {
         if (!url) return;
@@ -170,7 +194,8 @@
               /^(\d{1,3}\.){3}\d{1,3}$/i.test(url)) {
             url = 'http://' + url;
           } else {
-            url = 'https://www.google.com/search?q=' + encodeURIComponent(url);
+            // Changed from Google to DuckDuckGo
+            url = 'https://duckduckgo.com/?q=' + encodeURIComponent(url);
           }
         }
         try {
@@ -219,6 +244,22 @@
           });
         }
       }
+
+      // Theme customization function
+      function customizeTheme(options) {
+        const root = document.documentElement;
+        for (const [key, value] of Object.entries(options)) {
+          root.style.setProperty(`--${key}`, value);
+        }
+      }
+
+      // Example usage:
+      // customizeTheme({
+      //   'bg-color': '#222222', 
+      //   'text-color': '#eeeeee',
+      //   'navbar-bg': 'rgba(30, 30, 30, 0.9)',
+      //   'button-bg': 'rgba(50, 50, 50, 0.8)'
+      // });
 
       // Event Listeners
       document.addEventListener('DOMContentLoaded', async () => {
