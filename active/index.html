@@ -4,7 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>OFP</title>
 
-    <!-- your CSS & JS includes -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -21,21 +20,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
 
     <style>
-      /* center everything */
+      html, body {
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-sizing: border-box;
+      }
+
       body {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 0;
-        padding: 0;
+        font-family: 'Open Sans', sans-serif;
       }
+
       #header,
-      #content,
-      #footer {
+      #content {
         width: 100%;
         max-width: 800px;
         text-align: center;
       }
+
       #popularSites {
         display: flex;
         justify-content: center;
@@ -43,8 +48,13 @@
         gap: 0.5rem;
         margin: 1rem 0;
       }
+
       #popularSites .btn {
         margin: 0.25rem;
+      }
+
+      #footer {
+        display: none; /* Hides any leftover footer styling or content */
       }
     </style>
 
@@ -54,7 +64,7 @@
           alert(
             "Please upgrade to UV v2 (rhenryw/UV-Static-2.0). Join our discord .gg/redlv for bonuses, updates, links, and more! "
           );
-          localStorage.setItem("discordAlertShown", "true");
+          localStorage.setItem("discordAlertShown", "false");
         }
       };
     </script>
@@ -69,20 +79,10 @@
 
     <div id="content">
       <form id="uv-form">
-        <input
-          id="uv-search-engine"
-          value="https://www.google.com/search?q=%s"
-          type="hidden"
-        />
-        <input
-          id="uv-address"
-          type="text"
-          placeholder="Search Google or type an URL"
-          class="form__input"
-        />
+        <input id="uv-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+        <input id="uv-address" type="text" placeholder="Search Google or type a URL" class="form__input" />
       </form>
 
-      <!-- popularSites without icons, all centered -->
       <div id="popularSites">
         <a class="btn secondary" onclick="autofill('http://xbox.com/play')">Xbox</a>
         <a class="btn secondary" onclick="autofill('https://now.gg/')">Now.gg</a>
@@ -94,14 +94,9 @@
         <a class="btn secondary" onclick="autofill('https://chatgpt.com')">ChatGPT</a>
       </div>
 
-      <!-- social icons, centered by body and #content -->
       <div class="social-icons" style="margin: .5rem 0;">
         <a href="https://discord.gg/Dybpe2uWfZ" target="_blank" class="fa-brands fa-discord"></a>
-        <a
-          href="https://github.com/tf7software/UV-Static"
-          target="_blank"
-          class="fa-brands fa-github"
-        ></a>
+        <a href="https://github.com/tf7software/UV-Static" target="_blank" class="fa-brands fa-github"></a>
         <a href="https://lupinevault.com/TIW/" target="_blank" class="fa-solid fa-cloud"></a>
       </div>
 
@@ -117,15 +112,5 @@
     <script src="register-sw.js" charset="UTF-8" defer></script>
     <script src="search.js" charset="UTF-8" defer></script>
     <script src="index.js" charset="UTF-8" defer></script>
-
-    <div id="footer">
-      <footer>
-        © tf7software,
-        <a href="https://rhw.one/">rhw.one</a> - 
-        <a href="https://lupinevault.com/privacy-policy.html">Privacy Policy</a> - 
-        By Using LV/UV Static Proxy You Agree To Our 
-        <a href="https://lupinevault.com/tos.html">Terms of Service</a>
-      </footer>
-    </div>
   </body>
 </html>
