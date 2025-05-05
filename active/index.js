@@ -20,22 +20,40 @@ const error = document.getElementById("uv-error");
  */
 const errorCode = document.getElementById("uv-error-code");
 
+// Register service worker once on page load to avoid multiple registrations
+let serviceWorkerRegistered = false;
+async function ensureServiceWorkerRegistered() {
+  if (!serviceWorkerRegistered) {
+    try {
+      await registerSW();
+      serviceWorkerRegistered = true;
+    } catch (err) {
+      error.textContent = "Failed to register service worker.";
+      errorCode.textContent = err.toString();
+      throw err;
+    }
+  }
+}
+
+// Run this as soon as possible
+ensureServiceWorkerRegistered();
+
 // Attach form submit event listener
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  
+
   try {
-    await registerSW();
+    // Make sure service worker is registered
+    await ensureServiceWorkerRegistered();
+    
+    // Get the URL to navigate to
+    const url = search(address.value, searchEngine.value);
+    
+    // Navigate to search page with URL parameter
+    window.location.href = `search.html?url=${encodeURIComponent(url)}`;
   } catch (err) {
-    error.textContent = "Failed to register service worker.";
-    errorCode.textContent = err.toString();
-    throw err;
+    console.error("Navigation error:", err);
   }
-  
-  const url = search(address.value, searchEngine.value);
-  
-  // Instead of redirecting with UV prefix, load search.html with URL as parameter
-  location.href = `search.html?url=${encodeURIComponent(url)}`;
 });
 
 // Autofill function with auto-submit
@@ -54,7 +72,7 @@ function updateClock() {
   }
 }
 
-// Initialize clock if it exists
+// Initialize clock as soon as possible
 document.addEventListener('DOMContentLoaded', () => {
   const clockElement = document.getElementById('clock');
   if (clockElement) {
