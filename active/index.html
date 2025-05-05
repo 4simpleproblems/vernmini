@@ -1,85 +1,131 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>OFP</title>
-      <!--<link rel="stylesheet" href="../../assets/styles/css/global.min.css">-->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-      <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-      <link rel="stylesheet" href="index.css">
-      <link rel="icon" type="image/x-icon" href="logo.png">
-      <link rel="shortcut icon" type="image/jpg" href="logo.png"/>
-      <link rel="stylesheet" href="../assets/font-awesome/css/all.css">
-      <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-      <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
-      <style>
-         #popularSites {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-         }
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OFP</title>
 
-         .site-btn {
-            padding: 10px 20px;
-            background-color: #111;
-            color: white;
-            border: none;
-            border-radius: 999px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.3s;
-         }
+    <!-- your CSS & JS includes -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="icon" type="image/x-icon" href="logo.png" />
+    <link rel="shortcut icon" type="image/jpg" href="logo.png" />
 
-         .site-btn:hover {
-            background-color: #333;
-         }
-      </style>
-   </head>
-   <body>
-      <canvas id="canvas"></canvas>
-      <div id="header">
-         <img src="Title.png" alt="Logo" id="bigTitle">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
+
+    <style>
+      /* center everything */
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+      }
+      #header,
+      #content,
+      #footer {
+        width: 100%;
+        max-width: 800px;
+        text-align: center;
+      }
+      #popularSites {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+      #popularSites .btn {
+        margin: 0.25rem;
+      }
+    </style>
+
+    <script>
+      window.onload = function () {
+        if (!localStorage.getItem("discordAlertShown")) {
+          alert(
+            "Please upgrade to UV v2 (rhenryw/UV-Static-2.0). Join our discord .gg/redlv for bonuses, updates, links, and more! "
+          );
+          localStorage.setItem("discordAlertShown", "true");
+        }
+      };
+    </script>
+  </head>
+
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <div id="header">
+      <img src="Title.png" alt="Logo" id="bigTitle" />
+    </div>
+
+    <div id="content">
+      <form id="uv-form">
+        <input
+          id="uv-search-engine"
+          value="https://www.google.com/search?q=%s"
+          type="hidden"
+        />
+        <input
+          id="uv-address"
+          type="text"
+          placeholder="Search Google or type an URL"
+          class="form__input"
+        />
+      </form>
+
+      <!-- popularSites without icons, all centered -->
+      <div id="popularSites">
+        <a class="btn secondary" onclick="autofill('http://xbox.com/play')">Xbox</a>
+        <a class="btn secondary" onclick="autofill('https://now.gg/')">Now.gg</a>
+        <a class="btn secondary" onclick="autofill('https://google.com')">Google</a>
+        <a class="btn secondary" onclick="autofill('https://play.geforcenow.com/')">GeForce NOW</a>
+        <a class="btn secondary" onclick="autofill('https://tiktok.com')">TikTok</a>
+        <a class="btn secondary" onclick="autofill('https://github.com')">GitHub</a>
+        <a class="btn secondary" onclick="autofill('https://twitch.tv')">Twitch</a>
+        <a class="btn secondary" onclick="autofill('https://chatgpt.com')">ChatGPT</a>
       </div>
-      <div id="content">
-         <p>An upkept version of <a href="https://github.com/TheTIW/UV-Static">TIW's UV-Static</a></p>
 
-         <form id="uv-form">
-            <input id="uv-search-engine" value="https://www.google.com/search?q=%s" type="hidden"/> 
-            <input id="uv-address" type="text" placeholder="Search Google or type an URL" class="form__input"/>
-         </form>
-
-         <div id="popularSites">
-            <button class="site-btn" onclick="autofill('http://xbox.com/play')">Xbox</button>
-            <button class="site-btn" onclick="autofill('https://now.gg/')">Now.gg</button>
-            <button class="site-btn" onclick="autofill('https://google.com')">Google</button>
-            <button class="site-btn" onclick="autofill('https://play.geforcenow.com/')">GeForce NOW</button>
-            <button class="site-btn" onclick="autofill('https://tiktok.com')">TikTok</button>
-            <button class="site-btn" onclick="autofill('https://github.com')">GitHub</button>
-            <button class="site-btn" onclick="autofill('https://twitch.tv')">Twitch</button>
-            <button class="site-btn" onclick="autofill('https://chatgpt.com')">ChatGPT</button>
-         </div>
-
-         <a href="https://discord.gg/Dybpe2uWfZ" target="_blank" class="fa-brands fa-discord"></a>
-         <a href="https://github.com/tf7software/UV-Static" target="_blank" class="fa-brands fa-github"></a>
-         <a href="https://lupinevault.com/TIW/" target="_blank" class="fa-solid fa-cloud"></a>
-
-         <div class="desc left-margin">
-            <p id="uv-error"></p>
-            <pre id="uv-error-code"></pre>
-         </div>
+      <!-- social icons, centered by body and #content -->
+      <div class="social-icons" style="margin: .5rem 0;">
+        <a href="https://discord.gg/Dybpe2uWfZ" target="_blank" class="fa-brands fa-discord"></a>
+        <a
+          href="https://github.com/tf7software/UV-Static"
+          target="_blank"
+          class="fa-brands fa-github"
+        ></a>
+        <a href="https://lupinevault.com/TIW/" target="_blank" class="fa-solid fa-cloud"></a>
       </div>
 
-      <script src="stars.js"></script>
-      <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
-      <script src="uv/uv.config.js" charset="UTF-8" defer></script>
-      <script src="register-sw.js" charset="UTF-8" defer></script>
-      <script src="search.js" charset="UTF-8" defer></script>
-      <script src="index.js" charset="UTF-8" defer></script>
-
-      <div id="footer">
-         <footer>© tf7software, <a href="https://rhw.one/">rhw.one</a> - <a href="https://lupinevault.com/privacy-policy.html">Privacy Policy</a> - By Using LV/UV Static Proxy You Agree To Our <a href="https://lupinevault.com/tos.html">Terms of Service</a></footer>
+      <div class="desc left-margin">
+        <p id="uv-error"></p>
+        <pre id="uv-error-code"></pre>
       </div>
-   </body>
+    </div>
+
+    <script src="stars.js"></script>
+    <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
+    <script src="uv/uv.config.js" charset="UTF-8" defer></script>
+    <script src="register-sw.js" charset="UTF-8" defer></script>
+    <script src="search.js" charset="UTF-8" defer></script>
+    <script src="index.js" charset="UTF-8" defer></script>
+
+    <div id="footer">
+      <footer>
+        © tf7software,
+        <a href="https://rhw.one/">rhw.one</a> - 
+        <a href="https://lupinevault.com/privacy-policy.html">Privacy Policy</a> - 
+        By Using LV/UV Static Proxy You Agree To Our 
+        <a href="https://lupinevault.com/tos.html">Terms of Service</a>
+      </footer>
+    </div>
+  </body>
 </html>
