@@ -28,144 +28,49 @@
         flex-direction: column;
       }
       
-      /* Tab Bar */
-      #tab-bar {
-        width: 100%;
-        height: 40px;
-        background-color: rgba(30, 30, 30, 0.8);
-        display: flex;
-        align-items: center;
-        padding: 0 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-      }
-      
-      #tabs {
-        display: flex;
-        height: 100%;
-        flex: 1;
-        overflow-x: auto;
-        scrollbar-width: thin;
-      }
-      
-      #tabs::-webkit-scrollbar {
-        height: 3px;
-      }
-      
-      #tabs::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.3);
-      }
-      
-      .tab {
-        display: flex;
-        align-items: center;
-        padding: 0 15px;
-        min-width: 100px;
-        max-width: 200px;
-        height: 36px;
-        margin: 2px 2px 0 0;
-        border-radius: 6px 6px 0 0;
-        background-color: rgba(40, 40, 40, 0.8);
-        cursor: pointer;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      
-      .tab.active {
-        background-color: rgba(60, 60, 60, 0.9);
-      }
-      
-      .tab-favicon {
-        width: 16px;
-        height: 16px;
-        margin-right: 8px;
-      }
-      
-      .tab-title {
-        font-size: 12px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex: 1;
-      }
-      
-      .tab-close {
-        margin-left: 8px;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-      }
-      
-      #new-tab {
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 5px;
-        border-radius: 50%;
-        background-color: transparent;
-        cursor: pointer;
-        font-size: 18px;
-        color: #ccc;
-      }
-      
       /* Navigation Bar */
       #nav-bar {
         display: flex;
         align-items: center;
-        padding: 8px;
+        padding: 12px;
         background-color: rgba(30, 30, 30, 0.8);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       }
       
-      #nav-controls {
-        display: flex;
-        margin-right: 10px;
-      }
-      
-      .nav-button, .home-button {
-        width: 32px;
-        height: 32px;
+      .home-button {
+        width: 38px;
+        height: 38px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 5px;
+        margin-right: 10px;
         border-radius: 50%;
-        background-color: transparent;
+        background-color: rgba(60, 60, 60, 0.8);
         cursor: pointer;
         color: #ccc;
+        transition: background-color 0.2s, color 0.2s;
       }
       
-      #address-bar {
+      .home-button:hover {
+        background-color: rgba(80, 80, 80, 0.9);
+        color: #fff;
+      }
+      
+      #search-bar {
         flex: 1;
-        height: 34px;
-        border-radius: 17px;
+        height: 40px;
+        border-radius: 20px;
         border: none;
         background-color: rgba(50, 50, 50, 0.8);
         color: #fff;
-        padding: 0 15px;
-        font-size: 14px;
+        padding: 0 18px;
+        font-size: 15px;
       }
       
-      #address-bar:focus {
+      #search-bar:focus {
         outline: none;
         background-color: rgba(60, 60, 60, 0.9);
-      }
-      
-      #menu-button {
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 10px;
-        border-radius: 50%;
-        background-color: transparent;
-        cursor: pointer;
-        color: #ccc;
+        box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.5);
       }
       
       /* Content Area */
@@ -202,32 +107,11 @@
   <body>
     <canvas id="canvas"></canvas>
     
-    <div id="tab-bar">
-      <div id="tabs"></div>
-      <div id="new-tab" title="New Tab">
-        <i class="fas fa-plus"></i>
-      </div>
-    </div>
-    
     <div id="nav-bar">
-      <div id="nav-controls">
-        <div class="nav-button" id="back-button" title="Back">
-          <i class="fas fa-arrow-left"></i>
-        </div>
-        <div class="nav-button" id="forward-button" title="Forward">
-          <i class="fas fa-arrow-right"></i>
-        </div>
-        <div class="nav-button" id="reload-button" title="Reload">
-          <i class="fas fa-redo"></i>
-        </div>
-        <div class="home-button" id="home-button" title="Home">
-          <i class="fas fa-home"></i>
-        </div>
+      <div class="home-button" id="home-button" title="Home">
+        <i class="fas fa-home"></i>
       </div>
-      <input type="text" id="address-bar" placeholder="Search Google or type a URL">
-      <div id="menu-button" title="Menu">
-        <i class="fas fa-ellipsis-v"></i>
-      </div>
+      <input type="text" id="search-bar" placeholder="Search Google or type a URL">
     </div>
     
     <iframe id="content-area" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
@@ -240,11 +124,6 @@
     <script src="stars.js"></script>
     
     <script>
-      // Tab management
-      const tabs = [];
-      let activeTabId = null;
-      const tabsCache = new Map(); // Cache iframe urls for better tab switching
-      
       // Initialize UV
       async function initUV() {
         try {
@@ -255,122 +134,9 @@
         }
       }
       
-      // Create a new tab
-      function createTab(url = null) {
-        const tabId = 'tab-' + Date.now();
-        
-        // Create tab object
-        const tab = {
-          id: tabId,
-          url: url || 'about:blank',
-          title: url ? 'Loading...' : 'New Tab',
-          favicon: 'logo.png'
-        };
-        
-        tabs.push(tab);
-        tabsCache.set(tabId, tab.url); // Store URL in cache
-        
-        renderTabs();
-        setActiveTab(tabId);
-        
-        // If URL provided, navigate to it
-        if (url && url !== 'about:blank') {
-          navigateTo(url);
-        }
-        
-        return tabId;
-      }
-      
-      // Close a tab
-      function closeTab(tabId) {
-        const tabIndex = tabs.findIndex(tab => tab.id === tabId);
-        if (tabIndex === -1) return;
-        
-        tabs.splice(tabIndex, 1);
-        tabsCache.delete(tabId); // Remove from cache
-        
-        if (tabs.length === 0) {
-          // Redirect to home when all tabs are closed
-          window.location.href = "index.html";
-          return;
-        }
-        
-        if (activeTabId === tabId) {
-          // Set next or previous tab as active
-          const newActiveTab = tabs[Math.min(tabIndex, tabs.length - 1)];
-          setActiveTab(newActiveTab.id);
-        }
-        
-        renderTabs();
-      }
-      
-      // Set active tab
-      function setActiveTab(tabId) {
-        if (activeTabId === tabId) return; // Already active
-        
-        activeTabId = tabId;
-        const tab = tabs.find(tab => tab.id === tabId);
-        if (!tab) return;
-        
-        // Update address bar
-        document.getElementById('address-bar').value = tab.url !== 'about:blank' ? tab.url : '';
-        
-        // Load content from cache or fetch new
-        const iframe = document.getElementById('content-area');
-        const cachedUrl = tabsCache.get(tabId);
-        
-        if (cachedUrl && cachedUrl !== 'about:blank') {
-          if (cachedUrl.startsWith(__uv$config.prefix)) {
-            iframe.src = cachedUrl;
-          } else {
-            // Encode with UV if not already encoded
-            const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(cachedUrl);
-            iframe.src = encodedUrl;
-          }
-        } else {
-          iframe.src = 'about:blank';
-        }
-        
-        renderTabs();
-      }
-      
-      // Render tabs in tab bar
-      function renderTabs() {
-        const tabsContainer = document.getElementById('tabs');
-        tabsContainer.innerHTML = '';
-        
-        tabs.forEach(tab => {
-          const tabElement = document.createElement('div');
-          tabElement.className = `tab${tab.id === activeTabId ? ' active' : ''}`;
-          tabElement.onclick = () => setActiveTab(tab.id);
-          
-          const favicon = document.createElement('img');
-          favicon.className = 'tab-favicon';
-          favicon.src = tab.favicon;
-          favicon.onerror = () => { favicon.src = 'logo.png'; }; // Fallback for invalid favicons
-          tabElement.appendChild(favicon);
-          
-          const title = document.createElement('div');
-          title.className = 'tab-title';
-          title.textContent = tab.title;
-          tabElement.appendChild(title);
-          
-          const closeButton = document.createElement('div');
-          closeButton.className = 'tab-close';
-          closeButton.innerHTML = '×';
-          closeButton.onclick = (e) => {
-            e.stopPropagation();
-            closeTab(tab.id);
-          };
-          tabElement.appendChild(closeButton);
-          
-          tabsContainer.appendChild(tabElement);
-        });
-      }
-      
-      // Navigate to URL in active tab
+      // Navigate to URL
       function navigateTo(url) {
-        if (!url || !activeTabId) return;
+        if (!url) return;
         
         // Format URL if needed
         if (!/^https?:\/\//i.test(url) && !url.startsWith('about:')) {
@@ -382,25 +148,13 @@
           }
         }
         
-        // Update tab data
-        const tabIndex = tabs.findIndex(tab => tab.id === activeTabId);
-        if (tabIndex !== -1) {
-          tabs[tabIndex].url = url;
-          tabs[tabIndex].title = 'Loading...';
-          
-          try {
-            // Use Ultraviolet for proxying
-            const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
-            document.getElementById('content-area').src = encodedUrl;
-            document.getElementById('address-bar').value = url;
-            
-            // Update cache
-            tabsCache.set(activeTabId, url);
-            
-            renderTabs();
-          } catch (err) {
-            console.error("Navigation error:", err);
-          }
+        try {
+          // Use Ultraviolet for proxying
+          const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
+          document.getElementById('content-area').src = encodedUrl;
+          document.getElementById('search-bar').value = url;
+        } catch (err) {
+          console.error("Navigation error:", err);
         }
       }
       
@@ -412,85 +166,43 @@
         const urlParams = new URLSearchParams(window.location.search);
         const url = urlParams.get('url');
         
-        // Create first tab
+        // Navigate to URL if provided
         if (url) {
-          createTab(url);
-        } else {
-          createTab();
+          navigateTo(url);
         }
         
-        // New tab button
-        document.getElementById('new-tab').addEventListener('click', () => {
-          createTab();
-        });
-        
-        // Address bar
-        document.getElementById('address-bar').addEventListener('keydown', (e) => {
+        // Search bar
+        document.getElementById('search-bar').addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
             navigateTo(e.target.value);
           }
         });
         
-        // Navigation buttons
-        document.getElementById('back-button').addEventListener('click', () => {
-          const iframe = document.getElementById('content-area');
-          try {
-            iframe.contentWindow.history.back();
-          } catch (e) {
-            console.log("Cannot go back");
-          }
-        });
-        
-        document.getElementById('forward-button').addEventListener('click', () => {
-          const iframe = document.getElementById('content-area');
-          try {
-            iframe.contentWindow.history.forward();
-          } catch (e) {
-            console.log("Cannot go forward");
-          }
-        });
-        
-        document.getElementById('reload-button').addEventListener('click', () => {
-          const iframe = document.getElementById('content-area');
-          iframe.src = iframe.src;
-        });
-        
+        // Home button
         document.getElementById('home-button').addEventListener('click', () => {
           window.location.href = "index.html";
         });
         
-        // Update tab info when iframe loads
+        // Update page title when iframe loads
         document.getElementById('content-area').addEventListener('load', () => {
           const iframe = document.getElementById('content-area');
-          const tabIndex = tabs.findIndex(tab => tab.id === activeTabId);
           
-          if (tabIndex !== -1) {
-            try {
-              // Try to get title and favicon from iframe
-              if (iframe.contentDocument) {
-                tabs[tabIndex].title = iframe.contentDocument.title || 'Untitled';
-                
-                const faviconLink = iframe.contentDocument.querySelector('link[rel="icon"]') || 
-                                   iframe.contentDocument.querySelector('link[rel="shortcut icon"]');
-                if (faviconLink && faviconLink.href) {
-                  tabs[tabIndex].favicon = faviconLink.href;
-                }
-              } else {
-                // Cross-origin: use more generic title
-                const currentUrl = tabs[tabIndex].url;
-                try {
-                  const hostname = new URL(currentUrl).hostname;
-                  tabs[tabIndex].title = hostname;
-                  tabs[tabIndex].favicon = `https://www.google.com/s2/favicons?domain=${hostname}`;
-                } catch (e) {
-                  tabs[tabIndex].title = 'Website';
-                }
+          try {
+            // Try to get title from iframe
+            if (iframe.contentDocument) {
+              document.title = iframe.contentDocument.title + ' - OFP Browser';
+            } else {
+              // Cross-origin: use more generic title
+              const currentUrl = document.getElementById('search-bar').value;
+              try {
+                const hostname = new URL(currentUrl).hostname;
+                document.title = hostname + ' - OFP Browser';
+              } catch (e) {
+                document.title = 'OFP Browser';
               }
-            } catch (e) {
-              console.log("Tab info update error:", e);
             }
-            
-            renderTabs();
+          } catch (e) {
+            console.log("Title update error:", e);
           }
         });
       });
