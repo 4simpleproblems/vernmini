@@ -87,8 +87,8 @@
   <script>
     "use strict";
 
-    // ─── YOUR VERCEL‑HOSTED PROXY PATH ────────────────────────────────────────────
-    const PROXY_BASE = "/active/proxy";
+    // ─── Use Vercel Serverless Function as your proxy ───────────────────────────
+    const PROXY_BASE = "/api/proxy";
 
     const tabs = [];
     let currentTabIndex = -1;
@@ -140,7 +140,8 @@
       } catch {
         urlStr = `https://${input}`;
       }
-      return `${PROXY_BASE}/?url=${encodeURIComponent(urlStr)}`;
+      // all iframe traffic goes via your Vercel function
+      return `${PROXY_BASE}?url=${encodeURIComponent(urlStr)}`;
     }
 
     function beautify(input) {
