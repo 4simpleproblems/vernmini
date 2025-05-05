@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search - OFP</title>
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    #topbar {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background-color: var(--bg);
+      border-bottom: 1px solid var(--border-gray);
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      background: var(--input-bg);
+      cursor: pointer;
+      white-space: nowrap;
+      border: 1px solid var(--border-gray);
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    .tab.active {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    #content iframe {
+      width: 100%;
+      height: calc(100vh - 50px);
+      border: none;
+    }
+
+    button {
+      background: none;
+      border: 1px solid var(--border-gray);
+      color: var(--fg);
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--border-hover);
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar">
+    <button onclick="goHome()">🏠</button>
+    <div id="tabs"></div>
+    <button onclick="newTab()">➕</button>
+  </div>
+  <div id="content"></div>
+
+  <script>
+    const tabs = [];
+    let currentTabIndex = -1;
+
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+
+    function newTab(query) {
+      if (tabs.length >= 10) {
+        alert("Max 10 tabs reached.");
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const input = query || params.get("q") || "https://google.com";
+      const url = buildUrl(input);
+
+      const iframe = document.createElement("iframe");
+      iframe.src = url;
+
+      const tabId = tabs.length;
+      tabs.push({ input, iframe });
+
+      const tabButton = document.createElement("div");
+      tabButton.textContent = beautify(input);
+      tabButton.className = "tab";
+      tabButton.onclick = () => switchTab(tabId);
+
+      document.getElementById("tabs").appendChild(tabButton);
+      document.getElementById("content").appendChild(iframe);
+
+      switchTab(tabId);
+    }
+
+    function switchTab(index) {
+      tabs.forEach((tab, i) => {
+        tab.iframe.style.display = i === index ? "block" : "none";
+        document.getElementsByClassName("tab")[i].classList.toggle("active", i === index);
+      });
+      currentTabIndex = index;
+    }
+
+    function buildUrl(input) {
+      try {
+        return new URL(input).toString();
+      } catch {
+        try {
+          return new URL(`http://${input}`).toString();
+        } catch {
+          return `https://www.google.com/search?q=${encodeURIComponent(input)}`;
+        }
+      }
+    }
+
+    function beautify(input) {
+      try {
+        const url = new URL(input);
+        return url.hostname;
+      } catch {
+        return input.length > 15 ? input.slice(0, 12) + "..." : input;
+      }
+    }
+
+    window.onload = () => newTab();
+  </script>
+</body>
+</html>
