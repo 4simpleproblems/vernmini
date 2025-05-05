@@ -3,19 +3,15 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>OFP</title>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="index.css" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link rel="shortcut icon" type="image/jpg" href="logo.png" />
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
     <style>
       html, body {
         margin: 0;
@@ -23,22 +19,37 @@
         border: none;
         box-sizing: border-box;
       }
-
       body {
         display: flex;
         flex-direction: column;
         align-items: center;
         font-family: 'Open Sans', sans-serif;
       }
-
       #header,
       #content {
         width: 100%;
-        max-width: 500px;
+        max-width: 700px;
         text-align: center;
         margin-bottom: 2rem;
       }
-
+      #clock {
+        color: #fff;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      #uv-form {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      #uv-address {
+        width: 90%;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
       #popularSites {
         display: flex;
         justify-content: center;
@@ -46,15 +57,12 @@
         gap: 0.5rem;
         margin: 1rem 0;
       }
-
       #popularSites .btn {
         margin: 0.25rem;
       }
-
       #footer {
         display: none; /* Hides any leftover footer styling or content */
       }
-
       /* Official label in bottom-left */
       .footer-label {
         position: fixed;
@@ -66,23 +74,19 @@
         color: #fff;
       }
     </style>
-
     <!-- Removed discord alert -->
   </head>
-
   <body>
     <canvas id="canvas"></canvas>
-
     <div id="header">
       <img src="Title.png" alt="Logo" id="bigTitle" />
+      <div id="clock"></div>
     </div>
-
     <div id="content">
       <form id="uv-form">
         <input id="uv-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
         <input id="uv-address" type="text" placeholder="Search Google or type a URL" class="form__input" />
       </form>
-
       <div id="popularSites">
         <a class="btn secondary" onclick="autofill('http://xbox.com/play')">Xbox</a>
         <a class="btn secondary" onclick="autofill('http://youtube.com')">Youtube</a>
@@ -92,20 +96,29 @@
         <a class="btn secondary" onclick="autofill('http://apple.com')">Apple</a>
         <a class="btn secondary" onclick="autofill('http://gemini.google.com')">Gemini</a>
       </div>
-
       <div class="desc left-margin">
         <p id="uv-error"></p>
         <pre id="uv-error-code"></pre>
       </div>
     </div>
-
     <script src="stars.js"></script>
     <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
     <script src="uv/uv.config.js" charset="UTF-8" defer></script>
     <script src="register-sw.js" charset="UTF-8" defer></script>
     <script src="search.js" charset="UTF-8" defer></script>
     <script src="index.js" charset="UTF-8" defer></script>
-
+    <!-- Script for clock display -->
+    <script>
+      function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        document.getElementById('clock').textContent = timeString;
+      }
+      
+      // Update clock immediately and then every second
+      updateClock();
+      setInterval(updateClock, 1000);
+    </script>
     <!-- Official label -->
     <a href="https://4simpleproblems.github.io/proxy-list.html" class="footer-label">Official 4SP Proxy</a>
   </body>
