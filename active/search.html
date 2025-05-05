@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Search - OFP</title>
+  <title>Search – OFP (Encrypted)</title>
   <link rel="stylesheet" href="index.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
   <style>
     :root {
       --bg: #111;
@@ -14,13 +18,7 @@
       --border-gray: #333;
       --border-hover: #555;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       height: 100%;
       background: var(--bg);
@@ -28,7 +26,6 @@
       font-family: sans-serif;
       overflow: hidden;
     }
-
     #topbar {
       display: flex;
       align-items: center;
@@ -38,36 +35,22 @@
       gap: 0.5rem;
       overflow-x: auto;
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 60px;
       z-index: 10;
     }
-
     #content {
       position: fixed;
-      top: 60px;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 60px; left: 0; right: 0; bottom: 0;
       z-index: 1;
     }
-
     #content iframe {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 100%;
       border: none;
-      margin: 0;
-      padding: 0;
       display: block;
     }
-
     .tab {
       padding: 0.4rem 0.75rem;
       border-radius: 20px;
@@ -78,12 +61,10 @@
       font-size: 0.9rem;
       user-select: none;
     }
-
     .tab.active {
       background-color: var(--fg);
       color: var(--bg);
     }
-
     button {
       background: none;
       border: 1px solid var(--border-gray);
@@ -92,10 +73,7 @@
       border-radius: 20px;
       cursor: pointer;
     }
-
-    button:hover {
-      border-color: var(--border-hover);
-    }
+    button:hover { border-color: var(--border-hover); }
   </style>
 </head>
 <body>
@@ -106,8 +84,12 @@
   </div>
   <div id="content"></div>
 
-  <script src="index.js"></script>
   <script>
+    "use strict";
+
+    // ─── YOUR VERCEL‑HOSTED PROXY PATH ────────────────────────────────────────────
+    const PROXY_BASE = "/active/proxy";
+
     const tabs = [];
     let currentTabIndex = -1;
 
@@ -117,26 +99,26 @@
 
     function newTab(query) {
       if (tabs.length >= 10) {
-        alert("Max 10 tabs reached.");
+        alert("Max 10 tabs reached.");
         return;
       }
 
       const params = new URLSearchParams(window.location.search);
       const input = query || params.get("q") || "https://google.com";
-      const url = buildUrl(input);
+      const target = buildEncryptedUrl(input);
 
       const iframe = document.createElement("iframe");
-      iframe.src = url;
+      iframe.src = target;
 
       const tabId = tabs.length;
       tabs.push({ input, iframe });
 
-      const tabButton = document.createElement("div");
-      tabButton.textContent = beautify(input);
-      tabButton.className = "tab";
-      tabButton.onclick = () => switchTab(tabId);
+      const btn = document.createElement("div");
+      btn.textContent = beautify(input);
+      btn.className = "tab";
+      btn.onclick = () => switchTab(tabId);
 
-      document.getElementById("tabs").appendChild(tabButton);
+      document.getElementById("tabs").appendChild(btn);
       document.getElementById("content").appendChild(iframe);
 
       switchTab(tabId);
@@ -144,28 +126,27 @@
 
     function switchTab(index) {
       tabs.forEach((tab, i) => {
-        tab.iframe.style.display = i === index ? "block" : "none";
-        document.getElementsByClassName("tab")[i].classList.toggle("active", i === index);
+        tab.iframe.style.display = (i === index) ? "block" : "none";
+        document.getElementsByClassName("tab")[i]
+                .classList.toggle("active", i === index);
       });
       currentTabIndex = index;
     }
 
-    function buildUrl(input) {
+    function buildEncryptedUrl(input) {
+      let urlStr;
       try {
-        return new URL(input).toString();
+        urlStr = new URL(input).toString();
       } catch {
-        try {
-          return new URL(`http://${input}`).toString();
-        } catch {
-          return `https://www.google.com/search?q=${encodeURIComponent(input)}`;
-        }
+        urlStr = `https://${input}`;
       }
+      return `${PROXY_BASE}/?url=${encodeURIComponent(urlStr)}`;
     }
 
     function beautify(input) {
       try {
-        const url = new URL(input);
-        return url.hostname;
+        const u = new URL(input);
+        return u.hostname.replace(/^www\./, "");
       } catch {
         return input.length > 15 ? input.slice(0, 12) + "..." : input;
       }
