@@ -4,20 +4,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>OFP</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="index.css" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link rel="shortcut icon" type="image/jpg" href="logo.png" />
 
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
     <style>
       html, body {
@@ -40,7 +37,6 @@
         max-width: 500px;
         text-align: center;
         margin-bottom: 2rem;
-        
       }
 
       #popularSites {
@@ -58,18 +54,20 @@
       #footer {
         display: none; /* Hides any leftover footer styling or content */
       }
+
+      /* Official label in bottom-left */
+      .footer-label {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        margin: 1rem;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.9rem;
+        color: #fff;
+      }
     </style>
 
-    <script>
-      window.onload = function () {
-        if (!localStorage.getItem("discordAlertShown")) {
-          alert(
-            "Please upgrade to UV v2 (rhenryw/UV-Static-2.0). Join our discord .gg/redlv for bonuses, updates, links, and more! "
-          );
-          localStorage.setItem("discordAlertShown", "false");
-        }
-      };
-    </script>
+    <!-- Removed discord alert -->
   </head>
 
   <body>
@@ -108,5 +106,8 @@
     <script src="register-sw.js" charset="UTF-8" defer></script>
     <script src="search.js" charset="UTF-8" defer></script>
     <script src="index.js" charset="UTF-8" defer></script>
+
+    <!-- Official label -->
+    <a href="https://4simpleproblems.github.io/proxy-list.html" class="footer-label">Official 4SP Proxy</a>
   </body>
 </html>
