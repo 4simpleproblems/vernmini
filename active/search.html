@@ -73,12 +73,43 @@
         box-shadow: 0 0 0 3px rgba(100, 100, 100, 0.5);
       }
       
+      /* Fullscreen Button */
+      .fullscreen-button {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        border-radius: 50%;
+        background-color: rgba(35, 35, 35, 0.8);
+        cursor: pointer;
+        color: #fff;
+        transition: background-color 0.2s, color 0.2s;
+      }
+      
+      .fullscreen-button:hover {
+        background-color: rgba(50, 50, 50, 0.9);
+        color: #fff;
+      }
+      
       /* Content Area */
       #content-area {
         flex: 1;
         width: 100%;
         border: none;
         background-color: #0;
+      }
+      
+      /* Fullscreen Mode */
+      .fullscreen-iframe {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        border: none;
       }
       
       /* Footer Label */
@@ -112,6 +143,9 @@
         <i class="fas fa-home"></i>
       </div>
       <input type="text" id="search-bar" placeholder="Search Google or type a URL">
+      <div class="fullscreen-button" id="fullscreen-button" title="Toggle Fullscreen">
+        <i class="fas fa-expand"></i>
+      </div>
     </div>
     
     <iframe id="content-area" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
@@ -158,6 +192,36 @@
         }
       }
       
+      // Toggle Fullscreen for iframe
+      function toggleFullscreen() {
+        const iframe = document.getElementById('content-area');
+        const navBar = document.getElementById('nav-bar');
+        const fullscreenButton = document.getElementById('fullscreen-button');
+        const footerLabel = document.querySelector('.footer-label');
+        
+        if (iframe.classList.contains('fullscreen-iframe')) {
+          // Exit fullscreen mode
+          iframe.classList.remove('fullscreen-iframe');
+          navBar.style.display = 'flex';
+          footerLabel.style.display = 'block';
+          fullscreenButton.innerHTML = '<i class="fas fa-expand"></i>';
+        } else {
+          // Enter fullscreen mode
+          iframe.classList.add('fullscreen-iframe');
+          navBar.style.display = 'none';
+          footerLabel.style.display = 'none';
+          fullscreenButton.innerHTML = '<i class="fas fa-compress"></i>';
+          
+          // Add escape key handler for exiting fullscreen
+          document.addEventListener('keydown', function escKeyHandler(e) {
+            if (e.key === 'Escape') {
+              toggleFullscreen();
+              document.removeEventListener('keydown', escKeyHandler);
+            }
+          });
+        }
+      }
+      
       // Event Listeners
       document.addEventListener('DOMContentLoaded', async () => {
         await initUV();
@@ -181,6 +245,11 @@
         // Home button
         document.getElementById('home-button').addEventListener('click', () => {
           window.location.href = "index.html";
+        });
+        
+        // Fullscreen button
+        document.getElementById('fullscreen-button').addEventListener('click', () => {
+          toggleFullscreen();
         });
         
         // Update page title when iframe loads
