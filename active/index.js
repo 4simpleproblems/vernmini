@@ -23,7 +23,7 @@ const errorCode = document.getElementById("uv-error-code");
 // Attach form submit event listener
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-
+  
   try {
     await registerSW();
   } catch (err) {
@@ -31,9 +31,11 @@ form.addEventListener("submit", async (event) => {
     errorCode.textContent = err.toString();
     throw err;
   }
-
+  
   const url = search(address.value, searchEngine.value);
-  location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
+  
+  // Instead of redirecting with UV prefix, load search.html with URL as parameter
+  location.href = `search.html?url=${encodeURIComponent(url)}`;
 });
 
 // Autofill function with auto-submit
@@ -41,3 +43,22 @@ function autofill(url) {
   address.value = url;
   form.requestSubmit(); // Automatically submit the form
 }
+
+// Add clock functionality
+function updateClock() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString();
+  const clockElement = document.getElementById('clock');
+  if (clockElement) {
+    clockElement.textContent = timeString;
+  }
+}
+
+// Initialize clock if it exists
+document.addEventListener('DOMContentLoaded', () => {
+  const clockElement = document.getElementById('clock');
+  if (clockElement) {
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+});
