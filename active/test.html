@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OFP Browser</title>
+    <title>Vern Browser</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link rel="shortcut icon" type="image/jpg" href="logo.png" />
@@ -413,40 +413,32 @@
       
       // Navigate to URL
       function navigateTo(url, tab = null) {
-        if (!url) return;
-        
-        // Get the current active tab if none specified
-        if (!tab) {
-          tab = tabs.find(t => t.id === activeTabId);
-          if (!tab && tabs.length > 0) {
-            tab = tabs[0];
-          }
-          if (!tab) {
-            tab = createTab();
-          }
-        }
-        
-        // Format URL
-        let formattedUrl = url;
-        if (!/^https?:\/\//i.test(url) && !url.startsWith('about:')) {
-          if (/^([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(url) ||
-              /^(\d{1,3}\.){3}\d{1,3}$/i.test(url)) {
-            formattedUrl = 'http://' + url;
-          } else {
-            // Use DuckDuckGo for searches
-            formattedUrl = 'https://duckduckgo.com/?q=' + encodeURIComponent(url);
-          }
-        }
-        
-        try {
-          const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
-          tab.iframe.src = encodedUrl;
-          tab.url = formattedUrl;
-          document.getElementById('search-bar').value = formattedUrl;
-        } catch (err) {
-          console.error("Navigation error:", err);
-        }
-      }
+  if (!url) return;
+  
+  // Get the current active tab if none specified
+  if (!tab) {
+    tab = tabs.find(t => t.id === activeTabId);
+    if (!tab && tabs.length > 0) {
+      tab = tabs[0];
+    }
+    if (!tab) {
+      tab = createTab();
+    }
+  }
+  
+  // Use optimized search function to process the URL
+  try {
+    // Use the searchFast function from search.js
+    const formattedUrl = searchFast(url, 'https://duckduckgo.com/?q=%s');
+    
+    const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+    tab.iframe.src = encodedUrl;
+    tab.url = formattedUrl;
+    document.getElementById('search-bar').value = formattedUrl;
+  } catch (err) {
+    console.error("Navigation error:", err);
+  }
+}
       
       // Update tab information
       function updateTabInfo(tab, title, favicon) {
