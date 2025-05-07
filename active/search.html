@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OFP Browser</title>
+    <title>Vern</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link rel="shortcut icon" type="image/jpg" href="logo.png" />
@@ -22,10 +22,10 @@
         --search-bg: rgba(10, 10, 10, 0.8);
         --search-focus-bg: rgba(45, 45, 45, 0.9);
         --search-focus-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); /* Changed to white outline */
-        --iframe-bg: #000;
+        --iframe-bg: #202020;
         --footer-text-color: #fff;
         --font-family-main: 'Roboto Mono', monospace;
-        --font-family-alt: 'Open Sans', sans-serif;
+        --font-family-alt: 'Roboto Mono', monospace;
       }
 
       html, body {
@@ -84,14 +84,18 @@
         background-color: var(--search-bg);
         color: var(--text-color);
         padding: 0 18px;
-        font-size: 15px;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); /* Changed to white outline */
+        font-size: 15px
+        font-weight: 700;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); /* Changed to white */
+        font-family: var(--font-family-main);
+
       }
       
       #search-bar:focus {
         outline: none;
         background-color: var(--search-focus-bg);
         box-shadow: var(--search-focus-shadow);
+        font-weight: 700;
       }
       
       /* Content Area */
