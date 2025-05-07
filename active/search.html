@@ -21,7 +21,7 @@
         --button-hover-bg: rgba(15, 15, 15, 0.9);
         --search-bg: rgba(10, 10, 10, 0.8);
         --search-focus-bg: rgba(45, 45, 45, 0.9);
-        --search-focus-shadow: 0 0 0 3px rgba(50, 50, 50, 0.3);
+        --search-focus-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); /* Changed to white outline */
         --iframe-bg: #000;
         --footer-text-color: #fff;
         --font-family-main: 'Roboto Mono', monospace;
@@ -68,17 +68,11 @@
         cursor: pointer;
         color: var(--text-color);
         transition: background-color 0.2s, color 0.2s;
-        box-shadow: var(--search-focus-shadow);
-
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); /* Changed to white outline */
       }
       
       .nav-button:hover {
         background-color: var(--button-hover-bg);
-      }
-      
-      .fullscreen-button {
-        margin-left: 10px;
-        margin-right: 0;
       }
       
       /* Search Bar */
@@ -91,8 +85,7 @@
         color: var(--text-color);
         padding: 0 18px;
         font-size: 15px;
-        box-shadow: var(--search-focus-shadow);
-
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); /* Changed to white outline */
       }
       
       #search-bar:focus {
@@ -111,31 +104,6 @@
         position: relative;
         z-index: 1;
         box-shadow: 0 0 0 0 #0000;
-      }
-      
-      /* Fullscreen Animation States */
-      .animating-to-fullscreen {
-        transform: scale(1.05);
-        opacity: 0.7;
-        box-shadow: 0 0 40px 10px #000a;
-      }
-      
-      .fullscreen-iframe {
-        position: fixed !important;
-        top: 0; left: 0;
-        width: 100vw !important;
-        height: 100vh !important;
-        z-index: 9999;
-        background: var(--iframe-bg);
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 40px 10px #000a;
-      }
-      
-      .animating-to-normal {
-        transform: scale(0.95);
-        opacity: 0.7;
-        box-shadow: 0 0 40px 10px #000a;
       }
       
       /* Footer */
@@ -168,10 +136,19 @@
       <div class="nav-button" id="home-button" title="Home">
         <i class="fas fa-home"></i>
       </div>
-      <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
-      <div class="nav-button fullscreen-button" id="fullscreen-button" title="Toggle Fullscreen">
-        <i class="fas fa-expand"></i>
+      <div class="nav-button" id="back-button" title="Back">
+        <i class="fas fa-arrow-left"></i>
       </div>
+      <div class="nav-button" id="forward-button" title="Forward">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+      <div class="nav-button" id="refresh-button" title="Refresh">
+        <i class="fas fa-redo"></i>
+      </div>
+      <div class="nav-button" id="foursp-button" title="4SP Dashboard">
+        <img src="4spicon.png" alt="4SP" style="width: 20px; height: 20px;">
+      </div>
+      <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
     </div>
     <iframe id="content-area" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     <a href="https://4simpleproblems.github.io/proxy-list.html" class="footer-label">Official 4SP Proxy</a>
@@ -211,44 +188,6 @@
         }
       }
 
-      // Fullscreen animation logic
-      function toggleFullscreen() {
-        const iframe = document.getElementById('content-area');
-        const navBar = document.getElementById('nav-bar');
-        const fullscreenButton = document.getElementById('fullscreen-button');
-        const footerLabel = document.querySelector('.footer-label');
-        const duration = 400; // ms, must match CSS
-
-        if (iframe.classList.contains('fullscreen-iframe')) {
-          // Animate exit fullscreen
-          iframe.classList.remove('fullscreen-iframe');
-          iframe.classList.add('animating-to-normal');
-          setTimeout(() => {
-            iframe.classList.remove('animating-to-normal');
-            navBar.style.display = 'flex';
-            footerLabel.style.display = 'block';
-            fullscreenButton.innerHTML = '<i class="fas fa-expand"></i>';
-          }, duration);
-        } else {
-          // Animate enter fullscreen
-          iframe.classList.add('animating-to-fullscreen');
-          navBar.style.display = 'none';
-          footerLabel.style.display = 'none';
-          setTimeout(() => {
-            iframe.classList.remove('animating-to-fullscreen');
-            iframe.classList.add('fullscreen-iframe');
-            fullscreenButton.innerHTML = '<i class="fas fa-compress"></i>';
-          }, duration);
-          // Add escape key handler for exiting fullscreen
-          document.addEventListener('keydown', function escKeyHandler(e) {
-            if (e.key === 'Escape') {
-              toggleFullscreen();
-              document.removeEventListener('keydown', escKeyHandler);
-            }
-          });
-        }
-      }
-
       // Theme customization function
       function customizeTheme(options) {
         const root = document.documentElement;
@@ -281,9 +220,42 @@
         document.getElementById('home-button').addEventListener('click', () => {
           window.location.href = "index.html";
         });
-        document.getElementById('fullscreen-button').addEventListener('click', () => {
-          toggleFullscreen();
+        
+        // New navigation button event listeners
+        document.getElementById('back-button').addEventListener('click', () => {
+          const iframe = document.getElementById('content-area');
+          try {
+            iframe.contentWindow.history.back();
+          } catch (err) {
+            console.error("Navigation error:", err);
+          }
         });
+        
+        document.getElementById('forward-button').addEventListener('click', () => {
+          const iframe = document.getElementById('content-area');
+          try {
+            iframe.contentWindow.history.forward();
+          } catch (err) {
+            console.error("Navigation error:", err);
+          }
+        });
+        
+        document.getElementById('refresh-button').addEventListener('click', () => {
+          const iframe = document.getElementById('content-area');
+          try {
+            iframe.contentWindow.location.reload();
+          } catch (err) {
+            console.error("Refresh error:", err);
+            // Fallback: reload the current URL
+            const currentUrl = document.getElementById('search-bar').value;
+            if (currentUrl) navigateTo(currentUrl);
+          }
+        });
+        
+        document.getElementById('foursp-button').addEventListener('click', () => {
+          navigateTo('https://4simpleproblems.github.io/dashboard.html');
+        });
+        
         document.getElementById('content-area').addEventListener('load', () => {
           const iframe = document.getElementById('content-area');
           try {
