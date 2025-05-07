@@ -72,8 +72,7 @@ function searchFast(input, template) {
      }
 }
 
-// Make searchFast globally available as expected by the HTML script
-// This is standard for scripts loaded via <script> tags in a browser
+// Make searchFast globally available as expected by the HTML script(s)
 window.searchFast = searchFast;
 
 // Note: The original code included a Node.js module.exports block.
