@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vern Browser</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/x-icon" href="logo.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+    
+    <style id="custom-styles">
+      /* Base Elements */
+      :root {
+        --bg-color: #1a1a1a;
+        --text-color: #fff;
+        --navbar-bg: rgba(15, 15, 15, 0.8);
+        --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        --button-bg: rgba(10, 10, 10, 0.8);
+        --button-hover-bg: rgba(15, 15, 15, 0.9);
+        --search-bg: rgba(10, 10, 10, 0.8);
+        --search-focus-bg: rgba(45, 45, 45, 0.9);
+        --search-focus-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        --iframe-bg: #202020;
+        --footer-text-color: #fff;
+        --font-family-main: 'Roboto Mono', monospace;
+        --tab-bg: rgba(25, 25, 25, 0.8);
+        --tab-active-bg: rgba(45, 45, 45, 0.9);
+        --tab-border: rgba(60, 60, 60, 0.5);
+        --tab-hover-bg: rgba(35, 35, 35, 0.9);
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: var(--font-family-main);
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+      
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #top-bar-assembly {
+        overflow: hidden;
+        transition: max-height 0.35s ease-in-out;
+        /* Set initial max-height via JS for proper first animation */
+      }
+
+      #top-bar-assembly.hidden {
+        max-height: 0 !important; 
+      }
+      
+      /* Tab Bar */
+      #tab-bar {
+        display: flex;
+        background-color: var(--navbar-bg);
+        padding: 10px 12px;
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: thin;
+        position: relative;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      #tab-bar::-webkit-scrollbar { height: 3px; }
+      #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+      
+      .tab {
+        display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
+        padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
+        transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
+      }
+      .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
+      .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
+      .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+      .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+      .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
+      .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
+      
+      .new-tab-button {
+        width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
+        cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+      }
+      .new-tab-button:hover { background-color: var(--button-hover-bg); }
+      
+      /* Navigation Bar */
+      #nav-bar {
+        display: flex; align-items: center; padding: 10px; background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
+      }
+      
+      .nav-button {
+        width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+        margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
+        cursor: pointer; color: var(--text-color); transition: background-color 0.2s, color 0.2s;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+      }
+      .nav-button:hover { background-color: var(--button-hover-bg); }
+      
+      #search-bar {
+        flex: 1; height: 40px; border-radius: 30px; border: none; background-color: var(--search-bg);
+        color: var(--text-color); padding: 0 18px; font-size: 15px; font-weight: 700;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); font-family: var(--font-family-main);
+      }
+      #search-bar:focus { outline: none; background-color: var(--search-focus-bg); box-shadow: var(--search-focus-shadow); font-weight: 700; }
+      
+      /* Toggle Top Bar Button */
+      #toggle-top-bar-button {
+        position: fixed;
+        z-index: 1001; 
+        width: 44px; 
+        height: 22px; 
+        background-color: var(--navbar-bg); 
+        box-shadow: var(--navbar-shadow); 
+        border-radius: 0 0 22px 22px; 
+        right: 30px;
+        /* top position is set by JS */
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--text-color);
+        transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out;
+      }
+      #toggle-top-bar-button:hover {
+        background-color: var(--button-hover-bg); 
+      }
+      #toggle-top-bar-button .fas {
+        font-size: 14px;
+        transition: transform 0.3s ease-in-out; /* For potential future arrow animations */
+      }
+
+      /* Content Area */
+      #tabs-container {
+        flex: 1; position: relative; background-color: var(--iframe-bg);
+      }
+      .tab-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; border: none; }
+      .tab-content.active { display: block; }
+      
+      .footer-label {
+        position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
+        font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+      }
+      
+      canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div id="top-bar-assembly">
+        <div id="tab-bar">
+            <div class="new-tab-button" id="new-tab-button" title="New Tab">
+                <i class="fas fa-plus"></i>
+            </div>
+        </div>
+        <div id="nav-bar">
+            <div class="nav-button" id="home-button" title="Home"> <i class="fas fa-home"></i> </div>
+            <div class="nav-button" id="back-button" title="Back"> <i class="fas fa-arrow-left"></i> </div>
+            <div class="nav-button" id="forward-button" title="Forward"> <i class="fas fa-arrow-right"></i> </div>
+            <div class="nav-button" id="refresh-button" title="Refresh"> <i class="fas fa-redo"></i> </div>
+            <div class="nav-button" id="foursp-button" title="4SP Dashboard"> <img src="../4spicon.png" alt="4SP" style="width: 20px; height: 20px;"> </div>
+            <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
+        </div>
+    </div>
+
+    <div id="toggle-top-bar-button" title="Hide Toolbar">
+        <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
+    </div>
+
+    <div id="tabs-container">
+        </div>
+    <a href="https://4simpleproblems.github.io/proxy-list.html" class="footer-label">Official 4SP Proxy</a>
+    
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script>
+    <script src="search.js" defer></script>
+    <script src="stars.js" defer></script>
+    <script>
+      let tabs = [];
+      let activeTabId = null;
+      let tabCounter = 0;
+
+      let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fourspButtonEl;
+      
+      let topBarAssemblyEl, toggleTopBarButtonEl, toggleBarIconEl;
+      let initialTopBarHeight = 0;
+      let isTopBarHidden = false;
+
+      async function initUV() { 
+        try { await registerSW(); console.log("Service worker registered"); } 
+        catch (err) { console.error("Failed to register service worker:", err); }
+      }
+      
+      function createTab(url = null) { 
+        const tabId = `tab-${tabCounter++}`;
+        const contentId = `content-${tabId}`;
+        const tabElement = document.createElement('div');
+        tabElement.className = 'tab';
+        tabElement.dataset.tabId = tabId;
+        tabElement.innerHTML = `<div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div><div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>`;
+        tabBarEl.insertBefore(tabElement, newTabButtonEl); // Ensure newTabButtonEl is defined and child of tabBarEl
+        const iframe = document.createElement('iframe');
+        iframe.id = contentId;
+        iframe.className = 'tab-content';
+        iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups';
+        tabsContainerEl.appendChild(iframe);
+        const tab = { id: tabId, contentId: contentId, element: tabElement, iframe: iframe, url: url || 'about:blank', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon') };
+        tabs.push(tab);
+        activateTab(tabId);
+        if (url) navigateTo(url, tab);
+        return tab;
+      }
+      
+      function activateTab(tabId) { 
+        tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
+        const tab = tabs.find(t => t.id === tabId);
+        if (tab) {
+          tab.element.classList.add('active');
+          tab.iframe.classList.add('active');
+          activeTabId = tabId;
+          if (searchBarEl) searchBarEl.value = tab.url !== 'about:blank' ? tab.url : '';
+          tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+      
+      function closeTab(tabId) { 
+        const tabIndex = tabs.findIndex(t => t.id === tabId);
+        if (tabIndex === -1) return;
+        const tab = tabs[tabIndex];
+        tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1);
+        if (activeTabId === tabId) {
+          if (tabs.length > 0) { activateTab(tabs[Math.max(0, tabIndex - 1)].id); } 
+          else { createTab(); }
+        }
+      }
+      
+      function navigateTo(urlInput, tab = null) { 
+        if (!urlInput && typeof urlInput !== 'string') return;
+        let currentTab = tab;
+        if (!currentTab) { currentTab = getActiveTab() || (tabs.length > 0 ? tabs[0] : createTab());}
+        if (typeof searchFast !== 'function') { console.error("searchFast function is not available."); currentTab.iframe.src = `about:blank#error=search_function_missing&query=${encodeURIComponent(urlInput)}`; updateTabInfo(currentTab, "Error: Search unavailable"); return; }
+        try {
+            const formattedUrl = searchFast(urlInput, 'https://duckduckgo.com/?q=%s');
+            if (typeof __uv$config === 'undefined' || typeof __uv$config.prefix === 'undefined' || typeof __uv$config.encodeUrl === 'undefined') { console.error("UV configuration (__uv$config) is not available."); currentTab.iframe.src = `about:blank#error=uv_config_missing&url=${encodeURIComponent(formattedUrl)}`; updateTabInfo(currentTab, "Error: UV Config Missing"); return; }
+            const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+            currentTab.iframe.src = encodedUrl; currentTab.url = formattedUrl; if (searchBarEl) searchBarEl.value = formattedUrl;
+        } catch (err) { console.error("Navigation error:", err); if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; updateTabInfo(currentTab, "Navigation Error"); }
+      }
+      
+      function updateTabInfo(tab, title, favicon) { 
+        if (!tab) return;
+        const displayTitle = title || (tab.url !== 'about:blank' && tab.url.startsWith('http') ? new URL(tab.url).hostname : 'New Tab') || 'New Tab';
+        tab.titleElement.textContent = displayTitle; tab.titleElement.title = displayTitle;
+        if (favicon) { tab.faviconElement.innerHTML = `<img src="${favicon}" alt="" style="width:16px;height:16px;">`; } 
+        else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;}
+      }
+      
+      function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
+
+      function handleTopBarToggle() {
+        isTopBarHidden = !isTopBarHidden;
+        if (isTopBarHidden) {
+            topBarAssemblyEl.classList.add('hidden');
+            // topBarAssemblyEl.style.maxHeight = '0px'; // Class '.hidden' handles this
+            toggleTopBarButtonEl.style.top = '-1px'; 
+            toggleBarIconEl.className = 'fas fa-chevron-down';
+            toggleTopBarButtonEl.title = "Show Toolbar";
+        } else {
+            topBarAssemblyEl.classList.remove('hidden');
+            topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; // Explicitly set for animation
+            toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
+            toggleBarIconEl.className = 'fas fa-chevron-up';
+            toggleTopBarButtonEl.title = "Hide Toolbar";
+        }
+      }
+      
+      function updateInitialTopBarHeight() {
+        const wasHidden = topBarAssemblyEl.classList.contains('hidden');
+        if (wasHidden) {
+          topBarAssemblyEl.classList.remove('hidden'); // Temporarily show to measure
+          topBarAssemblyEl.style.maxHeight = '500px'; // Arbitrary large value to ensure full height
+        }
+        
+        initialTopBarHeight = topBarAssemblyEl.offsetHeight;
+        
+        if (wasHidden) {
+          topBarAssemblyEl.classList.add('hidden'); // Restore hidden state if it was
+          // No need to set maxHeight to 0px here, class '.hidden' does it.
+        } else {
+          topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; // Set for visible state
+        }
+
+        // Adjust button position
+        if (!isTopBarHidden) { // Use the global toggle state
+            toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
+        } else {
+            toggleTopBarButtonEl.style.top = '-1px';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        tabBarEl = document.getElementById('tab-bar');
+        tabsContainerEl = document.getElementById('tabs-container');
+        searchBarEl = document.getElementById('search-bar');
+        newTabButtonEl = document.getElementById('new-tab-button'); // This is inside #tab-bar
+        homeButtonEl = document.getElementById('home-button');
+        backButtonEl = document.getElementById('back-button');
+        forwardButtonEl = document.getElementById('forward-button');
+        refreshButtonEl = document.getElementById('refresh-button');
+        fourspButtonEl = document.getElementById('foursp-button');
+
+        topBarAssemblyEl = document.getElementById('top-bar-assembly');
+        toggleTopBarButtonEl = document.getElementById('toggle-top-bar-button');
+        toggleBarIconEl = document.getElementById('toggle-bar-icon');
+
+        await initUV();
+        
+        setTimeout(() => {
+            updateInitialTopBarHeight(); 
+            if (!isTopBarHidden) {
+                 topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+            } else {
+                 topBarAssemblyEl.style.maxHeight = '0px';
+                 topBarAssemblyEl.classList.add('hidden'); // Ensure consistent state
+            }
+        }, 10); // Small delay for layout
+
+        toggleTopBarButtonEl.addEventListener('click', handleTopBarToggle);
+        
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (!isTopBarHidden) { // Only update if bar is supposed to be visible
+                     updateInitialTopBarHeight();
+                }
+            }, 100); // Debounce resize handling
+        });
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialUrl = urlParams.get('url');
+        if (tabs.length === 0) createTab(initialUrl || null); // Create initial tab only if none exist
+        
+        if(newTabButtonEl) newTabButtonEl.addEventListener('click', () => createTab());
+        
+        if(tabBarEl) tabBarEl.addEventListener('click', (e) => { 
+            const tabElement = e.target.closest('.tab'); const closeButton = e.target.closest('.tab-close');
+            if (closeButton && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); } 
+            else if (tabElement) { activateTab(tabElement.dataset.tabId); }
+        });
+
+        if(searchBarEl) searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
+        if(homeButtonEl) homeButtonEl.addEventListener('click', () => { window.location.href = "index.html"; });
+        if(backButtonEl) backButtonEl.addEventListener('click', () => { const t = getActiveTab(); if (t && t.iframe.contentWindow) try { t.iframe.contentWindow.history.back(); } catch (err) {console.error("Back nav error:", err)} });
+        if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => { const t = getActiveTab(); if (t && t.iframe.contentWindow) try { t.iframe.contentWindow.history.forward(); } catch (err) {console.error("Fwd nav error:", err)} });
+        if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => { 
+            const tab = getActiveTab(); if (!tab) return;
+            try { if (tab.iframe.contentWindow && tab.iframe.contentWindow.location && typeof tab.iframe.contentWindow.location.reload === 'function') { tab.iframe.contentWindow.location.reload(); } else if (tab.url) { navigateTo(tab.url, tab); } }
+            catch(err) { console.error("Refresh error:", err); if (tab.url) navigateTo(tab.url, tab); }
+        });
+        if(fourspButtonEl) fourspButtonEl.addEventListener('click', () => navigateTo('https://4simpleproblems.github.io/dashboard.html'));
+        
+        if(tabsContainerEl) tabsContainerEl.addEventListener('load', (e) => { 
+            if (e.target.tagName !== 'IFRAME') return;
+            const tab = tabs.find(t => t.contentId === e.target.id); if (!tab) return;
+            try {
+                let pageTitle = 'Loaded'; let pageFavicon = null;
+                if (tab.iframe.contentDocument) {
+                    pageTitle = tab.iframe.contentDocument.title;
+                    const faviconLink = tab.iframe.contentDocument.querySelector("link[rel*='icon']");
+                    if (faviconLink) pageFavicon = new URL(faviconLink.href, tab.iframe.contentDocument.baseURI).href;
+                } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) { try { pageTitle = new URL(tab.url).hostname; } catch {} }
+                updateTabInfo(tab, pageTitle, pageFavicon);
+                if (tab.id === activeTabId) document.title = pageTitle + ' - Vern Browser';
+            } catch (err) { 
+                let fallbackTitle = 'New Tab'; if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) { try { fallbackTitle = new URL(tab.url).hostname; } catch {} }
+                updateTabInfo(tab, fallbackTitle); if (tab.id === activeTabId) document.title = fallbackTitle + ' - Vern Browser';
+            }
+        }, true);
+        
+        document.addEventListener('keydown', (e) => { 
+            if (e.ctrlKey && e.key === 't') { e.preventDefault(); createTab(); }
+            if (e.ctrlKey && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); }
+            if (e.ctrlKey && e.key === 'Tab') { e.preventDefault(); if (tabs.length > 1) { const ci = tabs.findIndex(t=>t.id===activeTabId); activateTab(tabs[(ci+1)%tabs.length].id);}}
+        });
+      });
+
+      window.addEventListener('load', () => { 
+        setTimeout(() => { if (window.initStars && typeof window.initStars === 'function') window.initStars(); }, 500);
+      });
+    </script>
+</body>
+</html>
