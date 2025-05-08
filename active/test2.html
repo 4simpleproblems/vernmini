@@ -411,6 +411,98 @@
             }
         }
 
+        // NEW FUNCTION: Track URL/location changes within the iframe
+        function setupRedirectTracking(tab) {
+            if (!tab || !tab.iframe) return;
+            
+            // Create a clean interval ID property for this tab if it doesn't exist
+            if (!tab.locationCheckIntervalId) {
+                tab.lastKnownUrl = tab.url;
+                
+                // Poll for URL changes - necessary since we can't directly access cross-origin iframe locations
+                tab.locationCheckIntervalId = setInterval(() => {
+                    try {
+                        // First try to access the iframe location directly (works for same-origin)
+                        const iframeWindow = tab.iframe.contentWindow;
+                        if (iframeWindow && iframeWindow.location.href) {
+                            const currentUrl = iframeWindow.location.href;
+                            
+                            // Check if URL has changed - if it's a UV/proxy URL, we need to decode it
+                            if (currentUrl !== tab.lastKnownUrl) {
+                                let decodedUrl = currentUrl;
+                                
+                                // Try to decode UV URL if applicable
+                                if (typeof __uv$config !== 'undefined' && typeof __uv$config.decodeUrl === 'function' && 
+                                    currentUrl.includes(__uv$config.prefix)) {
+                                    try {
+                                        const encodedUrl = currentUrl.split(__uv$config.prefix)[1];
+                                        decodedUrl = __uv$config.decodeUrl(encodedUrl);
+                                    } catch (decodeErr) {
+                                        console.warn("Could not decode UV URL:", decodeErr);
+                                    }
+                                }
+                                
+                                // Update tab URL and UI
+                                tab.url = decodedUrl;
+                                tab.lastKnownUrl = currentUrl;
+                                
+                                // Update UI only if this is the active tab
+                                if (tab.id === activeTabId) {
+                                    if (searchBarEl) searchBarEl.value = decodedUrl;
+                                }
+                                
+                                // Update tab title from the page title
+                                if (iframeWindow.document && iframeWindow.document.title) {
+                                    updateTabInfo(tab, iframeWindow.document.title);
+                                } else {
+                                    // Use URL as fallback title if document title isn't available
+                                    try {
+                                        const urlObj = new URL(decodedUrl);
+                                        updateTabInfo(tab, urlObj.hostname);
+                                    } catch (e) {
+                                        updateTabInfo(tab, decodedUrl);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        // This usually means we're hitting cross-origin restrictions
+                        // We'll handle this with events instead
+                    }
+                }, 500); // Check every half second
+            }
+        }
+
+        // NEW FUNCTION: Clean up interval when tab is closed
+        function cleanupTabTracking(tab) {
+            if (tab && tab.locationCheckIntervalId) {
+                clearInterval(tab.locationCheckIntervalId);
+                tab.locationCheckIntervalId = null;
+            }
+        }
+
+        // MODIFIED closeTab function to clean up tracking interval
+        function closeTab(tabId) { 
+            const tabIndex = tabs.findIndex(t => t.id === tabId);
+            if (tabIndex === -1) return;
+            const tab = tabs[tabIndex];
+            
+            // NEW: Clean up tracking interval before removing tab
+            cleanupTabTracking(tab);
+            
+            tab.element.remove(); 
+            tab.iframe.remove(); 
+            tabs.splice(tabIndex, 1);
+            
+            if (activeTabId === tabId) {
+                if (tabs.length > 0) { 
+                    activateTab(tabs[Math.max(0, tabIndex - 1)].id); 
+                } else { 
+                    createTab(); 
+                } 
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             tabBarEl = document.getElementById('tab-bar');
             tabsContainerEl = document.getElementById('tabs-container');
@@ -505,66 +597,193 @@
             if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => { 
                 const t = getActiveTab(); 
                 if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.history.forward(); } catch (err) {console.error("Fwd nav error:", err)} 
+                  try { t.iframe.contentWindow.history.forward(); } catch (err) {console.error("Forward nav error:", err)} 
                 } 
             });
             
             if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => { 
                 const t = getActiveTab(); 
                 if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.location.reload(); } catch (err) {console.error("Refresh error:", err)} 
+                    try { t.iframe.contentWindow.location.reload(); } catch (err) {
+                        console.error("Refresh error:", err);
+                        // Alternative method if direct reload fails due to cross-origin restrictions
+                        navigateTo(t.url, t);
+                    } 
                 } 
             });
 
-            // Event listener for the 4SP button
-             if(fourspButtonEl) fourspButtonEl.addEventListener('click', () => {
-                 // You need to decide where this button should navigate.
-                 // The second HTML has '../4spicon.png' which suggests it might be a local page or resource.
-                 // For exact replication, let's assume it navigates the active tab to a placeholder URL.
-                 navigateTo('/path/to/your/4sp/dashboard'); // Replace with the actual path/URL you want this button to go to
-             });
-
-            // Listen for messages from iframes (e.g., for title/favicon updates)
+            // Setup message event listener for communication from iframes
             window.addEventListener('message', (event) => {
-                 // Implement logic to handle messages from iframes if needed
-                 // This might be used by the UV script or content within the iframe
-                 // For example, if the iframe sends its title:
-                 // if (event.data.type === 'updateTitle') {
-                 //    const tab = tabs.find(t => t.iframe === event.source.frameElement);
-                 //    if (tab) updateTabInfo(tab, event.data.title);
-                 // }
-                 console.log("Message from iframe:", event.data); // Log messages for debugging
+                // Handle messages from iframes - could be used for title updates, navigation events, etc.
+                try {
+                    if (event.data && event.data.type === 'tabUpdate') {
+                        const tab = tabs.find(t => t.iframe.contentWindow === event.source);
+                        if (tab) {
+                            // Handle different update types
+                            if (event.data.title) {
+                                updateTabInfo(tab, event.data.title);
+                            }
+                            if (event.data.url) {
+                                tab.url = event.data.url;
+                                if (tab.id === activeTabId && searchBarEl) {
+                                    searchBarEl.value = event.data.url;
+                                }
+                            }
+                            if (event.data.favicon) {
+                                // Update favicon if provided
+                                tab.faviconElement.innerHTML = `<img src="${event.data.favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Error processing iframe message:", err);
+                }
             });
 
-            // Optional: Update tab title/favicon when iframe content loads (requires iframe to be same origin or send messages)
-             tabsContainerEl.addEventListener('load', (e) => {
-                 if (e.target.classList.contains('tab-content')) {
-                     const iframe = e.target;
-                     const tab = tabs.find(t => t.iframe === iframe);
-                     if (tab) {
-                          try {
-                              // Attempt to get title directly (may fail due to cross-origin)
-                              const title = iframe.contentDocument ? iframe.contentDocument.title : '';
-                              if (title && title !== '') {
-                                  updateTabInfo(tab, title);
-                              } else {
-                                  // If title is empty or inaccessible, use the URL as a fallback
-                                  updateTabInfo(tab, tab.url);
-                              }
-                              // Favicon update is more complex due to cross-origin issues.
-                          } catch (err) {
-                              console.warn("Could not access iframe contentDocument for title update:", err);
-                              // Use URL as a fallback if accessing contentDocument fails
-                              updateTabInfo(tab, tab.url); 
-                          }
-                     }
-                 }
-             }, true); // Use capture phase to catch load events from iframes
-
-            // If the initial tab was created with a URL from the parameter, make sure the search bar reflects it
-            if (initialUrl && searchBarEl) {
-                searchBarEl.value = initialUrl;
-            }
+            // Setup mutation observer for tracking tab content changes
+            const setupTabContentObserver = (tab) => {
+                try {
+                    // Try to access iframe content - will throw if cross-origin
+                    const iframeDocument = tab.iframe.contentDocument;
+                    
+                    // If we can access it, observe title changes
+                    if (iframeDocument) {
+                        const titleObserver = new MutationObserver((mutations) => {
+                            if (iframeDocument.title) {
+                                updateTabInfo(tab, iframeDocument.title);
+                                if (tab.id === activeTabId) {
+                                    document.title = iframeDocument.title + ' - Vern Browser';
+                                }
+                            }
+                        });
+                        
+                        // Observe title element if it exists
+                        const titleEl = iframeDocument.querySelector('title');
+                        if (titleEl) {
+                            titleObserver.observe(titleEl, { 
+                                subtree: true, 
+                                characterData: true, 
+                                childList: true 
+                            });
+                        }
+                        
+                        // Store observer reference for cleanup
+                        tab.titleObserver = titleObserver;
+                    }
+                } catch (err) {
+                    // Cross-origin access error - use URL tracking instead
+                    setupRedirectTracking(tab);
+                }
+            };
+            
+            // Modified activateTab to setup content observers
+            const originalActivateTab = activateTab;
+            activateTab = function(tabId) {
+                originalActivateTab(tabId);
+                const tab = tabs.find(t => t.id === tabId);
+                if (tab) {
+                    setupTabContentObserver(tab);
+                }
+            };
+            
+            // Modified createTab to setup content observers
+            const originalCreateTab = createTab;
+            createTab = function(url = null) {
+                const tab = originalCreateTab(url);
+                setupTabContentObserver(tab);
+                return tab;
+            };
+            
+            // Handle iframe load events to update tab info
+            document.addEventListener('load', (e) => {
+                if (e.target.tagName === 'IFRAME') {
+                    const tabId = e.target.id.replace('content-', 'tab-');
+                    const tab = tabs.find(t => t.id === tabId);
+                    
+                    if (tab) {
+                        try {
+                            // Try to get title from iframe - will throw if cross-origin
+                            const title = e.target.contentDocument.title;
+                            if (title) {
+                                updateTabInfo(tab, title);
+                            }
+                            // Setup observer for future title changes
+                            setupTabContentObserver(tab);
+                        } catch (err) {
+                            // Cross-origin iframe, use URL for title
+                            if (tab.url && tab.url !== 'about:blank') {
+                                try {
+                                    const urlObj = new URL(tab.url);
+                                    updateTabInfo(tab, urlObj.hostname);
+                                } catch (e) {
+                                    updateTabInfo(tab, tab.url);
+                                }
+                            }
+                            // Setup tracking for URL changes
+                            setupRedirectTracking(tab);
+                        }
+                    }
+                }
+            }, true); // Use capture to ensure we get iframe load events
+            
+            // Handle keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Only process if not typing in search bar
+                if (e.target === searchBarEl) return;
+                
+                // Handle Ctrl+T for new tab
+                if (e.ctrlKey && e.key === 't') {
+                    e.preventDefault();
+                    createTab('about:blank');
+                }
+                
+                // Handle Ctrl+W for close tab
+                if (e.ctrlKey && e.key === 'w') {
+                    e.preventDefault();
+                    if (activeTabId) {
+                        closeTab(activeTabId);
+                    }
+                }
+                
+                // Handle Ctrl+Tab for next tab
+                if (e.ctrlKey && e.key === 'Tab') {
+                    e.preventDefault();
+                    if (tabs.length > 1) {
+                        const currentIndex = tabs.findIndex(t => t.id === activeTabId);
+                        const nextIndex = (currentIndex + 1) % tabs.length;
+                        activateTab(tabs[nextIndex].id);
+                    }
+                }
+                
+                // Handle Alt+Left/Right for back/forward
+                if (e.altKey && e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    backButtonEl.click();
+                }
+                if (e.altKey && e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    forwardButtonEl.click();
+                }
+                
+                // Handle F5 or Ctrl+R for refresh
+                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+                    e.preventDefault();
+                    refreshButtonEl.click();
+                }
+                
+                // Handle F11 for toggling toolbar
+                if (e.key === 'F11') {
+                    e.preventDefault();
+                    handleTopBarToggle();
+                }
+            });
+            
+            // Handle contextmenu events for right-click menu
+            document.addEventListener('contextmenu', (e) => {
+                // Implement right-click context menu here if desired
+                // This would involve creating a custom popup menu
+                // For now, we'll allow the default browser context menu
+            });
         });
     </script>
 </body>
