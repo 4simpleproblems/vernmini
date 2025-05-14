@@ -1,189 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>OFP Search</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OFP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="index.css" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <style>
-      * {
+      html, body {
+        margin: 0;
+        padding: 0;
+        border: none;
         box-sizing: border-box;
       }
       body {
-        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         font-family: 'Open Sans', sans-serif;
         background-color: #0e0e0e;
         color: white;
       }
-      #tabBar {
+      #header,
+      #content {
+        width: 100%;
+        max-width: 700px;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      #clock {
+        color: #fff;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      #uv-form {
+        width: 100%;
         display: flex;
-        overflow-x: auto;
-        padding: 0.5rem;
-        background-color: #1b1b1b;
-        border-bottom: 1px solid #333;
+        justify-content: center;
       }
-      .tab {
-        padding: 8px 16px;
-        margin-right: 6px;
-        background-color: #2b2b2b;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        cursor: pointer;
-        transition: background-color 0.2s;
-        white-space: nowrap;
-      }
-      .tab.active {
-        background-color: #4e4e4e;
-        border-color: #fff;
-      }
-      .tab:hover {
-        background-color: #3a3a3a;
-      }
-      #controls {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        background-color: #121212;
-        gap: 8px;
-      }
-      #controls button {
-        background: #2b2b2b;
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 8px;
-        padding: 6px 10px;
-        cursor: pointer;
-      }
-      #controls button:hover {
-        background-color: #3a3a3a;
-      }
-      #searchBar {
-        flex: 1;
-        padding: 8px 14px;
+      #uv-address {
+        width: 90%;
+        padding: 12px;
+        border-radius: 100px;
         font-size: 1rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: none;
+        outline: none;
         background-color: #1e1e1e;
         color: white;
+        text-align: center;
       }
-      #iframeView {
-        width: 100%;
-        height: calc(100vh - 130px);
-        border: none;
-        background: #000;
+      #popularSites {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+      #popularSites .btn {
+        background-color: #2b2b2b;
+        border: 1px solid #444;
+        border-radius: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+        color: white;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+      }
+      #popularSites .btn:hover {
+        background-color: #3a3a3a;
+      }
+      .footer-label {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        margin: 1rem;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.9rem;
+        color: #fff;
       }
     </style>
   </head>
   <body>
-    <div id="tabBar"></div>
-
-    <div id="controls">
-      <button onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
-      <button onclick="goForward()"><i class="fas fa-arrow-right"></i></button>
-      <button onclick="refreshTab()"><i class="fas fa-sync"></i></button>
-      <input
-        type="text"
-        id="searchBar"
-        placeholder="Search or enter a URL"
-        onkeydown="handleSearch(event)"
-      />
-      <button onclick="newTab()">+</button>
+    <canvas id="canvas"></canvas>
+    <div id="header">
+      <img src="Title.png" alt="Logo" id="bigTitle" />
+      <div id="clock"></div>
+    </div>
+    <div id="content">
+      <form id="uv-form">
+        <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden" />
+        <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL" class="form__input" autocomplete="off" />
+      </form>
+      <div id="popularSites">
+        <a class="btn secondary" onclick="autofill('http://xbox.com/play')">Xbox</a>
+        <a class="btn secondary" onclick="autofill('http://youtube.com')">Youtube</a>
+        <a class="btn secondary" onclick="autofill('https://tiktok.com')">TikTok</a>
+        <a class="btn secondary" onclick="autofill('https://chatgpt.com')">ChatGPT</a>
+        <a class="btn secondary" onclick="autofill('http://apple.com')">Apple</a>
+        <a class="btn secondary" onclick="autofill('http://gemini.google.com')">Gemini</a>
+        <a class="btn secondary" onclick="autofill('http://totaljerkface.com')">Happy Wheels</a>
+      </div>
+      <div class="desc left-margin">
+        <p id="uv-error"></p>
+        <pre id="uv-error-code"></pre>
+      </div>
     </div>
 
-    <iframe id="iframeView" src=""></iframe>
+    <!-- Scripts -->
+    <script src="stars.js"></script>
+    <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
+    <script src="uv/uv.config.js" charset="UTF-8" defer></script>
+    <script src="register-sw.js" charset="UTF-8" defer></script>
+    <script src="search.js" charset="UTF-8" defer></script>
+    <script src="index.js" charset="UTF-8" defer></script>
 
+    <!-- Clock Script -->
     <script>
-      const tabs = [];
-      let currentTab = -1;
-
-      function newTab(url = '') {
-        if (tabs.length >= 10) return alert('Tab limit reached.');
-        tabs.push({ url });
-        currentTab = tabs.length - 1;
-        renderTabs();
-        if (url) loadURL(url);
-        else document.getElementById('iframeView').src = '';
+      function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        document.getElementById('clock').textContent = timeString;
       }
-
-      function renderTabs() {
-        const tabBar = document.getElementById('tabBar');
-        tabBar.innerHTML = '';
-        tabs.forEach((tab, index) => {
-          const tabBtn = document.createElement('div');
-          tabBtn.className = 'tab' + (index === currentTab ? ' active' : '');
-          tabBtn.textContent = `Tab ${index + 1}`;
-          tabBtn.onclick = () => switchTab(index);
-          tabBar.appendChild(tabBtn);
-        });
-        updateSearchBar();
-      }
-
-      function switchTab(index) {
-        currentTab = index;
-        loadURL(tabs[index].url);
-        renderTabs();
-      }
-
-      function loadURL(url) {
-        if (!url) return;
-        const proxied = `./searchFast?q=${encodeURIComponent(url)}`;
-        document.getElementById('iframeView').src = proxied;
-        tabs[currentTab].url = url;
-        updateSearchBar();
-      }
-
-      function handleSearch(e) {
-        if (e.key === 'Enter') {
-          const query = document.getElementById('searchBar').value.trim();
-          if (!query) return;
-          if (
-            query.startsWith('http://') ||
-            query.startsWith('https://') ||
-            query.includes('.')
-          ) {
-            loadURL(query);
-          } else {
-            loadURL(`https://duckduckgo.com/?q=${encodeURIComponent(query)}`);
-          }
-        }
-      }
-
-      function updateSearchBar() {
-        const input = document.getElementById('searchBar');
-        if (tabs[currentTab]) {
-          input.value = tabs[currentTab].url;
-        }
-      }
-
-      function goBack() {
-        const iframe = document.getElementById('iframeView').contentWindow;
-        if (iframe.history) iframe.history.back();
-      }
-
-      function goForward() {
-        const iframe = document.getElementById('iframeView').contentWindow;
-        if (iframe.history) iframe.history.forward();
-      }
-
-      function refreshTab() {
-        const iframe = document.getElementById('iframeView');
-        iframe.src = iframe.src;
-      }
-
-      // Start with one blank tab
-      newTab();
+      updateClock();
+      setInterval(updateClock, 1000);
     </script>
+
+    <!-- Autofill Helper -->
+    <script>
+      function autofill(url) {
+        const input = document.getElementById('uv-address');
+        input.value = url;
+        document.getElementById('uv-form').dispatchEvent(new Event('submit'));
+      }
+    </script>
+
+    <!-- Footer Label -->
+    <span class="footer-label">Official 4SP Proxy</span>
   </body>
 </html>
