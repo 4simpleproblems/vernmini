@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vern Browser Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="logo.png" /> <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
 
     <style id="custom-styles">
         /* Base Elements */
@@ -26,10 +26,18 @@
             --tab-active-bg: rgba(45, 45, 45, 0.9);
             --tab-border: rgba(60, 60, 60, 0.5);
             --tab-hover-bg: rgba(35, 35, 35, 0.9);
-            --sidebar-width: 250px; /* Added for sidebar width */
-            --sidebar-bg: #2a2a2a; /* Added for sidebar background */
-            --sidebar-link-color: #ccc; /* Added for sidebar link color */
-            --sidebar-link-hover-bg: #3a3a3a; /* Added for sidebar link hover background */
+
+            /* Pro Version Additions */
+            --sidebar-width: 250px; /* Sidebar width */
+            --sidebar-bg: #1a1a1a; /* Sidebar background */
+            --sidebar-border-color: rgba(255, 255, 255, 0.2); /* Border color */
+            --sidebar-link-color: #ccc; /* Sidebar link color */
+            --sidebar-link-hover-bg: rgba(30, 30, 30, 0.8); /* Sidebar link hover background */
+            --modal-bg: #2a2a2a; /* Modal background */
+            --modal-border-color: rgba(255, 255, 255, 0.3); /* Modal border color */
+             --input-bg: rgba(20, 20, 20, 0.8); /* Input background */
+             --input-border: rgba(100, 100, 100, 0.5); /* Input border */
+             --input-focus-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2); /* Input focus shadow */
         }
 
         /* Theme: Light */
@@ -49,11 +57,18 @@
             --tab-active-bg: rgba(200, 200, 200, 0.9);
             --tab-border: rgba(150, 150, 150, 0.5);
             --tab-hover-bg: rgba(215, 215, 215, 0.9);
-            --sidebar-bg: #d0d0d0;
-            --sidebar-link-color: #555;
-            --sidebar-link-hover-bg: #c0c0c0;
-        }
 
+            /* Pro Version Additions - Light */
+            --sidebar-bg: #f0f0f0;
+            --sidebar-border-color: rgba(0, 0, 0, 0.2);
+            --sidebar-link-color: #555;
+            --sidebar-link-hover-bg: rgba(220, 220, 220, 0.8);
+            --modal-bg: #e0e0e0;
+            --modal-border-color: rgba(0, 0, 0, 0.3);
+            --input-bg: rgba(220, 220, 220, 0.8);
+            --input-border: rgba(150, 150, 150, 0.5);
+            --input-focus-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+        }
 
         html, body {
             margin: 0;
@@ -85,48 +100,98 @@
         /* Sidebar styles */
         #sidebar {
             width: var(--sidebar-width);
+            min-width: 180px; /* Minimum width to prevent collapsing too much */
             background-color: var(--sidebar-bg);
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             padding: 15px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
             transform: translateX(0); /* Initial state: visible */
             z-index: 1000;
+            overflow-y: auto; /* Allow scrolling if sidebar content exceeds height */
+            border-right: 1px solid var(--sidebar-border-color);
         }
 
         #sidebar.hidden {
              transform: translateX(-var(--sidebar-width)); /* Hidden state */
+             width: 0; /* Collapse width when hidden */
+             padding: 0; /* Remove padding when hidden */
         }
 
-        #sidebar h3 {
+         #sidebar h3 {
             margin-top: 0;
+            margin-bottom: 20px;
             color: var(--text-color);
+            text-align: center;
+            border-bottom: 1px solid var(--sidebar-border-color);
+            padding-bottom: 10px;
         }
 
         #sidebar ul {
             list-style: none;
             padding: 0;
             margin: 0;
+            flex-grow: 1; /* Allow list to take available space */
         }
 
         #sidebar ul li {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         #sidebar ul li a {
             color: var(--sidebar-link-color);
             text-decoration: none;
-            display: block;
-            padding: 8px;
-            border-radius: 5px;
+            display: flex; /* Use flex for icon and text alignment */
+            align-items: center;
+            padding: 10px 12px; /* Increased padding */
+            border-radius: 20px; /* Pill shape */
             transition: background-color 0.2s;
+             font-size: 14px;
+        }
+
+        #sidebar ul li a i {
+             margin-right: 10px;
+             width: 20px; /* Fixed width for icons */
+             text-align: center;
         }
 
         #sidebar ul li a:hover {
             background-color: var(--sidebar-link-hover-bg);
+            color: var(--text-color); /* Improve hover readability */
         }
+
+         /* User Info/Logout in Sidebar */
+         #user-info {
+            margin-top: auto; /* Push to bottom */
+            padding-top: 15px;
+            border-top: 1px solid var(--sidebar-border-color);
+            display: none; /* Hidden by default */
+            text-align: center;
+         }
+
+         #user-info p {
+             margin: 0 0 10px 0;
+             font-size: 13px;
+             word-break: break-all; /* Prevent long emails from overflowing */
+         }
+
+         #user-info button {
+             padding: 8px 15px;
+             background-color: var(--button-bg);
+             color: var(--text-color);
+             border: none;
+             border-radius: 20px; /* Pill shape */
+             cursor: pointer;
+             transition: background-color 0.2s;
+             font-family: var(--font-family-main);
+             font-size: 12px;
+         }
+         #user-info button:hover {
+              background-color: var(--button-hover-bg);
+         }
+
 
         /* Main content area (browser) */
         #main-content {
@@ -135,6 +200,7 @@
             flex-direction: column;
             transition: margin-left 0.3s ease-in-out;
             margin-left: var(--sidebar-width); /* Initially shifted by sidebar width */
+            overflow: hidden; /* Prevent content overflow during transition */
         }
 
         #sidebar.hidden + #main-content {
@@ -245,13 +311,20 @@
         }
 
         .footer-label {
-            position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
+            position: fixed; bottom: 0; left: 10px; margin: 1rem; font-family: var(--font-family-main);
             font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+            /* Adjust left margin based on sidebar state */
+            transition: left 0.3s ease-in-out;
         }
+
+         body:not(.sidebar-hidden) .footer-label {
+            left: calc(10px + var(--sidebar-width)); /* Shift when sidebar is visible */
+         }
+
 
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; } /* Z-index lower than sidebar */
 
-        /* Settings Modal/Overlay (Basic Example) */
+        /* Settings Modal/Overlay */
         .settings-overlay {
             display: none; /* Hidden by default */
             position: fixed;
@@ -266,53 +339,63 @@
         }
 
         .settings-modal {
-            background-color: var(--bg-color);
+            background-color: var(--modal-bg);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             color: var(--text-color);
             width: 90%;
-            max-width: 500px;
+            max-width: 400px;
+            border: 1px solid var(--modal-border-color);
+            font-family: var(--font-family-main);
         }
 
         .settings-modal h2 {
             margin-top: 0;
-            border-bottom: 1px solid var(--sidebar-link-color);
+            border-bottom: 1px solid var(--sidebar-border-color);
             padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .settings-modal label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
+            font-size: 14px;
         }
 
         .settings-modal select {
             padding: 8px;
             border-radius: 4px;
-            border: 1px solid var(--sidebar-link-color);
-            background-color: var(--search-bg);
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
             color: var(--text-color);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             width: 100%;
             box-sizing: border-box;
+            font-family: var(--font-family-main);
         }
 
         .settings-modal button {
+            display: block; /* Make button a block element */
+            width: 100%; /* Make button full width */
             padding: 10px 15px;
             background-color: var(--button-bg);
             color: var(--text-color);
             border: none;
-            border-radius: 5px;
+            border-radius: 20px; /* Pill shape */
             cursor: pointer;
             transition: background-color 0.2s;
+             font-family: var(--font-family-main);
+             font-size: 14px;
         }
 
         .settings-modal button:hover {
             background-color: var(--button-hover-bg);
         }
 
-         /* Login/Signup Modal/Overlay (Basic Example) */
+         /* Login/Signup Modal/Overlay */
         .auth-overlay {
             display: none; /* Hidden by default */
             position: fixed;
@@ -327,19 +410,21 @@
         }
 
         .auth-modal {
-            background-color: var(--bg-color);
+            background-color: var(--modal-bg);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             color: var(--text-color);
             width: 90%;
-            max-width: 400px;
+            max-width: 350px;
             text-align: center;
+            border: 1px solid var(--modal-border-color);
+            font-family: var(--font-family-main);
         }
 
         .auth-modal h2 {
             margin-top: 0;
-            border-bottom: 1px solid var(--sidebar-link-color);
+            border-bottom: 1px solid var(--sidebar-border-color);
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
@@ -349,21 +434,35 @@
             width: calc(100% - 20px); /* Account for padding */
             padding: 10px;
             margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid var(--sidebar-link-color);
-            background-color: var(--search-bg);
+            border-radius: 5px; /* Slightly less rounded than buttons */
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
             color: var(--text-color);
+            font-family: var(--font-family-main);
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s;
         }
 
+        .auth-modal input:focus {
+            outline: none;
+            box-shadow: var(--input-focus-shadow);
+        }
+
+
         .auth-modal button {
+             display: block; /* Make button a block element */
+             width: 100%; /* Make button full width */
             padding: 10px 15px;
             background-color: var(--button-bg);
             color: var(--text-color);
             border: none;
-            border-radius: 5px;
+            border-radius: 20px; /* Pill shape */
             cursor: pointer;
             transition: background-color 0.2s;
             margin-top: 10px;
+            font-family: var(--font-family-main);
+            font-size: 14px;
         }
 
         .auth-modal button:hover {
@@ -376,24 +475,24 @@
             cursor: pointer;
             color: var(--sidebar-link-color);
             text-decoration: underline;
+            transition: color 0.2s;
         }
+         .auth-modal .toggle-link:hover {
+             color: var(--text-color);
+         }
+
 
     </style>
 </head>
-<body>
-    <canvas id="canvas"></canvas>
-
-    <div id="sidebar">
+<body class="theme-dark"> <canvas id="canvas"></canvas> <div id="sidebar">
         <h3>Vern Browser Pro</h3>
         <ul>
-            <li><a href="#" id="toggle-sidebar"><i class="fas fa-arrow-left"></i> Hide Sidebar</a></li>
             <li><a href="#" id="open-settings"><i class="fas fa-cog"></i> Settings</a></li>
             <li><a href="#" id="open-auth-modal"><i class="fas fa-user"></i> Login / Signup</a></li>
-            <li><a href="#" id="show-bookmarks"><i class="fas fa-bookmark"></i> Bookmarks (Coming Soon)</a></li>
-             <li><a href="#" id="show-history"><i class="fas fa-history"></i> History (Coming Soon)</a></li>
+            <li><a href="#" id="show-bookmarks"><i class="fas fa-bookmark"></i> Bookmarks (WIP)</a></li>
+             <li><a href="#" id="show-history"><i class="fas fa-history"></i> History (WIP)</a></li>
         </ul>
-         <div id="user-info" style="margin-top: auto; padding-top: 15px; border-top: 1px solid #444; display: none;">
-            <p>Logged in as: <span id="user-email"></span></p>
+         <div id="user-info"> <p>Logged in as:<br><span id="user-email"></span></p>
             <button id="logout-button">Logout</button>
         </div>
     </div>
@@ -420,7 +519,7 @@
         </div>
 
         <div id="tabs-container">
-        </div>
+             </div>
     </div>
 
      <div class="settings-overlay" id="settings-overlay">
@@ -460,10 +559,12 @@
     <script src="uv/uv.config.js" defer></script>
     <script src="register-sw.js" defer></script>
     <script src="search.js" defer></script>
-    <script src="stars.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="stars.js" defer></script> <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
     <script src="firebase-info.js"></script>
+
+
     <script>
         let tabs = [];
         let activeTabId = null;
@@ -476,8 +577,8 @@
         let isTopBarHidden = false;
 
         // Added sidebar elements
-        let sidebarEl, toggleSidebarButtonEl, toggleSidebarLinkEl, mainContentEl;
-        let isSidebarHidden = false;
+        let sidebarEl, toggleSidebarButtonEl, mainContentEl;
+        let isSidebarHidden = false; // Track sidebar state
 
         // Added settings elements
         let settingsOverlayEl, settingsModalEl, themeSelectEl, closeSettingsButtonEl, openSettingsButtonEl;
@@ -486,18 +587,8 @@
         let authOverlayEl, authModalLoginEl, authModalSignupEl, loginEmailInputEl, loginPasswordInputEl, loginButtonEl, signupEmailInputEl, signupPasswordInputEl, signupPasswordConfirmInputEl, signupButtonEl, showSignupLinkEl, showLoginLinkEl, openAuthModalButtonEl, userInfoEl, userEmailSpanEl, logoutButtonEl;
 
 
-        // Initialize Firebase
-        // IMPORTANT: Add your Firebase config in firebase-info.js
-        // Example:
-        // const firebaseConfig = {
-        //     apiKey: "YOUR_API_KEY",
-        //     authDomain: "YOUR_AUTH_DOMAIN",
-        //     projectId: "YOUR_PROJECT_ID",
-        //     storageBucket: "YOUR_STORAGE_BUCKET",
-        //     messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        //     appId: "YOUR_APP_ID"
-        // };
-        // firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase (ensure firebase-info.js initializes the app)
+        // const firebaseConfig = { ... }; firebase.initializeApp(firebaseConfig); should be in firebase-info.js
         const auth = firebase.auth();
 
 
@@ -531,10 +622,10 @@
             // Call navigateTo, which will handle the URL including 'about:blank'
             navigateTo(tab.url, tab);
 
-            if (activeTabId === tabId && !url) {
+            if (activeTabId === tabId && (!url || url === 'about:blank')) {
                  // Clear search bar only if it's the initially created blank tab
                  if (searchBarEl) searchBarEl.value = '';
-             }
+            }
 
             return tab;
         }
@@ -568,6 +659,8 @@
                 } catch (e) {
                     document.title = 'Vern Browser Pro'; // Fallback if iframe content is inaccessible (cross-origin)
                 }
+                 // Ensure content observer is set up for the active tab
+                 setupTabContentObserver(tab);
             }
         }
 
@@ -585,8 +678,12 @@
 
             if (activeTabId === tabId) {
                 if (tabs.length > 0) { activateTab(tabs[Math.max(0, tabIndex - 1)].id); }
-                else { createTab(); }
+                else { createTab(); } // Create a new blank tab if the last one is closed
             }
+             if (tabs.length === 0) {
+                // If all tabs are closed, maybe navigate to a default page or show a message
+                // For now, create a new blank tab above.
+             }
         }
 
         // Navigate function using the searchFast logic from the second HTML's search.js
@@ -598,7 +695,7 @@
 
             let currentTab = tab;
             if (!currentTab) {
-                currentTab = getActiveTab() || (tabs.length > 0 ? tabs[0] : createTab('about:blank')); // Ensure a tab exists
+                currentTab = getActiveTab() || (tabs.length > 0 ? tabs[0] : createTab('about:blank')); // Ensure a tab exists or create one
             }
 
             if (!currentTab) {
@@ -612,6 +709,8 @@
                 currentTab.url = 'about:blank';
                 if (searchBarEl && currentTab.id === activeTabId) searchBarEl.value = ''; // Clear search bar for blank tab
                 updateTabInfo(currentTab, 'New Tab'); // Set title for blank tab
+                // Clear any existing tracking interval for this blank tab
+                cleanupTabTracking(currentTab);
                 return; // Stop here, do not process with searchFast or UV
             }
 
@@ -632,7 +731,15 @@
                     if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=uv_config_missing&url=${encodeURIComponent(formattedUrl)}`;
                     updateTabInfo(currentTab, "Error: UV Config Missing"); return;
                 }
-                const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+                 let encodedUrl;
+                 try {
+                     encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+                 } catch (e) {
+                     console.error("UV encoding error:", e);
+                      if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=uv_encode_error&query=${encodeURIComponent(formattedUrl)}`;
+                      updateTabInfo(currentTab, "Error: Encoding Failed"); return;
+                 }
+
 
                 currentTab.iframe.src = encodedUrl;
                 currentTab.url = formattedUrl;
@@ -646,6 +753,9 @@
                 } catch (e) { /* Use 'Loading...' */ }
                 updateTabInfo(currentTab, tempTitle);
 
+                // Setup content observer or redirect tracking after navigation starts
+                setupTabContentObserver(currentTab);
+
             } catch (err) {
                 console.error("Navigation error:", err);
                 if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
@@ -655,7 +765,8 @@
 
         function updateTabInfo(tab, title, favicon) {
             if (!tab) return;
-            const displayTitle = title && title !== '' ? title : (tab.url !== 'about:blank' && tab.url.startsWith('http') ? (()=>{try{return new URL(tab.url).hostname}catch(e){return tab.url}})() : 'New Tab') || 'New Tab';
+            // Prioritize actual title if available, then URL hostname, then 'New Tab'
+            const displayTitle = title && title !== '' ? title : (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http') ? (()=>{try{return new URL(tab.url).hostname}catch(e){return tab.url}})() : 'New Tab') || 'New Tab';
             tab.titleElement.textContent = displayTitle; tab.titleElement.title = displayTitle;
             // Favicon logic (placeholder - a full implementation would require fetching favicon)
             if (favicon) { tab.faviconElement.innerHTML = `<img src="${favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`; }
@@ -685,20 +796,23 @@
         }
 
         function updateInitialTopBarHeight() {
+             // Temporarily show if hidden to get full height measurement
             const wasHidden = topBarAssemblyEl.classList.contains('hidden');
             if (wasHidden) {
               topBarAssemblyEl.classList.remove('hidden');
-              topBarAssemblyEl.style.maxHeight = '500px'; // Temporarily allow it to expand fully to measure
+              topBarAssemblyEl.style.maxHeight = '500px'; // Arbitrary large value to allow full expansion
             }
 
             initialTopBarHeight = topBarAssemblyEl.offsetHeight;
 
+             // Restore hidden state if it was hidden
             if (wasHidden) {
               topBarAssemblyEl.classList.add('hidden');
             } else {
               topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
             }
 
+            // Position the toggle button correctly
             if (!isTopBarHidden) {
                 toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
             } else {
@@ -710,43 +824,65 @@
         function setupRedirectTracking(tab) {
             if (!tab || !tab.iframe) return;
 
-            // Create a clean interval ID property for this tab if it doesn't exist
-            if (!tab.locationCheckIntervalId) {
-                tab.lastKnownUrl = tab.url;
+            // Clear any existing interval first
+            cleanupTabTracking(tab);
 
-                // Poll for URL changes - necessary since we can't directly access cross-origin iframe locations
-                tab.locationCheckIntervalId = setInterval(() => {
-                    try {
-                        // First try to access the iframe location directly (works for same-origin)
-                        const iframeWindow = tab.iframe.contentWindow;
-                        if (iframeWindow && iframeWindow.location.href) {
-                            const currentUrl = iframeWindow.location.href;
+            tab.lastKnownUrl = tab.url; // Initialize last known URL
 
-                            // Check if URL has changed - if it's a UV/proxy URL, we need to decode it
-                            if (currentUrl !== tab.lastKnownUrl) {
-                                let decodedUrl = currentUrl;
+            // Poll for URL changes - necessary since we can't directly access cross-origin iframe locations
+            tab.locationCheckIntervalId = setInterval(() => {
+                try {
+                    const iframeWindow = tab.iframe.contentWindow;
+                    // Check if iframeWindow and its location property are accessible
+                    if (iframeWindow && iframeWindow.location && typeof iframeWindow.location.href === 'string') {
+                        const currentUrl = iframeWindow.location.href;
 
-                                // Try to decode UV URL if applicable
-                                if (typeof __uv$config !== 'undefined' && typeof __uv$config.decodeUrl === 'function' &&
-                                    currentUrl.includes(__uv$config.prefix)) {
-                                    try {
-                                        const encodedUrl = currentUrl.split(__uv$config.prefix)[1];
+                        // Check if URL has changed
+                        if (currentUrl !== tab.lastKnownUrl) {
+                            let decodedUrl = currentUrl;
+
+                            // Try to decode UV URL if applicable
+                            if (typeof __uv$config !== 'undefined' && typeof __uv$config.decodeUrl === 'function' &&
+                                currentUrl.includes(__uv$config.prefix)) {
+                                try {
+                                    // Ensure the prefix is actually at the start of the relevant part of the URL
+                                     const prefixIndex = currentUrl.indexOf(__uv$config.prefix);
+                                     if (prefixIndex !== -1) {
+                                        const encodedUrl = currentUrl.substring(prefixIndex + __uv$config.prefix.length);
                                         decodedUrl = __uv$config.decodeUrl(encodedUrl);
-                                    } catch (decodeErr) {
-                                        console.warn("Could not decode UV URL:", decodeErr);
-                                    }
+                                     } else {
+                                        decodedUrl = currentUrl; // Not a UV URL, use as is
+                                     }
+                                } catch (decodeErr) {
+                                    console.warn("Could not decode UV URL:", decodeErr);
+                                    decodedUrl = currentUrl; // Fallback to raw URL on decode error
                                 }
+                            }
 
+                             // Only update if the decoded URL is different from the tab's stored URL
+                            if (decodedUrl !== tab.url) {
                                 // Update tab URL and UI
                                 tab.url = decodedUrl;
-                                tab.lastKnownUrl = currentUrl;
+                                tab.lastKnownUrl = currentUrl; // Store the actual iframe URL
 
                                 // Update UI only if this is the active tab
                                 if (tab.id === activeTabId) {
-                                    if (searchBarEl) searchBarEl.value = decodedUrl;
+                                    if (searchBarEl) searchBarEl.value = decodedUrl !== 'about:blank' ? decodedUrl : '';
+                                     // Also update browser document title
+                                     try {
+                                        if (iframeWindow.document && iframeWindow.document.title) {
+                                            document.title = iframeWindow.document.title + ' - Vern Browser Pro';
+                                        } else if (decodedUrl && decodedUrl !== 'about:blank' && decodedUrl.startsWith('http')) {
+                                            document.title = new URL(decodedUrl).hostname + ' - Vern Browser Pro';
+                                        } else {
+                                            document.title = 'New Tab - Vern Browser Pro';
+                                        }
+                                     } catch (e) {
+                                        document.title = 'Vern Browser Pro'; // Fallback
+                                     }
                                 }
 
-                                // Update tab title from the page title
+                                // Update tab title from the page title or URL
                                 if (iframeWindow.document && iframeWindow.document.title) {
                                     updateTabInfo(tab, iframeWindow.document.title);
                                 } else {
@@ -760,12 +896,13 @@
                                 }
                             }
                         }
-                    } catch (err) {
-                        // This usually means we're hitting cross-origin restrictions
-                        // We'll handle this with events instead
                     }
-                }, 500); // Check every half second
-            }
+                } catch (err) {
+                    // This likely means we're hitting cross-origin restrictions
+                    // Console error is fine, as we expect this for cross-origin iframes.
+                    // console.warn("Could not access iframe location:", err);
+                }
+            }, 500); // Check every half second
         }
 
         // NEW FUNCTION: Clean up interval when tab is closed
@@ -774,6 +911,10 @@
                 clearInterval(tab.locationCheckIntervalId);
                 tab.locationCheckIntervalId = null;
             }
+             if (tab && tab.titleObserver) {
+                 tab.titleObserver.disconnect();
+                 tab.titleObserver = null;
+             }
         }
 
          // Function to toggle sidebar visibility
@@ -781,15 +922,16 @@
             isSidebarHidden = !isSidebarHidden;
             if (isSidebarHidden) {
                 sidebarEl.classList.add('hidden');
-                 toggleSidebarLinkEl.innerHTML = '<i class="fas fa-arrow-right"></i> Show Sidebar';
-                 toggleSidebarButtonEl.innerHTML = '<i class="fas fa-bars"></i>';
+                 document.body.classList.add('sidebar-hidden'); // Add class to body for footer adjustment
+                 toggleSidebarButtonEl.innerHTML = '<i class="fas fa-bars"></i>'; // Keep icon consistent
+                 toggleSidebarButtonEl.title = "Show Sidebar";
             } else {
                 sidebarEl.classList.remove('hidden');
-                 toggleSidebarLinkEl.innerHTML = '<i class="fas fa-arrow-left"></i> Hide Sidebar';
+                document.body.classList.remove('sidebar-hidden'); // Remove class from body
                  toggleSidebarButtonEl.innerHTML = '<i class="fas fa-bars"></i>'; // Keep icon consistent
+                 toggleSidebarButtonEl.title = "Hide Sidebar";
             }
-             // Adjust main content margin based on sidebar state
-            mainContentEl.style.marginLeft = isSidebarHidden ? '0' : 'var(--sidebar-width)';
+             // Adjust main content margin handled by CSS based on .sidebar-hidden class
         }
 
         // Function to apply selected theme
@@ -799,12 +941,13 @@
             body.classList.add(`theme-${theme}`);
             // Store preference
             localStorage.setItem('browserTheme', theme);
+             console.log(`Applied theme: ${theme}`);
         }
 
         // Function to load saved theme on startup
         function loadTheme() {
             const savedTheme = localStorage.getItem('browserTheme');
-            if (savedTheme) {
+            if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) { // Validate saved theme
                 applyTheme(savedTheme);
                 if(themeSelectEl) themeSelectEl.value = savedTheme;
             } else {
@@ -824,13 +967,19 @@
             if(settingsOverlayEl) settingsOverlayEl.style.display = 'none';
         }
 
-        // Function to open auth modal
+        // Function to open auth modal and show login form
         function openAuthModal() {
              if(authOverlayEl) {
                  authOverlayEl.style.display = 'flex';
                   // Show login form by default
                  authModalLoginEl.style.display = 'block';
                  authModalSignupEl.style.display = 'none';
+                 // Clear any previous input
+                 if(loginEmailInputEl) loginEmailInputEl.value = '';
+                 if(loginPasswordInputEl) loginPasswordInputEl.value = '';
+                 if(signupEmailInputEl) signupEmailInputEl.value = '';
+                 if(signupPasswordInputEl) signupPasswordInputEl.value = '';
+                 if(signupPasswordConfirmInputEl) signupPasswordConfirmInputEl.value = '';
              }
         }
 
@@ -840,39 +989,45 @@
         }
 
 
-        // Firebase Authentication Listeners and Functions (PLACEHOLDERS)
+        // Firebase Authentication Listeners and Functions
         auth.onAuthStateChanged((user) => {
             if (user) {
                 // User is signed in
                 console.log('User logged in:', user.email);
-                if(userInfoEl && userEmailSpanEl && logoutButtonEl) {
-                    userInfoEl.style.display = 'block';
+                if(userInfoEl && userEmailSpanEl && logoutButtonEl && openAuthModalButtonEl) {
+                    userInfoEl.style.display = 'block'; // Show user info
                     userEmailSpanEl.textContent = user.email;
                     openAuthModalButtonEl.style.display = 'none'; // Hide login/signup button
                 }
-                closeAuthModal(); // Close modal if open
+                closeAuthModal(); // Close modal if open after login
             } else {
                 // User is signed out
                 console.log('User logged out');
-                 if(userInfoEl && userEmailSpanEl && logoutButtonEl) {
-                    userInfoEl.style.display = 'none';
+                 if(userInfoEl && userEmailSpanEl && logoutButtonEl && openAuthModalButtonEl) {
+                    userInfoEl.style.display = 'none'; // Hide user info
                     userEmailSpanEl.textContent = '';
-                    openAuthModalButtonEl.style.display = 'block'; // Show login/signup button
+                    openAuthModalButtonEl.style.display = 'flex'; // Show login/signup button (using flex because it's an anchor)
                  }
             }
         });
 
         function handleLogin() {
-             const email = loginEmailInputEl.value;
-             const password = loginPasswordInputEl.value;
+             const email = loginEmailInputEl ? loginEmailInputEl.value : '';
+             const password = loginPasswordInputEl ? loginPasswordInputEl.value : '';
+
+             if (!email || !password) {
+                 alert("Please enter both email and password.");
+                 return;
+             }
 
              // --- Firebase Login Logic ---
-             // Use Firebase Authentication methods here
+             // Uncomment and use Firebase Authentication methods here
              auth.signInWithEmailAndPassword(email, password)
                  .then((userCredential) => {
                      // Logged in successfully
                      console.log("Login successful", userCredential.user);
                      // UI update handled by onAuthStateChanged listener
+                     // closeAuthModal(); // Already handled by onAuthStateChanged
                  })
                  .catch((error) => {
                      // Handle login errors (e.g., wrong password, user not found)
@@ -883,23 +1038,33 @@
         }
 
         function handleSignup() {
-             const email = signupEmailInputEl.value;
-             const password = signupPasswordInputEl.value;
-             const confirmPassword = signupPasswordConfirmInputEl.value;
+             const email = signupEmailInputEl ? signupEmailInputEl.value : '';
+             const password = signupPasswordInputEl ? signupPasswordInputEl.value : '';
+             const confirmPassword = signupPasswordConfirmInputEl ? signupPasswordConfirmInputEl.value : '';
+
+             if (!email || !password || !confirmPassword) {
+                  alert("Please fill in all fields.");
+                  return;
+             }
 
              if (password !== confirmPassword) {
                  alert("Passwords do not match!");
                  return;
              }
+              if (password.length < 6) {
+                alert("Password should be at least 6 characters.");
+                return;
+             }
 
              // --- Firebase Signup Logic ---
-             // Use Firebase Authentication methods here
+             // Uncomment and use Firebase Authentication methods here
              auth.createUserWithEmailAndPassword(email, password)
                  .then((userCredential) => {
                      // Signed up successfully
                      console.log("Signup successful", userCredential.user);
                      // UI update handled by onAuthStateChanged listener
                      alert("Signup successful! You are now logged in.");
+                     // closeAuthModal(); // Already handled by onAuthStateChanged
                  })
                  .catch((error) => {
                      // Handle signup errors (e.g., email already in use, weak password)
@@ -911,6 +1076,7 @@
 
         function handleLogout() {
              // --- Firebase Logout Logic ---
+             // Uncomment and use Firebase Authentication methods here
              auth.signOut()
                  .then(() => {
                      // Signed out successfully
@@ -924,6 +1090,114 @@
                  });
              // --- End Firebase Logout Logic ---
         }
+
+
+         // Setup mutation observer for tracking tab content changes (title specifically)
+        const setupTabContentObserver = (tab) => {
+             // Clear any existing observer
+             if (tab.titleObserver) {
+                 tab.titleObserver.disconnect();
+                 tab.titleObserver = null;
+             }
+            try {
+                // Try to access iframe content - will throw if cross-origin
+                const iframeDocument = tab.iframe.contentDocument;
+
+                // If we can access it, observe title changes
+                if (iframeDocument) {
+                    const titleObserver = new MutationObserver((mutations) => {
+                         // Check if mutations affect the title element or its text content
+                         const titleChanged = mutations.some(mutation => {
+                              if (mutation.target.tagName === 'TITLE') return true;
+                              if (mutation.addedNodes) {
+                                   for (const node of mutation.addedNodes) {
+                                        if (node.nodeType === Node.TEXT_NODE && node.parentElement && node.parentElement.tagName === 'TITLE') return true;
+                                   }
+                              }
+                              return false;
+                         });
+
+                        if (titleChanged && iframeDocument.title) {
+                            updateTabInfo(tab, iframeDocument.title);
+                             // Also update browser document title if it's the active tab
+                            if (tab.id === activeTabId) {
+                                document.title = iframeDocument.title + ' - Vern Browser Pro';
+                            }
+                        }
+                    });
+
+                    // Observe the head element, as title changes happen there
+                    const headEl = iframeDocument.querySelector('head');
+                    if (headEl) {
+                        titleObserver.observe(headEl, {
+                            childList: true, // Observe direct children
+                            subtree: true, // Observe descendants
+                            characterData: true // Observe text changes
+                        });
+                    }
+
+                    // Store observer reference for cleanup
+                    tab.titleObserver = titleObserver;
+
+                     // Since we have access, also set up redirect tracking using the iframe's load event
+                     // This is often more reliable for navigation than setInterval polling
+                     tab.iframe.onload = () => {
+                         console.log(`Iframe loaded: ${tab.iframe.contentWindow.location.href}`);
+                          // Update URL and title after load, if accessible
+                         try {
+                            const loadedUrl = tab.iframe.contentWindow.location.href;
+                            let decodedLoadedUrl = loadedUrl;
+
+                            // Attempt to decode UV URL
+                             if (typeof __uv$config !== 'undefined' && typeof __uv$config.decodeUrl === 'function' &&
+                                loadedUrl.includes(__uv$config.prefix)) {
+                                 try {
+                                     const prefixIndex = loadedUrl.indexOf(__uv$config.prefix);
+                                     if (prefixIndex !== -1) {
+                                         const encodedUrl = loadedUrl.substring(prefixIndex + __uv$config.prefix.length);
+                                         decodedLoadedUrl = __uv$config.decodeUrl(encodedUrl);
+                                     }
+                                 } catch (e) {
+                                     console.warn("Could not decode URL on load:", e);
+                                 }
+                             }
+
+
+                            tab.url = decodedLoadedUrl; // Update stored URL
+                            if (tab.id === activeTabId && searchBarEl) {
+                                searchBarEl.value = decodedLoadedUrl !== 'about:blank' ? decodedLoadedUrl : '';
+                            }
+                            if (tab.iframe.contentDocument && tab.iframe.contentDocument.title) {
+                                updateTabInfo(tab, tab.iframe.contentDocument.title);
+                            } else {
+                                try {
+                                    const urlObj = new URL(decodedLoadedUrl);
+                                    updateTabInfo(tab, urlObj.hostname);
+                                } catch (e) {
+                                    updateTabInfo(tab, decodedLoadedUrl);
+                                }
+                            }
+                             // Re-setup observer in case content was replaced
+                             setupTabContentObserver(tab);
+
+                         } catch (e) {
+                             // Cross-origin on load - continue with interval tracking if already set up
+                             console.warn("Cross-origin iframe load, cannot access contentDocument/location directly.");
+                             setupRedirectTracking(tab); // Ensure interval tracking is active as fallback
+                         }
+                     };
+
+                } else {
+                    // Cross-origin access error - use URL tracking instead
+                     console.warn("Cannot access iframe contentDocument, using URL tracking.");
+                    setupRedirectTracking(tab);
+                }
+            } catch (err) {
+                // Cross-origin access error - use URL tracking instead
+                console.warn("Exception when accessing iframe contentDocument, using URL tracking:", err);
+                setupRedirectTracking(tab);
+            }
+        };
 
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -943,7 +1217,6 @@
             // Get sidebar elements
             sidebarEl = document.getElementById('sidebar');
             toggleSidebarButtonEl = document.getElementById('toggle-sidebar-button');
-            toggleSidebarLinkEl = document.getElementById('toggle-sidebar');
             mainContentEl = document.getElementById('main-content');
 
             // Get settings elements
@@ -972,6 +1245,13 @@
             userEmailSpanEl = document.getElementById('user-email');
             logoutButtonEl = document.getElementById('logout-button');
 
+             // Initial state setup
+             userInfoEl.style.display = 'none'; // Hide user info by default
+             // Show login/signup button initially; onAuthStateChanged will hide it if logged in
+             if (openAuthModalButtonEl) {
+                openAuthModalButtonEl.style.display = 'flex';
+             }
+
 
             // Initialize UV service worker (requires register-sw.js)
             await initUV();
@@ -988,8 +1268,14 @@
                      topBarAssemblyEl.style.maxHeight = '0px';
                      topBarAssemblyEl.classList.add('hidden');
                  }
-                 // Ensure main content is positioned correctly based on initial sidebar state
-                 mainContentEl.style.marginLeft = isSidebarHidden ? '0' : 'var(--sidebar-width)';
+                 // Initial sidebar state - hidden class is applied to body
+                 if (isSidebarHidden) {
+                      document.body.classList.add('sidebar-hidden');
+                      sidebarEl.classList.add('hidden');
+                 } else {
+                      document.body.classList.remove('sidebar-hidden');
+                      sidebarEl.classList.remove('hidden');
+                 }
              }, 10);
 
             // Event listeners for the top bar toggle button
@@ -998,14 +1284,8 @@
             // Event listener for sidebar toggle button in nav bar
             if(toggleSidebarButtonEl) toggleSidebarButtonEl.addEventListener('click', toggleSidebar);
 
-             // Event listener for sidebar toggle link inside sidebar
-            if(toggleSidebarLinkEl) toggleSidebarLinkEl.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default link behavior
-                toggleSidebar();
-            });
 
-
-            // Update initial top bar height on window resize
+            // Update initial top bar height and sidebar margin on window resize
             let resizeTimer;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
@@ -1013,19 +1293,22 @@
                     if (!isTopBarHidden) {
                          updateInitialTopBarHeight();
                     }
-                    // Re-apply sidebar margin in case sidebar width changes due to responsive design (though not implemented here)
-                    mainContentEl.style.marginLeft = isSidebarHidden ? '0' : 'var(--sidebar-width)';
+                    // Sidebar margin is handled by CSS .sidebar-hidden class
                 }, 100);
             });
 
             // Create initial tab on load
-            const urlParams = new URLSearchParams(window.location.search);
-            const initialUrl = urlParams.get('url'); // Check for 'url' parameter in the main page URL
-            // If no tabs exist, create a new one, optionally loading a URL from the query parameter
+            // Use 'about:blank' as the default if no URL is provided or if tabs list is empty
             if (tabs.length === 0) {
-                // Use 'about:blank' as the default if no URL is provided
-                createTab(initialUrl || 'about:blank');
-            }
+                 const urlParams = new URLSearchParams(window.location.search);
+                 const initialUrl = urlParams.get('url'); // Check for 'url' parameter
+                 createTab(initialUrl || 'about:blank');
+             } else {
+                 // If tabs already exist (e.g., from a previous session save - not implemented),
+                 // activate the first one and set up observers.
+                 activateTab(tabs[0].id);
+             }
+
 
             // Event listener for the new tab button
             if(newTabButtonEl) newTabButtonEl.addEventListener('click', () => createTab('about:blank')); // New tabs should also default to blank
@@ -1046,35 +1329,52 @@
             if(searchBarEl) searchBarEl.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     navigateTo(e.target.value);
+                    searchBarEl.blur(); // Remove focus after navigating
                 }
             });
 
+             // Event listener for clicking outside the search bar to clear if blank
+             if (searchBarEl) searchBarEl.addEventListener('blur', (e) => {
+                 // If the search bar is the active element and loses focus, and is empty,
+                 // update it with the current tab's URL if not blank.
+                 const activeTab = getActiveTab();
+                 if (e.target.value === '' && activeTab && activeTab.url !== 'about:blank') {
+                     e.target.value = activeTab.url;
+                 }
+             });
+
+
             // Event listeners for navigation buttons
             if(homeButtonEl) homeButtonEl.addEventListener('click', () => {
-                 window.location.href = "index.html"; // Redirects the main page to index.html (assuming it exists)
+                 // Navigates the active tab to the homepage (about:blank)
+                 const activeTab = getActiveTab();
+                 if (activeTab) {
+                     navigateTo('about:blank', activeTab);
+                 }
             });
 
             // Back, Forward, Refresh buttons target the active iframe
             if(backButtonEl) backButtonEl.addEventListener('click', () => {
                 const t = getActiveTab();
-                if (t && t.iframe.contentWindow) {
+                if (t && t.iframe && t.iframe.contentWindow) {
                     try { t.iframe.contentWindow.history.back(); } catch (err) {console.error("Back nav error:", err)}
                 }
             });
 
             if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => {
                 const t = getActiveTab();
-                if (t && t.iframe.contentWindow) {
+                if (t && t.iframe && t.iframe.contentWindow) {
                   try { t.iframe.contentWindow.history.forward(); } catch (err) {console.error("Forward nav error:", err)}
                 }
             });
 
             if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => {
                 const t = getActiveTab();
-                if (t && t.iframe.contentWindow) {
+                if (t && t.iframe && t.iframe.contentWindow) {
                     try { t.iframe.contentWindow.location.reload(); } catch (err) {
                         console.error("Refresh error:", err);
                         // Alternative method if direct reload fails due to cross-origin restrictions
+                        // This re-proxies the current URL, effectively refreshing
                         navigateTo(t.url, t);
                     }
                 }
@@ -1086,8 +1386,9 @@
                 openSettings();
             });
             if(closeSettingsButtonEl) closeSettingsButtonEl.addEventListener('click', closeSettings);
+            // Close settings modal when clicking outside the modal content
             if(settingsOverlayEl) settingsOverlayEl.addEventListener('click', (e) => {
-                if (e.target === settingsOverlayEl) { // Close if clicked outside the modal
+                if (e.target === settingsOverlayEl) { // Check if the click was directly on the overlay
                     closeSettings();
                 }
             });
@@ -1101,20 +1402,25 @@
                 e.preventDefault(); // Prevent default link behavior
                 openAuthModal();
             });
+            // Close auth modal when clicking outside the modal content
              if(authOverlayEl) authOverlayEl.addEventListener('click', (e) => {
-                 if (e.target === authOverlayEl) { // Close if clicked outside the modal
+                 if (e.target === authOverlayEl) { // Check if the click was directly on the overlay
                      closeAuthModal();
                  }
              });
 
             if(showSignupLinkEl) showSignupLinkEl.addEventListener('click', () => {
-                authModalLoginEl.style.display = 'none';
-                authModalSignupEl.style.display = 'block';
+                if(authModalLoginEl && authModalSignupEl) {
+                    authModalLoginEl.style.display = 'none';
+                    authModalSignupEl.style.display = 'block';
+                }
             });
 
             if(showLoginLinkEl) showLoginLinkEl.addEventListener('click', () => {
-                authModalSignupEl.style.display = 'none';
-                authModalLoginEl.style.display = 'block';
+                 if(authModalLoginEl && authModalSignupEl) {
+                    authModalSignupEl.style.display = 'none';
+                    authModalLoginEl.style.display = 'block';
+                 }
             });
 
             if(loginButtonEl) loginButtonEl.addEventListener('click', handleLogin);
@@ -1123,123 +1429,58 @@
 
 
             // Setup message event listener for communication from iframes
+            // This is a fallback/alternative to MutationObserver and Interval polling
             window.addEventListener('message', (event) => {
                 // Handle messages from iframes - could be used for title updates, navigation events, etc.
+                // Ensure the message is from a trusted source if you implement complex messaging
                 try {
-                    if (event.data && event.data.type === 'tabUpdate') {
-                        const tab = tabs.find(t => t.iframe.contentWindow === event.source);
-                        if (tab) {
-                            // Handle different update types
+                    // Basic check if the message comes from one of our iframes
+                     const sourceTab = tabs.find(t => t.iframe.contentWindow === event.source);
+                     if (sourceTab && event.data && event.data.type) {
+                         console.log('Received message from iframe:', event.data);
+                         if (event.data.type === 'tabUpdate') {
+                             // Handle different update types sent from the iframe itself
                             if (event.data.title) {
-                                updateTabInfo(tab, event.data.title);
+                                updateTabInfo(sourceTab, event.data.title);
                             }
                             if (event.data.url) {
-                                tab.url = event.data.url;
-                                if (tab.id === activeTabId && searchBarEl) {
-                                    searchBarEl.value = event.data.url;
+                                // Only update if the URL seems valid and is different
+                                if (typeof event.data.url === 'string' && event.data.url !== sourceTab.url) {
+                                     sourceTab.url = event.data.url;
+                                     if (sourceTab.id === activeTabId && searchBarEl) {
+                                         searchBarEl.value = event.data.url !== 'about:blank' ? event.data.url : '';
+                                     }
                                 }
                             }
                             if (event.data.favicon) {
                                 // Update favicon if provided
-                                tab.faviconElement.innerHTML = `<img src="${event.data.favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
+                                sourceTab.faviconElement.innerHTML = `<img src="${event.data.favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
                             }
-                        }
-                    }
+                         }
+                         // Add other message types here if needed
+                     }
                 } catch (err) {
                     console.warn("Error processing iframe message:", err);
                 }
             });
 
-            // Setup mutation observer for tracking tab content changes
-            const setupTabContentObserver = (tab) => {
-                try {
-                    // Try to access iframe content - will throw if cross-origin
-                    const iframeDocument = tab.iframe.contentDocument;
-
-                    // If we can access it, observe title changes
-                    if (iframeDocument) {
-                        const titleObserver = new MutationObserver((mutations) => {
-                            if (iframeDocument.title) {
-                                updateTabInfo(tab, iframeDocument.title);
-                                if (tab.id === activeTabId) {
-                                    document.title = iframeDocument.title + ' - Vern Browser Pro';
-                                }
-                            }
-                        });
-
-                        // Observe title element if it exists
-                        const titleEl = iframeDocument.querySelector('title');
-                        if (titleEl) {
-                            titleObserver.observe(titleEl, {
-                                subtree: true,
-                                characterData: true,
-                                childList: true
-                            });
-                        }
-
-                        // Store observer reference for cleanup
-                        tab.titleObserver = titleObserver;
-                    }
-                } catch (err) {
-                    // Cross-origin access error - use URL tracking instead
-                    setupRedirectTracking(tab);
-                }
-            };
-
-            // Modified activateTab to setup content observers
-            const originalActivateTab = activateTab;
-            activateTab = function(tabId) {
-                originalActivateTab(tabId);
-                const tab = tabs.find(t => t.id === tabId);
-                if (tab) {
-                    setupTabContentObserver(tab);
-                }
-            };
-
-            // Modified createTab to setup content observers
-            const originalCreateTab = createTab;
-            createTab = function(url = null) {
-                const tab = originalCreateTab(url);
-                setupTabContentObserver(tab);
-                return tab;
-            };
-
-            // Handle iframe load events to update tab info
-            document.addEventListener('load', (e) => {
-                if (e.target.tagName === 'IFRAME') {
-                    const tabId = e.target.id.replace('content-', 'tab-');
-                    const tab = tabs.find(t => t.id === tabId);
-
-                    if (tab) {
-                        try {
-                            // Try to get title from iframe - will throw if cross-origin
-                            const title = e.target.contentDocument.title;
-                            if (title) {
-                                updateTabInfo(tab, title);
-                            }
-                            // Setup observer for future title changes
-                            setupTabContentObserver(tab);
-                        } catch (err) {
-                            // Cross-origin iframe, use URL for title
-                            if (tab.url && tab.url !== 'about:blank') {
-                                try {
-                                    const urlObj = new URL(tab.url);
-                                    updateTabInfo(tab, urlObj.hostname);
-                                } catch (e) {
-                                    updateTabInfo(tab, tab.url);
-                                }
-                            }
-                            // Setup tracking for URL changes
-                            setupRedirectTracking(tab);
-                        }
-                    }
-                }
-            }, true); // Use capture to ensure we get iframe load events
 
             // Handle keyboard shortcuts
             document.addEventListener('keydown', (e) => {
-                // Only process if not typing in search bar or in a modal
-                if (e.target === searchBarEl || settingsOverlayEl.style.display === 'flex' || authOverlayEl.style.display === 'flex') return;
+                // Do not process shortcuts if a modal is open
+                if (settingsOverlayEl.style.display === 'flex' || authOverlayEl.style.display === 'flex') {
+                     // Allow Escape key to close modals
+                     if (e.key === 'Escape') {
+                         if (settingsOverlayEl.style.display === 'flex') closeSettings();
+                         if (authOverlayEl.style.display === 'flex') closeAuthModal();
+                     }
+                    return; // Prevent other shortcuts while modal is active
+                }
+                 // Do not process shortcuts if typing in search bar, unless it's Enter
+                if (e.target === searchBarEl && e.key !== 'Enter') {
+                     return;
+                }
+
 
                 // Handle Ctrl+T for new tab
                 if (e.ctrlKey && e.key === 't') {
@@ -1298,12 +1539,17 @@
                      e.preventDefault();
                      openSettings();
                  }
+                 // Handle Ctrl+L for focusing search bar
+                 if (e.ctrlKey && e.key === 'l') {
+                     e.preventDefault();
+                     if (searchBarEl) searchBarEl.focus();
+                 }
             });
 
             // Handle contextmenu events for right-click menu
             document.addEventListener('contextmenu', (e) => {
                 // Implement right-click context menu here if desired
-                // This would involve creating a custom popup menu
+                // This would involve creating a custom popup menu positioned near e.clientX, e.clientY
                 // For now, we'll allow the default browser context menu
             });
         });
