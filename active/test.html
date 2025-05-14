@@ -1,160 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vern Proxy Search</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="icon" type="image/x-icon" href="logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg-color: #1a1a1a;
-      --text-color: #fff;
-      --navbar-bg: #0f0f0f;
-      --navbar-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      --button-bg: #0a0a0a;
-      --button-hover-bg: #0f0f0f;
-      --search-bg: #0a0a0a;
-      --search-focus-bg: #2d2d2d;
-      --iframe-bg: #202020;
-      --font-family-main: 'Roboto Mono', monospace;
-      --tab-bg: #191919;
-      --tab-active-bg: #2d2d2d;
-      --tab-border: #3c3c3c;
-      --tab-hover-bg: #232323;
-    }
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    body, html {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      font-family: var(--font-family-main);
-      color: var(--text-color);
-      background: var(--bg-color);
-      overflow: hidden;
-    }
-    /* Top Bar */
-    #top-bar {
-      display: flex; flex-direction: column;
-      background: var(--navbar-bg);
-      box-shadow: var(--navbar-shadow);
-    }
-    #tab-bar {
-      display: flex; align-items: center;
-      padding: 8px; gap: 8px;
-      overflow-x: auto; white-space: nowrap;
-      background: var(--navbar-bg);
-    }
-    .tab {
-      display: flex; align-items: center;
-      padding: 0 12px; height: 32px;
-      background: var(--tab-bg); border-radius: 16px;
-      box-shadow: 0 0 0 1px var(--tab-border);
-      cursor: pointer; transition: background 0.2s;
-    }
-    .tab.active { background: var(--tab-active-bg); box-shadow: 0 0 0 1px #fff; }
-    .tab:hover { background: var(--tab-hover-bg); }
-    .tab .tab-close { margin-left: 8px; }
-    .new-tab { display: flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px; background: var(--button-bg);
-      box-shadow: 0 0 0 1px #fff; border-radius: 50%; cursor: pointer;
-    }
-    .new-tab:hover { background: var(--button-hover-bg); }
-    /* Nav & Search */
-    #nav-search { display: flex; align-items: center; padding: 8px; gap: 8px;
-      background: var(--navbar-bg);
-    }
-    .nav-btn { width: 36px; height: 36px; display: flex;
-      align-items: center; justify-content: center;
-      background: var(--button-bg);
-      box-shadow: 0 0 0 1px #fff;
-      border-radius: 50%; cursor: pointer;
-    }
-    .nav-btn:hover { background: var(--button-hover-bg); }
-    #search-bar { flex: 1; height: 36px; border: none;
-      border-radius: 18px; padding: 0 16px;
-      background: var(--search-bg);
-      box-shadow: 0 0 0 1px #fff;
-      font-size: 14px;
-      color: var(--text-color);
-    }
-    #search-bar:focus { outline: none; background: var(--search-focus-bg); }
-    /* Content */
-    #tabs-container { position: absolute; top: 104px; bottom: 0; left: 0; right: 0;
-      background: var(--iframe-bg);
-    }
-    iframe { width: 100%; height: 100%; border: none; display: none; }
-    iframe.active { display: block; }
-  </style>
-</head>
-<body>
-  <div id="top-bar">
-    <div id="tab-bar">
-      <div class="new-tab" id="add-tab" title="New Tab"><i class="fas fa-plus"></i></div>
-    </div>
-    <div id="nav-search">
-      <div class="nav-btn" id="btn-back"><i class="fas fa-arrow-left"></i></div>
-      <div class="nav-btn" id="btn-forward"><i class="fas fa-arrow-right"></i></div>
-      <div class="nav-btn" id="btn-refresh"><i class="fas fa-redo"></i></div>
-      <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL" />
-    </div>
-  </div>
-  <div id="tabs-container"></div>
-  <script src="uv/uv.bundle.js" defer></script>
-  <script src="uv/uv.config.js" defer></script>
-  <script>
-    const tabs = []; let activeId = null, counter = 0;
-    const tabBar = document.getElementById('tab-bar');
-    const addBtn = document.getElementById('add-tab');
-    const container = document.getElementById('tabs-container');
-    const searchBar = document.getElementById('search-bar');
-    document.getElementById('btn-back').onclick = () => navigate('back');
-    document.getElementById('btn-forward').onclick = () => navigate('forward');
-    document.getElementById('btn-refresh').onclick = () => navigate('refresh');
-    addBtn.onclick = () => createTab('about:blank');
-    searchBar.onkeydown = e => e.key==='Enter' && loadUrl(searchBar.value);
-    function createTab(url) {
-      const id = 'tab'+(counter++);
-      const tabEl = document.createElement('div'); tabEl.className='tab';
-      tabEl.dataset.id = id;
-      tabEl.innerHTML='<div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>';
-      tabBar.insertBefore(tabEl, addBtn);
-      const iframe = document.createElement('iframe'); iframe.id=id;
-      container.appendChild(iframe);
-      tabs.push({id,tabEl,iframe,url:'about:blank'});
-      tabEl.onclick = () => activate(id);
-      tabEl.querySelector('.tab-close').onclick = e => { e.stopPropagation(); closeTab(id); };
-      activate(id); loadUrl(url);
-    }
-    function activate(id) {
-      tabs.forEach(t=>{t.tabEl.classList.remove('active');t.iframe.classList.remove('active');});
-      const t = tabs.find(x=>x.id===id); if(!t) return;
-      t.tabEl.classList.add('active'); t.iframe.classList.add('active'); activeId=id;
-      searchBar.value = t.url==='about:blank'?'':t.url;
-    }
-    function closeTab(id) {
-      const idx = tabs.findIndex(t=>t.id===id); if(idx<0) return;
-      const t = tabs[idx]; t.tabEl.remove(); t.iframe.remove(); tabs.splice(idx,1);
-      if(activeId===id) idx>0?activate(tabs[idx-1].id):tabs[0]?activate(tabs[0].id):createTab('about:blank');
-    }
-    function loadUrl(input) {
-      const t = tabs.find(x=>x.id===activeId); if(!t) return;
-      let url=input||'about:blank';
-      if(url!=='about:blank') {
-        const ddg='https://duckduckgo.com/?q=%s';
-        url = searchFast?(__uv$config.prefix+__uv$config.encodeUrl(searchFast(input,ddg))):url;
+  <head>
+    <meta charset="UTF-8" />
+    <title>OFP Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="icon" type="image/x-icon" href="logo.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
       }
-      t.iframe.src=url; t.url=input; activate(activeId);
-    }
-    function navigate(type) {
-      const t = tabs.find(x=>x.id===activeId); if(!t) return;
-      try { if(type==='back') t.iframe.contentWindow.history.back();
-            if(type==='forward') t.iframe.contentWindow.history.forward();
-            if(type==='refresh') t.iframe.contentWindow.location.reload();
-      } catch { loadUrl(t.url);}    }
-    document.addEventListener('DOMContentLoaded',()=>createTab('about:blank'));
-  </script>
-</body>
+      body {
+        margin: 0;
+        font-family: 'Open Sans', sans-serif;
+        background-color: #0e0e0e;
+        color: white;
+      }
+      #tabBar {
+        display: flex;
+        overflow-x: auto;
+        padding: 0.5rem;
+        background-color: #1b1b1b;
+        border-bottom: 1px solid #333;
+      }
+      .tab {
+        padding: 8px 16px;
+        margin-right: 6px;
+        background-color: #2b2b2b;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: background-color 0.2s;
+        white-space: nowrap;
+      }
+      .tab.active {
+        background-color: #4e4e4e;
+        border-color: #fff;
+      }
+      .tab:hover {
+        background-color: #3a3a3a;
+      }
+      #controls {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: #121212;
+        gap: 8px;
+      }
+      #controls button {
+        background: #2b2b2b;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+      #controls button:hover {
+        background-color: #3a3a3a;
+      }
+      #searchBar {
+        flex: 1;
+        padding: 8px 14px;
+        font-size: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background-color: #1e1e1e;
+        color: white;
+      }
+      #iframeView {
+        width: 100%;
+        height: calc(100vh - 130px);
+        border: none;
+        background: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="tabBar"></div>
+
+    <div id="controls">
+      <button onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+      <button onclick="goForward()"><i class="fas fa-arrow-right"></i></button>
+      <button onclick="refreshTab()"><i class="fas fa-sync"></i></button>
+      <input
+        type="text"
+        id="searchBar"
+        placeholder="Search or enter a URL"
+        onkeydown="handleSearch(event)"
+      />
+      <button onclick="newTab()">+</button>
+    </div>
+
+    <iframe id="iframeView" src=""></iframe>
+
+    <script>
+      const tabs = [];
+      let currentTab = -1;
+
+      function newTab(url = '') {
+        if (tabs.length >= 10) return alert('Tab limit reached.');
+        tabs.push({ url });
+        currentTab = tabs.length - 1;
+        renderTabs();
+        if (url) loadURL(url);
+        else document.getElementById('iframeView').src = '';
+      }
+
+      function renderTabs() {
+        const tabBar = document.getElementById('tabBar');
+        tabBar.innerHTML = '';
+        tabs.forEach((tab, index) => {
+          const tabBtn = document.createElement('div');
+          tabBtn.className = 'tab' + (index === currentTab ? ' active' : '');
+          tabBtn.textContent = `Tab ${index + 1}`;
+          tabBtn.onclick = () => switchTab(index);
+          tabBar.appendChild(tabBtn);
+        });
+        updateSearchBar();
+      }
+
+      function switchTab(index) {
+        currentTab = index;
+        loadURL(tabs[index].url);
+        renderTabs();
+      }
+
+      function loadURL(url) {
+        if (!url) return;
+        const proxied = `./searchFast?q=${encodeURIComponent(url)}`;
+        document.getElementById('iframeView').src = proxied;
+        tabs[currentTab].url = url;
+        updateSearchBar();
+      }
+
+      function handleSearch(e) {
+        if (e.key === 'Enter') {
+          const query = document.getElementById('searchBar').value.trim();
+          if (!query) return;
+          if (
+            query.startsWith('http://') ||
+            query.startsWith('https://') ||
+            query.includes('.')
+          ) {
+            loadURL(query);
+          } else {
+            loadURL(`https://duckduckgo.com/?q=${encodeURIComponent(query)}`);
+          }
+        }
+      }
+
+      function updateSearchBar() {
+        const input = document.getElementById('searchBar');
+        if (tabs[currentTab]) {
+          input.value = tabs[currentTab].url;
+        }
+      }
+
+      function goBack() {
+        const iframe = document.getElementById('iframeView').contentWindow;
+        if (iframe.history) iframe.history.back();
+      }
+
+      function goForward() {
+        const iframe = document.getElementById('iframeView').contentWindow;
+        if (iframe.history) iframe.history.forward();
+      }
+
+      function refreshTab() {
+        const iframe = document.getElementById('iframeView');
+        iframe.src = iframe.src;
+      }
+
+      // Start with one blank tab
+      newTab();
+    </script>
+  </body>
 </html>
