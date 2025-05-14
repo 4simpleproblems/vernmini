@@ -2,11 +2,10 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Browser</title>
+    <title>Vern Pro Browser</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-    
+    <link rel="icon" type="image/x-icon" href="logo.png" /> <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+
     <style id="custom-styles">
         /* Base Elements */
         :root {
@@ -26,8 +25,34 @@
             --tab-active-bg: rgba(45, 45, 45, 0.9);
             --tab-border: rgba(60, 60, 60, 0.5);
             --tab-hover-bg: rgba(35, 35, 35, 0.9);
+            --accent-color: #6d5acd;
+            --accent-hover: #584caf;
+            --shortcut-bg: rgba(20, 20, 20, 0.9);
+            --shortcut-hover: rgba(40, 40, 40, 0.9);
+            --sidebar-bg: rgba(10, 10, 10, 0.95);
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 48px; /* Not used in current CSS, but good for future */
+            --menu-bg: rgba(30, 30, 30, 0.95);
+            --menu-hover: rgba(60, 60, 60, 0.95);
+            --menu-border: rgba(70, 70, 70, 0.5);
+            --dropdown-bg: rgba(25, 25, 25, 0.98);
+            --dropdown-hover: rgba(40, 40, 40, 0.98);
+            --dropdown-border: rgba(60, 60, 60, 0.5);
+            --modal-bg: rgba(30, 30, 30, 0.98);
+            --modal-border: rgba(70, 70, 70, 0.5);
+            --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --tooltip-bg: rgba(15, 15, 15, 0.95);
+            --tooltip-border: rgba(70, 70, 70, 0.5);
+            --input-bg: rgba(40, 40, 40, 0.95);
+            --input-border: rgba(70, 70, 70, 0.5);
+            --input-focus-border: var(--accent-color);
+            --theme-red: #e74c3c;
+            --theme-green: #2ecc71;
+            --theme-blue: #3498db;
+            --theme-orange: #e67e22;
+            --theme-purple: #9b59b6;
+            --theme-cyan: #1abc9c;
         }
-
         html, body {
             margin: 0;
             padding: 0;
@@ -40,22 +65,63 @@
             background-color: var(--bg-color);
             color: var(--text-color);
         }
-        
         body {
             display: flex;
             flex-direction: column;
         }
-
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        button {
+            font-family: var(--font-family-main);
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: inherit;
+        }
+        /* Top Bar Assembly */
         #top-bar-assembly {
             overflow: hidden;
             transition: max-height 0.35s ease-in-out;
             /* Set initial max-height via JS for proper first animation */
         }
-
         #top-bar-assembly.hidden {
-            max-height: 0 !important; 
+            max-height: 0 !important;
         }
-        
+        /* Pro Options Bar */
+        #pro-options-bar {
+            display: flex;
+            background-color: var(--navbar-bg);
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+        #pro-options-bar::-webkit-scrollbar { height: 3px; }
+        #pro-options-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+        .pro-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+        .pro-menu-item:hover {
+            background-color: var(--menu-hover);
+        }
+        .pro-menu-item i {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+        .pro-menu-separator {
+            width: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 0 4px;
+        }
         /* Tab Bar */
         #tab-bar {
             display: flex;
@@ -67,30 +133,41 @@
             position: relative;
             align-items: center;
             gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
         #tab-bar::-webkit-scrollbar { height: 3px; }
         #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
-        
         .tab {
             display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
             padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
         }
-        .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
+        .tab.active {
+            background-color: var(--tab-active-bg);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; /* Adjust if border-bottom on #tab-bar is thicker */
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .tab-favicon img { width: 100%; height: 100%; object-fit: contain; }
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
         .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
         .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
-        
         .new-tab-button {
             width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
             cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
         }
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
-        
         /* Navigation Bar */
         #nav-bar {
             display: flex;
@@ -98,692 +175,1747 @@
             padding: 10px;
             background-color: var(--navbar-bg);
             box-shadow: var(--navbar-shadow);
-            /* Added border for fluent outline with toggle button */
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5); 
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            position: relative; /* For toggle button positioning */
+            z-index: 999; /* Above sidebar content but below toggle button if it overlaps */
         }
-        
+        #nav-buttons {
+            display: flex;
+            gap: 8px;
+            margin-right: 8px;
+        }
         .nav-button {
             width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-            margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
+            border-radius: 50%; background-color: var(--button-bg);
             cursor: pointer; color: var(--text-color); transition: background-color 0.2s, color 0.2s;
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
-        
         #search-bar {
             flex: 1; height: 40px; border-radius: 30px; border: none; background-color: var(--search-bg);
             color: var(--text-color); padding: 0 18px; font-size: 15px; font-weight: 700;
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); font-family: var(--font-family-main);
         }
         #search-bar:focus { outline: none; background-color: var(--search-focus-bg); box-shadow: var(--search-focus-shadow); font-weight: 700; }
-        
         /* Toggle Top Bar Button */
         #toggle-top-bar-button {
             position: fixed;
-            z-index: 1001; 
-            width: 40px; 
-            height: 32px; 
-            background-color: var(--navbar-bg); 
-            border-radius: 0 0 100px 100px; 
-            right: 2px;
-            /* top position is set by JS */
+            z-index: 1001;
+            width: 40px;
+            height: 32px;
+            background-color: var(--navbar-bg);
+            border-radius: 0 0 100px 100px;
+            right: 20px; /* Adjusted for better visibility */
+            /* top position is set by JS to be below nav-bar */
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text-color);
-            transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out;
-            box-shadow: /* This creates the L/R/B white outline for the button itself */
+            transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.3s ease-in-out;
+            box-shadow:
               -2px 0 0 0 rgba(255, 255, 255, 0.5), /* left */
                2px 0 0 0 rgba(255, 255, 255, 0.5), /* right */
                0 2px 0 0 rgba(255, 255, 255, 0.5); /* bottom */
         }
         #toggle-top-bar-button:hover {
-            background-color: var(--button-hover-bg); 
+            background-color: var(--button-hover-bg);
         }
         #toggle-top-bar-button .fas {
             font-size: 14px;
-            transition: transform 0.3s ease-in-out; /* For potential future arrow animations */
+            transition: transform 0.3s ease-in-out;
         }
+        #toggle-top-bar-button.up .fas {
+             transform: rotate(180deg);
+        }
+        /* Sidebar Toggle Button */
+        #toggle-sidebar-button {
+            position: fixed;
+            z-index: 1001;
+            width: 32px;
+            height: 40px;
+            background-color: var(--navbar-bg);
+            border-radius: 0 100px 100px 0;
+            left: 0; /* JS will adjust if sidebar is partially visible */
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            transition: left 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.35s ease-in-out;
+            box-shadow:
+              0 -2px 0 0 rgba(255, 255, 255, 0.5), /* top */
+              0 2px 0 0 rgba(255, 255, 255, 0.5), /* bottom */
+              2px 0 0 0 rgba(255, 255, 255, 0.5); /* right */
+        }
+        #toggle-sidebar-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+        #toggle-sidebar-button .fas {
+            font-size: 14px;
+            transition: transform 0.3s ease-in-out;
+        }
+        #toggle-sidebar-button.collapsed .fas {
+            transform: rotate(180deg);
+        }
+        /* Sidebar */
+        #sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            z-index: 1000;
+            transform: translateX(0); /* Initially visible */
+            transition: transform 0.35s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar.collapsed {
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+        }
+        #sidebar-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #sidebar-logo {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #sidebar-logo img { /* Assuming logo.png is your sidebar logo too */
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        #sidebar-logo i { /* Fallback if image fails or for an icon logo */
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        #sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        .sidebar-section-title {
+            padding: 0 16px 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sidebar-item {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+        }
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .sidebar-item.active {
+            background-color: rgba(109, 90, 205, 0.2); /* --accent-color with alpha */
+            border-left: 3px solid var(--accent-color);
+            padding-left: 13px; /* 16px - 3px */
+        }
+        .sidebar-item.active i {
+            color: var(--accent-color);
+        }
+        #sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-around; /* For multiple icons */
+        }
+        #sidebar-footer .sidebar-item { padding: 8px; } /* Smaller padding for footer items */
 
-        /* Content Area */
+        /* Content Area with Sidebar Support */
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: margin-left 0.35s ease;
+            margin-left: var(--sidebar-width); /* Initial margin when sidebar is visible */
+        }
+        #main-content.sidebar-collapsed {
+            margin-left: 0;
+        }
+        /* Tabs Container */
         #tabs-container {
             flex: 1; position: relative; background-color: var(--iframe-bg);
         }
-        .tab-content { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; /* Inactive iframes are hidden, not removed. This preserves their state. */
-            border: none; 
+        .tab-content {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; /* Inactive iframes are hidden */
+            border: none;
         }
-        .tab-content.active { 
-            display: block; /* Active iframe is shown. Switching display does not cause reload. */
+        .tab-content.active {
+            display: block; /* Active iframe is shown */
         }
-        
+        /* Shortcuts Grid */
+        #shortcuts-container {
+            display: none; /* Initially hidden, shown when a new tab is "empty" */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            overflow-y: auto;
+            background-color: var(--bg-color); /* Or var(--iframe-bg) if preferred */
+            z-index: 2; /* Above iframe iframes are also present but hidden */
+        }
+        #shortcuts-container.active {
+            display: block;
+        }
+        #shortcuts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        #shortcuts-header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        #shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+        .shortcut-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--shortcut-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            color: var(--text-color); /* Ensure text is visible */
+            text-decoration: none; /* If using <a> tags */
+        }
+        .shortcut-item:hover {
+            transform: translateY(-3px);
+            background-color: var(--shortcut-hover);
+        }
+        .shortcut-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--accent-color); /* Default, can be overridden by specific shortcut icon */
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        .shortcut-icon img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .shortcut-title {
+            font-size: 14px;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        .shortcut-url {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        .add-shortcut {
+            opacity: 0.7;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .add-shortcut:hover {
+            opacity: 1;
+        }
+        .add-shortcut .shortcut-icon {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        /* Modals */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1200;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: var(--modal-bg);
+            border-radius: 10px;
+            box-shadow: var(--modal-shadow);
+            padding: 24px;
+            max-width: 500px;
+            width: calc(100% - 40px); /* Ensure some padding on small screens */
+            border: 1px solid var(--modal-border);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 18px;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 22px; /* Larger close icon */
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            padding: 5px; /* Easier to click */
+        }
+        .modal-close:hover {
+            opacity: 1;
+        }
+        .modal-body {
+            margin-bottom: 24px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        /* Form elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-family: var(--font-family-main);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+        }
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            font-family: var(--font-family-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none; /* Ensure no default button border */
+        }
+        .btn i {
+            margin-right: 6px;
+        }
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .btn-danger {
+            background-color: var(--theme-red);
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b; /* Darker red */
+        }
+        /* Dropdown menu */
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background-color: var(--dropdown-bg);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dropdown-border);
+            min-width: 180px;
+            z-index: 1100;
+            overflow: hidden; /* Ensure rounded corners clip items */
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            color: var(--text-color); /* Ensure text color */
+            text-decoration: none; /* If using <a> */
+        }
+        .dropdown-item:hover {
+            background-color: var(--dropdown-hover);
+        }
+        .dropdown-item i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+            opacity: 0.8;
+        }
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--dropdown-border);
+            margin: 6px 0;
+        }
+        /* Settings panels */
+        .settings-category {
+            margin-bottom: 24px;
+        }
+        .settings-category-title {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--tab-border);
+            padding-bottom: 8px;
+        }
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+        .settings-item-label {
+            font-size: 14px;
+        }
+        /* Toggle switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 22px; /* Height of switch */
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: var(--accent-color);
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(18px);
+        }
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: auto;
+            white-space: nowrap;
+            background-color: var(--tooltip-bg);
+            color: var(--text-color);
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 10px;
+            position: absolute;
+            z-index: 1100;
+            bottom: 125%; /* Position above the element */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            border: 1px solid var(--tooltip-border);
+            pointer-events: none; /* So it doesn't interfere with hover on element */
+        }
+        .tooltip .tooltip-text::after { /* Arrow for tooltip */
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--tooltip-bg) transparent transparent transparent;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* Theme selector */
+        .theme-option {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .theme-option:hover {
+            transform: scale(1.1);
+        }
+        .theme-option.active {
+            border-color: white;
+            box-shadow: 0 0 5px white;
+        }
+        .theme-dark { background-color: #1a1a1a; border: 1px solid #555; } /* Added border for visibility if on dark bg */
+        .theme-light { background-color: #f5f5f5; border: 1px solid #ccc; }
+        .theme-purple-accent { background-color: #6d5acd; } /* Changed to match variable */
+        .theme-blue-accent { background-color: #3498db; }
+        .theme-green-accent { background-color: #2ecc71; }
+        .theme-orange-accent { background-color: #e67e22; }
+
         .footer-label {
             position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
             font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+            opacity: 0.7;
         }
-        
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        canvas#backgroundCanvas { /* Added ID for specificity */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            pointer-events: none; /* Canvas should not intercept mouse events */
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 200px; /* Smaller sidebar on tablets */
+            }
+            #shortcuts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+            .shortcut-item {
+                padding: 12px;
+            }
+            .shortcut-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .modal-content {
+                width: 90%;
+            }
+            #pro-options-bar {
+                padding: 6px;
+                gap: 4px;
+            }
+            .pro-menu-item {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+            .pro-menu-item i {
+                margin-right: 4px;
+            }
+            .tab {
+                 min-width: 140px; max-width: 180px;
+            }
+        }
+        @media (max-width: 576px) {
+            :root {
+                --sidebar-width: 100%; /* Full width sidebar on mobile, or hide by default */
+            }
+             #sidebar.collapsed { /* On mobile, ensure it's fully off-screen if toggled */
+                transform: translateX(-100%);
+            }
+            #main-content.sidebar-collapsed { margin-left: 0; }
+            #main-content { margin-left: 0; /* Sidebar might overlay or be hidden by default */ }
+
+
+            #shortcuts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+                padding: 20px;
+            }
+            #shortcuts-container { padding: 20px; }
+            .nav-button {
+                width: 36px;
+                height: 36px;
+            }
+            #search-bar {
+                height: 36px;
+                font-size: 14px;
+                padding: 0 15px;
+            }
+            .tab {
+                min-width: 100px; /* Further reduce tab size */
+                max-width: 130px;
+                height: 30px;
+                padding: 0 8px;
+                font-size: 11px;
+            }
+            .tab-favicon { width: 14px; height: 14px; margin-right: 5px;}
+            .tab-close { font-size: 10px; }
+            .new-tab-button { width: 30px; height: 30px; }
+
+            #pro-options-bar { display: none; } /* Example: hide pro options on very small screens */
+            #nav-bar { padding: 8px; }
+            #toggle-top-bar-button { right: 10px; }
+        }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <canvas id="backgroundCanvas"></canvas>
 
-    <div id="top-bar-assembly">
-        <div id="tab-bar">
-            <div class="new-tab-button" id="new-tab-button" title="New Tab">
-                <i class="fas fa-plus"></i>
+    <aside id="sidebar">
+        <div id="sidebar-header">
+            <a href="#" id="sidebar-logo">
+                <img src="logo.png" alt="Vern Pro Logo">
+                <span>Vern Pro</span>
+            </a>
+        </div>
+        <nav id="sidebar-content">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Navigation</div>
+                <a href="#" class="sidebar-item active" data-action="show-home">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#" class="sidebar-item" data-action="show-bookmarks">
+                    <i class="fas fa-bookmark"></i> Bookmarks
+                </a>
+                <a href="#" class="sidebar-item" data-action="show-history">
+                    <i class="fas fa-history"></i> History
+                </a>
+                <a href="#" class="sidebar-item" data-action="show-downloads">
+                    <i class="fas fa-download"></i> Downloads
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Tools</div>
+                 <a href="#" class="sidebar-item" data-action="open-devtools">
+                    <i class="fas fa-code"></i> Dev Tools
+                </a>
+                <a href="#" class="sidebar-item" data-action="open-extensions">
+                    <i class="fas fa-puzzle-piece"></i> Extensions
+                </a>
+            </div>
+        </nav>
+        <div id="sidebar-footer">
+            <div class="tooltip">
+                <button class="sidebar-item" id="settings-button" data-action="open-settings-modal">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <span class="tooltip-text">Settings</span>
+            </div>
+             <div class="tooltip">
+                <button class="sidebar-item" data-action="show-profile">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <span class="tooltip-text">Profile</span>
             </div>
         </div>
-        <div id="nav-bar">
-            <div class="nav-button" id="home-button" title="Home"> <i class="fas fa-home"></i> </div>
-            <div class="nav-button" id="back-button" title="Back"> <i class="fas fa-arrow-left"></i> </div>
-            <div class="nav-button" id="forward-button" title="Forward"> <i class="fas fa-arrow-right"></i> </div>
-            <div class="nav-button" id="refresh-button" title="Refresh"> <i class="fas fa-redo"></i> </div>
-            <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
+    </aside>
+
+    <main id="main-content">
+        <div id="top-bar-assembly">
+            <div id="pro-options-bar">
+                <button class="pro-menu-item" data-action="pro-feature-1"><i class="fas fa-star"></i> Pro Feature 1</button>
+                <button class="pro-menu-item" data-action="pro-feature-2"><i class="fas fa-bolt"></i> Pro Feature 2</button>
+                <div class="pro-menu-separator"></div>
+                <div class="dropdown">
+                    <button class="pro-menu-item" id="tools-dropdown-toggle"><i class="fas fa-tools"></i> Tools</button>
+                    <div class="dropdown-menu" id="tools-dropdown-menu">
+                        <a href="#" class="dropdown-item"><i class="fas fa-cut"></i> Snippet Tool</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-palette"></i> Color Picker</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-bar">
+                <button class="new-tab-button tooltip" id="new-tab-btn">
+                    <i class="fas fa-plus"></i>
+                    <span class="tooltip-text">New Tab</span>
+                </button>
+            </div>
+        </div>
+
+        <nav id="nav-bar">
+            <div id="nav-buttons">
+                <button class="nav-button tooltip" id="back-btn" disabled>
+                    <i class="fas fa-arrow-left"></i>
+                    <span class="tooltip-text">Back</span>
+                </button>
+                <button class="nav-button tooltip" id="forward-btn" disabled>
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="tooltip-text">Forward</span>
+                </button>
+                <button class="nav-button tooltip" id="reload-btn">
+                    <i class="fas fa-redo"></i>
+                    <span class="tooltip-text">Reload</span>
+                </button>
+                <button class="nav-button tooltip" id="home-btn">
+                    <i class="fas fa-home"></i>
+                    <span class="tooltip-text">Home</span>
+                </button>
+            </div>
+            <input type="text" id="search-bar" placeholder="Search or enter address">
+            <div id="nav-actions" style="display: flex; gap: 8px; margin-left: 8px;">
+                 <button class="nav-button tooltip" id="menu-btn"> <i class="fas fa-ellipsis-v"></i>
+                    <span class="tooltip-text">Menu</span>
+                </button>
+                 <div class="dropdown">
+                    <button class="nav-button tooltip" id="user-profile-btn" data-dropdown-target="user-dropdown-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="tooltip-text">Profile & More</span>
+                    </button>
+                    <div class="dropdown-menu" id="user-dropdown-menu" style="min-width: 220px;">
+                        <div style="padding: 10px 16px; display:flex; align-items:center; border-bottom: 1px solid var(--dropdown-border);">
+                            <img src="logo.png" alt="User" style="width:32px; height:32px; border-radius:50%; margin-right:10px;">
+                            <div>
+                                <div>User Name</div>
+                                <div style="font-size:12px; opacity:0.7;">user@example.com</div>
+                            </div>
+                        </div>
+                        <a href="#" class="dropdown-item" data-action="open-settings-modal"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" class="dropdown-item" data-action="manage-bookmarks"><i class="fas fa-bookmark"></i> Bookmarks</a>
+                        <a href="#" class="dropdown-item" data-action="open-history"><i class="fas fa-history"></i> History</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" data-action="sign-out"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <button id="toggle-top-bar-button" class="tooltip">
+            <i class="fas fa-chevron-up"></i>
+            <span class="tooltip-text">Toggle Toolbar</span>
+        </button>
+
+        <div id="tabs-container">
+            <div id="shortcuts-container" class="active">
+                <div id="shortcuts-header">
+                    <h1>Speed Dial</h1>
+                    <button class="btn btn-primary" id="manage-shortcuts-btn"><i class="fas fa-pencil-alt"></i> Manage</button>
+                </div>
+                <div id="shortcuts-grid">
+                    <a href="https://google.com" class="shortcut-item" data-url="https://google.com">
+                        <div class="shortcut-icon"><img src="https://www.google.com/s2/favicons?domain=google.com&sz=64" alt="G"></div>
+                        <div class="shortcut-title">Google</div>
+                        <div class="shortcut-url">google.com</div>
+                    </a>
+                    <a href="https://github.com" class="shortcut-item" data-url="https://github.com">
+                        <div class="shortcut-icon"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="GH"></div>
+                        <div class="shortcut-title">GitHub</div>
+                        <div class="shortcut-url">github.com</div>
+                    </a>
+                    <div class="shortcut-item add-shortcut" id="add-shortcut-btn">
+                        <div class="shortcut-icon"><i class="fas fa-plus"></i></div>
+                        <div class="shortcut-title">Add Shortcut</div>
+                        <div class="shortcut-url">Click to add</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <button id="toggle-sidebar-button" class="tooltip">
+        <i class="fas fa-chevron-left"></i>
+        <span class="tooltip-text">Toggle Sidebar</span>
+    </button>
+
+
+    <div class="modal" id="add-shortcut-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Shortcut</h3>
+                <button class="modal-close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="shortcut-name">Name</label>
+                    <input type="text" id="shortcut-name" class="form-control" placeholder="e.g., Google News">
+                </div>
+                <div class="form-group">
+                    <label for="shortcut-url">URL</label>
+                    <input type="url" id="shortcut-url-input" class="form-control" placeholder="https://news.google.com">
+                </div>
+                 <div class="form-group">
+                    <label for="shortcut-icon-url">Icon URL (Optional)</label>
+                    <input type="url" id="shortcut-icon-url" class="form-control" placeholder="https://example.com/icon.png">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="save-shortcut-btn">Save Shortcut</button>
+            </div>
         </div>
     </div>
 
-    <div id="toggle-top-bar-button" title="Hide Toolbar">
-        <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
+    <div class="modal" id="settings-modal">
+        <div class="modal-content" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                <div class="settings-category">
+                    <h4 class="settings-category-title">Appearance</h4>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Theme</span>
+                        <div>
+                            <span class="theme-option theme-dark active" data-theme="dark" title="Dark Theme"></span>
+                            <span class="theme-option theme-light" data-theme="light" title="Light Theme"></span>
+                            <span class="theme-option theme-purple-accent" data-theme="purple" title="Purple Accent"></span>
+                            <span class="theme-option theme-blue-accent" data-theme="blue" title="Blue Accent"></span>
+                            <span class="theme-option theme-green-accent" data-theme="green" title="Green Accent"></span>
+                            <span class="theme-option theme-orange-accent" data-theme="orange" title="Orange Accent"></span>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Show Pro Options Bar</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-show-pro-bar" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Font Size</span>
+                        <select id="setting-font-size" class="form-control" style="width: 120px;">
+                            <option value="12px">Small</option>
+                            <option value="14px" selected>Medium</option>
+                            <option value="16px">Large</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-category">
+                    <h4 class="settings-category-title">Startup</h4>
+                     <div class="settings-item">
+                        <span class="settings-item-label">On startup</span>
+                        <select id="setting-startup-behavior" class="form-control" style="width: 200px;">
+                            <option value="newtab">Open the New Tab page</option>
+                            <option value="lastsession">Continue where you left off</option>
+                            <option value="homepage">Open a specific page</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="setting-homepage-url-group" style="display: none;">
+                         <label for="setting-homepage-url">Homepage URL</label>
+                         <input type="url" id="setting-homepage-url" class="form-control" placeholder="https://example.com">
+                    </div>
+                </div>
+                 <div class="settings-category">
+                    <h4 class="settings-category-title">Privacy</h4>
+                     <div class="settings-item">
+                        <span class="settings-item-label">Clear Browse data</span>
+                        <button class="btn btn-secondary" id="clear-Browse-data-btn">Clear Data...</button>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Send "Do Not Track" request</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-do-not-track">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal">Done</button>
+            </div>
+        </div>
     </div>
 
-    <div id="tabs-container">
-        </div>
-            <span class="footer-label">Official 4SP Proxy</span>
-    
-    <script src="uv/uv.bundle.js" defer></script>
-    <script src="uv/uv.config.js" defer></script>
-    <script src="register-sw.js" defer></script>
-    <script src="search.js" defer></script>
-    <script src="stars.js" defer></script>
+
+    <a href="https://github.com/Lissy93/vern" target="_blank" class="footer-label">Vern Pro (Inspired by Vern)</a>
 
     <script>
-        let tabs = [];
-        let activeTabId = null;
-        let tabCounter = 0;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Element References
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar-button');
+            const toggleSidebarIcon = toggleSidebarBtn.querySelector('.fas');
 
-        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fourspButtonEl;
-        
-        let topBarAssemblyEl, toggleTopBarButtonEl, toggleBarIconEl;
-        let initialTopBarHeight = 0;
-        let isTopBarHidden = false;
+            const topBarAssembly = document.getElementById('top-bar-assembly');
+            const navBar = document.getElementById('nav-bar');
+            const toggleTopBarBtn = document.getElementById('toggle-top-bar-button');
+            const toggleTopBarIcon = toggleTopBarBtn.querySelector('.fas');
 
-        // Function to initialize the UV service worker
-        // Assumes registerSW() is provided by register-sw.js
-        async function initUV() { 
-            try { await registerSW(); console.log("Service worker registered"); } 
-            catch (err) { console.error("Failed to register service worker:", err); }
-        }
-        
-        function createTab(url = null) { 
-            const tabId = `tab-${tabCounter++}`;
-            const contentId = `content-${tabId}`;
-            const tabElement = document.createElement('div');
-            tabElement.className = 'tab';
-            tabElement.dataset.tabId = tabId;
-            tabElement.innerHTML = `<div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div><div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>`;
-            tabBarEl.insertBefore(tabElement, newTabButtonEl); 
-            
-            const iframe = document.createElement('iframe');
-            iframe.id = contentId;
-            iframe.className = 'tab-content';
-            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups';
-            iframe.loading = 'eager'; 
-            tabsContainerEl.appendChild(iframe);
-            
-            const tab = { id: tabId, contentId: contentId, element: tabElement, iframe: iframe, url: url || 'New Tab', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon') };
-            tabs.push(tab);
-            activateTab(tabId); 
-            
-            // Call navigateTo, which will handle the URL including 'about:blank'
-            navigateTo(tab.url, tab); 
-            
-            if (activeTabId === tabId && !url) {
-                 // Clear search bar only if it's the initially created blank tab
-                 if (searchBarEl) searchBarEl.value = '';
-             }
+            const searchBar = document.getElementById('search-bar');
+            const backBtn = document.getElementById('back-btn');
+            const forwardBtn = document.getElementById('forward-btn');
+            const reloadBtn = document.getElementById('reload-btn');
+            const homeBtn = document.getElementById('home-btn');
+            const newTabBtn = document.getElementById('new-tab-btn');
+            const tabBar = document.getElementById('tab-bar');
+            const tabsContainer = document.getElementById('tabs-container');
+            const shortcutsContainer = document.getElementById('shortcuts-container');
 
-            return tab;
-        }
-        
-        function activateTab(tabId) { 
-            tabs.forEach(t => { 
-                t.element.classList.remove('active'); 
-                t.iframe.classList.remove('active'); 
+            const addShortcutBtn = document.getElementById('add-shortcut-btn');
+            const addShortcutModal = document.getElementById('add-shortcut-modal');
+            const saveShortcutBtn = document.getElementById('save-shortcut-btn');
+            const shortcutNameInput = document.getElementById('shortcut-name');
+            const shortcutUrlInput = document.getElementById('shortcut-url-input');
+
+            const settingsButton = document.getElementById('settings-button'); // Sidebar settings
+            const settingsModal = document.getElementById('settings-modal');
+            const userProfileBtn = document.getElementById('user-profile-btn'); // Nav bar user icon
+
+            let tabs = [];
+            let activeTabId = null;
+            let nextTabId = 1;
+            const MAX_TABS = 10; // Example limit
+
+            const DEFAULT_HOME_PAGE = 'shortcuts'; // Can be a URL or 'shortcuts'
+
+            // --- Initial Setup ---
+            function initializeBrowser() {
+                loadSettings();
+                createNewTab(DEFAULT_HOME_PAGE, true); // Open initial tab
+                updateTopBarAssemblyHeight();
+                updateToggleTopBarButtonPosition();
+                updateSidebarState(); // Load from localStorage
+                updateTopBarState();  // Load from localStorage
+
+
+                // Sidebar items active state
+                document.querySelectorAll('#sidebar .sidebar-item').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.querySelectorAll('#sidebar .sidebar-item.active').forEach(active => active.classList.remove('active'));
+                        this.classList.add('active');
+                        const action = this.dataset.action;
+                        handleSidebarAction(action);
+                    });
+                });
+            }
+
+            // --- Sidebar Toggle ---
+            toggleSidebarBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('sidebar-collapsed');
+                toggleSidebarIcon.classList.toggle('fa-chevron-left');
+                toggleSidebarIcon.classList.toggle('fa-chevron-right');
+                toggleSidebarBtn.classList.toggle('collapsed');
+
+                // Adjust button position if it needs to stick to a collapsed sidebar edge
+                if (sidebar.classList.contains('collapsed')) {
+                    toggleSidebarBtn.style.left = '0px'; // Or a small offset
+                    localStorage.setItem('sidebarCollapsed', 'true');
+                } else {
+                    // If sidebar has a visible collapsed state (e.g., 48px), adjust accordingly
+                    // toggleSidebarBtn.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-collapsed-width').trim();
+                    toggleSidebarBtn.style.left = '0px'; // For fully hidden, it stays at 0
+                    localStorage.setItem('sidebarCollapsed', 'false');
+                }
+                setTimeout(updateToggleTopBarButtonPosition, 350); // After sidebar transition
             });
-            const tab = tabs.find(t => t.id === tabId);
-            if (tab) {
-                tab.element.classList.add('active');
-                tab.iframe.classList.add('active');
-                activeTabId = tabId;
-                // Update search bar with the tab's current URL, but show blank for 'about:blank'
-                if (searchBarEl) searchBarEl.value = tab.url !== 'about:blank' ? tab.url : '';
-                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                try {
-                    // Update document title based on iframe content or URL
-                    if (tab.iframe.contentDocument && tab.iframe.contentDocument.title && tab.iframe.contentDocument.title !== '') {
-                        document.title = tab.iframe.contentDocument.title + ' - Vern Browser';
-                    } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
-                        try {
-                             document.title = new URL(tab.url).hostname + ' - Vern Browser';
-                        } catch (e) {
-                            document.title = tab.url + ' - Vern Browser'; // Fallback for invalid URL string
-                        }
-                    } else {
-                        document.title = 'New Tab - Vern Browser';
-                    }
-                } catch (e) {
-                    document.title = 'Vern Browser'; // Fallback if iframe content is inaccessible (cross-origin)
+
+             function updateSidebarState() {
+                const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (isCollapsed) {
+                    sidebar.classList.add('collapsed');
+                    mainContent.classList.add('sidebar-collapsed');
+                    toggleSidebarIcon.classList.remove('fa-chevron-left');
+                    toggleSidebarIcon.classList.add('fa-chevron-right');
+                    toggleSidebarBtn.classList.add('collapsed');
+                    toggleSidebarBtn.style.left = '0px';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    mainContent.classList.remove('sidebar-collapsed');
+                    toggleSidebarIcon.classList.add('fa-chevron-left');
+                    toggleSidebarIcon.classList.remove('fa-chevron-right');
+                    toggleSidebarBtn.classList.remove('collapsed');
+                    toggleSidebarBtn.style.left = '0px';
                 }
             }
-        }
-        
-        function closeTab(tabId) { 
-            const tabIndex = tabs.findIndex(t => t.id === tabId);
-            if (tabIndex === -1) return;
-            const tab = tabs[tabIndex];
-            tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1);
-            if (activeTabId === tabId) {
-                if (tabs.length > 0) { activateTab(tabs[Math.max(0, tabIndex - 1)].id); } 
-                else { createTab(); } 
-            }
-        }
-        
-        // Navigate function using the searchFast logic from the second HTML's search.js
-        // Assumes searchFast() and __uv$config are provided by the external scripts
-        function navigateTo(urlInput, tab = null) { 
-            if (!urlInput || typeof urlInput !== 'string') { // Also handle null/undefined input
-                 urlInput = 'about:blank'; // Default to about:blank for invalid inputs
-            }
-            
-            let currentTab = tab;
-            if (!currentTab) { 
-                currentTab = getActiveTab() || (tabs.length > 0 ? tabs[0] : createTab('about:blank')); // Ensure a tab exists
-            }
-
-            if (!currentTab) { 
-                console.error("NavigateTo: No current tab available.");
-                return;
-            }
-
-            // --- MODIFICATION START ---
-            // Explicitly handle 'about:blank' to prevent proxying/searching it
-            if (urlInput === 'about:blank') {
-                currentTab.iframe.src = 'about:blank';
-                currentTab.url = 'about:blank';
-                if (searchBarEl && currentTab.id === activeTabId) searchBarEl.value = ''; // Clear search bar for blank tab
-                updateTabInfo(currentTab, 'New Tab'); // Set title for blank tab
-                return; // Stop here, do not process with searchFast or UV
-            }
-            // --- MODIFICATION END ---
 
 
-            // Check if searchFast is available from the external script search.js
-            if (typeof searchFast !== 'function') { 
-                console.error("searchFast function is not available. Ensure search.js is loaded."); 
-                 if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=search_function_missing&query=${encodeURIComponent(urlInput)}`; 
-                 updateTabInfo(currentTab, "Error: Search unavailable"); return; 
-            }
-            
-            try {
-                // Use searchFast from the external script
-                const formattedUrl = searchFast(urlInput, 'https://duckduckgo.com/?q=%s');
-                
-                // Check if UV configuration is available from uv.config.js
-                if (typeof __uv$config === 'undefined' || typeof __uv$config.prefix === 'undefined' || typeof __uv$config.encodeUrl === 'undefined') { 
-                    console.error("UV configuration (__uv$config) is not available. Ensure uv.config.js is loaded."); 
-                    if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=uv_config_missing&url=${encodeURIComponent(formattedUrl)}`; 
-                    updateTabInfo(currentTab, "Error: UV Config Missing"); return; 
+            // --- Top Bar Assembly Toggle (Pro Options + Tabs) ---
+            function updateTopBarAssemblyHeight() {
+                // Set initial max-height for animation.
+                // Needs to be done after elements are rendered to get correct scrollHeight.
+                if (!topBarAssembly.classList.contains('hidden')) {
+                     topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
+                } else {
+                    topBarAssembly.style.maxHeight = '0px';
                 }
-                const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
-                
-                currentTab.iframe.src = encodedUrl; 
-                currentTab.url = formattedUrl; 
-                if (searchBarEl && currentTab.id === activeTabId) searchBarEl.value = formattedUrl; 
-                
-                let tempTitle = 'Loading...';
-                try {
-                    if (formattedUrl && formattedUrl !== 'about:blank' && formattedUrl.startsWith('http')) {
-                        tempTitle = new URL(formattedUrl).hostname;
-                    }
-                } catch (e) { /* Use 'Loading...' */ }
-                updateTabInfo(currentTab, tempTitle);
-
-            } catch (err) { 
-                console.error("Navigation error:", err); 
-                if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; 
-                updateTabInfo(currentTab, "Navigation Error"); 
-            }
-        }
-        
-        function updateTabInfo(tab, title, favicon) { 
-            if (!tab) return;
-            const displayTitle = title && title !== '' ? title : (tab.url !== 'about:blank' && tab.url.startsWith('http') ? (()=>{try{return new URL(tab.url).hostname}catch(e){return tab.url}})() : 'New Tab') || 'New Tab';
-            tab.titleElement.textContent = displayTitle; tab.titleElement.title = displayTitle; 
-            // Favicon logic (placeholder - a full implementation would require fetching favicon)
-            if (favicon) { tab.faviconElement.innerHTML = `<img src="${favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`; } 
-            else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;}
-            
-            if (tab.id === activeTabId) {
-                document.title = displayTitle + ' - Vern Browser';
-            }
-        }
-        
-        function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
-
-        function handleTopBarToggle() {
-            isTopBarHidden = !isTopBarHidden;
-            if (isTopBarHidden) {
-                topBarAssemblyEl.classList.add('hidden');
-                toggleTopBarButtonEl.style.top = '-1px'; 
-                toggleBarIconEl.className = 'fas fa-chevron-down';
-                toggleTopBarButtonEl.title = "Show Toolbar";
-            } else {
-                topBarAssemblyEl.classList.remove('hidden');
-                topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; 
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
-                toggleBarIconEl.className = 'fas fa-chevron-up';
-                toggleTopBarButtonEl.title = "Hide Toolbar";
-            }
-        }
-        
-        function updateInitialTopBarHeight() {
-            const wasHidden = topBarAssemblyEl.classList.contains('hidden');
-            if (wasHidden) {
-              topBarAssemblyEl.classList.remove('hidden'); 
-              topBarAssemblyEl.style.maxHeight = '500px'; // Temporarily allow it to expand fully to measure
-            }
-            
-            initialTopBarHeight = topBarAssemblyEl.offsetHeight; // This now includes the new border on nav-bar
-            
-            if (wasHidden) {
-              topBarAssemblyEl.classList.add('hidden'); 
-            } else {
-              topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; 
             }
 
-            if (!isTopBarHidden) { 
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
-            } else {
-                toggleTopBarButtonEl.style.top = '-1px';
+            function updateToggleTopBarButtonPosition() {
+                const navBarHeight = navBar.offsetHeight;
+                toggleTopBarBtn.style.top = navBarHeight + 'px';
             }
-        }
 
-        // NEW FUNCTION: Track URL/location changes within the iframe
-        function setupRedirectTracking(tab) {
-            if (!tab || !tab.iframe) return;
-            
-            // Create a clean interval ID property for this tab if it doesn't exist
-            if (!tab.locationCheckIntervalId) {
-                tab.lastKnownUrl = tab.url;
-                
-                // Poll for URL changes - necessary since we can't directly access cross-origin iframe locations
-                tab.locationCheckIntervalId = setInterval(() => {
-                    try {
-                        // First try to access the iframe location directly (works for same-origin)
-                        const iframeWindow = tab.iframe.contentWindow;
-                        if (iframeWindow && iframeWindow.location.href) {
-                            const currentUrl = iframeWindow.location.href;
-                            
-                            // Check if URL has changed - if it's a UV/proxy URL, we need to decode it
-                            if (currentUrl !== tab.lastKnownUrl) {
-                                let decodedUrl = currentUrl;
-                                
-                                // Try to decode UV URL if applicable
-                                if (typeof __uv$config !== 'undefined' && typeof __uv$config.decodeUrl === 'function' && 
-                                    currentUrl.includes(__uv$config.prefix)) {
-                                    try {
-                                        const encodedUrl = currentUrl.split(__uv$config.prefix)[1];
-                                        decodedUrl = __uv$config.decodeUrl(encodedUrl);
-                                    } catch (decodeErr) {
-                                        console.warn("Could not decode UV URL:", decodeErr);
-                                    }
-                                }
-                                
-                                // Update tab URL and UI
-                                tab.url = decodedUrl;
-                                tab.lastKnownUrl = currentUrl;
-                                
-                                // Update UI only if this is the active tab
-                                if (tab.id === activeTabId) {
-                                    if (searchBarEl) searchBarEl.value = decodedUrl;
-                                }
-                                
-                                // Update tab title from the page title
-                                if (iframeWindow.document && iframeWindow.document.title) {
-                                    updateTabInfo(tab, iframeWindow.document.title);
-                                } else {
-                                    // Use URL as fallback title if document title isn't available
-                                    try {
-                                        const urlObj = new URL(decodedUrl);
-                                        updateTabInfo(tab, urlObj.hostname);
-                                    } catch (e) {
-                                        updateTabInfo(tab, decodedUrl);
-                                    }
-                                }
-                            }
-                        }
-                    } catch (err) {
-                        // This usually means we're hitting cross-origin restrictions
-                        // We'll handle this with events instead
-                    }
-                }, 500); // Check every half second
+            toggleTopBarBtn.addEventListener('click', () => {
+                topBarAssembly.classList.toggle('hidden');
+                toggleTopBarIcon.classList.toggle('fa-chevron-up');
+                toggleTopBarIcon.classList.toggle('fa-chevron-down');
+                toggleTopBarBtn.classList.toggle('up', !topBarAssembly.classList.contains('hidden'));
+
+
+                if (topBarAssembly.classList.contains('hidden')) {
+                    topBarAssembly.style.maxHeight = '0px';
+                    localStorage.setItem('topBarHidden', 'true');
+                } else {
+                    topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
+                     localStorage.setItem('topBarHidden', 'false');
+                }
+            });
+
+             function updateTopBarState() {
+                const isHidden = localStorage.getItem('topBarHidden') === 'true';
+                if (isHidden) {
+                    topBarAssembly.classList.add('hidden');
+                    toggleTopBarIcon.classList.remove('fa-chevron-up');
+                    toggleTopBarIcon.classList.add('fa-chevron-down');
+                    topBarAssembly.style.maxHeight = '0px';
+                } else {
+                    topBarAssembly.classList.remove('hidden');
+                    toggleTopBarIcon.classList.add('fa-chevron-up');
+                    toggleTopBarIcon.classList.remove('fa-chevron-down');
+                    // Call after a slight delay to ensure DOM is ready for scrollHeight
+                    setTimeout(() => {
+                         topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
+                    }, 0);
+                }
+                toggleTopBarBtn.classList.toggle('up', !topBarAssembly.classList.contains('hidden'));
             }
-        }
 
-        // NEW FUNCTION: Clean up interval when tab is closed
-        function cleanupTabTracking(tab) {
-            if (tab && tab.locationCheckIntervalId) {
-                clearInterval(tab.locationCheckIntervalId);
-                tab.locationCheckIntervalId = null;
-            }
-        }
 
-        // MODIFIED closeTab function to clean up tracking interval
-        function closeTab(tabId) { 
-            const tabIndex = tabs.findIndex(t => t.id === tabId);
-            if (tabIndex === -1) return;
-            const tab = tabs[tabIndex];
-            
-            // NEW: Clean up tracking interval before removing tab
-            cleanupTabTracking(tab);
-            
-            tab.element.remove(); 
-            tab.iframe.remove(); 
-            tabs.splice(tabIndex, 1);
-            
-            if (activeTabId === tabId) {
-                if (tabs.length > 0) { 
-                    activateTab(tabs[Math.max(0, tabIndex - 1)].id); 
-                } else { 
-                    createTab(); 
-                } 
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            tabBarEl = document.getElementById('tab-bar');
-            tabsContainerEl = document.getElementById('tabs-container');
-            searchBarEl = document.getElementById('search-bar');
-            newTabButtonEl = document.getElementById('new-tab-button'); 
-            homeButtonEl = document.getElementById('home-button');
-            backButtonEl = document.getElementById('back-button');
-            forwardButtonEl = document.getElementById('forward-button');
-            refreshButtonEl = document.getElementById('refresh-button');
-            fourspButtonEl = document.getElementById('foursp-button');
-
-            topBarAssemblyEl = document.getElementById('top-bar-assembly');
-            toggleTopBarButtonEl = document.getElementById('toggle-top-bar-button');
-            toggleBarIconEl = document.getElementById('toggle-bar-icon');
-
-            // Initialize UV service worker (requires register-sw.js)
-            await initUV();
-            
-            // Set initial max-height for the top bar after elements are rendered
-            // Use a small timeout to ensure all elements are measured correctly
-             setTimeout(() => {
-                 updateInitialTopBarHeight(); 
-                 if (!isTopBarHidden) {
-                     topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-                 } else {
-                     topBarAssemblyEl.style.maxHeight = '0px';
-                     topBarAssemblyEl.classList.add('hidden'); 
-                 }
-             }, 10); 
-
-            // Event listeners for the top bar toggle button
-            if(toggleTopBarButtonEl) toggleTopBarButtonEl.addEventListener('click', handleTopBarToggle);
-            
-            // Update initial top bar height on window resize
-            let resizeTimer;
             window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    if (!isTopBarHidden) { 
-                         updateInitialTopBarHeight();
-                    }
-                }, 100); 
+                updateTopBarAssemblyHeight();
+                updateToggleTopBarButtonPosition();
             });
-            
-            // Create initial tab on load
-            const urlParams = new URLSearchParams(window.location.search);
-            const initialUrl = urlParams.get('url'); // Check for 'url' parameter in the main page URL
-            // If no tabs exist, create a new one, optionally loading a URL from the query parameter
-            if (tabs.length === 0) {
-                // Use 'about:blank' as the default if no URL is provided
-                createTab(initialUrl || 'about:blank'); 
+
+
+            // --- Tab Management ---
+            function createNewTab(url = DEFAULT_HOME_PAGE, makeActive = true) {
+                if (tabs.length >= MAX_TABS) {
+                    alert("Maximum number of tabs reached.");
+                    return;
+                }
+
+                const tabId = `tab-${nextTabId++}`;
+                const tabData = {
+                    id: tabId,
+                    url: url,
+                    title: 'New Tab',
+                    favicon: 'logo.png', // Default favicon
+                    isLoading: true,
+                    history: [url],
+                    historyIndex: 0
+                };
+                tabs.push(tabData);
+
+                // Create Tab Element
+                const tabEl = document.createElement('div');
+                tabEl.className = 'tab';
+                tabEl.dataset.tabId = tabId;
+                tabEl.innerHTML = `
+                    <span class="tab-favicon"><img src="${tabData.favicon}" alt=""></span>
+                    <span class="tab-title">${tabData.title}</span>
+                    <button class="tab-close"><i class="fas fa-times"></i></button>
+                `;
+                tabBar.insertBefore(tabEl, newTabBtn);
+
+                // Create Content Element (iframe or shortcuts)
+                const contentEl = document.createElement('div');
+                contentEl.id = `content-${tabId}`;
+
+
+                if (url === 'shortcuts') {
+                    contentEl.className = 'tab-content'; // Keep class for consistency
+                    // Clone shortcuts container for this tab or use a shared one and toggle visibility
+                    // For simplicity, we'll assume the main shortcutsContainer is shown/hidden
+                    tabData.title = "Speed Dial";
+                    tabData.favicon = 'logo.png'; // Or a specific icon for speed dial
+                    updateTabElement(tabData);
+                } else {
+                    contentEl.className = 'tab-content';
+                    const iframe = document.createElement('iframe');
+                    iframe.src = parseUrl(url); // Ensure URL has protocol
+                    iframe.addEventListener('load', () => handleIframeLoad(tabData, iframe));
+                    iframe.addEventListener('error', () => handleIframeError(tabData, iframe));
+                    contentEl.appendChild(iframe);
+                    tabData.iframe = iframe;
+                }
+                tabsContainer.appendChild(contentEl);
+
+                tabEl.querySelector('.tab-close').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeTab(tabId);
+                });
+                tabEl.addEventListener('click', () => switchToTab(tabId));
+
+                if (makeActive) {
+                    switchToTab(tabId);
+                }
+                updateTabVisuals();
+                return tabData;
             }
-            
-            // Event listener for the new tab button
-            if(newTabButtonEl) newTabButtonEl.addEventListener('click', () => createTab('about:blank')); // New tabs should also default to blank
-            
-            // Event listener for clicks on the tab bar (for activating and closing tabs)
-            if(tabBarEl) tabBarEl.addEventListener('click', (e) => { 
-                const tabElement = e.target.closest('.tab'); 
-                const closeButton = e.target.closest('.tab-close');
-                if (closeButton && tabElement) { 
-                    e.stopPropagation(); // Prevent tab activation when clicking close
-                    closeTab(tabElement.dataset.tabId); 
-                } else if (tabElement) { 
-                    activateTab(tabElement.dataset.tabId); 
-                }
-            });
 
-            // Event listener for Enter key in the search bar
-            if(searchBarEl) searchBarEl.addEventListener('keydown', (e) => { 
+            function switchToTab(tabId) {
+                if (activeTabId === tabId && document.querySelector(`.tab[data-tab-id="${tabId}"]`).classList.contains('active')) return;
+
+
+                tabs.forEach(tab => {
+                    const tabEl = document.querySelector(`.tab[data-tab-id="${tab.id}"]`);
+                    const contentEl = document.getElementById(`content-${tab.id}`);
+                    if (tabEl) tabEl.classList.remove('active');
+                    if (contentEl) contentEl.classList.remove('active');
+                });
+
+                 // Hide global shortcuts if switching to a tab that is not 'shortcuts'
+                shortcutsContainer.classList.remove('active');
+
+
+                activeTabId = tabId;
+                const activeTabData = tabs.find(t => t.id === tabId);
+
+                const activeTabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const activeContentEl = document.getElementById(`content-${tabId}`);
+
+                if (activeTabEl) activeTabEl.classList.add('active');
+
+
+                if (activeTabData) {
+                    searchBar.value = (activeTabData.url === 'shortcuts') ? '' : activeTabData.url;
+                    if (activeTabData.url === 'shortcuts') {
+                        shortcutsContainer.classList.add('active'); // Show shortcuts for this tab
+                        if(activeContentEl) activeContentEl.classList.remove('active'); // Hide its own content div
+                    } else {
+                        if (activeContentEl) activeContentEl.classList.add('active');
+                    }
+                    updateNavButtons(activeTabData);
+                }
+                updateTabVisuals();
+            }
+
+            function closeTab(tabId) {
+                const tabIndex = tabs.findIndex(t => t.id === tabId);
+                if (tabIndex === -1) return;
+
+                const tabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const contentEl = document.getElementById(`content-${tabId}`);
+
+                if (tabEl) tabEl.remove();
+                if (contentEl) contentEl.remove();
+
+                tabs.splice(tabIndex, 1);
+
+                if (activeTabId === tabId) {
+                    activeTabId = null;
+                    if (tabs.length > 0) {
+                        switchToTab(tabs[Math.max(0, tabIndex - 1)].id);
+                    } else {
+                        createNewTab(); // Open a new default tab if all are closed
+                    }
+                }
+                if (tabs.length === 0) { // If last tab closed, create a new one
+                     createNewTab();
+                }
+                updateTabVisuals();
+            }
+
+            function updateTabElement(tabData) {
+                const tabEl = document.querySelector(`.tab[data-tab-id="${tabData.id}"]`);
+                if (tabEl) {
+                    tabEl.querySelector('.tab-title').textContent = tabData.isLoading ? 'Loading...' : (tabData.title || 'Untitled');
+                    tabEl.querySelector('.tab-favicon img').src = tabData.favicon || 'logo.png';
+                    if(tabData.isLoading) {
+                        tabEl.querySelector('.tab-favicon').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    } else {
+                        tabEl.querySelector('.tab-favicon').innerHTML = `<img src="${tabData.favicon || 'logo.png'}" alt="">`;
+                    }
+                }
+            }
+
+            function handleIframeLoad(tabData, iframe) {
+                tabData.isLoading = false;
+                try {
+                    tabData.title = iframe.contentDocument.title || iframe.src;
+                    // Try to get favicon - might be blocked by CORS
+                    const links = iframe.contentDocument.getElementsByTagName('link');
+                    for (let link of links) {
+                        if (link.rel.includes('icon')) {
+                            tabData.favicon = new URL(link.href, iframe.src).href;
+                            break;
+                        }
+                    }
+                     if (!tabData.favicon || tabData.favicon === 'logo.png') { // If still default, try domain favicon
+                        const domain = new URL(iframe.src).hostname;
+                        tabData.favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+                    }
+
+                } catch (e) {
+                    // Likely CORS issue accessing iframe content
+                    console.warn("CORS issue accessing iframe content for title/favicon.", e);
+                    tabData.title = new URL(iframe.src).hostname; // Fallback to hostname
+                    const domain = new URL(iframe.src).hostname;
+                    tabData.favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+                }
+
+                // Update URL history for back/forward
+                if (tabData.history[tabData.historyIndex] !== iframe.src) {
+                    // If navigating forward from a back state, clear future history
+                    if (tabData.historyIndex < tabData.history.length - 1) {
+                        tabData.history = tabData.history.slice(0, tabData.historyIndex + 1);
+                    }
+                    tabData.history.push(iframe.src);
+                    tabData.historyIndex = tabData.history.length - 1;
+                }
+                tabData.url = iframe.src;
+
+
+                if (tabData.id === activeTabId) {
+                    searchBar.value = tabData.url;
+                    updateNavButtons(tabData);
+                }
+                updateTabElement(tabData);
+            }
+
+            function handleIframeError(tabData, iframe){
+                tabData.isLoading = false;
+                tabData.title = "Error Loading Page";
+                tabData.favicon = 'logo.png'; // Error icon
+                // iframe.contentDocument.body.innerHTML = `<div style="padding:20px; text-align:center;"><h2>Failed to load page</h2><p>${tabData.url}</p></div>`;
+                updateTabElement(tabData);
+                 if (tabData.id === activeTabId) {
+                    updateNavButtons(tabData);
+                }
+            }
+
+
+            function updateTabVisuals() {
+                // Example: Add a class if tabs overflow for scrolling indicator
+                if (tabBar.scrollWidth > tabBar.clientWidth) {
+                    tabBar.classList.add('has-scroll');
+                } else {
+                    tabBar.classList.remove('has-scroll');
+                }
+            }
+
+            newTabBtn.addEventListener('click', () => createNewTab('shortcuts'));
+
+            // --- Navigation ---
+            function navigate(url) {
+                const currentTab = tabs.find(t => t.id === activeTabId);
+                if (!currentTab) return;
+
+                const parsed = parseUrl(url);
+                searchBar.value = parsed; // Update search bar immediately
+
+                if (parsed === 'shortcuts' || url === 'shortcuts') {
+                    currentTab.url = 'shortcuts';
+                    currentTab.title = 'Speed Dial';
+                    currentTab.favicon = 'logo.png';
+                    currentTab.isLoading = false;
+
+                    // Hide its iframe content if it exists
+                    const contentEl = document.getElementById(`content-${currentTab.id}`);
+                    if(contentEl && currentTab.iframe) {
+                        currentTab.iframe.src = 'about:blank'; // Clear iframe
+                        contentEl.classList.remove('active');
+                    }
+                    shortcutsContainer.classList.add('active');
+                    updateTabElement(currentTab);
+                    updateNavButtons(currentTab);
+                } else {
+                    if (currentTab.iframe) {
+                        currentTab.isLoading = true;
+                        updateTabElement(currentTab);
+                        currentTab.iframe.src = parsed;
+                        shortcutsContainer.classList.remove('active'); // Hide shortcuts when navigating
+                    } else { // This tab was 'shortcuts', now navigating away
+                        const contentEl = document.getElementById(`content-${currentTab.id}`);
+                        contentEl.innerHTML = ''; // Clear previous (which was nothing for shortcuts)
+                        const iframe = document.createElement('iframe');
+                        iframe.src = parsed;
+                        iframe.addEventListener('load', () => handleIframeLoad(currentTab, iframe));
+                        iframe.addEventListener('error', () => handleIframeError(currentTab, iframe));
+                        contentEl.appendChild(iframe);
+                        currentTab.iframe = iframe;
+                        currentTab.isLoading = true;
+                        updateTabElement(currentTab);
+                        shortcutsContainer.classList.remove('active');
+                        if(contentEl) contentEl.classList.add('active');
+                    }
+                }
+            }
+
+            function parseUrl(url) {
+                if (url === 'shortcuts') return 'shortcuts';
+                if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('file://') && !url.startsWith('about:')) {
+                    // Check if it's a domain name like "google.com"
+                    if (url.includes('.') && !url.includes(' ')) {
+                        return 'https://' + url;
+                    }
+                    // Assume search if not a valid-looking URL start
+                    return `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+                }
+                return url;
+            }
+
+            searchBar.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    navigateTo(e.target.value); 
+                    navigate(searchBar.value);
                 }
             });
 
-            // Event listeners for navigation buttons
-            if(homeButtonEl) homeButtonEl.addEventListener('click', () => { 
-                 // The second HTML's home button navigates the top page, which isn't standard browser behavior.
-                 // Replicating the second HTML's exact JS means navigating the top window.
-                 // If you want it to navigate the active iframe to a homepage, change this line.
-                 window.location.href = "index.html"; // Redirects the main page
-            });
-            
-            // Back, Forward, Refresh buttons target the active iframe
-            if(backButtonEl) backButtonEl.addEventListener('click', () => { 
-                const t = getActiveTab(); 
-                if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.history.back(); } catch (err) {console.error("Back nav error:", err)} 
-                } 
-            });
-            
-            if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => { 
-                const t = getActiveTab(); 
-                if (t && t.iframe.contentWindow) {
-                  try { t.iframe.contentWindow.history.forward(); } catch (err) {console.error("Forward nav error:", err)} 
-                } 
-            });
-            
-            if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => { 
-                const t = getActiveTab(); 
-                if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.location.reload(); } catch (err) {
-                        console.error("Refresh error:", err);
-                        // Alternative method if direct reload fails due to cross-origin restrictions
-                        navigateTo(t.url, t);
-                    } 
-                } 
-            });
-
-            // Setup message event listener for communication from iframes
-            window.addEventListener('message', (event) => {
-                // Handle messages from iframes - could be used for title updates, navigation events, etc.
-                try {
-                    if (event.data && event.data.type === 'tabUpdate') {
-                        const tab = tabs.find(t => t.iframe.contentWindow === event.source);
-                        if (tab) {
-                            // Handle different update types
-                            if (event.data.title) {
-                                updateTabInfo(tab, event.data.title);
-                            }
-                            if (event.data.url) {
-                                tab.url = event.data.url;
-                                if (tab.id === activeTabId && searchBarEl) {
-                                    searchBarEl.value = event.data.url;
-                                }
-                            }
-                            if (event.data.favicon) {
-                                // Update favicon if provided
-                                tab.faviconElement.innerHTML = `<img src="${event.data.favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
-                            }
-                        }
-                    }
-                } catch (err) {
-                    console.warn("Error processing iframe message:", err);
+            reloadBtn.addEventListener('click', () => {
+                const currentTab = tabs.find(t => t.id === activeTabId);
+                if (currentTab && currentTab.iframe) {
+                    currentTab.isLoading = true;
+                    updateTabElement(currentTab);
+                    currentTab.iframe.contentWindow.location.reload();
+                } else if (currentTab && currentTab.url === 'shortcuts') {
+                    // "Reload" shortcuts (e.g., re-fetch from localStorage)
+                    loadShortcuts();
                 }
             });
 
-            // Setup mutation observer for tracking tab content changes
-            const setupTabContentObserver = (tab) => {
-                try {
-                    // Try to access iframe content - will throw if cross-origin
-                    const iframeDocument = tab.iframe.contentDocument;
-                    
-                    // If we can access it, observe title changes
-                    if (iframeDocument) {
-                        const titleObserver = new MutationObserver((mutations) => {
-                            if (iframeDocument.title) {
-                                updateTabInfo(tab, iframeDocument.title);
-                                if (tab.id === activeTabId) {
-                                    document.title = iframeDocument.title + ' - Vern Browser';
-                                }
-                            }
-                        });
-                        
-                        // Observe title element if it exists
-                        const titleEl = iframeDocument.querySelector('title');
-                        if (titleEl) {
-                            titleObserver.observe(titleEl, { 
-                                subtree: true, 
-                                characterData: true, 
-                                childList: true 
-                            });
-                        }
-                        
-                        // Store observer reference for cleanup
-                        tab.titleObserver = titleObserver;
-                    }
-                } catch (err) {
-                    // Cross-origin access error - use URL tracking instead
-                    setupRedirectTracking(tab);
-                }
-            };
-            
-            // Modified activateTab to setup content observers
-            const originalActivateTab = activateTab;
-            activateTab = function(tabId) {
-                originalActivateTab(tabId);
-                const tab = tabs.find(t => t.id === tabId);
-                if (tab) {
-                    setupTabContentObserver(tab);
-                }
-            };
-            
-            // Modified createTab to setup content observers
-            const originalCreateTab = createTab;
-            createTab = function(url = null) {
-                const tab = originalCreateTab(url);
-                setupTabContentObserver(tab);
-                return tab;
-            };
-            
-            // Handle iframe load events to update tab info
-            document.addEventListener('load', (e) => {
-                if (e.target.tagName === 'IFRAME') {
-                    const tabId = e.target.id.replace('content-', 'tab-');
-                    const tab = tabs.find(t => t.id === tabId);
-                    
-                    if (tab) {
-                        try {
-                            // Try to get title from iframe - will throw if cross-origin
-                            const title = e.target.contentDocument.title;
-                            if (title) {
-                                updateTabInfo(tab, title);
-                            }
-                            // Setup observer for future title changes
-                            setupTabContentObserver(tab);
-                        } catch (err) {
-                            // Cross-origin iframe, use URL for title
-                            if (tab.url && tab.url !== 'about:blank') {
-                                try {
-                                    const urlObj = new URL(tab.url);
-                                    updateTabInfo(tab, urlObj.hostname);
-                                } catch (e) {
-                                    updateTabInfo(tab, tab.url);
-                                }
-                            }
-                            // Setup tracking for URL changes
-                            setupRedirectTracking(tab);
-                        }
-                    }
-                }
-            }, true); // Use capture to ensure we get iframe load events
-            
-            // Handle keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                // Only process if not typing in search bar
-                if (e.target === searchBarEl) return;
-                
-                // Handle Ctrl+T for new tab
-                if (e.ctrlKey && e.key === 't') {
-                    e.preventDefault();
-                    createTab('about:blank');
-                }
-                
-                // Handle Ctrl+W for close tab
-                if (e.ctrlKey && e.key === 'w') {
-                    e.preventDefault();
-                    if (activeTabId) {
-                        closeTab(activeTabId);
-                    }
-                }
-                
-                // Handle Ctrl+Tab for next tab
-                if (e.ctrlKey && e.key === 'Tab') {
-                    e.preventDefault();
-                    if (tabs.length > 1) {
-                        const currentIndex = tabs.findIndex(t => t.id === activeTabId);
-                        const nextIndex = (currentIndex + 1) % tabs.length;
-                        activateTab(tabs[nextIndex].id);
-                    }
-                }
-                
-                // Handle Alt+Left/Right for back/forward
-                if (e.altKey && e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    backButtonEl.click();
-                }
-                if (e.altKey && e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    forwardButtonEl.click();
-                }
-                
-                // Handle F5 or Ctrl+R for refresh
-                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                    e.preventDefault();
-                    refreshButtonEl.click();
-                }
-                
-                // Handle F11 for toggling toolbar
-                if (e.key === 'F11') {
-                    e.preventDefault();
-                    handleTopBarToggle();
+            homeBtn.addEventListener('click', () => navigate(DEFAULT_HOME_PAGE));
+
+            backBtn.addEventListener('click', () => {
+                const currentTab = tabs.find(t => t.id === activeTabId);
+                if (currentTab && currentTab.iframe && currentTab.historyIndex > 0) {
+                    currentTab.historyIndex--;
+                    currentTab.isLoading = true;
+                    updateTabElement(currentTab);
+                    currentTab.iframe.src = currentTab.history[currentTab.historyIndex];
                 }
             });
-            
-            // Handle contextmenu events for right-click menu
-            document.addEventListener('contextmenu', (e) => {
-                // Implement right-click context menu here if desired
-                // This would involve creating a custom popup menu
-                // For now, we'll allow the default browser context menu
+
+            forwardBtn.addEventListener('click', () => {
+                const currentTab = tabs.find(t => t.id === activeTabId);
+                if (currentTab && currentTab.iframe && currentTab.historyIndex < currentTab.history.length - 1) {
+                    currentTab.historyIndex++;
+                    currentTab.isLoading = true;
+                    updateTabElement(currentTab);
+                    currentTab.iframe.src = currentTab.history[currentTab.historyIndex];
+                }
             });
+
+            function updateNavButtons(tabData) {
+                if (!tabData) { // No active tab, disable all
+                    backBtn.disabled = true;
+                    forwardBtn.disabled = true;
+                    reloadBtn.disabled = true;
+                    return;
+                }
+                reloadBtn.disabled = tabData.isLoading; // Disable reload if already loading
+                if (tabData.url === 'shortcuts' || !tabData.iframe) {
+                     backBtn.disabled = true;
+                     forwardBtn.disabled = true;
+                } else {
+                    backBtn.disabled = tabData.historyIndex <= 0;
+                    forwardBtn.disabled = tabData.historyIndex >= tabData.history.length - 1;
+                }
+            }
+
+
+            // --- Shortcuts Management ---
+            const shortcutsGrid = document.getElementById('shortcuts-grid');
+            let shortcuts = [];
+
+            function renderShortcuts() {
+                shortcutsGrid.innerHTML = ''; // Clear existing
+                shortcuts.forEach(sc => {
+                    const shortcutEl = document.createElement('a'); // Use <a> for actual navigation
+                    shortcutEl.className = 'shortcut-item';
+                    shortcutEl.href = parseUrl(sc.url); // Set href for direct click
+                    shortcutEl.dataset.url = sc.url;
+                    const iconSrc = sc.iconUrl || `https://www.google.com/s2/favicons?domain=${new URL(parseUrl(sc.url)).hostname}&sz=64`;
+                    shortcutEl.innerHTML = `
+                        <div class="shortcut-icon"><img src="${iconSrc}" alt="${sc.name.substring(0,2)}"></div>
+                        <div class="shortcut-title">${sc.name}</div>
+                        <div class="shortcut-url">${new URL(parseUrl(sc.url)).hostname}</div>
+                    `;
+                    shortcutEl.addEventListener('click', (e) => {
+                        e.preventDefault(); // Prevent default link navigation
+                        navigate(sc.url);   // Use browser's navigate function
+                    });
+                    shortcutsGrid.appendChild(shortcutEl);
+                });
+                // Re-add the "Add Shortcut" button
+                shortcutsGrid.appendChild(addShortcutBtn);
+            }
+
+            function loadShortcuts() {
+                const storedShortcuts = localStorage.getItem('vernProShortcuts');
+                shortcuts = storedShortcuts ? JSON.parse(storedShortcuts) : [
+                    { name: 'Google', url: 'https://google.com' },
+                    { name: 'GitHub', url: 'https://github.com' }
+                ];
+                renderShortcuts();
+            }
+
+            function saveShortcuts() {
+                localStorage.setItem('vernProShortcuts', JSON.stringify(shortcuts));
+            }
+
+            addShortcutBtn.addEventListener('click', () => {
+                shortcutNameInput.value = '';
+                shortcutUrlInput.value = '';
+                document.getElementById('shortcut-icon-url').value = '';
+                addShortcutModal.classList.add('active');
+            });
+
+            saveShortcutBtn.addEventListener('click', () => {
+                const name = shortcutNameInput.value.trim();
+                const url = shortcutUrlInput.value.trim();
+                const iconUrl = document.getElementById('shortcut-icon-url').value.trim();
+
+                if (name && url) {
+                    shortcuts.push({ name, url: parseUrl(url), iconUrl: iconUrl || null });
+                    saveShortcuts();
+                    renderShortcuts();
+                    addShortcutModal.classList.remove('active');
+                } else {
+                    alert('Please provide a name and URL for the shortcut.');
+                }
+            });
+
+
+            // --- Modal Handling ---
+            document.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.closest('.modal').classList.remove('active');
+                });
+            });
+            // Close modal on escape key
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal.active').forEach(modal => modal.classList.remove('active'));
+                }
+            });
+            // Close modal on backdrop click
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) { // Check if click is on backdrop itself
+                        this.classList.remove('active');
+                    }
+                });
+            });
+
+
+            // --- Settings Modal & Theming ---
+            function openSettingsModal() {
+                 // Load current settings into the modal fields here if needed
+                settingsModal.classList.add('active');
+            }
+            // Attach to buttons that should open settings
+            document.querySelectorAll('[data-action="open-settings-modal"]').forEach(btn => {
+                btn.addEventListener('click', openSettingsModal);
+            });
+
+
+            const themeOptions = document.querySelectorAll('.theme-option');
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const theme = option.dataset.theme;
+                    applyTheme(theme);
+                    localStorage.setItem('vernProTheme', theme);
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                });
+            });
+
+            function applyTheme(theme) {
+                // This is a simplified theme application.
+                // For full theming, you'd update CSS variables or link different stylesheets.
+                // Example: update root variables based on theme selection
+                const root = document.documentElement;
+                if (theme === 'light') {
+                    root.style.setProperty('--bg-color', '#f0f0f0');
+                    root.style.setProperty('--text-color', '#333');
+                    root.style.setProperty('--navbar-bg', 'rgba(230, 230, 230, 1)');
+                    root.style.setProperty('--button-bg', 'rgba(220, 220, 220, 0.8)');
+                    root.style.setProperty('--search-bg', 'rgba(220, 220, 220, 0.8)');
+                    root.style.setProperty('--iframe-bg', '#fff');
+                    root.style.setProperty('--tab-bg', 'rgba(210, 210, 210, 0.8)');
+                    root.style.setProperty('--tab-active-bg', 'rgba(200, 200, 200, 0.9)');
+                     root.style.setProperty('--footer-text-color', '#555');
+                } else if (theme === 'dark') { // Default dark from CSS
+                    root.style.setProperty('--bg-color', '#1a1a1a');
+                    root.style.setProperty('--text-color', '#fff');
+                    root.style.setProperty('--navbar-bg', 'rgba(15, 15, 15, 1)');
+                    // ... reset all to default dark theme variables from :root
+                    const initialStyles = document.getElementById('custom-styles').sheet.cssRules[0].style;
+                    for (let i = 0; i < initialStyles.length; i++) {
+                        const propName = initialStyles[i];
+                        if (propName.startsWith('--')) {
+                            root.style.setProperty(propName, initialStyles.getPropertyValue(propName));
+                        }
+                    }
+                } else if (theme === 'purple') {
+                    root.style.setProperty('--accent-color', '#9b59b6');
+                    root.style.setProperty('--accent-hover', '#8e44ad');
+                } else if (theme === 'blue') {
+                    root.style.setProperty('--accent-color', '#3498db');
+                    root.style.setProperty('--accent-hover', '#2980b9');
+                } else if (theme === 'green') {
+                    root.style.setProperty('--accent-color', '#2ecc71');
+                    root.style.setProperty('--accent-hover', '#27ae60');
+                } else if (theme === 'orange') {
+                    root.style.setProperty('--accent-color', '#e67e22');
+                    root.style.setProperty('--accent-hover', '#d35400');
+                }
+                // The specific accent themes might need to also reset bg/text if they are not based on dark
+                // For simplicity, current accent themes only change accent color on top of dark theme.
+            }
+
+            // Setting: Show Pro Bar
+            const settingShowProBar = document.getElementById('setting-show-pro-bar');
+            settingShowProBar.addEventListener('change', function() {
+                const proBar = document.getElementById('pro-options-bar');
+                if (this.checked) {
+                    proBar.style.display = 'flex';
+                } else {
+                    proBar.style.display = 'none';
+                }
+                updateTopBarAssemblyHeight(); // Recalculate height
+                localStorage.setItem('vernProShowProBar', this.checked);
+            });
+
+            // Setting: Startup Behavior
+            const startupBehaviorSelect = document.getElementById('setting-startup-behavior');
+            const homepageUrlGroup = document.getElementById('setting-homepage-url-group');
+            const homepageUrlInput = document.getElementById('setting-homepage-url');
+
+            startupBehaviorSelect.addEventListener('change', function() {
+                if (this.value === 'homepage') {
+                    homepageUrlGroup.style.display = 'block';
+                } else {
+                    homepageUrlGroup.style.display = 'none';
+                }
+                localStorage.setItem('vernProStartupBehavior', this.value);
+            });
+            homepageUrlInput.addEventListener('change', function() {
+                 localStorage.setItem('vernProHomepageUrl', this.value);
+            });
+
+
+            function loadSettings() {
+                // Theme
+                const savedTheme = localStorage.getItem('vernProTheme') || 'dark';
+                applyTheme(savedTheme);
+                document.querySelectorAll('.theme-option').forEach(opt => {
+                    opt.classList.toggle('active', opt.dataset.theme === savedTheme);
+                });
+
+                // Pro Bar visibility
+                const showProBar = localStorage.getItem('vernProShowProBar') !== 'false'; // default true
+                settingShowProBar.checked = showProBar;
+                document.getElementById('pro-options-bar').style.display = showProBar ? 'flex' : 'none';
+
+                // Startup Behavior
+                const startupBehavior = localStorage.getItem('vernProStartupBehavior') || 'newtab';
+                startupBehaviorSelect.value = startupBehavior;
+                if (startupBehavior === 'homepage') {
+                    homepageUrlGroup.style.display = 'block';
+                    homepageUrlInput.value = localStorage.getItem('vernProHomepageUrl') || '';
+                } else {
+                     homepageUrlGroup.style.display = 'none';
+                }
+
+                loadShortcuts();
+            }
+
+            // --- Dropdown Menus ---
+            document.querySelectorAll('[data-dropdown-target]').forEach(toggle => {
+                const menuId = toggle.dataset.dropdownTarget;
+                const menu = document.getElementById(menuId);
+                if (!menu) return;
+
+                toggle.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    // Close other open dropdowns
+                    document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                        if (openMenu !== menu) {
+                            openMenu.classList.remove('show');
+                        }
+                    });
+                    menu.classList.toggle('show');
+                });
+            });
+
+            // Pro options tools dropdown
+            const toolsDropdownToggle = document.getElementById('tools-dropdown-toggle');
+            const toolsDropdownMenu = document.getElementById('tools-dropdown-menu');
+            if(toolsDropdownToggle && toolsDropdownMenu) {
+                toolsDropdownToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                     document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                        if (openMenu !== toolsDropdownMenu) {
+                            openMenu.classList.remove('show');
+                        }
+                    });
+                    toolsDropdownMenu.classList.toggle('show');
+                });
+            }
+
+
+            // Close dropdowns if clicked outside
+            window.addEventListener('click', (event) => {
+                if (!event.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+
+            // --- Sidebar Actions ---
+            function handleSidebarAction(action) {
+                console.log("Sidebar action:", action);
+                switch(action) {
+                    case 'show-home':
+                        // Check if a "Speed Dial" tab exists, if so switch, else new one
+                        const existingHomeTab = tabs.find(t => t.url === 'shortcuts');
+                        if (existingHomeTab) {
+                            switchToTab(existingHomeTab.id);
+                        } else {
+                            createNewTab('shortcuts');
+                        }
+                        break;
+                    case 'show-bookmarks':
+                        // Implement bookmark manager view (could be a special URL or modal)
+                        alert('Bookmarks manager not yet implemented.');
+                        break;
+                    case 'show-history':
+                        alert('History viewer not yet implemented.');
+                        break;
+                    // Add more cases as needed
+                }
+            }
+
+            // --- Canvas Background (Simple Example) ---
+            const canvas = document.getElementById('backgroundCanvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let particles = [];
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                function Particle(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = `rgba(109, 90, 205, ${Math.random() * 0.5 + 0.2})`; // Accent color with alpha
+                }
+                Particle.prototype.update = function() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.size > 0.1) this.size -= 0.01;
+                };
+                Particle.prototype.draw = function() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                };
+
+                function createParticles() {
+                    for (let i = 0; i < 30; i++) {
+                        particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+                    }
+                }
+                function animateParticles() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (let i = 0; i < particles.length; i++) {
+                        particles[i].update();
+                        particles[i].draw();
+                        if (particles[i].size <= 0.1) {
+                            particles.splice(i, 1);
+                            i--;
+                            particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+                        }
+                    }
+                    requestAnimationFrame(animateParticles);
+                }
+                window.addEventListener('resize', () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    particles = []; // Reset particles on resize
+                    createParticles();
+                });
+
+                createParticles();
+                // animateParticles(); // Uncomment to enable particle animation
+            }
+
+
+            // Initialize
+            initializeBrowser();
         });
     </script>
 </body>
