@@ -1,148 +1,934 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OFP</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="index.css" />
+    <title>Vern Browser Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link rel="shortcut icon" type="image/png" href="logo.png" />
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        border: none;
-        box-sizing: border-box;
-      }
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-family: 'Open Sans', sans-serif;
-        background-color: #0e0e0e;
-        color: white;
-      }
-      #header,
-      #content {
-        width: 100%;
-        max-width: 700px;
-        text-align: center;
-        margin-bottom: 2rem;
-      }
-      #clock {
-        color: #fff;
-        font-family: 'Roboto Mono', monospace;
-        font-size: 1.2rem;
-        margin-top: 0.5rem;
-        margin-bottom: 1.5rem;
-      }
-      #uv-form {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-      #uv-address {
-        width: 90%;
-        padding: 12px;
-        border-radius: 100px;
-        font-size: 1rem;
-        border: none;
-        outline: none;
-        background-color: #1e1e1e;
-        color: white;
-        text-align: center;
-      }
-      #popularSites {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin: 1rem 0;
-      }
-      #popularSites .btn {
-        background-color: #2b2b2b;
-        border: 1px solid #444;
-        border-radius: 20px;
-        padding: 8px 16px;
-        cursor: pointer;
-        color: white;
-        font-size: 0.9rem;
-        transition: background 0.2s;
-      }
-      #popularSites .btn:hover {
-        background-color: #3a3a3a;
-      }
-      .footer-label {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        margin: 1rem;
-        font-family: 'Roboto Mono', monospace;
-        font-size: 0.9rem;
-        color: #fff;
-      }
+    
+    <style id="custom-styles">
+        /* Base Elements */
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --navbar-bg: rgba(15, 15, 15, 1);
+            --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            --button-bg: rgba(10, 10, 10, 0.8);
+            --button-hover-bg: rgba(15, 15, 15, 0.9);
+            --search-bg: rgba(10, 10, 10, 0.8);
+            --search-focus-bg: rgba(45, 45, 45, 0.9);
+            --search-focus-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+            --iframe-bg: #202020;
+            --footer-text-color: #fff;
+            --font-family-main: 'Roboto Mono', monospace;
+            --tab-bg: rgba(25, 25, 25, 0.8);
+            --tab-active-bg: rgba(45, 45, 45, 0.9);
+            --tab-border: rgba(60, 60, 60, 0.5);
+            --tab-hover-bg: rgba(35, 35, 35, 0.9);
+            --settings-panel-bg: rgba(25, 25, 25, 0.95);
+            --dropdown-bg: rgba(35, 35, 35, 0.95);
+            --dropdown-hover: rgba(55, 55, 55, 0.95);
+            --dropdown-text: #ffffff;
+            --tooltip-bg: rgba(15, 15, 15, 0.95);
+            --tooltip-text: #ffffff;
+            --settings-button-bg: rgba(50, 50, 50, 0.8);
+            --settings-button-hover: rgba(70, 70, 70, 0.9);
+            --switch-bg-off: #444;
+            --switch-bg-on: #2196F3;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            border: none;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-family-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #top-bar-assembly {
+            overflow: hidden;
+            transition: max-height 0.35s ease-in-out;
+            z-index: 10;
+        }
+
+        #top-bar-assembly.hidden {
+            max-height: 0 !important; 
+        }
+        
+        /* Tab Bar */
+        #tab-bar {
+            display: flex;
+            background-color: var(--navbar-bg);
+            padding: 10px 12px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+            position: relative;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #tab-bar::-webkit-scrollbar { height: 3px; }
+        #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+        
+        .tab {
+            display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
+            padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
+            transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
+        }
+        .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
+        .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
+        .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+        .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
+        .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
+        
+        .new-tab-button {
+            width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
+            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+        .new-tab-button:hover { background-color: var(--button-hover-bg); }
+        
+        /* Navigation Bar */
+        #nav-bar {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--navbar-bg);
+            box-shadow: var(--navbar-shadow);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5); 
+        }
+        
+        .nav-button {
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+            margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
+            cursor: pointer; color: var(--text-color); transition: background-color 0.2s, color 0.2s;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+        .nav-button:hover { background-color: var(--button-hover-bg); }
+        .nav-button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        #search-bar {
+            flex: 1; height: 40px; border-radius: 30px; border: none; background-color: var(--search-bg);
+            color: var(--text-color); padding: 0 18px; font-size: 15px; font-weight: 700;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); font-family: var(--font-family-main);
+        }
+        #search-bar:focus { outline: none; background-color: var(--search-focus-bg); box-shadow: var(--search-focus-shadow); font-weight: 700; }
+        
+        /* Toggle Top Bar Button */
+        #toggle-top-bar-button {
+            position: fixed;
+            z-index: 1001; 
+            width: 40px; 
+            height: 32px; 
+            background-color: var(--navbar-bg); 
+            border-radius: 0 0 100px 100px; 
+            right: 2px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out;
+            box-shadow: 
+              -2px 0 0 0 rgba(255, 255, 255, 0.5),
+               2px 0 0 0 rgba(255, 255, 255, 0.5),
+               0 2px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        #toggle-top-bar-button:hover {
+            background-color: var(--button-hover-bg); 
+        }
+        #toggle-top-bar-button .fas {
+            font-size: 14px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Content Area */
+        #tabs-container {
+            flex: 1; position: relative; background-color: var(--iframe-bg);
+        }
+        .tab-content { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: none;
+            border: none; 
+        }
+        .tab-content.active { 
+            display: block;
+        }
+        
+        .footer-label {
+            position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
+            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+        }
+        
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        /* Settings & Extra Controls */
+        #settings-button {
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            margin-left: 10px; border-radius: 50%; 
+            background-color: var(--settings-button-bg);
+            cursor: pointer; color: var(--text-color);
+            transition: background-color 0.2s;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+        #settings-button:hover {
+            background-color: var(--settings-button-hover);
+        }
+
+        #settings-panel {
+            position: fixed;
+            top: 60px;
+            right: 10px;
+            width: 300px;
+            background-color: var(--settings-panel-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1002;
+            display: none;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin-bottom: 15px;
+        }
+
+        .settings-section h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 5px;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .settings-label {
+            font-size: 12px;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-bg-off);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--switch-bg-on);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(21px);
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--dropdown-bg);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        .dropdown-item {
+            color: var(--dropdown-text);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--dropdown-hover);
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* Status Bar */
+        #status-bar {
+            height: 24px;
+            background-color: var(--navbar-bg);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-item {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-item i {
+            margin-right: 5px;
+            font-size: 10px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-text);
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Bookmark Bar */
+        #bookmark-bar {
+            display: flex;
+            background-color: rgba(25, 25, 25, 0.9);
+            padding: 6px 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #bookmark-bar::-webkit-scrollbar {
+            height: 2px;
+        }
+
+        #bookmark-bar::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .bookmark {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            padding: 5px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 12px;
+        }
+
+        .bookmark:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bookmark-favicon {
+            margin-right: 5px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Progress bar */
+        #progress-bar {
+            height: 3px;
+            width: 0;
+            background-color: #2196F3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: width 0.2s ease;
+        }
+
+        /* History viewer */
+        #history-panel {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            background-color: var(--settings-panel-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1002;
+            display: none;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        #history-list {
+            margin-top: 15px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .history-favicon {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+        }
+
+        .history-title {
+            flex: 1;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-url {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            margin-left: 15px;
+            max-width: 40%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-time {
+            margin-left: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Download manager */
+        #downloads-panel {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 350px;
+            background-color: var(--settings-panel-bg);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1002;
+            display: none;
+        }
+
+        .download-item {
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .download-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .download-filename {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .download-progress-bar {
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+
+        .download-progress-fill {
+            height: 100%;
+            background-color: #2196F3;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <canvas id="canvas"></canvas>
-    <div id="header">
-      <img src="Title.png" alt="Logo" id="bigTitle" />
-      <div id="clock"></div>
+
+    <!-- Progress Bar for loading indication -->
+    <div id="progress-bar"></div>
+
+    <div id="top-bar-assembly">
+        <div id="tab-bar">
+            <div class="new-tab-button" id="new-tab-button" title="New Tab">
+                <i class="fas fa-plus"></i>
+            </div>
+        </div>
+        <div id="nav-bar">
+            <div class="nav-button tooltip" id="home-button" title="Home">
+                <i class="fas fa-home"></i>
+                <span class="tooltip-text">Home (Alt+H)</span>
+            </div>
+            <div class="nav-button tooltip disabled" id="back-button" title="Back">
+                <i class="fas fa-arrow-left"></i>
+                <span class="tooltip-text">Back (Alt+←)</span>
+            </div>
+            <div class="nav-button tooltip disabled" id="forward-button" title="Forward">
+                <i class="fas fa-arrow-right"></i>
+                <span class="tooltip-text">Forward (Alt+→)</span>
+            </div>
+            <div class="nav-button tooltip" id="refresh-button" title="Refresh">
+                <i class="fas fa-redo"></i>
+                <span class="tooltip-text">Refresh (F5)</span>
+            </div>
+            <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
+            <div class="nav-button tooltip" id="history-button" title="History">
+                <i class="fas fa-history"></i>
+                <span class="tooltip-text">History (Ctrl+H)</span>
+            </div>
+            <div class="nav-button tooltip" id="downloads-button" title="Downloads">
+                <i class="fas fa-download"></i>
+                <span class="tooltip-text">Downloads (Ctrl+J)</span>
+            </div>
+            <div class="nav-button tooltip" id="settings-button" title="Settings">
+                <i class="fas fa-cog"></i>
+                <span class="tooltip-text">Settings (Alt+S)</span>
+            </div>
+        </div>
+        <div id="bookmark-bar">
+            <!-- Bookmarks will be populated here dynamically -->
+            <div class="bookmark" data-url="https://www.google.com">
+                <div class="bookmark-favicon"><i class="fab fa-google"></i></div>
+                <span>Google</span>
+            </div>
+            <div class="bookmark" data-url="https://www.youtube.com">
+                <div class="bookmark-favicon"><i class="fab fa-youtube"></i></div>
+                <span>YouTube</span>
+            </div>
+            <div class="bookmark" data-url="https://www.github.com">
+                <div class="bookmark-favicon"><i class="fab fa-github"></i></div>
+                <span>GitHub</span>
+            </div>
+            <div class="bookmark" data-url="https://www.reddit.com">
+                <div class="bookmark-favicon"><i class="fab fa-reddit"></i></div>
+                <span>Reddit</span>
+            </div>
+            <div class="bookmark" data-url="https://www.twitter.com">
+                <div class="bookmark-favicon"><i class="fab fa-twitter"></i></div>
+                <span>Twitter</span>
+            </div>
+            <div class="bookmark" data-url="https://www.wikipedia.org">
+                <div class="bookmark-favicon"><i class="fas fa-book"></i></div>
+                <span>Wikipedia</span>
+            </div>
+        </div>
     </div>
-    <div id="content">
-      <form id="uv-form">
-        <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden" />
-        <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL" class="form__input" autocomplete="off" />
-      </form>
-      <div id="popularSites">
-        <a class="btn secondary" onclick="autofill('http://xbox.com/play')">Xbox</a>
-        <a class="btn secondary" onclick="autofill('http://youtube.com')">Youtube</a>
-        <a class="btn secondary" onclick="autofill('https://tiktok.com')">TikTok</a>
-        <a class="btn secondary" onclick="autofill('https://chatgpt.com')">ChatGPT</a>
-        <a class="btn secondary" onclick="autofill('http://apple.com')">Apple</a>
-        <a class="btn secondary" onclick="autofill('http://gemini.google.com')">Gemini</a>
-        <a class="btn secondary" onclick="autofill('http://totaljerkface.com')">Happy Wheels</a>
-      </div>
-      <div class="desc left-margin">
-        <p id="uv-error"></p>
-        <pre id="uv-error-code"></pre>
-      </div>
+
+    <div id="toggle-top-bar-button" title="Hide Toolbar">
+        <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
     </div>
 
-    <!-- Scripts -->
-    <script src="stars.js"></script>
-    <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
-    <script src="uv/uv.config.js" charset="UTF-8" defer></script>
-    <script src="register-sw.js" charset="UTF-8" defer></script>
-    <script src="search.js" charset="UTF-8" defer></script>
-    <script src="index.js" charset="UTF-8" defer></script>
+    <div id="tabs-container">
+        <!-- Tab content (iframes) will be dynamically added here -->
+    </div>
 
-    <!-- Clock Script -->
-    <script>
-      function updateClock() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString();
-        document.getElementById('clock').textContent = timeString;
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
+    <!-- Status Bar -->
+    <div id="status-bar">
+        <div class="status-item" id="connection-status">
+            <i class="fas fa-lock"></i>
+            <span>Secure</span>
+        </div>
+        <div class="status-item" id="page-status">
+            <span>Ready</span>
+        </div>
+        <div class="status-item" id="memory-usage">
+            <i class="fas fa-memory"></i>
+            <span>0 MB</span>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel">
+        <h2>Settings</h2>
+        
+        <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="settings-row">
+                <span class="settings-label">Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="dark-mode-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Show Bookmarks Bar</span>
+                <label class="switch">
+                    <input type="checkbox" id="bookmark-bar-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Show Status Bar</span>
+                <label class="switch">
+                    <input type="checkbox" id="status-bar-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Enable Background Animation</span>
+                <label class="switch">
+                    <input type="checkbox" id="animation-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>Privacy & Security</h3>
+            <div class="settings-row">
+                <span class="settings-label">Block Trackers</span>
+                <label class="switch">
+                    <input type="checkbox" id="tracker-blocking-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Block Ads</span>
+                <label class="switch">
+                    <input type="checkbox" id="ad-blocking-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">JavaScript Enabled</span>
+                <label class="switch">
+                    <input type="checkbox" id="javascript-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>Search Engine</h3>
+            <div class="settings-row">
+                <span class="settings-label">Default Search</span>
+                <select id="search-engine-select">
+                    <option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option>
+                    <option value="https://www.google.com/search?q=%s">Google</option>
+                    <option value="https://www.bing.com/search?q=%s">Bing</option>
+                    <option value="https://search.brave.com/search?q=%s">Brave Search</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>Browser Data</h3>
+            <div class="settings-row">
+                <span class="settings-label">Clear Browsing History</span>
+                <button id="clear-history-btn">Clear</button>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Clear Cache</span>
+                <button id="clear-cache-btn">Clear</button>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>Advanced</h3>
+            <div class="settings-row">
+                <span class="settings-label">Proxy Server URL</span>
+                <input type="text" id="proxy-url" placeholder="Enter proxy URL">
+            </div>
+            <div class="settings-row">
+                <button id="save-settings-btn">Save All Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Panel -->
+    <div id="history-panel">
+        <h2>Browsing History</h2>
+        <input type="text" id="history-search" placeholder="Search history..." style="width: 100%; padding: 8px; margin-bottom: 10px; background-color: rgba(30,30,30,0.9); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;">
+        <div id="history-list">
+            <!-- History items will be populated here dynamically -->
+        </div>
+    </div>
+
+    <!-- Downloads Panel -->
+    <div id="downloads-panel">
+        <h2>Downloads</h2>
+        <div id="downloads-list">
+            <!-- Download items will be populated here dynamically -->
+        </div>
+    </div>
+
+    <span class="footer-label">Official 4SP Proxy Pro</span>
+    
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script>
+    <script src="search.js" defer></script>
+    <script src="stars.js" defer></script>
+
+        <script>
+        // Browser state
+        let tabs = [];
+        let activeTabId = null;
+        let tabCounter = 0;
+        let browserHistory = [];
+        let downloadQueue = [];
+        let bookmarks = [];
+
+        // UI elements
+        const tabBarEl = document.getElementById('tab-bar');
+        const tabsContainerEl = document.getElementById('tabs-container');
+        const searchBarEl = document.getElementById('search-bar');
+        const newTabButtonEl = document.getElementById('new-tab-button');
+        const homeButtonEl = document.getElementById('home-button');
+        const backButtonEl = document.getElementById('back-button');
+        const forwardButtonEl = document.getElementById('forward-button');
+        const refreshButtonEl = document.getElementById('refresh-button');
+        const historyButtonEl = document.getElementById('history-button');
+        const downloadsButtonEl = document.getElementById('downloads-button');
+        const settingsButtonEl = document.getElementById('settings-button');
+        const progressBarEl = document.getElementById('progress-bar');
+        const historyPanelEl = document.getElementById('history-panel');
+        const downloadsPanelEl = document.getElementById('downloads-panel');
+        const settingsPanelEl = document.getElementById('settings-panel');
+
+        // Default homepage
+        const HOME_URL = 'https://duckduckgo.com';
+        // Settings stored in localStorage
+        let settings = {
+            defaultSearchEngine: localStorage.getItem('searchEngine') || 'https://duckduckgo.com/?q=%s',
+            proxyUrl: localStorage.getItem('proxyUrl') || '',
+            javascriptEnabled: JSON.parse(localStorage.getItem('jsEnabled') || 'true')
+        };
+
+        // Util: format search or URL
+        function buildTargetUrl(input) {
+            let url;
+            // Simple URL detection
+            if (/^(https?:\/\/)/.test(input)) {
+                url = input;
+            } else if (/\./.test(input) && !/\s/.test(input)) {
+                url = 'http://' + input;
+            } else {
+                url = settings.defaultSearchEngine.replace('%s', encodeURIComponent(input));
+            }
+            return url;
+        }
+
+        // Create a new tab
+        function createTab(url = HOME_URL, switchTo = true) {
+            const id = ++tabCounter;
+            const tabEl = document.createElement('div');
+            tabEl.className = 'tab';
+            tabEl.dataset.id = id;
+
+            const favicon = document.createElement('div');
+            favicon.className = 'tab-favicon';
+            favicon.innerHTML = '<i class="fas fa-question"></i>';
+            tabEl.appendChild(favicon);
+
+            const title = document.createElement('div');
+            title.className = 'tab-title';
+            title.textContent = 'Loading...';
+            tabEl.appendChild(title);
+
+            const closeBtn = document.createElement('div');
+            closeBtn.className = 'tab-close';
+            closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            tabEl.appendChild(closeBtn);
+
+            tabBarEl.insertBefore(tabEl, newTabButtonEl);
+
+            // Iframe
+            const iframe = document.createElement('iframe');
+            iframe.className = 'tab-content';
+            iframe.dataset.id = id;
+            iframe.src = settings.proxyUrl ? settings.proxyUrl + encodeURIComponent(url) : url;
+            iframe.sandbox = settings.javascriptEnabled ? 'allow-scripts allow-same-origin' : 'allow-same-origin';
+            tabsContainerEl.appendChild(iframe);
+
+            // Tab object
+            tabs.push({ id, tabEl, iframe, url });
+
+            // Events
+            tabEl.addEventListener('click', () => switchTab(id));
+            closeBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                closeTab(id);
+            });
+            iframe.addEventListener('load', () => onTabLoad(id));
+
+            if (switchTo) switchTab(id);
+            return id;
+        }
+
+        // Switch to a tab
+        function switchTab(id) {
+            tabs.forEach(t => {
+                const active = t.id === id;
+                t.tabEl.classList.toggle('active', active);
+                t.iframe.classList.toggle('active', active);
+                if (active) {
+                    activeTabId = id;
+                    searchBarEl.value = t.url;
+                    updateNavButtons();
+                }
+            });
+        }
+
+        // Close a tab
+        function closeTab(id) {
+            const idx = tabs.findIndex(t => t.id === id);
+            if (idx === -1) return;
+            const t = tabs[idx];
+            t.tabEl.remove();
+            t.iframe.remove();
+            tabs.splice(idx, 1);
+            if (activeTabId === id) {
+                if (tabs.length) createTab(HOME_URL);
+                else activeTabId = null;
+            }
+        }
+
+        // Update Back/Forward button state
+        function updateNavButtons() {
+            const iframe = tabs.find(t => t.id === activeTabId)?.iframe;
+            if (!iframe) return;
+            backButtonEl.classList.toggle('disabled', !iframe.contentWindow.history.length);
+            forwardButtonEl.classList.toggle('disabled', !iframe.contentWindow.history.length);
+        }
+
+        // On iframe load
+        function onTabLoad(id) {
+            const tab = tabs.find(t => t.id === id);
+            if (!tab) return;
+            const src = tab.iframe.contentWindow.location.href;
+            tab.url = src;
+            tab.tabEl.querySelector('.tab-title').textContent = tab.iframe.contentDocument.title || src;
+            // Attempt favicon
+            const link = tab.iframe.contentDocument.querySelector("link[rel*='icon']");
+            if (link) tab.tabEl.querySelector('.tab-favicon').innerHTML = `<img src="${link.href}" width="16" height="16">`;
+            if (activeTabId === id) searchBarEl.value = src;
+            updateNavButtons();
+        }
+
+        // Navigation actions
+        homeButtonEl.addEventListener('click', () => loadInActive(HOME_URL));
+        backButtonEl.addEventListener('click', () => navigateActive('back'));
+        forwardButtonEl.addEventListener('click', () => navigateActive('forward'));
+        refreshButtonEl.addEventListener('click', () => reloadActive());
+
+        function loadInActive(url) {
+            const tab = tabs.find(t => t.id === activeTabId);
+            if (!tab) return;
+            tab.url = url;
+            tab.iframe.src = settings.proxyUrl + encodeURIComponent(url) || url;
+        }
+        function navigateActive(dir) {
+            const iframe = tabs.find(t => t.id === activeTabId)?.iframe;
+            if (!iframe) return;
+            iframe.contentWindow.history[dir]();
+        }
+        function reloadActive() {
+            const iframe = tabs.find(t => t.id === activeTabId)?.iframe;
+            if (!iframe) return;
+            iframe.src = iframe.src;
+        }
+
+        // Search bar
+        searchBarEl.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                const target = buildTargetUrl(searchBarEl.value);
+                loadInActive(target);
+            }
+        });
+
+        // New tab
+        newTabButtonEl.addEventListener('click', () => createTab());
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            createTab(HOME_URL);
+        });
     </script>
-
-    <!-- Autofill Helper -->
-    <script>
-      function autofill(url) {
-        const input = document.getElementById('uv-address');
-        input.value = url;
-        document.getElementById('uv-form').dispatchEvent(new Event('submit'));
-      }
-    </script>
-
-    <!-- Footer Label -->
-    <span class="footer-label">Official 4SP Proxy</span>
-  </body>
+</body>
 </html>
