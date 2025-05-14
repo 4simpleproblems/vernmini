@@ -289,6 +289,8 @@
             align-items: center;
             font-size: 18px;
             font-weight: bold;
+            text-decoration: none;
+            color: var(--text-color);
         }
         #sidebar-logo img { /* Assuming logo.png is your sidebar logo too */
             width: 24px;
@@ -321,6 +323,8 @@
             cursor: pointer;
             transition: background-color 0.2s;
             font-size: 14px;
+            text-decoration: none;
+            color: var(--text-color);
         }
         .sidebar-item:hover {
             background-color: rgba(255, 255, 255, 0.1);
@@ -367,6 +371,7 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: none; /* Inactive iframes are hidden */
             border: none;
+            /* sandbox: allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-pointer-lock allow-modals; */
         }
         .tab-content.active {
             display: block; /* Active iframe is shown */
@@ -889,19 +894,19 @@
                 <button class="pro-menu-item" data-action="pro-feature-2"><i class="fas fa-bolt"></i> Pro Feature 2</button>
                 <div class="pro-menu-separator"></div>
                 <div class="dropdown">
-                    <button class="pro-menu-item" id="tools-dropdown-toggle"><i class="fas fa-tools"></i> Tools</button>
+                    <button class="pro-menu-item" id="tools-dropdown-toggle" data-dropdown-target="tools-dropdown-menu"><i class="fas fa-tools"></i> Tools</button>
                     <div class="dropdown-menu" id="tools-dropdown-menu">
-                        <a href="#" class="dropdown-item"><i class="fas fa-cut"></i> Snippet Tool</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-palette"></i> Color Picker</a>
+                        <a href="#" class="dropdown-item" data-action="tool-snippet"><i class="fas fa-cut"></i> Snippet Tool</a>
+                        <a href="#" class="dropdown-item" data-action="tool-colorpicker"><i class="fas fa-palette"></i> Color Picker</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                        <a href="#" class="dropdown-item" data-action="tool-help"><i class="fas fa-question-circle"></i> Help</a>
                     </div>
                 </div>
             </div>
             <div id="tab-bar">
                 <button class="new-tab-button tooltip" id="new-tab-btn">
                     <i class="fas fa-plus"></i>
-                    <span class="tooltip-text">New Tab</span>
+                    <span class="tooltip-text">New Tab (Ctrl+T)</span>
                 </button>
             </div>
         </div>
@@ -910,15 +915,15 @@
             <div id="nav-buttons">
                 <button class="nav-button tooltip" id="back-btn" disabled>
                     <i class="fas fa-arrow-left"></i>
-                    <span class="tooltip-text">Back</span>
+                    <span class="tooltip-text">Back (Alt+Left)</span>
                 </button>
                 <button class="nav-button tooltip" id="forward-btn" disabled>
                     <i class="fas fa-arrow-right"></i>
-                    <span class="tooltip-text">Forward</span>
+                    <span class="tooltip-text">Forward (Alt+Right)</span>
                 </button>
                 <button class="nav-button tooltip" id="reload-btn">
                     <i class="fas fa-redo"></i>
-                    <span class="tooltip-text">Reload</span>
+                    <span class="tooltip-text">Reload (F5)</span>
                 </button>
                 <button class="nav-button tooltip" id="home-btn">
                     <i class="fas fa-home"></i>
@@ -927,7 +932,7 @@
             </div>
             <input type="text" id="search-bar" placeholder="Search or enter address">
             <div id="nav-actions" style="display: flex; gap: 8px; margin-left: 8px;">
-                 <button class="nav-button tooltip" id="menu-btn"> <i class="fas fa-ellipsis-v"></i>
+                 <button class="nav-button tooltip" id="menu-btn" data-action="toggle-user-menu"> <i class="fas fa-ellipsis-v"></i>
                     <span class="tooltip-text">Menu</span>
                 </button>
                  <div class="dropdown">
@@ -965,22 +970,7 @@
                     <button class="btn btn-primary" id="manage-shortcuts-btn"><i class="fas fa-pencil-alt"></i> Manage</button>
                 </div>
                 <div id="shortcuts-grid">
-                    <a href="https://google.com" class="shortcut-item" data-url="https://google.com">
-                        <div class="shortcut-icon"><img src="https://www.google.com/s2/favicons?domain=google.com&sz=64" alt="G"></div>
-                        <div class="shortcut-title">Google</div>
-                        <div class="shortcut-url">google.com</div>
-                    </a>
-                    <a href="https://github.com" class="shortcut-item" data-url="https://github.com">
-                        <div class="shortcut-icon"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="GH"></div>
-                        <div class="shortcut-title">GitHub</div>
-                        <div class="shortcut-url">github.com</div>
-                    </a>
-                    <div class="shortcut-item add-shortcut" id="add-shortcut-btn">
-                        <div class="shortcut-icon"><i class="fas fa-plus"></i></div>
-                        <div class="shortcut-title">Add Shortcut</div>
-                        <div class="shortcut-url">Click to add</div>
                     </div>
-                </div>
             </div>
         </div>
     </main>
@@ -1003,7 +993,7 @@
                     <input type="text" id="shortcut-name" class="form-control" placeholder="e.g., Google News">
                 </div>
                 <div class="form-group">
-                    <label for="shortcut-url">URL</label>
+                    <label for="shortcut-url-input">URL</label>
                     <input type="url" id="shortcut-url-input" class="form-control" placeholder="https://news.google.com">
                 </div>
                  <div class="form-group">
@@ -1073,7 +1063,7 @@
                     <h4 class="settings-category-title">Privacy</h4>
                      <div class="settings-item">
                         <span class="settings-item-label">Clear Browse data</span>
-                        <button class="btn btn-secondary" id="clear-Browse-data-btn">Clear Data...</button>
+                        <button class="btn btn-secondary" id="clear-browse-data-btn" data-action="clear-browse-data">Clear Data...</button>
                     </div>
                     <div class="settings-item">
                         <span class="settings-item-label">Send "Do Not Track" request</span>
@@ -1093,9 +1083,15 @@
 
 
     <a href="https://github.com/Lissy93/vern" target="_blank" class="footer-label">Vern Pro (Inspired by Vern)</a>
+    
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script> 
+    <script src="search.js" defer></script>
+
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             // Element References
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
@@ -1116,35 +1112,70 @@
             const tabBar = document.getElementById('tab-bar');
             const tabsContainer = document.getElementById('tabs-container');
             const shortcutsContainer = document.getElementById('shortcuts-container');
+            const shortcutsGrid = document.getElementById('shortcuts-grid');
+             const addShortcutPlaceholderBtn = document.getElementById('add-shortcut-btn'); // Renamed to avoid conflict
 
-            const addShortcutBtn = document.getElementById('add-shortcut-btn');
+
             const addShortcutModal = document.getElementById('add-shortcut-modal');
             const saveShortcutBtn = document.getElementById('save-shortcut-btn');
             const shortcutNameInput = document.getElementById('shortcut-name');
-            const shortcutUrlInput = document.getElementById('shortcut-url-input');
+            const shortcutUrlInput = document.getElementById('shortcut-url-input'); // Corrected ID
+            const shortcutIconUrlInput = document.getElementById('shortcut-icon-url');
 
-            const settingsButton = document.getElementById('settings-button'); // Sidebar settings
+
             const settingsModal = document.getElementById('settings-modal');
-            const userProfileBtn = document.getElementById('user-profile-btn'); // Nav bar user icon
+            const menuBtn = document.getElementById('menu-btn');
+
 
             let tabs = [];
             let activeTabId = null;
             let nextTabId = 1;
-            const MAX_TABS = 10; // Example limit
+            const MAX_TABS = 15; // Example limit
 
-            const DEFAULT_HOME_PAGE = 'shortcuts'; // Can be a URL or 'shortcuts'
+            const DEFAULT_HOME_PAGE = 'shortcuts'; // Can be a URL or 'shortcuts' which shows speed dial
+            const DEFAULT_SEARCH_ENGINE = 'https://duckduckgo.com/?q=%s'; // Default search engine from search.html
+
+            // --- UV Service Worker Initialization ---
+            async function initUV() {
+                try {
+                    if (typeof registerSW === 'function') {
+                        await registerSW();
+                        console.log("Service worker registered successfully for UV.");
+                    } else {
+                        console.error("registerSW function not found. Ensure register-sw.js is loaded.");
+                        alert("Error: Proxy service worker could not be registered. Website proxying will not work.");
+                    }
+                } catch (err) {
+                    console.error("Failed to register service worker:", err);
+                    alert("Error: Proxy service worker registration failed. Website proxying will not work.");
+                }
+            }
+            await initUV(); // Initialize UV as soon as DOM is ready
+
 
             // --- Initial Setup ---
             function initializeBrowser() {
-                loadSettings();
-                createNewTab(DEFAULT_HOME_PAGE, true); // Open initial tab
+                loadSettings(); // Load theme, shortcuts, etc.
+                
+                const startupBehavior = localStorage.getItem('vernProStartupBehavior') || 'newtab';
+                let initialUrl = DEFAULT_HOME_PAGE;
+
+                if (startupBehavior === 'lastsession') {
+                    // Rudimentary last session restore (can be expanded)
+                    const lastActiveTabUrl = localStorage.getItem('vernProLastActiveUrl');
+                    if (lastActiveTabUrl) initialUrl = lastActiveTabUrl;
+                } else if (startupBehavior === 'homepage') {
+                    initialUrl = localStorage.getItem('vernProHomepageUrl') || DEFAULT_HOME_PAGE;
+                }
+                
+                createNewTab(initialUrl, true); 
+
                 updateTopBarAssemblyHeight();
                 updateToggleTopBarButtonPosition();
-                updateSidebarState(); // Load from localStorage
-                updateTopBarState();  // Load from localStorage
+                updateSidebarState(); 
+                updateTopBarState();  
 
-
-                // Sidebar items active state
+                // Sidebar items active state and actions
                 document.querySelectorAll('#sidebar .sidebar-item').forEach(item => {
                     item.addEventListener('click', function(e) {
                         e.preventDefault();
@@ -1154,6 +1185,23 @@
                         handleSidebarAction(action);
                     });
                 });
+
+                // Pro Options Bar actions (placeholders)
+                document.querySelectorAll('#pro-options-bar .pro-menu-item, #tools-dropdown-menu .dropdown-item').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const action = this.dataset.action || this.textContent.trim();
+                        alert(`Action: ${action} (not implemented yet)`);
+                    });
+                });
+                
+                // Nav bar menu button action
+                if(menuBtn) {
+                    menuBtn.addEventListener('click', () => {
+                         const userDropdownMenu = document.getElementById('user-dropdown-menu');
+                         if(userDropdownMenu) userDropdownMenu.classList.toggle('show');
+                    });
+                }
             }
 
             // --- Sidebar Toggle ---
@@ -1164,17 +1212,14 @@
                 toggleSidebarIcon.classList.toggle('fa-chevron-right');
                 toggleSidebarBtn.classList.toggle('collapsed');
 
-                // Adjust button position if it needs to stick to a collapsed sidebar edge
                 if (sidebar.classList.contains('collapsed')) {
-                    toggleSidebarBtn.style.left = '0px'; // Or a small offset
+                    toggleSidebarBtn.style.left = '0px'; 
                     localStorage.setItem('sidebarCollapsed', 'true');
                 } else {
-                    // If sidebar has a visible collapsed state (e.g., 48px), adjust accordingly
-                    // toggleSidebarBtn.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-collapsed-width').trim();
-                    toggleSidebarBtn.style.left = '0px'; // For fully hidden, it stays at 0
+                    toggleSidebarBtn.style.left = '0px'; 
                     localStorage.setItem('sidebarCollapsed', 'false');
                 }
-                setTimeout(updateToggleTopBarButtonPosition, 350); // After sidebar transition
+                setTimeout(updateToggleTopBarButtonPosition, 350); 
             });
 
              function updateSidebarState() {
@@ -1199,8 +1244,6 @@
 
             // --- Top Bar Assembly Toggle (Pro Options + Tabs) ---
             function updateTopBarAssemblyHeight() {
-                // Set initial max-height for animation.
-                // Needs to be done after elements are rendered to get correct scrollHeight.
                 if (!topBarAssembly.classList.contains('hidden')) {
                      topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
                 } else {
@@ -1218,7 +1261,6 @@
                 toggleTopBarIcon.classList.toggle('fa-chevron-up');
                 toggleTopBarIcon.classList.toggle('fa-chevron-down');
                 toggleTopBarBtn.classList.toggle('up', !topBarAssembly.classList.contains('hidden'));
-
 
                 if (topBarAssembly.classList.contains('hidden')) {
                     topBarAssembly.style.maxHeight = '0px';
@@ -1240,7 +1282,6 @@
                     topBarAssembly.classList.remove('hidden');
                     toggleTopBarIcon.classList.add('fa-chevron-up');
                     toggleTopBarIcon.classList.remove('fa-chevron-down');
-                    // Call after a slight delay to ensure DOM is ready for scrollHeight
                     setTimeout(() => {
                          topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
                     }, 0);
@@ -1259,22 +1300,24 @@
             function createNewTab(url = DEFAULT_HOME_PAGE, makeActive = true) {
                 if (tabs.length >= MAX_TABS) {
                     alert("Maximum number of tabs reached.");
-                    return;
+                    return null;
                 }
 
                 const tabId = `tab-${nextTabId++}`;
                 const tabData = {
                     id: tabId,
-                    url: url,
+                    url: url, // This will be the "target" URL, not the proxied one initially
+                    actualUrl: url, // Store the original requested URL
                     title: 'New Tab',
-                    favicon: 'logo.png', // Default favicon
+                    favicon: 'logo.png', 
                     isLoading: true,
                     history: [url],
-                    historyIndex: 0
+                    historyIndex: 0,
+                    iframe: null,
+                    locationCheckIntervalId: null // For tracking iframe internal navigation
                 };
                 tabs.push(tabData);
 
-                // Create Tab Element
                 const tabEl = document.createElement('div');
                 tabEl.className = 'tab';
                 tabEl.dataset.tabId = tabId;
@@ -1285,29 +1328,21 @@
                 `;
                 tabBar.insertBefore(tabEl, newTabBtn);
 
-                // Create Content Element (iframe or shortcuts)
                 const contentEl = document.createElement('div');
                 contentEl.id = `content-${tabId}`;
+                contentEl.className = 'tab-content';
+                tabsContainer.appendChild(contentEl);
+                tabData.contentEl = contentEl;
 
-
-                if (url === 'shortcuts') {
-                    contentEl.className = 'tab-content'; // Keep class for consistency
-                    // Clone shortcuts container for this tab or use a shared one and toggle visibility
-                    // For simplicity, we'll assume the main shortcutsContainer is shown/hidden
-                    tabData.title = "Speed Dial";
-                    tabData.favicon = 'logo.png'; // Or a specific icon for speed dial
-                    updateTabElement(tabData);
-                } else {
-                    contentEl.className = 'tab-content';
+                if (url !== 'shortcuts') {
                     const iframe = document.createElement('iframe');
-                    iframe.src = parseUrl(url); // Ensure URL has protocol
+                    // iframe.sandbox = "allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-pointer-lock allow-modals";
                     iframe.addEventListener('load', () => handleIframeLoad(tabData, iframe));
                     iframe.addEventListener('error', () => handleIframeError(tabData, iframe));
                     contentEl.appendChild(iframe);
                     tabData.iframe = iframe;
                 }
-                tabsContainer.appendChild(contentEl);
-
+                
                 tabEl.querySelector('.tab-close').addEventListener('click', (e) => {
                     e.stopPropagation();
                     closeTab(tabId);
@@ -1316,57 +1351,78 @@
 
                 if (makeActive) {
                     switchToTab(tabId);
+                } else {
+                    updateTabVisuals();
                 }
-                updateTabVisuals();
+                // Navigate after tab structure is set up if it's an active new tab, or if switching will handle it
+                if (makeActive) {
+                     navigate(url, tabData); // Initial navigation for the new tab
+                }
                 return tabData;
             }
 
             function switchToTab(tabId) {
-                if (activeTabId === tabId && document.querySelector(`.tab[data-tab-id="${tabId}"]`).classList.contains('active')) return;
-
+                if (activeTabId === tabId && document.querySelector(`.tab[data-tab-id="${tabId}"]`)?.classList.contains('active')) return;
 
                 tabs.forEach(tab => {
                     const tabEl = document.querySelector(`.tab[data-tab-id="${tab.id}"]`);
-                    const contentEl = document.getElementById(`content-${tab.id}`);
+                    // const contentEl = document.getElementById(`content-${tab.id}`);
                     if (tabEl) tabEl.classList.remove('active');
-                    if (contentEl) contentEl.classList.remove('active');
+                    if (tab.contentEl) tab.contentEl.classList.remove('active');
+                    if(tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); // Stop tracking non-active tabs
                 });
 
-                 // Hide global shortcuts if switching to a tab that is not 'shortcuts'
                 shortcutsContainer.classList.remove('active');
-
-
                 activeTabId = tabId;
                 const activeTabData = tabs.find(t => t.id === tabId);
 
-                const activeTabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
-                const activeContentEl = document.getElementById(`content-${tabId}`);
-
-                if (activeTabEl) activeTabEl.classList.add('active');
-
-
                 if (activeTabData) {
-                    searchBar.value = (activeTabData.url === 'shortcuts') ? '' : activeTabData.url;
+                    const activeTabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                    if (activeTabEl) activeTabEl.classList.add('active');
+                    
+                    document.title = (activeTabData.title || 'Vern Pro') + ' - Vern Pro Browser';
+
                     if (activeTabData.url === 'shortcuts') {
-                        shortcutsContainer.classList.add('active'); // Show shortcuts for this tab
-                        if(activeContentEl) activeContentEl.classList.remove('active'); // Hide its own content div
+                        searchBar.value = '';
+                        shortcutsContainer.classList.add('active');
+                        if(activeTabData.contentEl) activeTabData.contentEl.classList.remove('active');
                     } else {
-                        if (activeContentEl) activeContentEl.classList.add('active');
+                        if (activeTabData.contentEl) activeTabData.contentEl.classList.add('active');
+                        // If iframe doesn't exist yet (e.g., was shortcuts, now navigating), create it.
+                        if (!activeTabData.iframe && activeTabData.contentEl) {
+                            const iframe = document.createElement('iframe');
+                            // iframe.sandbox = "allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-pointer-lock allow-modals";
+                            iframe.addEventListener('load', () => handleIframeLoad(activeTabData, iframe));
+                            iframe.addEventListener('error', () => handleIframeError(activeTabData, iframe));
+                            activeTabData.contentEl.innerHTML = ''; // Clear any previous non-iframe content
+                            activeTabData.contentEl.appendChild(iframe);
+                            activeTabData.iframe = iframe;
+                            navigate(activeTabData.url, activeTabData); // Navigate this newly created iframe
+                        } else {
+                             // update searchBar with the actual URL if available, otherwise the target one.
+                            searchBar.value = activeTabData.actualUrl || activeTabData.url;
+                        }
+                        trackIframeLocation(activeTabData); // Start tracking for this active tab
                     }
                     updateNavButtons(activeTabData);
+                    localStorage.setItem('vernProLastActiveUrl', activeTabData.actualUrl || activeTabData.url);
                 }
                 updateTabVisuals();
             }
-
+            
             function closeTab(tabId) {
                 const tabIndex = tabs.findIndex(t => t.id === tabId);
                 if (tabIndex === -1) return;
 
-                const tabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
-                const contentEl = document.getElementById(`content-${tabId}`);
+                const tabToClose = tabs[tabIndex];
+                if (tabToClose.locationCheckIntervalId) {
+                    clearInterval(tabToClose.locationCheckIntervalId);
+                }
 
+                const tabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                // const contentEl = document.getElementById(`content-${tabId}`);
                 if (tabEl) tabEl.remove();
-                if (contentEl) contentEl.remove();
+                if (tabToClose.contentEl) tabToClose.contentEl.remove();
 
                 tabs.splice(tabIndex, 1);
 
@@ -1375,11 +1431,10 @@
                     if (tabs.length > 0) {
                         switchToTab(tabs[Math.max(0, tabIndex - 1)].id);
                     } else {
-                        createNewTab(); // Open a new default tab if all are closed
+                        createNewTab(DEFAULT_HOME_PAGE); 
                     }
-                }
-                if (tabs.length === 0) { // If last tab closed, create a new one
-                     createNewTab();
+                } else if (tabs.length === 0) { 
+                     createNewTab(DEFAULT_HOME_PAGE);
                 }
                 updateTabVisuals();
             }
@@ -1388,64 +1443,139 @@
                 const tabEl = document.querySelector(`.tab[data-tab-id="${tabData.id}"]`);
                 if (tabEl) {
                     tabEl.querySelector('.tab-title').textContent = tabData.isLoading ? 'Loading...' : (tabData.title || 'Untitled');
-                    tabEl.querySelector('.tab-favicon img').src = tabData.favicon || 'logo.png';
+                    tabEl.querySelector('.tab-title').title = tabData.isLoading ? 'Loading...' : (tabData.title || 'Untitled');
+                    
+                    const faviconEl = tabEl.querySelector('.tab-favicon');
                     if(tabData.isLoading) {
-                        tabEl.querySelector('.tab-favicon').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        faviconEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                     } else {
-                        tabEl.querySelector('.tab-favicon').innerHTML = `<img src="${tabData.favicon || 'logo.png'}" alt="">`;
+                        faviconEl.innerHTML = `<img src="${tabData.favicon || 'logo.png'}" alt="" onerror="this.src='logo.png'">`;
                     }
+                }
+                if (tabData.id === activeTabId) {
+                     document.title = (tabData.title || 'Vern Pro') + ' - Vern Pro Browser';
                 }
             }
 
+            function trackIframeLocation(tabData) {
+                if (!tabData || !tabData.iframe || tabData.url === 'shortcuts') return;
+
+                if (tabData.locationCheckIntervalId) clearInterval(tabData.locationCheckIntervalId);
+
+                tabData.locationCheckIntervalId = setInterval(() => {
+                    if (tabData.id !== activeTabId || !tabData.iframe || !tabData.iframe.contentWindow) {
+                        clearInterval(tabData.locationCheckIntervalId);
+                        return;
+                    }
+                    try {
+                        const currentIframeSrc = tabData.iframe.contentWindow.location.href;
+                        // The UV proxied URL will be in iframe.src or iframe.contentWindow.location.href
+                        // We need to decode it to get the "actual" URL
+                        if (currentIframeSrc && currentIframeSrc !== 'about:blank' && currentIframeSrc !== tabData.proxiedUrl) {
+                             if (typeof __uv$config !== 'undefined' && typeof __uv$config.decodeUrl === 'function' && currentIframeSrc.includes(__uv$config.prefix)) {
+                                const encodedPart = currentIframeSrc.substring(currentIframeSrc.indexOf(__uv$config.prefix) + __uv$config.prefix.length);
+                                let decodedActualUrl = '';
+                                try {
+                                   decodedActualUrl = __uv$config.decodeUrl(encodedPart);
+                                } catch (e) { console.warn("Error decoding URL from iframe src:", e); decodedActualUrl = "error decoding URL"; }
+
+                                if (decodedActualUrl && decodedActualUrl !== tabData.actualUrl) {
+                                    tabData.actualUrl = decodedActualUrl; // Update the actual URL
+                                    tabData.url = decodedActualUrl; // Also update primary URL for history purposes if needed
+                                    searchBar.value = decodedActualUrl; // Update search bar
+                                    
+                                    // Update history if navigation wasn't through back/forward
+                                    if (tabData.history[tabData.historyIndex] !== decodedActualUrl) {
+                                        if (tabData.historyIndex < tabData.history.length - 1) {
+                                            tabData.history = tabData.history.slice(0, tabData.historyIndex + 1);
+                                        }
+                                        tabData.history.push(decodedActualUrl);
+                                        tabData.historyIndex = tabData.history.length - 1;
+                                        updateNavButtons(tabData);
+                                    }
+                                }
+                             }
+                        }
+                    } catch (e) {
+                        // console.warn("CORS error trying to access iframe location for tracking, or iframe detached.", e);
+                        // This often happens briefly during navigation or if iframe is cross-origin before UV kicks in fully
+                    }
+                }, 750); // Check periodically
+            }
+
+
             function handleIframeLoad(tabData, iframe) {
                 tabData.isLoading = false;
+                let pageTitle = 'Untitled';
+                let pageFavicon = 'logo.png';
+                let actualUrl = tabData.actualUrl || tabData.url; // Prefer actualUrl if set by UV process
+
                 try {
-                    tabData.title = iframe.contentDocument.title || iframe.src;
-                    // Try to get favicon - might be blocked by CORS
-                    const links = iframe.contentDocument.getElementsByTagName('link');
-                    for (let link of links) {
-                        if (link.rel.includes('icon')) {
-                            tabData.favicon = new URL(link.href, iframe.src).href;
-                            break;
+                    if (iframe.contentDocument) {
+                        pageTitle = iframe.contentDocument.title || new URL(iframe.src).hostname;
+                         const links = iframe.contentDocument.getElementsByTagName('link');
+                        for (let link of links) {
+                            if (link.rel.includes('icon')) {
+                                pageFavicon = new URL(link.href, iframe.src).href;
+                                break;
+                            }
                         }
                     }
-                     if (!tabData.favicon || tabData.favicon === 'logo.png') { // If still default, try domain favicon
-                        const domain = new URL(iframe.src).hostname;
-                        tabData.favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
-                    }
-
                 } catch (e) {
-                    // Likely CORS issue accessing iframe content
-                    console.warn("CORS issue accessing iframe content for title/favicon.", e);
-                    tabData.title = new URL(iframe.src).hostname; // Fallback to hostname
-                    const domain = new URL(iframe.src).hostname;
-                    tabData.favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+                    // CORS or other security error, fallback to URL parts
+                    console.warn("CORS issue accessing iframe content for title/favicon after load.", e);
+                    try {
+                        pageTitle = new URL(iframe.src).hostname; // This might be the proxied URL's hostname
+                    } catch { /* keep default */ }
+                }
+                
+                // If UV is used, try to get the decoded URL for display and history
+                if (typeof __uv$config !== 'undefined' && iframe.src.includes(__uv$config.prefix)) {
+                    const encodedPart = iframe.src.substring(iframe.src.indexOf(__uv$config.prefix) + __uv$config.prefix.length);
+                    try {
+                        actualUrl = __uv$config.decodeUrl(encodedPart);
+                        pageTitle = iframe.contentDocument?.title || new URL(actualUrl).hostname; // Use actual URL for title if doc title fails
+                    } catch (e) { console.warn("Error decoding UV URL on load:", e); actualUrl = "Failed to decode URL"; }
+                } else if (iframe.src !== 'about:blank' && iframe.src !== 'shortcuts'){
+                     actualUrl = iframe.src; // Non-proxied URL
                 }
 
-                // Update URL history for back/forward
-                if (tabData.history[tabData.historyIndex] !== iframe.src) {
-                    // If navigating forward from a back state, clear future history
+
+                tabData.title = pageTitle;
+                tabData.favicon = pageFavicon || `https://www.google.com/s2/favicons?domain=${new URL(actualUrl).hostname}&sz=32`;
+                tabData.actualUrl = actualUrl; // Store the "real" URL
+                tabData.proxiedUrl = iframe.src; // Store the current src of the iframe (could be proxied)
+
+
+                // Update URL history for back/forward using the actual (decoded) URL
+                if (tabData.history[tabData.historyIndex] !== actualUrl && actualUrl !== 'about:blank') {
                     if (tabData.historyIndex < tabData.history.length - 1) {
                         tabData.history = tabData.history.slice(0, tabData.historyIndex + 1);
                     }
-                    tabData.history.push(iframe.src);
+                    tabData.history.push(actualUrl);
                     tabData.historyIndex = tabData.history.length - 1;
                 }
-                tabData.url = iframe.src;
-
+                tabData.url = actualUrl; // Ensure main url is the actual one
 
                 if (tabData.id === activeTabId) {
-                    searchBar.value = tabData.url;
+                    searchBar.value = actualUrl === 'about:blank' ? '' : actualUrl;
                     updateNavButtons(tabData);
                 }
                 updateTabElement(tabData);
+                trackIframeLocation(tabData); // Start/restart tracking after load
             }
 
             function handleIframeError(tabData, iframe){
                 tabData.isLoading = false;
                 tabData.title = "Error Loading Page";
-                tabData.favicon = 'logo.png'; // Error icon
-                // iframe.contentDocument.body.innerHTML = `<div style="padding:20px; text-align:center;"><h2>Failed to load page</h2><p>${tabData.url}</p></div>`;
+                tabData.favicon = 'logo.png'; 
+                try {
+                    if(iframe && iframe.contentDocument) { // Check if iframe and its document exist
+                        iframe.contentDocument.body.innerHTML = `<div style="padding:20px; text-align:center; color: white;"><h2>Failed to load page</h2><p>${tabData.actualUrl || tabData.url}</p></div>`;
+                    }
+                } catch (e) {
+                    console.warn("Could not write error to iframe body (likely due to navigation change or removal).");
+                }
                 updateTabElement(tabData);
                  if (tabData.id === activeTabId) {
                     updateNavButtons(tabData);
@@ -1454,7 +1584,6 @@
 
 
             function updateTabVisuals() {
-                // Example: Add a class if tabs overflow for scrolling indicator
                 if (tabBar.scrollWidth > tabBar.clientWidth) {
                     tabBar.classList.add('has-scroll');
                 } else {
@@ -1462,66 +1591,112 @@
                 }
             }
 
-            newTabBtn.addEventListener('click', () => createNewTab('shortcuts'));
+            newTabBtn.addEventListener('click', () => createNewTab(DEFAULT_HOME_PAGE));
 
             // --- Navigation ---
-            function navigate(url) {
-                const currentTab = tabs.find(t => t.id === activeTabId);
-                if (!currentTab) return;
+            function navigate(urlInput, tab = null) {
+                let currentTab = tab || tabs.find(t => t.id === activeTabId);
+                if (!currentTab) {
+                    console.error("Navigate: No active tab found.");
+                    currentTab = createNewTab(urlInput); // Create one if none exists
+                    if(!currentTab) return; // If tab creation failed (e.g. max tabs)
+                }
 
-                const parsed = parseUrl(url);
-                searchBar.value = parsed; // Update search bar immediately
-
-                if (parsed === 'shortcuts' || url === 'shortcuts') {
-                    currentTab.url = 'shortcuts';
-                    currentTab.title = 'Speed Dial';
+                currentTab.isLoading = true;
+                updateTabElement(currentTab);
+                
+                if (urlInput === 'shortcuts' || urlInput === 'about:blank') {
+                    currentTab.url = urlInput;
+                    currentTab.actualUrl = urlInput;
+                    currentTab.title = urlInput === 'shortcuts' ? 'Speed Dial' : 'New Tab';
                     currentTab.favicon = 'logo.png';
                     currentTab.isLoading = false;
 
-                    // Hide its iframe content if it exists
-                    const contentEl = document.getElementById(`content-${currentTab.id}`);
-                    if(contentEl && currentTab.iframe) {
-                        currentTab.iframe.src = 'about:blank'; // Clear iframe
-                        contentEl.classList.remove('active');
-                    }
-                    shortcutsContainer.classList.add('active');
-                    updateTabElement(currentTab);
-                    updateNavButtons(currentTab);
-                } else {
                     if (currentTab.iframe) {
-                        currentTab.isLoading = true;
-                        updateTabElement(currentTab);
-                        currentTab.iframe.src = parsed;
-                        shortcutsContainer.classList.remove('active'); // Hide shortcuts when navigating
-                    } else { // This tab was 'shortcuts', now navigating away
-                        const contentEl = document.getElementById(`content-${currentTab.id}`);
-                        contentEl.innerHTML = ''; // Clear previous (which was nothing for shortcuts)
-                        const iframe = document.createElement('iframe');
-                        iframe.src = parsed;
-                        iframe.addEventListener('load', () => handleIframeLoad(currentTab, iframe));
-                        iframe.addEventListener('error', () => handleIframeError(currentTab, iframe));
-                        contentEl.appendChild(iframe);
-                        currentTab.iframe = iframe;
-                        currentTab.isLoading = true;
-                        updateTabElement(currentTab);
-                        shortcutsContainer.classList.remove('active');
-                        if(contentEl) contentEl.classList.add('active');
+                        currentTab.iframe.src = 'about:blank'; // Clear iframe content
                     }
+                     if(currentTab.contentEl && currentTab.url === 'shortcuts') {
+                        currentTab.contentEl.classList.remove('active'); // Hide its iframe container
+                    }
+
+
+                    if (urlInput === 'shortcuts') {
+                        shortcutsContainer.classList.add('active');
+                    } else {
+                        shortcutsContainer.classList.remove('active');
+                         if(currentTab.contentEl) currentTab.contentEl.classList.add('active'); // Show its content div if it's about:blank
+                         if(currentTab.iframe) currentTab.iframe.src = 'about:blank';
+                    }
+                    
+                    updateTabElement(currentTab);
+                    if (currentTab.id === activeTabId) {
+                        searchBar.value = '';
+                        updateNavButtons(currentTab);
+                    }
+                    return;
+                }
+
+                shortcutsContainer.classList.remove('active');
+                 if(currentTab.contentEl) currentTab.contentEl.classList.add('active'); // Ensure content area is visible for iframe
+
+                // Ensure iframe exists if navigating away from shortcuts
+                if (!currentTab.iframe && currentTab.contentEl) {
+                    const iframe = document.createElement('iframe');
+                    // iframe.sandbox = "allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-pointer-lock allow-modals";
+                    iframe.addEventListener('load', () => handleIframeLoad(currentTab, iframe));
+                    iframe.addEventListener('error', () => handleIframeError(currentTab, iframe));
+                    currentTab.contentEl.innerHTML = ''; 
+                    currentTab.contentEl.appendChild(iframe);
+                    currentTab.iframe = iframe;
+                }
+
+
+                // UV Proxy integration from search.html
+                let formattedUrl;
+                if (typeof searchFast === 'function') {
+                    formattedUrl = searchFast(urlInput, DEFAULT_SEARCH_ENGINE);
+                } else {
+                    console.warn("searchFast function not found. Using basic URL parsing.");
+                    // Basic parsing if searchFast is unavailable
+                    if (!urlInput.startsWith('http://') && !urlInput.startsWith('https://') && !urlInput.startsWith('file://')) {
+                        if (urlInput.includes('.') && !urlInput.includes(' ')) {
+                            formattedUrl = 'https://' + urlInput;
+                        } else {
+                            formattedUrl = DEFAULT_SEARCH_ENGINE.replace('%s', encodeURIComponent(urlInput));
+                        }
+                    } else {
+                        formattedUrl = urlInput;
+                    }
+                }
+                
+                currentTab.actualUrl = formattedUrl; // Store the target URL
+                if (currentTab.id === activeTabId) {
+                    searchBar.value = formattedUrl; // Update search bar immediately with target
+                }
+
+
+                if (typeof __uv$config === 'undefined' || typeof __uv$config.prefix === 'undefined' || typeof __uv$config.encodeUrl === 'undefined') {
+                    console.error("UV configuration (__uv$config) is not available. Website proxying will not work.");
+                    alert("UV Proxy not configured. Cannot load website.");
+                    handleIframeError(currentTab, currentTab.iframe);
+                    return;
+                }
+
+                try {
+                    const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+                    currentTab.proxiedUrl = encodedUrl;
+                    if(currentTab.iframe) currentTab.iframe.src = encodedUrl;
+                    else {
+                         console.error("Navigate: Iframe not found for tab " + currentTab.id);
+                         handleIframeError(currentTab, null);
+                         return;
+                    }
+                } catch (err) {
+                    console.error("Navigation error with UV:", err);
+                    handleIframeError(currentTab, currentTab.iframe);
                 }
             }
 
-            function parseUrl(url) {
-                if (url === 'shortcuts') return 'shortcuts';
-                if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('file://') && !url.startsWith('about:')) {
-                    // Check if it's a domain name like "google.com"
-                    if (url.includes('.') && !url.includes(' ')) {
-                        return 'https://' + url;
-                    }
-                    // Assume search if not a valid-looking URL start
-                    return `https://www.google.com/search?q=${encodeURIComponent(url)}`;
-                }
-                return url;
-            }
 
             searchBar.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -1531,13 +1706,19 @@
 
             reloadBtn.addEventListener('click', () => {
                 const currentTab = tabs.find(t => t.id === activeTabId);
-                if (currentTab && currentTab.iframe) {
-                    currentTab.isLoading = true;
-                    updateTabElement(currentTab);
-                    currentTab.iframe.contentWindow.location.reload();
-                } else if (currentTab && currentTab.url === 'shortcuts') {
-                    // "Reload" shortcuts (e.g., re-fetch from localStorage)
-                    loadShortcuts();
+                if (currentTab) {
+                    if (currentTab.url === 'shortcuts') {
+                        loadShortcuts(); // "Reload" shortcuts
+                    } else if (currentTab.iframe && currentTab.iframe.contentWindow) {
+                        currentTab.isLoading = true;
+                        updateTabElement(currentTab);
+                        try {
+                            currentTab.iframe.contentWindow.location.reload();
+                        } catch (e) {
+                             console.warn("Error reloading iframe directly, attempting re-navigation:", e);
+                             if(currentTab.actualUrl) navigate(currentTab.actualUrl, currentTab); // Fallback to re-navigate
+                        }
+                    }
                 }
             });
 
@@ -1545,32 +1726,38 @@
 
             backBtn.addEventListener('click', () => {
                 const currentTab = tabs.find(t => t.id === activeTabId);
-                if (currentTab && currentTab.iframe && currentTab.historyIndex > 0) {
+                if (currentTab && currentTab.url !== 'shortcuts' && currentTab.historyIndex > 0) {
                     currentTab.historyIndex--;
                     currentTab.isLoading = true;
                     updateTabElement(currentTab);
-                    currentTab.iframe.src = currentTab.history[currentTab.historyIndex];
+                    // Navigate to the URL from history (which should be the actual URL)
+                    navigate(currentTab.history[currentTab.historyIndex], currentTab);
+                } else if (currentTab && currentTab.iframe && currentTab.iframe.contentWindow && currentTab.url !== 'shortcuts') {
+                    // Fallback if history array is not perfectly synced, try iframe's own history
+                    try { currentTab.iframe.contentWindow.history.back(); } catch(e) {console.warn("iframe history.back() failed", e)}
                 }
             });
 
             forwardBtn.addEventListener('click', () => {
                 const currentTab = tabs.find(t => t.id === activeTabId);
-                if (currentTab && currentTab.iframe && currentTab.historyIndex < currentTab.history.length - 1) {
+                if (currentTab && currentTab.url !== 'shortcuts' && currentTab.historyIndex < currentTab.history.length - 1) {
                     currentTab.historyIndex++;
                     currentTab.isLoading = true;
                     updateTabElement(currentTab);
-                    currentTab.iframe.src = currentTab.history[currentTab.historyIndex];
+                    navigate(currentTab.history[currentTab.historyIndex], currentTab);
+                } else if (currentTab && currentTab.iframe && currentTab.iframe.contentWindow && currentTab.url !== 'shortcuts') {
+                     try { currentTab.iframe.contentWindow.history.forward(); } catch(e) {console.warn("iframe history.forward() failed", e)}
                 }
             });
 
             function updateNavButtons(tabData) {
-                if (!tabData) { // No active tab, disable all
+                if (!tabData) { 
                     backBtn.disabled = true;
                     forwardBtn.disabled = true;
                     reloadBtn.disabled = true;
                     return;
                 }
-                reloadBtn.disabled = tabData.isLoading; // Disable reload if already loading
+                reloadBtn.disabled = tabData.isLoading; 
                 if (tabData.url === 'shortcuts' || !tabData.iframe) {
                      backBtn.disabled = true;
                      forwardBtn.disabled = true;
@@ -1582,59 +1769,85 @@
 
 
             // --- Shortcuts Management ---
-            const shortcutsGrid = document.getElementById('shortcuts-grid');
             let shortcuts = [];
 
             function renderShortcuts() {
-                shortcutsGrid.innerHTML = ''; // Clear existing
+                shortcutsGrid.innerHTML = ''; 
                 shortcuts.forEach(sc => {
-                    const shortcutEl = document.createElement('a'); // Use <a> for actual navigation
+                    const shortcutEl = document.createElement('a'); 
                     shortcutEl.className = 'shortcut-item';
-                    shortcutEl.href = parseUrl(sc.url); // Set href for direct click
-                    shortcutEl.dataset.url = sc.url;
-                    const iconSrc = sc.iconUrl || `https://www.google.com/s2/favicons?domain=${new URL(parseUrl(sc.url)).hostname}&sz=64`;
+                    
+                    let targetUrl = sc.url;
+                    // No UV encoding needed for display or for the href if we handle navigation via JS
+                    // The navigate function will handle proxying.
+                    shortcutEl.href = "#"; // Prevent default nav, handle with JS
+                    shortcutEl.dataset.url = sc.url; // Store original URL
+
+                    const iconSrc = sc.iconUrl || `https://www.google.com/s2/favicons?domain=${new URL(sc.url.startsWith('http') ? sc.url : 'https://' + sc.url).hostname}&sz=64`;
+                    
                     shortcutEl.innerHTML = `
-                        <div class="shortcut-icon"><img src="${iconSrc}" alt="${sc.name.substring(0,2)}"></div>
+                        <div class="shortcut-icon"><img src="${iconSrc}" alt="${sc.name.substring(0,2)}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-link\\'></i>';"></div>
                         <div class="shortcut-title">${sc.name}</div>
-                        <div class="shortcut-url">${new URL(parseUrl(sc.url)).hostname}</div>
+                        <div class="shortcut-url">${new URL(sc.url.startsWith('http') ? sc.url : 'https://' + sc.url).hostname}</div>
                     `;
                     shortcutEl.addEventListener('click', (e) => {
-                        e.preventDefault(); // Prevent default link navigation
-                        navigate(sc.url);   // Use browser's navigate function
+                        e.preventDefault(); 
+                        navigate(sc.url);   
                     });
                     shortcutsGrid.appendChild(shortcutEl);
                 });
-                // Re-add the "Add Shortcut" button
-                shortcutsGrid.appendChild(addShortcutBtn);
+                
+                // Re-create and append the "Add Shortcut" button if it's defined
+                if (addShortcutPlaceholderBtn) {
+                    shortcutsGrid.appendChild(addShortcutPlaceholderBtn);
+                }
             }
+
 
             function loadShortcuts() {
                 const storedShortcuts = localStorage.getItem('vernProShortcuts');
-                shortcuts = storedShortcuts ? JSON.parse(storedShortcuts) : [
-                    { name: 'Google', url: 'https://google.com' },
-                    { name: 'GitHub', url: 'https://github.com' }
-                ];
+                try {
+                    shortcuts = storedShortcuts ? JSON.parse(storedShortcuts) : [
+                        { name: 'Google', url: 'https://google.com', iconUrl: null },
+                        { name: 'GitHub', url: 'https://github.com', iconUrl: null }
+                    ];
+                } catch (e) {
+                     shortcuts = [
+                        { name: 'Google', url: 'https://google.com', iconUrl: null },
+                        { name: 'GitHub', url: 'https://github.com', iconUrl: null }
+                    ];
+                     console.error("Error parsing shortcuts from localStorage", e);
+                }
                 renderShortcuts();
             }
 
             function saveShortcuts() {
                 localStorage.setItem('vernProShortcuts', JSON.stringify(shortcuts));
             }
+            
+            // Ensure addShortcutPlaceholderBtn exists before adding event listener
+            if (addShortcutPlaceholderBtn) {
+                 addShortcutPlaceholderBtn.addEventListener('click', () => {
+                    shortcutNameInput.value = '';
+                    shortcutUrlInput.value = ''; // Ensure this ID matches your input field for URL
+                    shortcutIconUrlInput.value = '';
+                    addShortcutModal.classList.add('active');
+                });
+            }
 
-            addShortcutBtn.addEventListener('click', () => {
-                shortcutNameInput.value = '';
-                shortcutUrlInput.value = '';
-                document.getElementById('shortcut-icon-url').value = '';
-                addShortcutModal.classList.add('active');
-            });
 
             saveShortcutBtn.addEventListener('click', () => {
                 const name = shortcutNameInput.value.trim();
-                const url = shortcutUrlInput.value.trim();
-                const iconUrl = document.getElementById('shortcut-icon-url').value.trim();
+                const url = shortcutUrlInput.value.trim(); // Ensure this ID matches
+                const iconUrl = shortcutIconUrlInput.value.trim();
 
                 if (name && url) {
-                    shortcuts.push({ name, url: parseUrl(url), iconUrl: iconUrl || null });
+                    // Basic URL validation (starts with http or https)
+                    let finalUrl = url;
+                    if (!url.match(/^https?:\/\//i) && !url.startsWith('about:') && !url.startsWith('file:')) {
+                        finalUrl = 'https://' + url;
+                    }
+                    shortcuts.push({ name, url: finalUrl, iconUrl: iconUrl || null });
                     saveShortcuts();
                     renderShortcuts();
                     addShortcutModal.classList.remove('active');
@@ -1650,16 +1863,14 @@
                     btn.closest('.modal').classList.remove('active');
                 });
             });
-            // Close modal on escape key
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal.active').forEach(modal => modal.classList.remove('active'));
                 }
             });
-            // Close modal on backdrop click
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.addEventListener('click', function(e) {
-                    if (e.target === this) { // Check if click is on backdrop itself
+                    if (e.target === this) { 
                         this.classList.remove('active');
                     }
                 });
@@ -1668,10 +1879,8 @@
 
             // --- Settings Modal & Theming ---
             function openSettingsModal() {
-                 // Load current settings into the modal fields here if needed
                 settingsModal.classList.add('active');
             }
-            // Attach to buttons that should open settings
             document.querySelectorAll('[data-action="open-settings-modal"]').forEach(btn => {
                 btn.addEventListener('click', openSettingsModal);
             });
@@ -1689,10 +1898,17 @@
             });
 
             function applyTheme(theme) {
-                // This is a simplified theme application.
-                // For full theming, you'd update CSS variables or link different stylesheets.
-                // Example: update root variables based on theme selection
                 const root = document.documentElement;
+                const initialStyles = document.getElementById('custom-styles').sheet.cssRules[0].style;
+
+                // Reset to default dark theme variables from :root first
+                for (let i = 0; i < initialStyles.length; i++) {
+                    const propName = initialStyles[i];
+                    if (propName.startsWith('--')) {
+                        root.style.setProperty(propName, initialStyles.getPropertyValue(propName));
+                    }
+                }
+                // Then apply specific theme overrides
                 if (theme === 'light') {
                     root.style.setProperty('--bg-color', '#f0f0f0');
                     root.style.setProperty('--text-color', '#333');
@@ -1702,19 +1918,11 @@
                     root.style.setProperty('--iframe-bg', '#fff');
                     root.style.setProperty('--tab-bg', 'rgba(210, 210, 210, 0.8)');
                     root.style.setProperty('--tab-active-bg', 'rgba(200, 200, 200, 0.9)');
-                     root.style.setProperty('--footer-text-color', '#555');
-                } else if (theme === 'dark') { // Default dark from CSS
-                    root.style.setProperty('--bg-color', '#1a1a1a');
-                    root.style.setProperty('--text-color', '#fff');
-                    root.style.setProperty('--navbar-bg', 'rgba(15, 15, 15, 1)');
-                    // ... reset all to default dark theme variables from :root
-                    const initialStyles = document.getElementById('custom-styles').sheet.cssRules[0].style;
-                    for (let i = 0; i < initialStyles.length; i++) {
-                        const propName = initialStyles[i];
-                        if (propName.startsWith('--')) {
-                            root.style.setProperty(propName, initialStyles.getPropertyValue(propName));
-                        }
-                    }
+                    root.style.setProperty('--footer-text-color', '#555');
+                    root.style.setProperty('--sidebar-bg', 'rgba(225, 225, 225, 0.95)');
+                    root.style.setProperty('--shortcut-bg', 'rgba(235, 235, 235, 0.9)');
+                    root.style.setProperty('--modal-bg', 'rgba(240, 240, 240, 0.98)');
+                    root.style.setProperty('--input-bg', 'rgba(220, 220, 220, 0.95)');
                 } else if (theme === 'purple') {
                     root.style.setProperty('--accent-color', '#9b59b6');
                     root.style.setProperty('--accent-hover', '#8e44ad');
@@ -1728,76 +1936,82 @@
                     root.style.setProperty('--accent-color', '#e67e22');
                     root.style.setProperty('--accent-hover', '#d35400');
                 }
-                // The specific accent themes might need to also reset bg/text if they are not based on dark
-                // For simplicity, current accent themes only change accent color on top of dark theme.
             }
 
-            // Setting: Show Pro Bar
             const settingShowProBar = document.getElementById('setting-show-pro-bar');
             settingShowProBar.addEventListener('change', function() {
                 const proBar = document.getElementById('pro-options-bar');
-                if (this.checked) {
-                    proBar.style.display = 'flex';
-                } else {
-                    proBar.style.display = 'none';
-                }
-                updateTopBarAssemblyHeight(); // Recalculate height
+                proBar.style.display = this.checked ? 'flex' : 'none';
+                updateTopBarAssemblyHeight(); 
                 localStorage.setItem('vernProShowProBar', this.checked);
             });
 
-            // Setting: Startup Behavior
             const startupBehaviorSelect = document.getElementById('setting-startup-behavior');
             const homepageUrlGroup = document.getElementById('setting-homepage-url-group');
             const homepageUrlInput = document.getElementById('setting-homepage-url');
 
             startupBehaviorSelect.addEventListener('change', function() {
-                if (this.value === 'homepage') {
-                    homepageUrlGroup.style.display = 'block';
-                } else {
-                    homepageUrlGroup.style.display = 'none';
-                }
+                homepageUrlGroup.style.display = (this.value === 'homepage') ? 'block' : 'none';
                 localStorage.setItem('vernProStartupBehavior', this.value);
             });
-            homepageUrlInput.addEventListener('change', function() {
+            homepageUrlInput.addEventListener('input', function() { // Use input for immediate save
                  localStorage.setItem('vernProHomepageUrl', this.value);
+            });
+            
+            document.getElementById('clear-browse-data-btn')?.addEventListener('click', () => {
+                alert('Clear Browse data functionality not fully implemented. \nFor now, this will clear localStorage for this site.');
+                localStorage.clear();
+                alert('Local storage cleared. Please reload.');
+                // For a full implementation, you'd also want to clear service worker caches, IndexedDB, etc.
             });
 
 
             function loadSettings() {
-                // Theme
                 const savedTheme = localStorage.getItem('vernProTheme') || 'dark';
                 applyTheme(savedTheme);
                 document.querySelectorAll('.theme-option').forEach(opt => {
                     opt.classList.toggle('active', opt.dataset.theme === savedTheme);
                 });
 
-                // Pro Bar visibility
-                const showProBar = localStorage.getItem('vernProShowProBar') !== 'false'; // default true
+                const showProBar = localStorage.getItem('vernProShowProBar') !== 'false'; 
                 settingShowProBar.checked = showProBar;
                 document.getElementById('pro-options-bar').style.display = showProBar ? 'flex' : 'none';
 
-                // Startup Behavior
                 const startupBehavior = localStorage.getItem('vernProStartupBehavior') || 'newtab';
                 startupBehaviorSelect.value = startupBehavior;
-                if (startupBehavior === 'homepage') {
-                    homepageUrlGroup.style.display = 'block';
-                    homepageUrlInput.value = localStorage.getItem('vernProHomepageUrl') || '';
-                } else {
-                     homepageUrlGroup.style.display = 'none';
-                }
+                homepageUrlGroup.style.display = (startupBehavior === 'homepage') ? 'block' : 'none';
+                homepageUrlInput.value = localStorage.getItem('vernProHomepageUrl') || 'https://google.com';
+                
+                const doNotTrack = localStorage.getItem('vernProDoNotTrack') === 'true';
+                document.getElementById('setting-do-not-track').checked = doNotTrack;
+                // Actual DNT header sending would need server-side or extension capabilities
+
+                const fontSize = localStorage.getItem('vernProFontSize') || '14px';
+                document.getElementById('setting-font-size').value = fontSize;
+                document.documentElement.style.fontSize = fontSize; // Apply global font size
 
                 loadShortcuts();
             }
+            
+            document.getElementById('setting-font-size').addEventListener('change', function() {
+                document.documentElement.style.fontSize = this.value;
+                localStorage.setItem('vernProFontSize', this.value);
+            });
+
+            document.getElementById('setting-do-not-track').addEventListener('change', function() {
+                localStorage.setItem('vernProDoNotTrack', this.checked);
+                alert("Do Not Track preference saved. Note: Actual DNT header behavior depends on browser/proxy capabilities not directly controlled here.");
+            });
+
 
             // --- Dropdown Menus ---
             document.querySelectorAll('[data-dropdown-target]').forEach(toggle => {
-                const menuId = toggle.dataset.dropdownTarget;
-                const menu = document.getElementById(menuId);
-                if (!menu) return;
-
                 toggle.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    // Close other open dropdowns
+                    const menuId = toggle.dataset.dropdownTarget;
+                    const menu = document.getElementById(menuId);
+                    if (!menu) return;
+                    
                     document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
                         if (openMenu !== menu) {
                             openMenu.classList.remove('show');
@@ -1807,23 +2021,6 @@
                 });
             });
 
-            // Pro options tools dropdown
-            const toolsDropdownToggle = document.getElementById('tools-dropdown-toggle');
-            const toolsDropdownMenu = document.getElementById('tools-dropdown-menu');
-            if(toolsDropdownToggle && toolsDropdownMenu) {
-                toolsDropdownToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                     document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
-                        if (openMenu !== toolsDropdownMenu) {
-                            openMenu.classList.remove('show');
-                        }
-                    });
-                    toolsDropdownMenu.classList.toggle('show');
-                });
-            }
-
-
-            // Close dropdowns if clicked outside
             window.addEventListener('click', (event) => {
                 if (!event.target.closest('.dropdown')) {
                     document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
@@ -1832,13 +2029,13 @@
                 }
             });
 
-            // --- Sidebar Actions ---
+            // --- Sidebar Actions & Other Button Actions ---
             function handleSidebarAction(action) {
                 console.log("Sidebar action:", action);
+                const currentTab = tabs.find(t => t.id === activeTabId);
                 switch(action) {
                     case 'show-home':
-                        // Check if a "Speed Dial" tab exists, if so switch, else new one
-                        const existingHomeTab = tabs.find(t => t.url === 'shortcuts');
+                        const existingHomeTab = tabs.find(t => t.url === 'shortcuts' || t.actualUrl === 'shortcuts');
                         if (existingHomeTab) {
                             switchToTab(existingHomeTab.id);
                         } else {
@@ -1846,72 +2043,113 @@
                         }
                         break;
                     case 'show-bookmarks':
-                        // Implement bookmark manager view (could be a special URL or modal)
+                    case 'manage-bookmarks': // from user dropdown
                         alert('Bookmarks manager not yet implemented.');
                         break;
                     case 'show-history':
+                    case 'open-history': // from user dropdown
                         alert('History viewer not yet implemented.');
                         break;
-                    // Add more cases as needed
+                    case 'show-downloads':
+                        alert('Downloads page not yet implemented.');
+                        break;
+                    case 'open-devtools':
+                        alert('Developer Tools not yet implemented in this web version.');
+                        break;
+                    case 'open-extensions':
+                        alert('Extensions page not yet implemented.');
+                        break;
+                    case 'show-profile': // Sidebar footer profile
+                        document.getElementById('user-profile-btn')?.click(); // Open nav bar profile dropdown
+                        break;
+                    case 'sign-out': // from user dropdown
+                        alert('Sign Out not implemented.');
+                        break;
+                    default:
+                        // For any other data-action clicks not explicitly handled elsewhere
+                         if (document.querySelector(`[data-action="${action}"]`)) {
+                            alert(`Action: ${action} (not implemented)`);
+                        }
+                        break;
                 }
             }
+            // Attach generic action handler for elements with data-action not covered by specific listeners
+            document.body.addEventListener('click', function(event) {
+                const target = event.target.closest('[data-action]');
+                if (target && target.dataset.action) {
+                    // Check if it's one of the already handled types by other more specific listeners
+                    const isHandledElsewhere = ['open-settings-modal', 'show-home', 'show-bookmarks', 'show-history', 'show-downloads', 'open-devtools', 'open-extensions', 'show-profile', 'toggle-user-menu'].includes(target.dataset.action);
+                    const isDropdownToggle = target.hasAttribute('data-dropdown-target');
+                    
+                    if (!isHandledElsewhere && !isDropdownToggle && !target.closest('.modal')) { // Avoid re-triggering for modals or specific items
+                        // Check if it's a pro-menu-item or dropdown-item from pro bar
+                        if (target.classList.contains('pro-menu-item') || target.classList.contains('dropdown-item')) {
+                             // Already handled by placeholder in initializeBrowser
+                        } else {
+                             handleSidebarAction(target.dataset.action);
+                        }
+                    }
+                }
+            });
+
+
 
             // --- Canvas Background (Simple Example) ---
             const canvas = document.getElementById('backgroundCanvas');
             if (canvas) {
                 const ctx = canvas.getContext('2d');
-                let particles = [];
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-
-                function Particle(x, y) {
-                    this.x = x;
-                    this.y = y;
-                    this.size = Math.random() * 2 + 0.5;
-                    this.speedX = Math.random() * 1 - 0.5;
-                    this.speedY = Math.random() * 1 - 0.5;
-                    this.color = `rgba(109, 90, 205, ${Math.random() * 0.5 + 0.2})`; // Accent color with alpha
-                }
-                Particle.prototype.update = function() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.size > 0.1) this.size -= 0.01;
-                };
-                Particle.prototype.draw = function() {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                };
-
-                function createParticles() {
-                    for (let i = 0; i < 30; i++) {
-                        particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-                    }
-                }
-                function animateParticles() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    for (let i = 0; i < particles.length; i++) {
-                        particles[i].update();
-                        particles[i].draw();
-                        if (particles[i].size <= 0.1) {
-                            particles.splice(i, 1);
-                            i--;
-                            particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-                        }
-                    }
-                    requestAnimationFrame(animateParticles);
-                }
-                window.addEventListener('resize', () => {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    particles = []; // Reset particles on resize
-                    createParticles();
-                });
-
-                createParticles();
-                // animateParticles(); // Uncomment to enable particle animation
+                // Basic animation can be kept or removed if not desired
             }
+
+            // --- Keyboard Shortcuts ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                    return; // Don't interfere with typing in form fields
+                }
+
+                if (e.ctrlKey || e.metaKey) { // Ctrl or Command key
+                    switch (e.key.toLowerCase()) {
+                        case 't':
+                            e.preventDefault();
+                            createNewTab(DEFAULT_HOME_PAGE);
+                            break;
+                        case 'w':
+                            e.preventDefault();
+                            if (activeTabId) closeTab(activeTabId);
+                            break;
+                        case 'tab':
+                            e.preventDefault();
+                            if (tabs.length > 1) {
+                                const currentIndex = tabs.findIndex(t => t.id === activeTabId);
+                                const nextIndex = (e.shiftKey ? (currentIndex - 1 + tabs.length) : (currentIndex + 1)) % tabs.length;
+                                switchToTab(tabs[nextIndex].id);
+                            }
+                            break;
+                        case 'r': // Ctrl+R for reload
+                             e.preventDefault();
+                             reloadBtn.click();
+                             break;
+                    }
+                } else if (e.altKey) {
+                     switch (e.key.toLowerCase()) {
+                        case 'arrowleft':
+                            e.preventDefault();
+                            backBtn.click();
+                            break;
+                        case 'arrowright':
+                            e.preventDefault();
+                            forwardBtn.click();
+                            break;
+                    }
+                } else {
+                     switch (e.key.toLowerCase()) {
+                        case 'f5': // F5 for reload
+                            e.preventDefault();
+                            reloadBtn.click();
+                            break;
+                    }
+                }
+            });
 
 
             // Initialize
