@@ -1,743 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Browser</title>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-
-    <style id="custom-styles">
-        /* Base Elements */
-        :root {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --navbar-bg: rgba(15, 15, 15, 1);
-            --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            --button-bg: rgba(10, 10, 10, 0.8);
-            --button-hover-bg: rgba(15, 15, 15, 0.9);
-            --search-bg: rgba(10, 10, 10, 0.8);
-            --search-focus-bg: rgba(45, 45, 45, 0.9);
-            --search-focus-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-            --iframe-bg: #202020;
-            --footer-text-color: #fff;
-            --font-family-main: 'Roboto Mono', monospace;
-            --tab-bg: rgba(25, 25, 25, 0.8);
-            --tab-active-bg: rgba(45, 45, 45, 0.9);
-            --tab-border: rgba(60, 60, 60, 0.5);
-            --tab-hover-bg: rgba(35, 35, 35, 0.9);
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            border: none;
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: var(--font-family-main);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        #top-bar-assembly {
-            overflow: hidden;
-            transition: max-height 0.35s ease-in-out;
-        }
-
-        #top-bar-assembly.hidden {
-            max-height: 0 !important;
-        }
-
-        /* Tab Bar */
-        #tab-bar {
-            display: flex;
-            background-color: var(--navbar-bg);
-            padding: 10px 12px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-            position: relative;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #tab-bar::-webkit-scrollbar { height: 3px; }
-        #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
-
-        .tab {
-            display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
-            padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
-            transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
-            user-select: none; /* Prevent text selection issues */
-        }
-        .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
-        .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
-        .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
-        .tab-close {
-             width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
-             margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s;
-             /* Ensure clicks on icon trigger close button */
-             pointer-events: auto; /* Default is fine, but explicit */
-             z-index: 1; /* Ensure it's clickable */
-        }
-        .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
-
-        .new-tab-button {
-            width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
-            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
-            flex-shrink: 0; /* Prevent shrinking when many tabs are open */
-        }
-        .new-tab-button:hover { background-color: var(--button-hover-bg); }
-
-        /* Navigation Bar */
-        #nav-bar {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: var(--navbar-bg);
-            box-shadow: var(--navbar-shadow);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-            flex-shrink: 0; /* Prevent shrinking */
-        }
-
-        .nav-button {
-            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-            margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
-            cursor: pointer; color: var(--text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
-            flex-shrink: 0; /* Prevent shrinking */
-        }
-        .nav-button:hover { background-color: var(--button-hover-bg); }
-
-        #search-bar {
-            flex: 1; height: 40px; border-radius: 30px; border: none; background-color: var(--search-bg);
-            color: var(--text-color); padding: 0 18px; font-size: 15px; font-weight: 700;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); font-family: var(--font-family-main);
-            min-width: 150px; /* Ensure search bar doesn't disappear */
-        }
-        #search-bar:focus { outline: none; background-color: var(--search-focus-bg); box-shadow: var(--search-focus-shadow); font-weight: 700; }
-
-        /* Toggle Top Bar Button */
-        #toggle-top-bar-button {
-            position: fixed;
-            z-index: 1001;
-            width: 40px;
-            height: 32px;
-            background-color: var(--navbar-bg);
-            border-radius: 0 0 100px 100px;
-            right: 2px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-color);
-            transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out;
-            box-shadow:
-              -2px 0 0 0 rgba(255, 255, 255, 0.5), /* left */
-               2px 0 0 0 rgba(255, 255, 255, 0.5), /* right */
-               0 2px 0 0 rgba(255, 255, 255, 0.5); /* bottom */
-        }
-        #toggle-top-bar-button:hover {
-            background-color: var(--button-hover-bg);
-        }
-        #toggle-top-bar-button .fas {
-            font-size: 14px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        /* Content Area */
-        #tabs-container {
-            flex: 1; position: relative; background-color: var(--iframe-bg);
-        }
-        .tab-content {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none;
-            border: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        .footer-label {
-            position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
-            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
-        }
-
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vern Proxy Search</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" type="image/x-icon" href="logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-color: #1a1a1a;
+      --text-color: #fff;
+      --navbar-bg: #0f0f0f;
+      --navbar-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      --button-bg: #0a0a0a;
+      --button-hover-bg: #0f0f0f;
+      --search-bg: #0a0a0a;
+      --search-focus-bg: #2d2d2d;
+      --iframe-bg: #202020;
+      --font-family-main: 'Roboto Mono', monospace;
+      --tab-bg: #191919;
+      --tab-active-bg: #2d2d2d;
+      --tab-border: #3c3c3c;
+      --tab-hover-bg: #232323;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      font-family: var(--font-family-main);
+      color: var(--text-color);
+      background: var(--bg-color);
+      overflow: hidden;
+    }
+    /* Top Bar */
+    #top-bar {
+      display: flex; flex-direction: column;
+      background: var(--navbar-bg);
+      box-shadow: var(--navbar-shadow);
+    }
+    #tab-bar {
+      display: flex; align-items: center;
+      padding: 8px; gap: 8px;
+      overflow-x: auto; white-space: nowrap;
+      background: var(--navbar-bg);
+    }
+    .tab {
+      display: flex; align-items: center;
+      padding: 0 12px; height: 32px;
+      background: var(--tab-bg); border-radius: 16px;
+      box-shadow: 0 0 0 1px var(--tab-border);
+      cursor: pointer; transition: background 0.2s;
+    }
+    .tab.active { background: var(--tab-active-bg); box-shadow: 0 0 0 1px #fff; }
+    .tab:hover { background: var(--tab-hover-bg); }
+    .tab .tab-close { margin-left: 8px; }
+    .new-tab { display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; background: var(--button-bg);
+      box-shadow: 0 0 0 1px #fff; border-radius: 50%; cursor: pointer;
+    }
+    .new-tab:hover { background: var(--button-hover-bg); }
+    /* Nav & Search */
+    #nav-search { display: flex; align-items: center; padding: 8px; gap: 8px;
+      background: var(--navbar-bg);
+    }
+    .nav-btn { width: 36px; height: 36px; display: flex;
+      align-items: center; justify-content: center;
+      background: var(--button-bg);
+      box-shadow: 0 0 0 1px #fff;
+      border-radius: 50%; cursor: pointer;
+    }
+    .nav-btn:hover { background: var(--button-hover-bg); }
+    #search-bar { flex: 1; height: 36px; border: none;
+      border-radius: 18px; padding: 0 16px;
+      background: var(--search-bg);
+      box-shadow: 0 0 0 1px #fff;
+      font-size: 14px;
+      color: var(--text-color);
+    }
+    #search-bar:focus { outline: none; background: var(--search-focus-bg); }
+    /* Content */
+    #tabs-container { position: absolute; top: 104px; bottom: 0; left: 0; right: 0;
+      background: var(--iframe-bg);
+    }
+    iframe { width: 100%; height: 100%; border: none; display: none; }
+    iframe.active { display: block; }
+  </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-
-    <div id="top-bar-assembly">
-        <div id="tab-bar">
-            <div class="new-tab-button" id="new-tab-button" title="New Tab">
-                <i class="fas fa-plus"></i>
-            </div>
-        </div>
-        <div id="nav-bar">
-            <div class="nav-button" id="home-button" title="Home"> <i class="fas fa-home"></i> </div>
-            <div class="nav-button" id="back-button" title="Back"> <i class="fas fa-arrow-left"></i> </div>
-            <div class="nav-button" id="forward-button" title="Forward"> <i class="fas fa-arrow-right"></i> </div>
-            <div class="nav-button" id="refresh-button" title="Refresh"> <i class="fas fa-redo"></i> </div>
-            <div class="nav-button" id="foursp-button" title="4SP Dashboard"> <img src="../4spicon.png" alt="4SP" style="width: 20px; height: 20px;"> </div>
-            <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
-        </div>
+  <div id="top-bar">
+    <div id="tab-bar">
+      <div class="new-tab" id="add-tab" title="New Tab"><i class="fas fa-plus"></i></div>
     </div>
-
-    <div id="toggle-top-bar-button" title="Hide Toolbar">
-        <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
+    <div id="nav-search">
+      <div class="nav-btn" id="btn-back"><i class="fas fa-arrow-left"></i></div>
+      <div class="nav-btn" id="btn-forward"><i class="fas fa-arrow-right"></i></div>
+      <div class="nav-btn" id="btn-refresh"><i class="fas fa-redo"></i></div>
+      <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL" />
     </div>
-
-    <div id="tabs-container">
-    </div>
-    <a href="https://4simpleproblems.github.io/proxy-list.html" class="footer-label">Official 4SP Proxy</a>
-
-    <script src="uv/uv.bundle.js" defer></script>
-    <script src="uv/uv.config.js" defer></script>
-    <script src="register-sw.js" defer></script>
-    <script src="search.js" defer></script>
-    <script src="stars.js" defer></script>
-
-    <script>
-        // Use const for variables that won't be reassigned
-        const tabs = [];
-        let activeTabId = null; // This needs to be mutable
-        let tabCounter = 0;
-
-        // Use const for DOM element references after they are assigned
-        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fourspButtonEl;
-        let topBarAssemblyEl, toggleTopBarButtonEl, toggleBarIconEl;
-
-        let initialTopBarHeight = 0;
-        let isTopBarHidden = false;
-
-        // Function to initialize the UV service worker
-        // Assumes registerSW() is provided by register-sw.js
-        async function initUV() {
-            try { await registerSW(); console.log("Service worker registered"); }
-            catch (err) { console.error("Failed to register service worker:", err); }
-        }
-
-        function createTab(url = null) {
-            const tabId = `tab-${tabCounter++}`;
-            const contentId = `content-${tabId}`;
-
-            const tabElement = document.createElement('div');
-            tabElement.className = 'tab';
-            tabElement.dataset.tabId = tabId;
-            // Use template literals for cleaner HTML insertion
-            tabElement.innerHTML = `
-                <div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div>
-                <div class="tab-title">New Tab</div>
-                <div class="tab-close" role="button" aria-label="Close tab"><i class="fas fa-times"></i></div>
-            `; // Added role/aria-label for accessibility
-
-            // Insert before the new tab button for correct ordering
-            tabBarEl.insertBefore(tabElement, newTabButtonEl);
-
-            const iframe = document.createElement('iframe');
-            iframe.id = contentId;
-            iframe.className = 'tab-content';
-            // Sandbox carefully - allowing popups might be necessary for some sites
-            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-orientation-lock allow-pointer-lock allow-modals';
-            iframe.loading = 'eager'; // 'eager' is default, could consider 'lazy' if tab content isn't needed immediately (less likely for an active tab)
-            tabsContainerEl.appendChild(iframe);
-
-            // Store tab info more comprehensively
-            const tab = {
-                id: tabId,
-                contentId: contentId,
-                element: tabElement,
-                iframe: iframe,
-                url: url || 'about:blank',
-                titleElement: tabElement.querySelector('.tab-title'),
-                faviconElement: tabElement.querySelector('.tab-favicon'),
-                // Add history state tracking if needed for back/forward button UI hints
-            };
-            tabs.push(tab);
-
-            activateTab(tabId);
-
-            // Call navigateTo, which will handle the URL including 'about:blank'
-            navigateTo(tab.url, tab);
-
-            // Only clear search bar if creating a blank tab and it's the active one
-            if (activeTabId === tabId && (!url || url === 'about:blank')) {
-                 if (searchBarEl) searchBarEl.value = '';
-            }
-
-            return tab;
-        }
-
-        function activateTab(tabId) {
-            const currentActiveTab = getActiveTab();
-            if (currentActiveTab && currentActiveTab.id === tabId) {
-                 // Already active, no need to do anything
-                 return;
-            }
-
-            tabs.forEach(t => {
-                 t.element.classList.remove('active');
-                 // Hide iframe quickly using CSS display
-                 t.iframe.classList.remove('active');
-            });
-
-            const tab = tabs.find(t => t.id === tabId);
-            if (tab) {
-                tab.element.classList.add('active');
-                // Show iframe quickly using CSS display
-                tab.iframe.classList.add('active');
-                activeTabId = tabId;
-
-                // Update search bar with the tab's current URL
-                if (searchBarEl) searchBarEl.value = tab.url !== 'about:blank' ? tab.url : '';
-
-                // Scroll active tab into view
-                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-                // Update document title based on tab state
-                 // Prefer the cached title/URL from updateTabInfo, fallback if necessary
-                 updateDocumentTitle(tab);
-            }
-        }
-
-        function closeTab(tabId) {
-            const tabIndex = tabs.findIndex(t => t.id === tabId);
-            if (tabIndex === -1) return;
-
-            const tab = tabs[tabIndex];
-            // Remove elements directly
-            tab.element.remove();
-            tab.iframe.remove();
-
-            // Remove from array
-            tabs.splice(tabIndex, 1);
-
-            // Determine which tab to activate next
-            if (activeTabId === tabId) {
-                if (tabs.length > 0) {
-                    // Activate the tab to the left, or the first one if it was the first tab
-                    const nextTabIndex = Math.max(0, tabIndex - 1);
-                    activateTab(tabs[nextTabIndex].id);
-                } else {
-                    // If no tabs left, create a new blank one
-                    createTab('about:blank');
-                }
-            }
-             // If the closed tab wasn't active, the activeTabId and display remain correct.
-        }
-
-        // Navigate function using the searchFast logic from the second HTML's search.js
-        // Assumes searchFast() and __uv$config are provided by the external scripts
-        function navigateTo(urlInput, tab = null) {
-            if (!urlInput || typeof urlInput !== 'string') {
-                 urlInput = 'about:blank'; // Default to about:blank for invalid inputs
-            } else {
-                 urlInput = urlInput.trim(); // Trim whitespace
-                 if (urlInput === '') urlInput = 'about:blank'; // Treat empty string as about:blank
-            }
-
-            let currentTab = tab;
-            if (!currentTab) {
-                currentTab = getActiveTab();
-                 // If no active tab exists (shouldn't happen after initial load, but safety check)
-                 if (!currentTab) {
-                     console.warn("navigateTo: No active tab, creating one.");
-                     currentTab = createTab('about:blank');
-                 }
-            }
-
-            // Explicitly handle 'about:blank' to prevent proxying/searching it
-            if (urlInput === 'about:blank') {
-                currentTab.iframe.src = 'about:blank';
-                currentTab.url = 'about:blank';
-                if (searchBarEl && currentTab.id === activeTabId) searchBarEl.value = '';
-                updateTabInfo(currentTab, 'New Tab');
-                return;
-            }
-
-            // Indicate loading state visually immediately? (e.g., change favicon to spinner)
-            // updateTabInfo(currentTab, 'Loading...', 'path/to/spinner.gif'); // Requires spinner image
-
-            // Check if searchFast is available from the external script search.js
-            if (typeof searchFast !== 'function') {
-                console.error("searchFast function is not available. Ensure search.js is loaded.");
-                 if (currentTab && currentTab.iframe) {
-                     currentTab.iframe.src = `about:blank#error=search_function_missing&query=${encodeURIComponent(urlInput)}`;
-                     updateTabInfo(currentTab, "Error: Search unavailable");
-                 }
-                 return;
-            }
-
-            try {
-                // Use searchFast from the external script
-                const formattedUrl = searchFast(urlInput, 'https://duckduckgo.com/?q=%s');
-
-                // Check if UV configuration is available from uv.config.js
-                if (typeof __uv$config === 'undefined' || typeof __uv$config.prefix === 'undefined' || typeof __uv$config.encodeUrl !== 'function') {
-                    console.error("UV configuration (__uv$config) or encodeUrl is not available. Ensure uv.config.js and uv.bundle.js are loaded.");
-                     if (currentTab && currentTab.iframe) {
-                         currentTab.iframe.src = `about:blank#error=uv_config_missing&url=${encodeURIComponent(formattedUrl)}`;
-                         updateTabInfo(currentTab, "Error: UV Config Missing");
-                     }
-                     return;
-                }
-
-                const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
-
-                // Set iframe src to the proxied URL
-                currentTab.iframe.src = encodedUrl;
-                currentTab.url = formattedUrl; // Store the *original* (formatted) URL
-
-                 // Update search bar value immediately after setting URL
-                 if (searchBarEl && currentTab.id === activeTabId) {
-                      searchBarEl.value = formattedUrl;
-                 }
-
-
-                // Set a temporary title while loading
-                let tempTitle = 'Loading...';
-                try {
-                    if (formattedUrl && formattedUrl !== 'about:blank' && formattedUrl.startsWith('http')) {
-                        tempTitle = new URL(formattedUrl).hostname;
-                    }
-                } catch (e) { /* Keep 'Loading...' */ }
-                updateTabInfo(currentTab, tempTitle);
-
-            } catch (err) {
-                console.error("Navigation error:", err);
-                 if (currentTab && currentTab.iframe) {
-                     currentTab.iframe.src = `about:blank#error=${encodeURIComponent(err.message || 'Unknown Error')}&query=${encodeURIComponent(urlInput)}`;
-                     updateTabInfo(currentTab, "Navigation Error");
-                 }
-            }
-        }
-
-        function updateTabInfo(tab, title, favicon) {
-            if (!tab || !tab.titleElement || !tab.faviconElement) return;
-
-            const displayTitle = title && title.trim() !== '' ? title.trim() : (tab.url !== 'about:blank' && tab.url.startsWith('http') ? (()=>{try{return new URL(tab.url).hostname}catch(e){return tab.url}})() : 'New Tab') || 'New Tab';
-
-            // Update tab element title and tooltip
-            tab.titleElement.textContent = displayTitle;
-            tab.element.title = displayTitle; // Use element title for tooltip
-
-            // Update favicon (placeholder logic)
-            if (favicon) {
-                tab.faviconElement.innerHTML = `<img src="${favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
-            } else {
-                // Default favicon if none provided or URL is blank
-                 tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
-            }
-
-            // Update main document title only if this is the active tab
-            if (tab.id === activeTabId) {
-                updateDocumentTitle(tab);
-            }
-        }
-
-         function updateDocumentTitle(tab) {
-             if (!tab || !tab.titleElement) {
-                 document.title = 'Vern Browser';
-                 return;
-             }
-             // Use the text content of the tab's title element
-             const tabTitle = tab.titleElement.textContent;
-             document.title = (tabTitle && tabTitle !== 'New Tab' ? tabTitle + ' - ' : '') + 'Vern Browser';
-         }
-
-
-        function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
-
-        function handleTopBarToggle() {
-            isTopBarHidden = !isTopBarHidden;
-            if (isTopBarHidden) {
-                topBarAssemblyEl.classList.add('hidden');
-                toggleTopBarButtonEl.style.top = '-1px';
-                toggleBarIconEl.className = 'fas fa-chevron-down';
-                toggleTopBarButtonEl.title = "Show Toolbar";
-            } else {
-                topBarAssemblyEl.classList.remove('hidden');
-                // No need to set max-height here, CSS transition handles it based on content
-                // topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; // Remove this line
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
-                toggleBarIconEl.className = 'fas fa-chevron-up';
-                toggleTopBarButtonEl.title = "Hide Toolbar";
-            }
-        }
-
-        // Measure the natural height of the top bar when visible
-        function measureTopBarHeight() {
-            // Ensure the top bar is visible to measure its full height
-            const wasHidden = topBarAssemblyEl.classList.contains('hidden');
-            const originalMaxHeight = topBarAssemblyEl.style.maxHeight; // Store original if any
-
-            if (wasHidden) {
-                topBarAssemblyEl.classList.remove('hidden');
-                topBarAssemblyEl.style.maxHeight = 'none'; // Temporarily allow it to take natural height
-            } else {
-                 topBarAssemblyEl.style.maxHeight = 'none'; // Also set to none to get true height if it had a fixed max-height
-            }
-
-            initialTopBarHeight = topBarAssemblyEl.offsetHeight;
-
-            // Restore original state
-            if (wasHidden) {
-                topBarAssemblyEl.classList.add('hidden');
-                topBarAssemblyEl.style.maxHeight = '0px'; // Set to 0 when hidden
-            } else {
-                topBarAssemblyEl.style.maxHeight = originalMaxHeight; // Restore original max-height (should be 'none' after this function runs first time)
-            }
-
-            // Update the toggle button position if the bar is visible
-            if (!isTopBarHidden) {
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
-            } else {
-                toggleTopBarButtonEl.style.top = '-1px';
-            }
-        }
-
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Cache DOM element references
-            tabBarEl = document.getElementById('tab-bar');
-            tabsContainerEl = document.getElementById('tabs-container');
-            searchBarEl = document.getElementById('search-bar');
-            newTabButtonEl = document.getElementById('new-tab-button');
-            homeButtonEl = document.getElementById('home-button');
-            backButtonEl = document.getElementById('back-button');
-            forwardButtonEl = document.getElementById('forward-button');
-            refreshButtonEl = document.getElementById('refresh-button');
-            fourspButtonEl = document.getElementById('foursp-button');
-
-            topBarAssemblyEl = document.getElementById('top-bar-assembly');
-            toggleTopBarButtonEl = document.getElementById('toggle-top-bar-button');
-            toggleBarIconEl = document.getElementById('toggle-bar-icon');
-
-            // Measure initial height and apply immediately (or set to 0 if hidden)
-             measureTopBarHeight();
-             if (isTopBarHidden) {
-                  topBarAssemblyEl.style.maxHeight = '0px';
-                  topBarAssemblyEl.classList.add('hidden');
-             } else {
-                  topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-             }
-             // Position toggle button initially
-             toggleTopBarButtonEl.style.top = (isTopBarHidden ? -1 : initialTopBarHeight - 1) + 'px';
-
-
-            // Initialize UV service worker (requires register-sw.js)
-            await initUV();
-
-            // Create initial tab on load if none exist
-            if (tabs.length === 0) {
-                 const urlParams = new URLSearchParams(window.location.search);
-                 const initialUrl = urlParams.get('url');
-                 createTab(initialUrl || 'about:blank');
-            }
-
-            // Event listener for the new tab button
-            if(newTabButtonEl) newTabButtonEl.addEventListener('click', () => createTab('about:blank'));
-
-            // Event listener for clicks on the tab bar (using event delegation)
-            if(tabBarEl) tabBarEl.addEventListener('click', (e) => {
-                const tabElement = e.target.closest('.tab');
-                if (!tabElement) return; // Click was not inside a tab element
-
-                const closeButton = e.target.closest('.tab-close');
-                if (closeButton) {
-                    // Click was on the close button inside a tab
-                    e.stopPropagation(); // Prevent the click from activating the tab
-                    closeTab(tabElement.dataset.tabId);
-                } else {
-                    // Click was on the tab element but not the close button
-                    activateTab(tabElement.dataset.tabId);
-                }
-            });
-
-            // Event listener for Enter key in the search bar
-            if(searchBarEl) searchBarEl.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault(); // Prevent default form submission if search bar was in a form
-                    navigateTo(e.target.value);
-                     searchBarEl.blur(); // Remove focus after navigating
-                }
-            });
-
-            // Event listeners for navigation buttons
-            if(homeButtonEl) homeButtonEl.addEventListener('click', () => {
-                 // Navigate the *active* tab to the home URL
-                 // If you truly want to redirect the entire page, keep the original line: window.top.location.href = "index.html";
-                 const activeTab = getActiveTab();
-                 if (activeTab) {
-                      // Replace 'index.html' with your desired homepage URL
-                      navigateTo('index.html', activeTab);
-                 } else {
-                      // Fallback if no tab is active
-                      createTab('index.html');
-                 }
-            });
-
-            // Back, Forward, Refresh buttons target the active iframe
-            if(backButtonEl) backButtonEl.addEventListener('click', () => {
-                const t = getActiveTab();
-                if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.history.back(); } catch (err) {console.error("Back nav error:", err)}
-                }
-            });
-
-            if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => {
-                const t = getActiveTab();
-                if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.history.forward(); } catch (err) {console.error("Fwd nav error:", err)}
-                }
-            });
-
-            if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => {
-                const t = getActiveTab();
-                if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.location.reload(); } catch (err) {console.error("Refresh error:", err)}
-                }
-            });
-
-            // 4SP button click handler
-            if(fourspButtonEl) fourspButtonEl.addEventListener('click', () => {
-                 // Navigate the *active* tab to the 4SP website
-                 const activeTab = getActiveTab();
-                 if (activeTab) {
-                      navigateTo("https://4simpleproblems.github.io", activeTab);
-                 } else {
-                      // Fallback if no tab is active
-                      createTab("https://4simpleproblems.github.io");
-                 }
-            });
-
-            // Event listener for the top bar toggle button
-            if(toggleTopBarButtonEl) toggleTopBarButtonEl.addEventListener('click', handleTopBarToggle);
-
-
-            // Listen for messages from iframes (This is the robust way to get title/favicon cross-origin)
-            // Your UV setup needs to inject scripts into proxied pages to send these messages.
-            window.addEventListener('message', (event) => {
-                // WARNING: Validate event.origin in a real application to prevent XSS
-                // if (event.origin !== 'YOUR_EXPECTED_ORIGIN_FOR_MESSAGES') return;
-
-                // Example message structure from UV script injected into iframe:
-                // event.data = { type: 'updateTabInfo', title: 'Page Title', favicon: 'favicon.ico' }
-                 if (event.data && event.data.type === 'updateTabInfo') {
-                     const iframe = event.source.frameElement; // Get the iframe element that sent the message
-                     if (!iframe) return;
-
-                     const tab = tabs.find(t => t.iframe === iframe);
-                     if (tab) {
-                         updateTabInfo(tab, event.data.title, event.data.favicon);
-                     }
-                 } else if (event.data && event.data.type === 'navigateTo') {
-                      // Optional: Handle navigation requests from within the iframe (e.g., internal links)
-                      // The UV service worker usually handles this, but this is an alternative.
-                      console.log("Received navigateTo message from iframe:", event.data.url);
-                      const iframe = event.source.frameElement;
-                       const tab = tabs.find(t => t.iframe === iframe);
-                      if (tab) {
-                           // Prevent infinite loops if the URL is already loaded or similar issues
-                           // Add checks here if necessary
-                           navigateTo(event.data.url, tab);
-                      }
-                 }
-                // console.log("Message from iframe:", event.data); // Keep for debugging other messages
-            });
-
-
-            // Fallback/Initial title/favicon update on iframe load (less reliable cross-origin)
-             // The message listener above is preferred if your UV setup sends messages.
-             tabsContainerEl.addEventListener('load', (e) => {
-                  if (e.target.classList.contains('tab-content')) {
-                       const iframe = e.target;
-                       const tab = tabs.find(t => t.iframe === iframe);
-                       if (tab) {
-                           // Use a small timeout because contentDocument might not be ready immediately on 'load'
-                           // Especially with service workers
-                            setTimeout(() => {
-                                try {
-                                    // Try to get title and favicon from iframe contentDocument
-                                    const iframeDoc = iframe.contentDocument;
-                                    if (iframeDoc) {
-                                        const title = iframeDoc.title;
-                                        // Attempt to find favicon link elements
-                                        const faviconLink = iframeDoc.querySelector('link[rel="icon"], link[rel="shortcut icon"]');
-                                        let faviconUrl = faviconLink ? faviconLink.href : null;
-
-                                        // If faviconUrl is relative, it needs to be resolved against the iframe's *proxied* origin
-                                        // This resolution is complex cross-origin and ideally handled by the proxy (UV) sending the absolute URL in a message.
-                                        // For a basic fallback, we'll just use the found URL if absolute, or rely on the default icon.
-                                        if (faviconUrl && !faviconUrl.startsWith('http')) {
-                                             // Cannot reliably resolve relative favicon URLs cross-origin without proxy help
-                                             faviconUrl = null; // Discard unreliable relative favicons
-                                        }
-
-
-                                        if (title && title.trim() !== '') {
-                                             updateTabInfo(tab, title, faviconUrl);
-                                        } else {
-                                             // Fallback to URL if title is empty
-                                             updateTabInfo(tab, tab.url, faviconUrl);
-                                        }
-                                    } else {
-                                         // Fallback if contentDocument is inaccessible
-                                         updateTabInfo(tab, tab.url);
-                                    }
-                                } catch (err) {
-                                    // This catch block handles cross-origin security errors
-                                    console.warn("Could not access iframe contentDocument for title/favicon update:", err);
-                                    // Fallback to URL if access fails
-                                    updateTabInfo(tab, tab.url);
-                                }
-                            }, 50); // Short delay
-                       }
-                  }
-             }, true); // Use capture phase
-
-
-            // Update initial top bar height on window resize
-            // Debounce the resize handler to avoid excessive recalculations
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    measureTopBarHeight(); // Recalculate height
-                    // Update max-height only if not hidden, transition handles the rest
-                     if (!isTopBarHidden) {
-                          topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-                     }
-                }, 100); // Adjust debounce delay as needed
-            });
-        });
-
-         // Optional: Handle beforeunload to warn user about closing multiple tabs
-         window.addEventListener('beforeunload', (e) => {
-             if (tabs.length > 1) {
-                 // Standard way to ask user for confirmation before leaving
-                 e.preventDefault(); // Cancel the event
-                 e.returnValue = 'You have multiple tabs open. Are you sure you want to leave?'; // Chrome requires returnValue
-                 return 'You have multiple tabs open. Are you sure you want to leave?'; // Older browsers
-             }
-         });
-
-    </script>
+  </div>
+  <div id="tabs-container"></div>
+  <script src="uv/uv.bundle.js" defer></script>
+  <script src="uv/uv.config.js" defer></script>
+  <script>
+    const tabs = []; let activeId = null, counter = 0;
+    const tabBar = document.getElementById('tab-bar');
+    const addBtn = document.getElementById('add-tab');
+    const container = document.getElementById('tabs-container');
+    const searchBar = document.getElementById('search-bar');
+    document.getElementById('btn-back').onclick = () => navigate('back');
+    document.getElementById('btn-forward').onclick = () => navigate('forward');
+    document.getElementById('btn-refresh').onclick = () => navigate('refresh');
+    addBtn.onclick = () => createTab('about:blank');
+    searchBar.onkeydown = e => e.key==='Enter' && loadUrl(searchBar.value);
+    function createTab(url) {
+      const id = 'tab'+(counter++);
+      const tabEl = document.createElement('div'); tabEl.className='tab';
+      tabEl.dataset.id = id;
+      tabEl.innerHTML='<div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>';
+      tabBar.insertBefore(tabEl, addBtn);
+      const iframe = document.createElement('iframe'); iframe.id=id;
+      container.appendChild(iframe);
+      tabs.push({id,tabEl,iframe,url:'about:blank'});
+      tabEl.onclick = () => activate(id);
+      tabEl.querySelector('.tab-close').onclick = e => { e.stopPropagation(); closeTab(id); };
+      activate(id); loadUrl(url);
+    }
+    function activate(id) {
+      tabs.forEach(t=>{t.tabEl.classList.remove('active');t.iframe.classList.remove('active');});
+      const t = tabs.find(x=>x.id===id); if(!t) return;
+      t.tabEl.classList.add('active'); t.iframe.classList.add('active'); activeId=id;
+      searchBar.value = t.url==='about:blank'?'':t.url;
+    }
+    function closeTab(id) {
+      const idx = tabs.findIndex(t=>t.id===id); if(idx<0) return;
+      const t = tabs[idx]; t.tabEl.remove(); t.iframe.remove(); tabs.splice(idx,1);
+      if(activeId===id) idx>0?activate(tabs[idx-1].id):tabs[0]?activate(tabs[0].id):createTab('about:blank');
+    }
+    function loadUrl(input) {
+      const t = tabs.find(x=>x.id===activeId); if(!t) return;
+      let url=input||'about:blank';
+      if(url!=='about:blank') {
+        const ddg='https://duckduckgo.com/?q=%s';
+        url = searchFast?(__uv$config.prefix+__uv$config.encodeUrl(searchFast(input,ddg))):url;
+      }
+      t.iframe.src=url; t.url=input; activate(activeId);
+    }
+    function navigate(type) {
+      const t = tabs.find(x=>x.id===activeId); if(!t) return;
+      try { if(type==='back') t.iframe.contentWindow.history.back();
+            if(type==='forward') t.iframe.contentWindow.history.forward();
+            if(type==='refresh') t.iframe.contentWindow.location.reload();
+      } catch { loadUrl(t.url);}    }
+    document.addEventListener('DOMContentLoaded',()=>createTab('about:blank'));
+  </script>
 </body>
 </html>
