@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Browser Pro</title>
+    <title>Vern Pro Browser</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUA6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/x-icon" href="logo.png" /> <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+
     <style id="custom-styles">
         /* Base Elements */
         :root {
@@ -26,18 +26,34 @@
             --tab-active-bg: rgba(45, 45, 45, 0.9);
             --tab-border: rgba(60, 60, 60, 0.5);
             --tab-hover-bg: rgba(35, 35, 35, 0.9);
-            --settings-panel-bg: rgba(25, 25, 25, 0.95);
-            --dropdown-bg: rgba(35, 35, 35, 0.95);
-            --dropdown-hover: rgba(55, 55, 55, 0.95);
-            --dropdown-text: #ffffff;
+            --accent-color: #6d5acd;
+            --accent-hover: #584caf;
+            --shortcut-bg: rgba(20, 20, 20, 0.9);
+            --shortcut-hover: rgba(40, 40, 40, 0.9);
+            --sidebar-bg: rgba(10, 10, 10, 0.95);
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 0px; /* Adjusted for full collapse */
+            --menu-bg: rgba(30, 30, 30, 0.95);
+            --menu-hover: rgba(60, 60, 60, 0.95);
+            --menu-border: rgba(70, 70, 70, 0.5);
+            --dropdown-bg: rgba(25, 25, 25, 0.98);
+            --dropdown-hover: rgba(40, 40, 40, 0.98);
+            --dropdown-border: rgba(60, 60, 60, 0.5);
+            --modal-bg: rgba(30, 30, 30, 0.98);
+            --modal-border: rgba(70, 70, 70, 0.5);
+            --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             --tooltip-bg: rgba(15, 15, 15, 0.95);
-            --tooltip-text: #ffffff;
-            --settings-button-bg: rgba(50, 50, 50, 0.8);
-            --settings-button-hover: rgba(70, 70, 70, 0.9);
-            --switch-bg-off: #444;
-            --switch-bg-on: #2196F3;
+            --tooltip-border: rgba(70, 70, 70, 0.5);
+            --input-bg: rgba(40, 40, 40, 0.95);
+            --input-border: rgba(70, 70, 70, 0.5);
+            --input-focus-border: var(--accent-color);
+            --theme-red: #e74c3c;
+            --theme-green: #2ecc71;
+            --theme-blue: #3498db;
+            --theme-orange: #e67e22;
+            --theme-purple: #9b59b6;
+            --theme-cyan: #1abc9c;
         }
-
         html, body {
             margin: 0;
             padding: 0;
@@ -50,22 +66,62 @@
             background-color: var(--bg-color);
             color: var(--text-color);
         }
-        
         body {
             display: flex;
             flex-direction: column;
         }
-
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        button {
+            font-family: var(--font-family-main);
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: inherit;
+        }
+        /* Top Bar Assembly */
         #top-bar-assembly {
             overflow: hidden;
             transition: max-height 0.35s ease-in-out;
-            z-index: 10;
         }
-
         #top-bar-assembly.hidden {
-            max-height: 0 !important; 
+            max-height: 0 !important;
         }
-        
+        /* Pro Options Bar */
+        #pro-options-bar {
+            display: flex;
+            background-color: var(--navbar-bg);
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+        #pro-options-bar::-webkit-scrollbar { height: 3px; }
+        #pro-options-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+        .pro-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+        .pro-menu-item:hover {
+            background-color: var(--menu-hover);
+        }
+        .pro-menu-item i {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+        .pro-menu-separator {
+            width: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 0 4px;
+        }
         /* Tab Bar */
         #tab-bar {
             display: flex;
@@ -77,30 +133,41 @@
             position: relative;
             align-items: center;
             gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
         #tab-bar::-webkit-scrollbar { height: 3px; }
         #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
-        
         .tab {
             display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
             padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
         }
-        .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
+        .tab.active {
+            background-color: var(--tab-active-bg);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .tab-favicon img, .tab-favicon .fas, .tab-favicon .fab { width: 100%; height: 100%; object-fit: contain; }
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
         .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
         .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
-        
         .new-tab-button {
             width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
             cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
         }
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
-        
         /* Navigation Bar */
         #nav-bar {
             display: flex;
@@ -108,642 +175,1928 @@
             padding: 10px;
             background-color: var(--navbar-bg);
             box-shadow: var(--navbar-shadow);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5); 
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 999;
         }
-        
+        #nav-buttons {
+            display: flex;
+            gap: 8px;
+            margin-right: 8px;
+        }
         .nav-button {
             width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-            margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
+            border-radius: 50%; background-color: var(--button-bg);
             cursor: pointer; color: var(--text-color); transition: background-color 0.2s, color 0.2s;
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
-        .nav-button.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
         #search-bar {
             flex: 1; height: 40px; border-radius: 30px; border: none; background-color: var(--search-bg);
             color: var(--text-color); padding: 0 18px; font-size: 15px; font-weight: 700;
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); font-family: var(--font-family-main);
         }
         #search-bar:focus { outline: none; background-color: var(--search-focus-bg); box-shadow: var(--search-focus-shadow); font-weight: 700; }
-        
         /* Toggle Top Bar Button */
         #toggle-top-bar-button {
             position: fixed;
-            z-index: 1001; 
-            width: 40px; 
-            height: 32px; 
-            background-color: var(--navbar-bg); 
-            border-radius: 0 0 100px 100px; 
-            right: 2px;
+            z-index: 1001;
+            width: 40px;
+            height: 32px;
+            background-color: var(--navbar-bg);
+            border-radius: 0 0 100px 100px;
+            right: 20px;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text-color);
-            transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out;
-            box-shadow: 
+            transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.3s ease-in-out;
+            box-shadow:
               -2px 0 0 0 rgba(255, 255, 255, 0.5),
                2px 0 0 0 rgba(255, 255, 255, 0.5),
                0 2px 0 0 rgba(255, 255, 255, 0.5);
         }
         #toggle-top-bar-button:hover {
-            background-color: var(--button-hover-bg); 
+            background-color: var(--button-hover-bg);
         }
         #toggle-top-bar-button .fas {
             font-size: 14px;
             transition: transform 0.3s ease-in-out;
         }
+        #toggle-top-bar-button.up .fas {
+             transform: rotate(180deg);
+        }
+        /* Sidebar Toggle Button */
+        #toggle-sidebar-button {
+            position: fixed;
+            z-index: 1001;
+            width: 32px;
+            height: 40px;
+            background-color: var(--navbar-bg);
+            border-radius: 0 100px 100px 0;
+            left: 0; 
+            top: 50%;
+            transform: translateY(-50%); /* Initial transform */
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            transition: left 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.35s ease-in-out;
+            box-shadow:
+              0 -2px 0 0 rgba(255, 255, 255, 0.5),
+              0 2px 0 0 rgba(255, 255, 255, 0.5),
+              2px 0 0 0 rgba(255, 255, 255, 0.5);
+        }
+        #toggle-sidebar-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+        #toggle-sidebar-button .fas {
+            font-size: 14px;
+            transition: transform 0.3s ease-in-out;
+        }
+         /* Sidebar */
+        #sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            z-index: 1000;
+            transform: translateX(0); 
+            transition: transform 0.35s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar.collapsed {
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+        }
+        #sidebar-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #sidebar-logo {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+        #sidebar-logo img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        #sidebar-logo i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        #sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        .sidebar-section-title {
+            padding: 0 16px 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sidebar-item {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .sidebar-item.active {
+            background-color: rgba(109, 90, 205, 0.2); 
+            border-left: 3px solid var(--accent-color);
+            padding-left: 13px;
+        }
+        .sidebar-item.active i {
+            color: var(--accent-color);
+        }
+        #sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-around;
+        }
+        #sidebar-footer .sidebar-item { padding: 8px; }
 
-        /* Content Area */
+        /* Content Area with Sidebar Support */
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: margin-left 0.35s ease;
+            margin-left: var(--sidebar-width);
+        }
+        #main-content.sidebar-collapsed {
+            margin-left: var(--sidebar-collapsed-width); /* Use variable for potential icon bar */
+        }
+        /* Tabs Container */
         #tabs-container {
             flex: 1; position: relative; background-color: var(--iframe-bg);
         }
-        .tab-content { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none;
-            border: none; 
+        .tab-content {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; 
+            border: none;
         }
-        .tab-content.active { 
+        .tab-content.active {
+            display: block; 
+        }
+        /* Shortcuts Grid */
+        #shortcuts-container {
+            display: none; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            overflow-y: auto;
+            background-color: var(--bg-color); 
+            z-index: 2; 
+        }
+        #shortcuts-container.active {
             display: block;
         }
-        
-        .footer-label {
-            position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
-            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
-        }
-        
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-
-        /* Settings & Extra Controls */
-        #settings-button {
-            width: 40px; height: 40px;
-            display: flex; align-items: center; justify-content: center;
-            margin-left: 10px; border-radius: 50%; 
-            background-color: var(--settings-button-bg);
-            cursor: pointer; color: var(--text-color);
-            transition: background-color 0.2s;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
-        }
-        #settings-button:hover {
-            background-color: var(--settings-button-hover);
-        }
-
-        #settings-panel {
-            position: fixed;
-            top: 60px;
-            right: 10px;
-            width: 300px;
-            background-color: var(--settings-panel-bg);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 1002;
-            display: none;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .settings-section {
-            margin-bottom: 15px;
-        }
-
-        .settings-section h3 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 5px;
-        }
-
-        .settings-row {
+        #shortcuts-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 30px;
+        }
+        #shortcuts-header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        #shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+        .shortcut-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--shortcut-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            color: var(--text-color); 
+            text-decoration: none; 
+        }
+        .shortcut-item:hover {
+            transform: translateY(-3px);
+            background-color: var(--shortcut-hover);
+        }
+        .shortcut-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--accent-color); 
             margin-bottom: 10px;
+            font-size: 20px;
         }
-
-        .settings-label {
-            font-size: 12px;
+        .shortcut-icon img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .shortcut-title {
+            font-size: 14px;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
-
-        /* Toggle Switch */
-        .switch {
+        .shortcut-url {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        .add-shortcut { /* Class for the add shortcut placeholder item */
+            opacity: 0.7;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .add-shortcut:hover {
+            opacity: 1;
+        }
+        .add-shortcut .shortcut-icon {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        /* Modals */
+        .modal {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1200;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: var(--modal-bg);
+            border-radius: 10px;
+            box-shadow: var(--modal-shadow);
+            padding: 24px;
+            max-width: 500px;
+            width: calc(100% - 40px); 
+            border: 1px solid var(--modal-border);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 18px;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 22px; 
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            padding: 5px; 
+        }
+        .modal-close:hover {
+            opacity: 1;
+        }
+        .modal-body {
+            margin-bottom: 24px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        /* Form elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-family: var(--font-family-main);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+        }
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            font-family: var(--font-family-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none; 
+        }
+        .btn i.fab, .btn i.fas { /* Ensure icons in buttons are spaced correctly */
+            margin-right: 8px;
+        }
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .btn-danger {
+            background-color: var(--theme-red);
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b; 
+        }
+        /* Dropdown menu */
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background-color: var(--dropdown-bg);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dropdown-border);
+            min-width: 180px;
+            z-index: 1100;
+            overflow: hidden; 
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            color: var(--text-color); 
+            text-decoration: none; 
+        }
+        .dropdown-item:hover {
+            background-color: var(--dropdown-hover);
+        }
+        .dropdown-item i.fas, .dropdown-item i.fab { /* Ensure icons in dropdown items are spaced correctly */
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+            opacity: 0.8;
+        }
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--dropdown-border);
+            margin: 6px 0;
+        }
+        /* Settings panels */
+        .settings-category {
+            margin-bottom: 24px;
+        }
+        .settings-category-title {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--tab-border);
+            padding-bottom: 8px;
+        }
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+        .settings-item-label {
+            font-size: 14px;
+        }
+        /* Toggle switch */
+        .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 44px;
+            width: 40px;
             height: 22px;
         }
-
-        .switch input {
+        .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-
-        .slider {
+        .toggle-slider {
             position: absolute;
             cursor: pointer;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: var(--switch-bg-off);
+            background-color: rgba(255, 255, 255, 0.2);
             transition: .4s;
-            border-radius: 34px;
+            border-radius: 22px; 
         }
-
-        .slider:before {
+        .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
+            height: 16px;
+            width: 16px;
             left: 3px;
-            bottom: 2px;
+            bottom: 3px;
             background-color: white;
             transition: .4s;
             border-radius: 50%;
         }
-
-        input:checked + .slider {
-            background-color: var(--switch-bg-on);
+        input:checked + .toggle-slider {
+            background-color: var(--accent-color);
         }
-
-        input:checked + .slider:before {
-            transform: translateX(21px);
+        input:checked + .toggle-slider:before {
+            transform: translateX(18px);
         }
-
-        /* Dropdown Menu */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: var(--dropdown-bg);
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 4px;
-        }
-
-        .dropdown-item {
-            color: var(--dropdown-text);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .dropdown-item:hover {
-            background-color: var(--dropdown-hover);
-        }
-
-        .show {
-            display: block;
-        }
-
-        /* Status Bar */
-        #status-bar {
-            height: 24px;
-            background-color: var(--navbar-bg);
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            font-size: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .status-item {
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .status-item i {
-            margin-right: 5px;
-            font-size: 10px;
-        }
-
-        /* Tooltip */
+        /* Tooltips */
         .tooltip {
             position: relative;
         }
-
         .tooltip .tooltip-text {
             visibility: hidden;
-            width: 120px;
+            width: auto;
+            white-space: nowrap;
             background-color: var(--tooltip-bg);
-            color: var(--tooltip-text);
+            color: var(--text-color);
             text-align: center;
             border-radius: 6px;
-            padding: 5px;
+            padding: 6px 10px;
             position: absolute;
-            z-index: 1;
-            bottom: 125%;
+            z-index: 1100;
+            bottom: 125%; 
             left: 50%;
-            margin-left: -60px;
+            transform: translateX(-50%);
             opacity: 0;
             transition: opacity 0.3s;
             font-size: 12px;
+            border: 1px solid var(--tooltip-border);
+            pointer-events: none; 
         }
-
+        .tooltip .tooltip-text::after { 
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--tooltip-bg) transparent transparent transparent;
+        }
         .tooltip:hover .tooltip-text {
             visibility: visible;
             opacity: 1;
         }
-
-        /* Bookmark Bar */
-        #bookmark-bar {
-            display: flex;
-            background-color: rgba(25, 25, 25, 0.9);
-            padding: 6px 10px;
-            overflow-x: auto;
-            white-space: nowrap;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        #bookmark-bar::-webkit-scrollbar {
-            height: 2px;
-        }
-
-        #bookmark-bar::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .bookmark {
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-            padding: 5px 8px;
-            border-radius: 4px;
+        /* Theme selector */
+        .theme-option {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 8px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 12px;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s;
         }
-
-        .bookmark:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .theme-option:hover {
+            transform: scale(1.1);
         }
-
-        .bookmark-favicon {
-            margin-right: 5px;
-            width: 16px;
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .theme-option.active {
+            border-color: white;
+            box-shadow: 0 0 5px white;
         }
+        .theme-dark { background-color: #1a1a1a; border: 1px solid #555; } 
+        .theme-light { background-color: #f5f5f5; border: 1px solid #ccc; }
+        .theme-purple-accent { background-color: #6d5acd; } 
+        .theme-blue-accent { background-color: #3498db; }
+        .theme-green-accent { background-color: #2ecc71; }
+        .theme-orange-accent { background-color: #e67e22; }
 
-        /* Progress bar */
-        #progress-bar {
-            height: 3px;
-            width: 0;
-            background-color: #2196F3;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            transition: width 0.2s ease;
+        .footer-label {
+            position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
+            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+            opacity: 0.7;
         }
-
-        /* History viewer */
-        #history-panel {
-            position: fixed;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            max-width: 800px;
-            background-color: var(--settings-panel-bg);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 1002;
-            display: none;
-            max-height: 80vh;
-            overflow-y: auto;
+        canvas#backgroundCanvas { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            pointer-events: none; 
         }
-
-        #history-list {
-            margin-top: 15px;
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 200px; 
+            }
+            #shortcuts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+            .shortcut-item {
+                padding: 12px;
+            }
+            .shortcut-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .modal-content {
+                width: 90%;
+            }
+            #pro-options-bar {
+                padding: 6px;
+                gap: 4px;
+            }
+            .pro-menu-item {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+            .pro-menu-item i {
+                margin-right: 4px;
+            }
+            .tab {
+                 min-width: 140px; max-width: 180px;
+            }
         }
+        @media (max-width: 576px) {
+            :root {
+                --sidebar-width: 100%; 
+            }
+             #sidebar.collapsed { 
+                transform: translateX(-100%);
+            }
+            #main-content.sidebar-collapsed { margin-left: 0; }
+            #main-content { margin-left: 0;  }
 
-        .history-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-        }
 
-        .history-item:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
+            #shortcuts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+                padding: 20px;
+            }
+            #shortcuts-container { padding: 20px; }
+            .nav-button {
+                width: 36px;
+                height: 36px;
+            }
+            #search-bar {
+                height: 36px;
+                font-size: 14px;
+                padding: 0 15px;
+            }
+            .tab {
+                min-width: 100px; 
+                max-width: 130px;
+                height: 30px;
+                padding: 0 8px;
+                font-size: 11px;
+            }
+            .tab-favicon { width: 14px; height: 14px; margin-right: 5px;}
+            .tab-close { font-size: 10px; }
+            .new-tab-button { width: 30px; height: 30px; }
 
-        .history-favicon {
-            width: 16px;
-            height: 16px;
-            margin-right: 10px;
-        }
-
-        .history-title {
-            flex: 1;
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .history-url {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 12px;
-            margin-left: 15px;
-            max-width: 40%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .history-time {
-            margin-left: 10px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Download manager */
-        #downloads-panel {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            width: 350px;
-            background-color: var(--settings-panel-bg);
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 1002;
-            display: none;
-        }
-
-        .download-item {
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-        }
-
-        .download-title {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-
-        .download-filename {
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
-        }
-
-        .download-progress-bar {
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            margin-top: 5px;
-        }
-
-        .download-progress-fill {
-            height: 100%;
-            background-color: #2196F3;
-            border-radius: 3px;
-            width: 0%;
-            transition: width 0.3s;
+            #pro-options-bar { display: none; } 
+            #nav-bar { padding: 8px; }
+            #toggle-top-bar-button { right: 10px; }
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <canvas id="backgroundCanvas"></canvas>
 
-    <!-- Progress Bar for loading indication -->
-    <div id="progress-bar"></div>
-
-    <div id="top-bar-assembly">
-        <div id="tab-bar">
-            <div class="new-tab-button" id="new-tab-button" title="New Tab">
-                <i class="fas fa-plus"></i>
+    <aside id="sidebar">
+        <div id="sidebar-header">
+            <a href="#" id="sidebar-logo">
+                <img src="logo.png" alt="Vern Pro Logo">
+                <span>Vern Pro</span>
+            </a>
+        </div>
+        <nav id="sidebar-content">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Navigation</div>
+                <a href="#" class="sidebar-item active" data-action="show-home">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#" class="sidebar-item" data-action="show-bookmarks">
+                    <i class="fas fa-bookmark"></i> Bookmarks
+                </a>
+                <a href="#" class="sidebar-item" data-action="show-history">
+                    <i class="fas fa-history"></i> History
+                </a>
+                <a href="#" class="sidebar-item" data-action="show-downloads">
+                    <i class="fas fa-download"></i> Downloads
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Tools</div>
+                 <a href="#" class="sidebar-item" data-action="open-devtools">
+                    <i class="fas fa-code"></i> Dev Tools
+                </a>
+                <a href="#" class="sidebar-item" data-action="open-extensions">
+                    <i class="fas fa-puzzle-piece"></i> Extensions
+                </a>
+            </div>
+        </nav>
+        <div id="sidebar-footer">
+            <div class="tooltip">
+                <button class="sidebar-item" id="settings-button" data-action="open-settings-modal">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <span class="tooltip-text">Settings</span>
+            </div>
+             <div class="tooltip">
+                <button class="sidebar-item" data-action="show-profile"> <i class="fas fa-user-circle"></i>
+                </button>
+                <span class="tooltip-text">Profile</span>
             </div>
         </div>
-        <div id="nav-bar">
-            <div class="nav-button tooltip" id="home-button" title="Home">
-                <i class="fas fa-home"></i>
-                <span class="tooltip-text">Home (Alt+H)</span>
+    </aside>
+
+    <main id="main-content">
+        <div id="top-bar-assembly">
+            <div id="pro-options-bar">
+                <button class="pro-menu-item" data-action="pro-feature-1"><i class="fas fa-star"></i> Pro Feature 1</button>
+                <button class="pro-menu-item" data-action="pro-feature-2"><i class="fas fa-bolt"></i> Pro Feature 2</button>
+                <div class="pro-menu-separator"></div>
+                <div class="dropdown">
+                    <button class="pro-menu-item" id="tools-dropdown-toggle-btn" data-dropdown-target="tools-dropdown-menu"><i class="fas fa-tools"></i> Tools</button>
+                    <div class="dropdown-menu" id="tools-dropdown-menu">
+                        <a href="#" class="dropdown-item" data-action="tool-snippet"><i class="fas fa-cut"></i> Snippet Tool</a>
+                        <a href="#" class="dropdown-item" data-action="tool-colorpicker"><i class="fas fa-palette"></i> Color Picker</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" data-action="tool-help"><i class="fas fa-question-circle"></i> Help</a>
+                    </div>
+                </div>
             </div>
-            <div class="nav-button tooltip disabled" id="back-button" title="Back">
-                <i class="fas fa-arrow-left"></i>
-                <span class="tooltip-text">Back (Alt+←)</span>
-            </div>
-            <div class="nav-button tooltip disabled" id="forward-button" title="Forward">
-                <i class="fas fa-arrow-right"></i>
-                <span class="tooltip-text">Forward (Alt+→)</span>
-            </div>
-            <div class="nav-button tooltip" id="refresh-button" title="Refresh">
-                <i class="fas fa-redo"></i>
-                <span class="tooltip-text">Refresh (F5)</span>
-            </div>
-            <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
-            <div class="nav-button tooltip" id="history-button" title="History">
-                <i class="fas fa-history"></i>
-                <span class="tooltip-text">History (Ctrl+H)</span>
-            </div>
-            <div class="nav-button tooltip" id="downloads-button" title="Downloads">
-                <i class="fas fa-download"></i>
-                <span class="tooltip-text">Downloads (Ctrl+J)</span>
-            </div>
-            <div class="nav-button tooltip" id="settings-button" title="Settings">
-                <i class="fas fa-cog"></i>
-                <span class="tooltip-text">Settings (Alt+S)</span>
+            <div id="tab-bar">
+                <button class="new-tab-button tooltip" id="new-tab-btn">
+                    <i class="fas fa-plus"></i>
+                    <span class="tooltip-text">New Tab (Ctrl+T)</span>
+                </button>
             </div>
         </div>
-        <div id="bookmark-bar">
-            <!-- Bookmarks will be populated here dynamically -->
-            <div class="bookmark" data-url="https://www.google.com">
-                <div class="bookmark-favicon"><i class="fab fa-google"></i></div>
-                <span>Google</span>
+
+        <nav id="nav-bar">
+            <div id="nav-buttons">
+                <button class="nav-button tooltip" id="back-btn" disabled>
+                    <i class="fas fa-arrow-left"></i>
+                    <span class="tooltip-text">Back (Alt+Left)</span>
+                </button>
+                <button class="nav-button tooltip" id="forward-btn" disabled>
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="tooltip-text">Forward (Alt+Right)</span>
+                </button>
+                <button class="nav-button tooltip" id="reload-btn">
+                    <i class="fas fa-redo"></i>
+                    <span class="tooltip-text">Reload (F5 / Ctrl+R)</span>
+                </button>
+                <button class="nav-button tooltip" id="home-btn">
+                    <i class="fas fa-home"></i>
+                    <span class="tooltip-text">Home</span>
+                </button>
             </div>
-            <div class="bookmark" data-url="https://www.youtube.com">
-                <div class="bookmark-favicon"><i class="fab fa-youtube"></i></div>
-                <span>YouTube</span>
+            <input type="text" id="search-bar" placeholder="Search or enter address">
+            <div id="nav-actions" style="display: flex; gap: 8px; margin-left: 8px;">
+                 <button class="nav-button tooltip" id="menu-btn" data-action="toggle-user-menu"> <i class="fas fa-ellipsis-v"></i> <span class="tooltip-text">Menu</span>
+                </button>
+                 <div class="dropdown">
+                    <button class="nav-button tooltip" id="user-profile-btn" data-dropdown-target="user-dropdown-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="tooltip-text">Profile & More</span>
+                    </button>
+                    <div class="dropdown-menu" id="user-dropdown-menu" style="min-width: 240px;">
+                        <div id="user-info" style="padding: 10px 16px; display:none; align-items:center; border-bottom: 1px solid var(--dropdown-border);">
+                            <img id="user-avatar" src="logo.png" alt="User" style="width:32px; height:32px; border-radius:50%; margin-right:10px;">
+                            <div>
+                                <div id="user-display-name">User Name</div>
+                                <div id="user-email" style="font-size:12px; opacity:0.7;">user@example.com</div>
+                            </div>
+                        </div>
+                        <a href="#" class="dropdown-item" id="login-google-btn" data-action="login-google"><i class="fab fa-google"></i> Sign in with Google</a>
+                        <a href="#" class="dropdown-item" id="login-email-btn" data-action="login-email-modal"><i class="fas fa-envelope"></i> Sign in/up with Email</a>
+                        
+                        <a href="#" class="dropdown-item" data-action="open-settings-modal"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" class="dropdown-item" data-action="manage-bookmarks"><i class="fas fa-bookmark"></i> Bookmarks</a>
+                        <a href="#" class="dropdown-item" data-action="open-history"><i class="fas fa-history"></i> History</a>
+                        <div class="dropdown-divider" id="auth-divider" style="display:none;"></div>
+                        <a href="#" class="dropdown-item" id="logout-btn" data-action="sign-out" style="display:none;"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                    </div>
+                </div>
             </div>
-            <div class="bookmark" data-url="https://www.github.com">
-                <div class="bookmark-favicon"><i class="fab fa-github"></i></div>
-                <span>GitHub</span>
+        </nav>
+
+        <button id="toggle-top-bar-button" class="tooltip">
+            <i class="fas fa-chevron-up"></i>
+            <span class="tooltip-text">Toggle Toolbar</span>
+        </button>
+
+        <div id="tabs-container">
+            <div id="shortcuts-container" class="active"> <div id="shortcuts-header">
+                    <h1>Speed Dial</h1>
+                    <button class="btn btn-primary" id="manage-shortcuts-btn"><i class="fas fa-pencil-alt"></i> Manage</button>
+                </div>
+                <div id="shortcuts-grid">
+                    <div class="shortcut-item add-shortcut" id="add-shortcut-placeholder-btn">
+                        <div class="shortcut-icon"><i class="fas fa-plus"></i></div>
+                        <div class="shortcut-title">Add Shortcut</div>
+                        <div class="shortcut-url">Click to add</div>
+                    </div>
+                </div>
             </div>
-            <div class="bookmark" data-url="https://www.reddit.com">
-                <div class="bookmark-favicon"><i class="fab fa-reddit"></i></div>
-                <span>Reddit</span>
+        </div>
+    </main>
+
+    <button id="toggle-sidebar-button" class="tooltip">
+        <i class="fas fa-chevron-left"></i>
+        <span class="tooltip-text">Toggle Sidebar</span>
+    </button>
+
+
+    <div class="modal" id="add-shortcut-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Shortcut</h3>
+                <button class="modal-close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="bookmark" data-url="https://www.twitter.com">
-                <div class="bookmark-favicon"><i class="fab fa-twitter"></i></div>
-                <span>Twitter</span>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="shortcut-name-input">Name</label>
+                    <input type="text" id="shortcut-name-input" class="form-control" placeholder="e.g., Google News">
+                </div>
+                <div class="form-group">
+                    <label for="shortcut-url-input">URL</label>
+                    <input type="url" id="shortcut-url-input" class="form-control" placeholder="https://news.google.com">
+                </div>
+                 <div class="form-group">
+                    <label for="shortcut-icon-url-input">Icon URL (Optional)</label>
+                    <input type="url" id="shortcut-icon-url-input" class="form-control" placeholder="https://example.com/icon.png">
+                </div>
             </div>
-            <div class="bookmark" data-url="https://www.wikipedia.org">
-                <div class="bookmark-favicon"><i class="fas fa-book"></i></div>
-                <span>Wikipedia</span>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="save-shortcut-btn">Save Shortcut</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="email-login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="email-modal-title">Login with Email</h3>
+                <button class="modal-close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="auth-email">Email</label>
+                    <input type="email" id="auth-email" class="form-control" placeholder="user@example.com" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="auth-password">Password</label>
+                    <input type="password" id="auth-password" class="form-control" placeholder="Password" autocomplete="current-password">
+                </div>
+                <p id="auth-error" style="color: var(--theme-red); display:none;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="email-signup-toggle-btn" style="margin-right: auto;">Need an account? Sign Up</button>
+                <button class="btn btn-primary" id="email-auth-submit-btn">Login</button>
             </div>
         </div>
     </div>
 
-    <div id="toggle-top-bar-button" title="Hide Toolbar">
-        <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
-    </div>
 
-    <div id="tabs-container">
-        <!-- Tab content (iframes) will be dynamically added here -->
-    </div>
+    <div class="modal" id="settings-modal">
+        <div class="modal-content" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                <div class="settings-category">
+                    <h4 class="settings-category-title">Appearance</h4>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Theme</span>
+                        <div>
+                            <span class="theme-option theme-dark active" data-theme="dark" title="Dark Theme"></span>
+                            <span class="theme-option theme-light" data-theme="light" title="Light Theme"></span>
+                            <span class="theme-option theme-purple-accent" data-theme="purple" title="Purple Accent"></span>
+                            <span class="theme-option theme-blue-accent" data-theme="blue" title="Blue Accent"></span>
+                            <span class="theme-option theme-green-accent" data-theme="green" title="Green Accent"></span>
+                            <span class="theme-option theme-orange-accent" data-theme="orange" title="Orange Accent"></span>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Show Pro Options Bar</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-show-pro-bar" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Font Size</span>
+                        <select id="setting-font-size" class="form-control" style="width: 120px;">
+                            <option value="12px">Small</option>
+                            <option value="14px" selected>Medium</option>
+                            <option value="16px">Large</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-category">
+                    <h4 class="settings-category-title">Startup</h4>
+                     <div class="settings-item">
+                        <span class="settings-item-label">On startup</span>
+                        <select id="setting-startup-behavior" class="form-control" style="width: 200px;">
+                            <option value="newtab">Open the New Tab page</option>
+                            <option value="lastsession">Continue where you left off</option>
+                            <option value="homepage">Open a specific page</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="setting-homepage-url-group" style="display: none;">
+                         <label for="setting-homepage-url">Homepage URL</label>
+                         <input type="url" id="setting-homepage-url" class="form-control" placeholder="https://example.com">
+                    </div>
+                </div>
+                 <div class="settings-category">
+                    <h4 class="settings-category-title">Privacy</h4>
+                     <div class="settings-item">
+                        <span class="settings-item-label">Clear Browse data</span>
+                        <button class="btn btn-secondary" id="clear-browse-data-btn" data-action="clear-browse-data">Clear Data...</button>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item-label">Send "Do Not Track" request</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-do-not-track">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
-    <!-- Status Bar -->
-    <div id="status-bar">
-        <div class="status-item" id="connection-status">
-            <i class="fas fa-lock"></i>
-            <span>Secure</span>
-        </div>
-        <div class="status-item" id="page-status">
-            <span>Ready</span>
-        </div>
-        <div class="status-item" id="memory-usage">
-            <i class="fas fa-memory"></i>
-            <span>0 MB</span>
-        </div>
-    </div>
-
-    <!-- Settings Panel -->
-    <div id="settings-panel">
-        <h2>Settings</h2>
-        
-        <div class="settings-section">
-            <h3>Appearance</h3>
-            <div class="settings-row">
-                <span class="settings-label">Dark Mode</span>
-                <label class="switch">
-                    <input type="checkbox" id="dark-mode-toggle" checked>
-                    <span class="slider"></span>
-                </label>
             </div>
-            <div class="settings-row">
-                <span class="settings-label">Show Bookmarks Bar</span>
-                <label class="switch">
-                    <input type="checkbox" id="bookmark-bar-toggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="settings-row">
-                <span class="settings-label">Show Status Bar</span>
-                <label class="switch">
-                    <input type="checkbox" id="status-bar-toggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="settings-row">
-                <span class="settings-label">Enable Background Animation</span>
-                <label class="switch">
-                    <input type="checkbox" id="animation-toggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Privacy & Security</h3>
-            <div class="settings-row">
-                <span class="settings-label">Block Trackers</span>
-                <label class="switch">
-                    <input type="checkbox" id="tracker-blocking-toggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="settings-row">
-                <span class="settings-label">Block Ads</span>
-                <label class="switch">
-                    <input type="checkbox" id="ad-blocking-toggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="settings-row">
-                <span class="settings-label">JavaScript Enabled</span>
-                <label class="switch">
-                    <input type="checkbox" id="javascript-toggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Search Engine</h3>
-            <div class="settings-row">
-                <span class="settings-label">Default Search</span>
-                <select id="search-engine-select">
-                    <option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option>
-                    <option value="https://www.google.com/search?q=%s">Google</option>
-                    <option value="https://www.bing.com/search?q=%s">Bing</option>
-                    <option value="https://search.brave.com/search?q=%s">Brave Search</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Browser Data</h3>
-            <div class="settings-row">
-                <span class="settings-label">Clear Browsing History</span>
-                <button id="clear-history-btn">Clear</button>
-            </div>
-            <div class="settings-row">
-                <span class="settings-label">Clear Cache</span>
-                <button id="clear-cache-btn">Clear</button>
-            </div>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Advanced</h3>
-            <div class="settings-row">
-                <span class="settings-label">Proxy Server URL</span>
-                <input type="text" id="proxy-url" placeholder="Enter proxy URL">
-            </div>
-            <div class="settings-row">
-                <button id="save-settings-btn">Save All Settings</button>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal">Done</button>
             </div>
         </div>
     </div>
 
-    <!-- History Panel -->
-    <div id="history-panel">
-        <h2>Browsing History</h2>
-        <input type="text" id="history-search" placeholder="Search history..." style="width: 100%; padding: 8px; margin-bottom: 10px; background-color: rgba(30,30,30,0.9); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;">
-        <div id="history-list">
-            <!-- History items will be populated here dynamically -->
-        </div>
-    </div>
 
-    <!-- Downloads Panel -->
-    <div id="downloads-panel">
-        <h2>Downloads</h2>
-        <div id="downloads-list">
-            <!-- Download items will be populated here dynamically -->
-        </div>
-    </div>
-
-    <span class="footer-label">Official 4SP Proxy Pro</span>
+    <a href="https://github.com/Lissy93/vern" target="_blank" class="footer-label">Vern Pro (Inspired by Vern)</a>
     
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
-    <script src="register-sw.js" defer></script>
-    <script src="search.js" defer></script>
-    <script src="stars.js" defer></script>
-    <script src="browser.js" defer></script>
+    <script src="register-sw.js" defer></script> 
+    <script src="search.js" defer></script> <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script defer src="firebase-info.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // --- Element References ---
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar-button');
+            const toggleSidebarIcon = toggleSidebarBtn.querySelector('.fas'); // For icon rotation
+
+            const topBarAssembly = document.getElementById('top-bar-assembly');
+            const navBar = document.getElementById('nav-bar');
+            const toggleTopBarBtn = document.getElementById('toggle-top-bar-button');
+            const toggleTopBarIcon = toggleTopBarBtn.querySelector('.fas');
+
+            const searchBar = document.getElementById('search-bar');
+            const backBtn = document.getElementById('back-btn');
+            const forwardBtn = document.getElementById('forward-btn');
+            const reloadBtn = document.getElementById('reload-btn');
+            const homeBtn = document.getElementById('home-btn');
+            const newTabBtn = document.getElementById('new-tab-btn');
+            const tabBarEl = document.getElementById('tab-bar'); // Renamed to avoid conflict
+            const tabsContainer = document.getElementById('tabs-container');
+            const shortcutsContainer = document.getElementById('shortcuts-container');
+            const shortcutsGrid = document.getElementById('shortcuts-grid');
+            const addShortcutPlaceholderBtn = document.getElementById('add-shortcut-placeholder-btn');
+
+
+            const addShortcutModalEl = document.getElementById('add-shortcut-modal'); // Renamed
+            const saveShortcutBtn = document.getElementById('save-shortcut-btn');
+            const shortcutNameInput = document.getElementById('shortcut-name-input'); // Corrected ID
+            const shortcutUrlInput = document.getElementById('shortcut-url-input'); 
+            const shortcutIconUrlInput = document.getElementById('shortcut-icon-url-input');
+
+
+            const settingsModalEl = document.getElementById('settings-modal'); // Renamed
+            const menuBtn = document.getElementById('menu-btn');
+
+            // Firebase Auth UI Elements
+            const emailLoginModal = document.getElementById('email-login-modal');
+            const emailModalTitle = document.getElementById('email-modal-title');
+            const authEmailInput = document.getElementById('auth-email');
+            const authPasswordInput = document.getElementById('auth-password');
+            const emailAuthSubmitBtn = document.getElementById('email-auth-submit-btn');
+            const emailSignupToggleBtn = document.getElementById('email-signup-toggle-btn');
+            const authErrorP = document.getElementById('auth-error');
+            let isEmailSignupMode = false;
+
+            const loginGoogleBtn = document.getElementById('login-google-btn');
+            const loginEmailBtn = document.getElementById('login-email-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const userInfoDiv = document.getElementById('user-info');
+            const userAvatarImg = document.getElementById('user-avatar');
+            const userDisplayNameDiv = document.getElementById('user-display-name');
+            const userEmailDiv = document.getElementById('user-email');
+            const authDivider = document.getElementById('auth-divider');
+
+
+            // --- Global State ---
+            let tabs = [];
+            let activeTabId = null;
+            let nextTabId = 1;
+            const MAX_TABS = 15; 
+            const DEFAULT_HOME_PAGE = 'shortcuts'; 
+            const DEFAULT_SEARCH_ENGINE = 'https://duckduckgo.com/?q=%s'; 
+            let firebaseApp = null;
+            let firebaseAuth = null;
+
+            // --- Firebase Initialization and Auth Logic ---
+            async function initializeFirebase() {
+                if (typeof firebase !== 'undefined' && typeof firebaseConfig !== 'undefined') {
+                    try {
+                        firebaseApp = firebase.initializeApp(firebaseConfig);
+                        firebaseAuth = firebase.auth(firebaseApp);
+                        setupAuthListeners();
+                        console.log("Firebase initialized successfully.");
+                    } catch (error) {
+                        console.error("Firebase initialization error:", error);
+                        alert("Could not initialize Firebase. Authentication will not work.");
+                    }
+                } else {
+                    console.warn("Firebase SDK or firebaseConfig not found. Firebase features disabled.");
+                }
+            }
+            
+            function setupAuthListeners() {
+                if (!firebaseAuth) return;
+
+                firebaseAuth.onAuthStateChanged(user => {
+                    if (user) { // User is signed in
+                        userInfoDiv.style.display = 'flex';
+                        userAvatarImg.src = user.photoURL || 'logo.png'; // Fallback to default logo
+                        userDisplayNameDiv.textContent = user.displayName || 'User';
+                        userEmailDiv.textContent = user.email;
+
+                        loginGoogleBtn.style.display = 'none';
+                        loginEmailBtn.style.display = 'none';
+                        logoutBtn.style.display = 'flex';
+                        authDivider.style.display = 'block';
+                    } else { // User is signed out
+                        userInfoDiv.style.display = 'none';
+                        loginGoogleBtn.style.display = 'flex';
+                        loginEmailBtn.style.display = 'flex';
+                        logoutBtn.style.display = 'none';
+                        authDivider.style.display = 'none';
+                    }
+                });
+            }
+
+            async function signInWithGoogle() {
+                if (!firebaseAuth) { alert("Firebase not initialized."); return; }
+                const provider = new firebase.auth.GoogleAuthProvider();
+                try {
+                    await firebaseAuth.signInWithPopup(provider);
+                    // onAuthStateChanged will handle UI updates
+                    document.getElementById('user-dropdown-menu').classList.remove('show'); // Close dropdown
+                } catch (error) {
+                    console.error("Google Sign-In Error:", error);
+                    authErrorP.textContent = error.message;
+                    authErrorP.style.display = 'block';
+                }
+            }
+
+            async function handleEmailAuth() {
+                if (!firebaseAuth) { alert("Firebase not initialized."); return; }
+                const email = authEmailInput.value;
+                const password = authPasswordInput.value;
+                authErrorP.style.display = 'none'; // Clear previous errors
+
+                try {
+                    if (isEmailSignupMode) { // Sign Up
+                        await firebaseAuth.createUserWithEmailAndPassword(email, password);
+                        // You might want to ask for display name here or update profile
+                        alert("Sign up successful! You are now logged in.");
+                    } else { // Sign In
+                        await firebaseAuth.signInWithEmailAndPassword(email, password);
+                    }
+                    emailLoginModal.classList.remove('active');
+                    document.getElementById('user-dropdown-menu').classList.remove('show'); // Close dropdown
+                } catch (error) {
+                    console.error("Email Auth Error:", error);
+                    authErrorP.textContent = error.message;
+                    authErrorP.style.display = 'block';
+                }
+            }
+            
+            function toggleEmailAuthMode() {
+                isEmailSignupMode = !isEmailSignupMode;
+                authErrorP.style.display = 'none';
+                if (isEmailSignupMode) {
+                    emailModalTitle.textContent = "Sign Up with Email";
+                    emailAuthSubmitBtn.textContent = "Sign Up";
+                    emailSignupToggleBtn.textContent = "Have an account? Login";
+                } else {
+                    emailModalTitle.textContent = "Login with Email";
+                    emailAuthSubmitBtn.textContent = "Login";
+                    emailSignupToggleBtn.textContent = "Need an account? Sign Up";
+                }
+            }
+
+
+            async function signOutUser() {
+                if (!firebaseAuth) { alert("Firebase not initialized."); return; }
+                try {
+                    await firebaseAuth.signOut();
+                    // onAuthStateChanged will handle UI updates
+                } catch (error) {
+                    console.error("Sign Out Error:", error);
+                }
+            }
+
+
+            // --- UV Service Worker Initialization ---
+            async function initUV() {
+                try {
+                    if (typeof registerSW === 'function') {
+                        await registerSW();
+                        console.log("Service worker registered successfully for UV.");
+                    } else {
+                        console.error("registerSW function not found. Ensure register-sw.js is loaded.");
+                        alert("Error: Proxy service worker could not be registered. Website proxying will not work.");
+                    }
+                } catch (err) {
+                    console.error("Failed to register service worker:", err);
+                    alert("Error: Proxy service worker registration failed. Website proxying will not work.");
+                }
+            }
+            
+            await initUV(); 
+            await initializeFirebase(); // Initialize Firebase after UV
+
+
+            // --- Initial Setup ---
+            function initializeBrowser() {
+                loadSettings(); 
+                
+                const startupBehavior = localStorage.getItem('vernProStartupBehavior') || 'newtab';
+                let initialUrl = DEFAULT_HOME_PAGE;
+
+                if (startupBehavior === 'lastsession') {
+                    const lastActiveTabUrl = localStorage.getItem('vernProLastActiveUrl');
+                    if (lastActiveTabUrl) initialUrl = lastActiveTabUrl;
+                } else if (startupBehavior === 'homepage') {
+                    initialUrl = localStorage.getItem('vernProHomepageUrl') || DEFAULT_HOME_PAGE;
+                }
+                
+                createNewTab(initialUrl, true); 
+
+                updateTopBarAssemblyHeight();
+                updateToggleTopBarButtonPosition();
+                updateSidebarStateVisuals(); // Use a specific function for visual update
+                updateTopBarState();  
+
+                document.querySelectorAll('#sidebar .sidebar-item').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.querySelectorAll('#sidebar .sidebar-item.active').forEach(active => active.classList.remove('active'));
+                        this.classList.add('active');
+                        const action = this.dataset.action;
+                        handleSidebarAction(action);
+                    });
+                });
+
+                document.querySelectorAll('#pro-options-bar .pro-menu-item, #tools-dropdown-menu .dropdown-item').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const action = this.dataset.action || this.textContent.trim();
+                        alert(`Action: ${action} (not fully implemented)`);
+                    });
+                });
+                
+                if(menuBtn) { // Main menu button in nav-bar
+                    menuBtn.addEventListener('click', (e) => {
+                         e.stopPropagation();
+                         const userDropdownMenu = document.getElementById('user-dropdown-menu');
+                         if(userDropdownMenu) userDropdownMenu.classList.toggle('show');
+                    });
+                }
+
+                // Wire up Firebase Auth buttons
+                loginGoogleBtn?.addEventListener('click', signInWithGoogle);
+                loginEmailBtn?.addEventListener('click', () => {
+                    isEmailSignupMode = false; // Default to login mode
+                    toggleEmailAuthMode(); // Update modal text
+                    authEmailInput.value = ''; authPasswordInput.value = ''; // Clear fields
+                    emailLoginModal.classList.add('active');
+                });
+                logoutBtn?.addEventListener('click', signOutUser);
+                emailAuthSubmitBtn?.addEventListener('click', handleEmailAuth);
+                emailSignupToggleBtn?.addEventListener('click', toggleEmailAuthMode);
+
+            }
+
+            // --- Sidebar Toggle ---
+            toggleSidebarBtn.addEventListener('click', () => {
+                const isCollapsing = !sidebar.classList.contains('collapsed');
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('sidebar-collapsed');
+                
+                // Icon rotation is handled by CSS if you add a class to the button itself
+                toggleSidebarBtn.classList.toggle('collapsed-state', isCollapsing);
+                toggleSidebarIcon.classList.toggle('fa-chevron-left', !isCollapsing);
+                toggleSidebarIcon.classList.toggle('fa-chevron-right', isCollapsing);
+
+                // The button's `left` position remains 0 for a fully collapsing sidebar.
+                // If it were an icon bar:
+                // toggleSidebarBtn.style.left = isCollapsing ? 'var(--sidebar-collapsed-width)' : '0px';
+                
+                localStorage.setItem('sidebarCollapsed', isCollapsing.toString());
+                // setTimeout(updateToggleTopBarButtonPosition, 350); // If top bar depends on sidebar
+                // If canvas animation needs to be aware of this:
+                // setTimeout( ()=>{ if(canvas && ctx) { resizeCanvas(); createParticles(); /* or redraw */ } }, 360);
+            });
+            
+            // This function updates the visual state based on localStorage, typically on load
+            function updateSidebarStateVisuals() {
+                const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                sidebar.classList.toggle('collapsed', isCollapsed);
+                mainContent.classList.toggle('sidebar-collapsed', isCollapsed);
+                toggleSidebarBtn.classList.toggle('collapsed-state', isCollapsed);
+                toggleSidebarIcon.classList.toggle('fa-chevron-left', !isCollapsed);
+                toggleSidebarIcon.classList.toggle('fa-chevron-right', isCollapsed);
+            }
+
+
+            // --- Top Bar Assembly Toggle ---
+            function updateTopBarAssemblyHeight() {
+                if (!topBarAssembly.classList.contains('hidden')) {
+                     topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
+                } else {
+                    topBarAssembly.style.maxHeight = '0px';
+                }
+            }
+
+            function updateToggleTopBarButtonPosition() {
+                const navBarHeight = navBar.offsetHeight;
+                toggleTopBarBtn.style.top = navBarHeight + 'px';
+            }
+
+            toggleTopBarBtn.addEventListener('click', () => {
+                const isHiding = !topBarAssembly.classList.contains('hidden');
+                topBarAssembly.classList.toggle('hidden');
+                toggleTopBarIcon.classList.toggle('fa-chevron-up', !isHiding);
+                toggleTopBarIcon.classList.toggle('fa-chevron-down', isHiding);
+                toggleTopBarBtn.classList.toggle('up', !isHiding);
+
+                if (isHiding) { // about to be hidden
+                    topBarAssembly.style.maxHeight = '0px';
+                    localStorage.setItem('topBarHidden', 'true');
+                } else { // about to be shown
+                    topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
+                     localStorage.setItem('topBarHidden', 'false');
+                }
+            });
+
+            function updateTopBarState() {
+                const isHidden = localStorage.getItem('topBarHidden') === 'true';
+                topBarAssembly.classList.toggle('hidden', isHidden);
+                toggleTopBarIcon.classList.toggle('fa-chevron-up', !isHidden);
+                toggleTopBarIcon.classList.toggle('fa-chevron-down', isHidden);
+                toggleTopBarBtn.classList.toggle('up', !isHidden);
+                if (isHidden) {
+                    topBarAssembly.style.maxHeight = '0px';
+                } else {
+                     setTimeout(() => { // Ensure scrollHeight is calculated after potential rendering
+                         topBarAssembly.style.maxHeight = topBarAssembly.scrollHeight + 'px';
+                    }, 0);
+                }
+            }
+
+            window.addEventListener('resize', () => {
+                updateTopBarAssemblyHeight();
+                updateToggleTopBarButtonPosition();
+                if(canvas && ctx) { resizeCanvas(); /* createParticles(); // Optionals */ }
+            });
+
+            // --- Tab Management (Largely unchanged from previous, ensure it's robust) ---
+            function createNewTab(url = DEFAULT_HOME_PAGE, makeActive = true) {
+                if (tabs.length >= MAX_TABS) {
+                    alert("Maximum number of tabs reached.");
+                    return null;
+                }
+
+                const tabId = `tab-${nextTabId++}`;
+                const tabData = {
+                    id: tabId, url: url, actualUrl: url, title: 'New Tab', favicon: 'logo.png', 
+                    isLoading: true, history: [url], historyIndex: 0,
+                    iframe: null, contentEl: null, locationCheckIntervalId: null
+                };
+                tabs.push(tabData);
+
+                const tabEl = document.createElement('div');
+                tabEl.className = 'tab';
+                tabEl.dataset.tabId = tabId;
+                tabEl.innerHTML = `
+                    <span class="tab-favicon"><img src="${tabData.favicon}" alt=""></span>
+                    <span class="tab-title">${tabData.title}</span>
+                    <button class="tab-close"><i class="fas fa-times"></i></button>
+                `;
+                tabBarEl.insertBefore(tabEl, newTabBtn);
+
+                const contentEl = document.createElement('div');
+                contentEl.id = `content-${tabId}`;
+                contentEl.className = 'tab-content';
+                tabsContainer.appendChild(contentEl);
+                tabData.contentEl = contentEl;
+
+                if (url !== 'shortcuts') { // Only create iframe if not a shortcuts tab initially
+                    const iframe = document.createElement('iframe');
+                    iframe.addEventListener('load', () => handleIframeLoad(tabData, iframe));
+                    iframe.addEventListener('error', () => handleIframeError(tabData, iframe));
+                    contentEl.appendChild(iframe);
+                    tabData.iframe = iframe;
+                }
+                
+                tabEl.querySelector('.tab-close').addEventListener('click', (e) => { e.stopPropagation(); closeTab(tabId); });
+                tabEl.addEventListener('click', () => switchToTab(tabId));
+
+                if (makeActive) {
+                    switchToTab(tabId); // This will also trigger navigation if needed
+                } else {
+                    updateTabVisuals(); // Update visuals for non-active new tab
+                }
+                return tabData;
+            }
+
+            function switchToTab(tabId) {
+                if (activeTabId === tabId && document.querySelector(`.tab[data-tab-id="${tabId}"]`)?.classList.contains('active')) return;
+
+                tabs.forEach(tab => {
+                    const tabEl = document.querySelector(`.tab[data-tab-id="${tab.id}"]`);
+                    if (tabEl) tabEl.classList.remove('active');
+                    if (tab.contentEl) tab.contentEl.classList.remove('active');
+                    if(tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); 
+                });
+
+                shortcutsContainer.classList.remove('active');
+                activeTabId = tabId;
+                const activeTabData = tabs.find(t => t.id === tabId);
+
+                if (activeTabData) {
+                    const activeTabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                    if (activeTabEl) activeTabEl.classList.add('active');
+                    
+                    document.title = (activeTabData.title || 'Vern Pro') + ' - Vern Pro Browser';
+
+                    if (activeTabData.url === 'shortcuts' || activeTabData.actualUrl === 'shortcuts') {
+                        searchBar.value = '';
+                        shortcutsContainer.classList.add('active');
+                        if(activeTabData.contentEl) activeTabData.contentEl.classList.remove('active'); // Hide iframe area
+                        if(activeTabData.iframe) activeTabData.iframe.src = 'about:blank'; // Clear iframe
+                    } else {
+                        if (activeTabData.contentEl) activeTabData.contentEl.classList.add('active');
+                        searchBar.value = activeTabData.actualUrl || activeTabData.url;
+                        
+                        if (!activeTabData.iframe && activeTabData.contentEl) { // If iframe needs to be created
+                            const iframe = document.createElement('iframe');
+                            iframe.addEventListener('load', () => handleIframeLoad(activeTabData, iframe));
+                            iframe.addEventListener('error', () => handleIframeError(activeTabData, iframe));
+                            activeTabData.contentEl.innerHTML = ''; 
+                            activeTabData.contentEl.appendChild(iframe);
+                            activeTabData.iframe = iframe;
+                            navigate(activeTabData.url, activeTabData); // Navigate this new iframe
+                        } else if (activeTabData.iframe && activeTabData.iframe.src !== activeTabData.proxiedUrl && activeTabData.proxiedUrl && !activeTabData.isLoading) {
+                            // If src is out of sync (e.g. after being 'about:blank' for shortcuts)
+                             navigate(activeTabData.actualUrl || activeTabData.url, activeTabData);
+                        } else if (!activeTabData.iframe && !activeTabData.contentEl) {
+                             // This case should ideally not happen if tab structure is managed well
+                             console.error("Tab content element missing for iframe.");
+                        }
+                        trackIframeLocation(activeTabData); 
+                    }
+                    updateNavButtons(activeTabData);
+                    localStorage.setItem('vernProLastActiveUrl', activeTabData.actualUrl || activeTabData.url);
+                }
+                updateTabVisuals();
+            }
+            
+            function closeTab(tabId) {
+                const tabIndex = tabs.findIndex(t => t.id === tabId);
+                if (tabIndex === -1) return;
+
+                const tabToClose = tabs[tabIndex];
+                if (tabToClose.locationCheckIntervalId) clearInterval(tabToClose.locationCheckIntervalId);
+
+                const tabEl = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                if (tabEl) tabEl.remove();
+                if (tabToClose.contentEl) tabToClose.contentEl.remove();
+
+                tabs.splice(tabIndex, 1);
+
+                if (activeTabId === tabId) {
+                    activeTabId = null;
+                    if (tabs.length > 0) {
+                        switchToTab(tabs[Math.max(0, tabIndex - 1)].id);
+                    } else {
+                        createNewTab(DEFAULT_HOME_PAGE); 
+                    }
+                } else if (tabs.length === 0) { 
+                     createNewTab(DEFAULT_HOME_PAGE);
+                }
+                updateTabVisuals();
+            }
+
+            function updateTabElement(tabData) {
+                const tabEl = document.querySelector(`.tab[data-tab-id="${tabData.id}"]`);
+                if (tabEl) {
+                    const titleText = tabData.isLoading ? 'Loading...' : (tabData.title || 'Untitled');
+                    tabEl.querySelector('.tab-title').textContent = titleText;
+                    tabEl.querySelector('.tab-title').title = titleText;
+                    
+                    const faviconEl = tabEl.querySelector('.tab-favicon');
+                    if(tabData.isLoading) {
+                        faviconEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    } else {
+                        faviconEl.innerHTML = `<img src="${tabData.favicon || 'logo.png'}" alt="" onerror="this.src='logo.png'; this.onerror=null;">`;
+                    }
+                }
+                if (tabData.id === activeTabId) {
+                     document.title = (tabData.title || 'Vern Pro') + ' - Vern Pro Browser';
+                }
+            }
+
+            function trackIframeLocation(tabData) {
+                // ... (Implementation from previous version, ensure robustness) ...
+                 if (!tabData || !tabData.iframe || tabData.actualUrl === 'shortcuts') return;
+                if (tabData.locationCheckIntervalId) clearInterval(tabData.locationCheckIntervalId);
+
+                tabData.locationCheckIntervalId = setInterval(() => {
+                    if (tabData.id !== activeTabId || !tabData.iframe || !tabData.iframe.contentWindow) {
+                        clearInterval(tabData.locationCheckIntervalId);
+                        return;
+                    }
+                    try {
+                        const currentIframeEffectiveHref = tabData.iframe.contentWindow.location.href;
+                         // Only update if it's a UV URL and different from current proxied URL
+                        if (currentIframeEffectiveHref && currentIframeEffectiveHref !== 'about:blank' && 
+                            currentIframeEffectiveHref !== tabData.proxiedUrl && 
+                            currentIframeEffectiveHref.includes(__uv$config.prefix)) {
+                            
+                            const encodedPart = currentIframeEffectiveHref.substring(currentIframeEffectiveHref.indexOf(__uv$config.prefix) + __uv$config.prefix.length);
+                            let decodedActualUrl = '';
+                            try { decodedActualUrl = __uv$config.decodeUrl(encodedPart); } catch (e) { /* ignore */ }
+
+                            if (decodedActualUrl && decodedActualUrl !== tabData.actualUrl) {
+                                tabData.actualUrl = decodedActualUrl;
+                                tabData.url = decodedActualUrl; // Keep primary url as actual for history
+                                tabData.proxiedUrl = currentIframeEffectiveHref; // Update the known proxied URL
+                                searchBar.value = decodedActualUrl;
+                                
+                                if (tabData.history[tabData.historyIndex] !== decodedActualUrl) {
+                                    if (tabData.historyIndex < tabData.history.length - 1) {
+                                        tabData.history = tabData.history.slice(0, tabData.historyIndex + 1);
+                                    }
+                                    tabData.history.push(decodedActualUrl);
+                                    tabData.historyIndex = tabData.history.length - 1;
+                                    updateNavButtons(tabData);
+                                }
+                            }
+                        }
+                    } catch (e) { /* CORS or detached iframe */ }
+                }, 1000);
+            }
+
+
+            function handleIframeLoad(tabData, iframe) {
+                // ... (Implementation from previous, ensure robustness for title/favicon, UV decoding) ...
+                tabData.isLoading = false;
+                let pageTitle = 'Untitled';
+                let pageFavicon = 'logo.png';
+                let loadedActualUrl = tabData.actualUrl || tabData.url; 
+
+                try {
+                    if (iframe.contentDocument) {
+                        pageTitle = iframe.contentDocument.title || new URL(iframe.src).hostname; // Fallback to hostname
+                        const links = iframe.contentDocument.getElementsByTagName('link');
+                        for (let link of links) {
+                            if (link.rel && (link.rel.includes('icon') || link.rel.includes('shortcut icon'))) {
+                                pageFavicon = new URL(link.href, iframe.src).href;
+                                break;
+                            }
+                        }
+                         if (!pageFavicon || pageFavicon === new URL(iframe.src).origin + '/') { // if favicon is just root
+                             pageFavicon = `https://www.google.com/s2/favicons?domain=${new URL(iframe.src).hostname}&sz=32`;
+                         }
+                    }
+                } catch (e) { 
+                    try { pageTitle = new URL(iframe.src).hostname; } catch { /* keep untitled */ }
+                     pageFavicon = `https://www.google.com/s2/favicons?domain=${new URL(iframe.src).hostname}&sz=32`;
+                }
+                
+                // If UV is used, the iframe.src is the proxied URL. Decode it to get the actual URL.
+                if (typeof __uv$config !== 'undefined' && iframe.src.includes(__uv$config.prefix)) {
+                    const encodedPart = iframe.src.substring(iframe.src.indexOf(__uv$config.prefix) + __uv$config.prefix.length);
+                    try {
+                        loadedActualUrl = __uv$config.decodeUrl(encodedPart);
+                        // Attempt to get title from document, otherwise use hostname from actual URL
+                        pageTitle = (iframe.contentDocument ? iframe.contentDocument.title : '') || new URL(loadedActualUrl).hostname;
+                        pageFavicon = pageFavicon === 'logo.png' ? `https://www.google.com/s2/favicons?domain=${new URL(loadedActualUrl).hostname}&sz=32` : pageFavicon;
+                    } catch (e) { 
+                        console.warn("Error decoding UV URL on load:", e); 
+                        loadedActualUrl = "Failed to decode URL"; 
+                        pageTitle = loadedActualUrl;
+                    }
+                } else if (iframe.src !== 'about:blank' && iframe.src !== 'shortcuts'){
+                     loadedActualUrl = iframe.src; 
+                }
+
+                tabData.title = pageTitle || 'Untitled';
+                tabData.favicon = pageFavicon || 'logo.png';
+                tabData.actualUrl = loadedActualUrl; 
+                tabData.proxiedUrl = iframe.src; 
+
+                if (tabData.history[tabData.historyIndex] !== loadedActualUrl && loadedActualUrl !== 'about:blank' && loadedActualUrl !== "Failed to decode URL") {
+                    if (tabData.historyIndex < tabData.history.length - 1) {
+                        tabData.history = tabData.history.slice(0, tabData.historyIndex + 1);
+                    }
+                    tabData.history.push(loadedActualUrl);
+                    tabData.historyIndex = tabData.history.length - 1;
+                }
+                tabData.url = loadedActualUrl; // Ensure primary URL is the actual one
+
+                if (tabData.id === activeTabId) {
+                    searchBar.value = (loadedActualUrl === 'about:blank' || loadedActualUrl === "Failed to decode URL") ? '' : loadedActualUrl;
+                    updateNavButtons(tabData);
+                }
+                updateTabElement(tabData);
+                trackIframeLocation(tabData); 
+            }
+
+            function handleIframeError(tabData, iframe){
+                // ... (Implementation from previous) ...
+                tabData.isLoading = false;
+                tabData.title = "Error Loading Page";
+                tabData.favicon = 'logo.png'; 
+                try {
+                    if(iframe && iframe.contentDocument) { 
+                        iframe.contentDocument.body.innerHTML = `<div style="padding:20px; text-align:center; color: white;"><h2>Failed to load page</h2><p>${tabData.actualUrl || tabData.url}</p></div>`;
+                    }
+                } catch (e) { /* ignore */ }
+                updateTabElement(tabData);
+                 if (tabData.id === activeTabId) updateNavButtons(tabData);
+            }
+
+            function updateTabVisuals() {
+                // ... (Implementation from previous) ...
+                if (tabBarEl.scrollWidth > tabBarEl.clientWidth) tabBarEl.classList.add('has-scroll');
+                else tabBarEl.classList.remove('has-scroll');
+            }
+
+            newTabBtn.addEventListener('click', () => createNewTab(DEFAULT_HOME_PAGE));
+
+            // --- Navigation ---
+            function navigate(urlInput, tab = null) {
+                // ... (Implementation from previous, ensure UV logic is sound) ...
+                let currentTab = tab || tabs.find(t => t.id === activeTabId);
+                if (!currentTab) currentTab = createNewTab(urlInput); 
+                if(!currentTab) return; 
+
+                currentTab.isLoading = true;
+                updateTabElement(currentTab);
+                
+                if (urlInput === 'shortcuts' || urlInput === 'about:blank') {
+                    currentTab.url = urlInput; currentTab.actualUrl = urlInput; currentTab.proxiedUrl = urlInput;
+                    currentTab.title = urlInput === 'shortcuts' ? 'Speed Dial' : 'New Tab';
+                    currentTab.favicon = 'logo.png'; currentTab.isLoading = false;
+
+                    if (currentTab.iframe) currentTab.iframe.src = 'about:blank';
+                    if(currentTab.contentEl && currentTab.url === 'shortcuts') currentTab.contentEl.classList.remove('active');
+                    
+                    if (urlInput === 'shortcuts') shortcutsContainer.classList.add('active');
+                    else {
+                        shortcutsContainer.classList.remove('active');
+                         if(currentTab.contentEl) currentTab.contentEl.classList.add('active');
+                         if(currentTab.iframe) currentTab.iframe.src = 'about:blank';
+                    }
+                    updateTabElement(currentTab);
+                    if (currentTab.id === activeTabId) { searchBar.value = ''; updateNavButtons(currentTab); }
+                    return;
+                }
+
+                shortcutsContainer.classList.remove('active');
+                if(currentTab.contentEl) currentTab.contentEl.classList.add('active');
+
+                if (!currentTab.iframe && currentTab.contentEl) { /* Create iframe if needed */ 
+                    const iframe = document.createElement('iframe');
+                    iframe.addEventListener('load', () => handleIframeLoad(currentTab, iframe));
+                    iframe.addEventListener('error', () => handleIframeError(currentTab, iframe));
+                    currentTab.contentEl.innerHTML = ''; currentTab.contentEl.appendChild(iframe);
+                    currentTab.iframe = iframe;
+                }
+                if (!currentTab.iframe) { // Still no iframe, critical error
+                    console.error("Navigate: iframe could not be created or found for tab " + currentTab.id);
+                    handleIframeError(currentTab, null); return;
+                }
+
+
+                let formattedUrl;
+                if (typeof searchFast === 'function') formattedUrl = searchFast(urlInput, DEFAULT_SEARCH_ENGINE);
+                else { /* Basic parsing fallback from previous */
+                    if (!urlInput.startsWith('http://') && !urlInput.startsWith('https://') && !urlInput.startsWith('file://')) {
+                        if (urlInput.includes('.') && !urlInput.includes(' ')) formattedUrl = 'https://' + urlInput;
+                        else formattedUrl = DEFAULT_SEARCH_ENGINE.replace('%s', encodeURIComponent(urlInput));
+                    } else formattedUrl = urlInput;
+                }
+                
+                currentTab.actualUrl = formattedUrl; 
+                if (currentTab.id === activeTabId) searchBar.value = formattedUrl; 
+
+                if (typeof __uv$config === 'undefined' || !__uv$config.prefix || !__uv$config.encodeUrl) {
+                    alert("UV Proxy not configured. Cannot load website.");
+                    handleIframeError(currentTab, currentTab.iframe); return;
+                }
+                try {
+                    const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+                    currentTab.proxiedUrl = encodedUrl; // Store the URL that will be set to iframe.src
+                    currentTab.iframe.src = encodedUrl;
+                } catch (err) { handleIframeError(currentTab, currentTab.iframe); }
+            }
+
+
+            searchBar.addEventListener('keypress', (e) => { if (e.key === 'Enter') navigate(searchBar.value); });
+            reloadBtn.addEventListener('click', () => { /* ... from previous ... */ 
+                 const currentTab = tabs.find(t => t.id === activeTabId);
+                if (currentTab) {
+                    if (currentTab.actualUrl === 'shortcuts') loadShortcuts(); 
+                    else if (currentTab.iframe && currentTab.iframe.contentWindow) {
+                        currentTab.isLoading = true; updateTabElement(currentTab);
+                        try { currentTab.iframe.contentWindow.location.reload(); } 
+                        catch (e) { if(currentTab.actualUrl) navigate(currentTab.actualUrl, currentTab); }
+                    }
+                }
+            });
+            homeBtn.addEventListener('click', () => navigate(DEFAULT_HOME_PAGE));
+            backBtn.addEventListener('click', () => { /* ... from previous, use navigate ... */ 
+                 const currentTab = tabs.find(t => t.id === activeTabId);
+                if (currentTab && currentTab.actualUrl !== 'shortcuts' && currentTab.historyIndex > 0) {
+                    currentTab.historyIndex--; currentTab.isLoading = true; updateTabElement(currentTab);
+                    navigate(currentTab.history[currentTab.historyIndex], currentTab);
+                } else if (currentTab && currentTab.iframe?.contentWindow && currentTab.actualUrl !== 'shortcuts') {
+                    try { currentTab.iframe.contentWindow.history.back(); } catch(e) { /* ignore */ }
+                }
+            });
+            forwardBtn.addEventListener('click', () => { /* ... from previous, use navigate ... */ 
+                const currentTab = tabs.find(t => t.id === activeTabId);
+                if (currentTab && currentTab.actualUrl !== 'shortcuts' && currentTab.historyIndex < currentTab.history.length - 1) {
+                    currentTab.historyIndex++; currentTab.isLoading = true; updateTabElement(currentTab);
+                    navigate(currentTab.history[currentTab.historyIndex], currentTab);
+                } else if (currentTab && currentTab.iframe?.contentWindow && currentTab.actualUrl !== 'shortcuts') {
+                     try { currentTab.iframe.contentWindow.history.forward(); } catch(e) { /* ignore */ }
+                }
+            });
+
+            function updateNavButtons(tabData) { /* ... from previous ... */ 
+                 if (!tabData) { backBtn.disabled = true; forwardBtn.disabled = true; reloadBtn.disabled = true; return; }
+                reloadBtn.disabled = tabData.isLoading; 
+                if (tabData.actualUrl === 'shortcuts' || !tabData.iframe) { backBtn.disabled = true; forwardBtn.disabled = true; }
+                else {
+                    backBtn.disabled = tabData.historyIndex <= 0;
+                    forwardBtn.disabled = tabData.historyIndex >= tabData.history.length - 1;
+                }
+            }
+
+            // --- Shortcuts Management ---
+            let shortcuts = [];
+            function renderShortcuts() { /* ... from previous ... */
+                shortcutsGrid.innerHTML = ''; 
+                shortcuts.forEach(sc => {
+                    const shortcutEl = document.createElement('a'); 
+                    shortcutEl.className = 'shortcut-item';
+                    shortcutEl.href = "#"; shortcutEl.dataset.url = sc.url; 
+                    const iconDomain = (sc.url.startsWith('http') ? new URL(sc.url) : { hostname: 'example.com' }).hostname;
+                    const iconSrc = sc.iconUrl || `https://www.google.com/s2/favicons?domain=${iconDomain}&sz=64`;
+                    shortcutEl.innerHTML = `
+                        <div class="shortcut-icon"><img src="${iconSrc}" alt="${sc.name.substring(0,2)}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-link\\'></i>'; this.onerror=null;"></div>
+                        <div class="shortcut-title">${sc.name}</div>
+                        <div class="shortcut-url">${iconDomain}</div>`;
+                    shortcutEl.addEventListener('click', (e) => { e.preventDefault(); navigate(sc.url); });
+                    shortcutsGrid.appendChild(shortcutEl);
+                });
+                if (addShortcutPlaceholderBtn) shortcutsGrid.appendChild(addShortcutPlaceholderBtn);
+            }
+            function loadShortcuts() { /* ... from previous ... */
+                const storedShortcuts = localStorage.getItem('vernProShortcuts');
+                try { shortcuts = storedShortcuts ? JSON.parse(storedShortcuts) : [ { name: 'Google', url: 'https://google.com', iconUrl: null }]; } 
+                catch (e) { shortcuts = [ { name: 'Google', url: 'https://google.com', iconUrl: null }];}
+                renderShortcuts();
+            }
+            function saveShortcuts() { localStorage.setItem('vernProShortcuts', JSON.stringify(shortcuts)); }
+            
+            addShortcutPlaceholderBtn?.addEventListener('click', () => { /* ... from previous ... */
+                shortcutNameInput.value = ''; shortcutUrlInput.value = ''; shortcutIconUrlInput.value = '';
+                addShortcutModalEl.classList.add('active');
+            });
+            saveShortcutBtn.addEventListener('click', () => { /* ... from previous ... */
+                const name = shortcutNameInput.value.trim(); const url = shortcutUrlInput.value.trim();
+                const iconUrl = shortcutIconUrlInput.value.trim();
+                if (name && url) {
+                    let finalUrl = url; if (!url.match(/^https?:\/\//i) && !url.startsWith('about:') && !url.startsWith('file:')) finalUrl = 'https://' + url;
+                    shortcuts.push({ name, url: finalUrl, iconUrl: iconUrl || null });
+                    saveShortcuts(); renderShortcuts(); addShortcutModalEl.classList.remove('active');
+                } else alert('Please provide a name and URL.');
+            });
+
+            // --- Modal Handling (General) ---
+            document.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
+                btn.addEventListener('click', () => btn.closest('.modal').classList.remove('active'));
+            });
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+            });
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+            });
+
+            // --- Settings Modal & Theming ---
+            function openSettingsModal() { settingsModalEl.classList.add('active'); }
+            document.querySelectorAll('[data-action="open-settings-modal"]').forEach(btn => btn.addEventListener('click', openSettingsModal));
+
+            const themeOptions = document.querySelectorAll('.theme-option');
+            themeOptions.forEach(option => { /* ... from previous ... */ 
+                option.addEventListener('click', () => {
+                    const theme = option.dataset.theme; applyTheme(theme); localStorage.setItem('vernProTheme', theme);
+                    themeOptions.forEach(opt => opt.classList.remove('active')); option.classList.add('active');
+                });
+            });
+            function applyTheme(theme) { /* ... from previous, ensure reset works well ... */
+                const root = document.documentElement;
+                // Reset to default dark first by removing inline styles for vars
+                // This is simpler if default styles are in :root and not overridden by inline styles initially
+                const defaultRootStyle = getComputedStyle(document.documentElement);
+                const themeVars = ['--bg-color', '--text-color', '--navbar-bg', '--button-bg', '--search-bg', '--iframe-bg', '--tab-bg', '--tab-active-bg', '--footer-text-color', '--sidebar-bg', '--shortcut-bg', '--modal-bg', '--input-bg', '--accent-color', '--accent-hover'];
+                
+                // It's better to define themes by setting all relevant vars
+                // For simplicity, current logic resets all to CSS defined, then overrides for 'light' or accent
+                const initialRoot = document.getElementById('custom-styles').sheet.cssRules[0].style;
+                for(let i=0; i < initialRoot.length; i++) {
+                    const propName = initialRoot[i];
+                    if (propName.startsWith('--')) root.style.setProperty(propName, initialRoot.getPropertyValue(propName));
+                }
+
+                if (theme === 'light') {
+                    root.style.setProperty('--bg-color', '#f0f0f0'); root.style.setProperty('--text-color', '#333');
+                    root.style.setProperty('--navbar-bg', 'rgba(230, 230, 230, 1)'); root.style.setProperty('--button-bg', 'rgba(220, 220, 220, 0.8)');
+                    root.style.setProperty('--search-bg', 'rgba(220, 220, 220, 0.8)'); root.style.setProperty('--iframe-bg', '#fff');
+                    root.style.setProperty('--tab-bg', 'rgba(210, 210, 210, 0.8)'); root.style.setProperty('--tab-active-bg', 'rgba(200, 200, 200, 0.9)');
+                    root.style.setProperty('--footer-text-color', '#555'); root.style.setProperty('--sidebar-bg', 'rgba(225, 225, 225, 0.95)');
+                    root.style.setProperty('--shortcut-bg', 'rgba(235, 235, 235, 0.9)'); root.style.setProperty('--modal-bg', 'rgba(240, 240, 240, 0.98)');
+                    root.style.setProperty('--input-bg', 'rgba(220, 220, 220, 0.95)');
+                } else if (theme === 'purple') { root.style.setProperty('--accent-color', '#9b59b6'); root.style.setProperty('--accent-hover', '#8e44ad'); }
+                else if (theme === 'blue') { root.style.setProperty('--accent-color', '#3498db'); root.style.setProperty('--accent-hover', '#2980b9'); }
+                // ... other accent themes ...
+            }
+
+            const settingShowProBar = document.getElementById('setting-show-pro-bar'); /* ... from previous ... */
+            settingShowProBar.addEventListener('change', function() {
+                document.getElementById('pro-options-bar').style.display = this.checked ? 'flex' : 'none';
+                updateTopBarAssemblyHeight(); localStorage.setItem('vernProShowProBar', this.checked.toString());
+            });
+            
+            const startupBehaviorSelect = document.getElementById('setting-startup-behavior'); /* ... from previous ... */
+            const homepageUrlGroup = document.getElementById('setting-homepage-url-group');
+            const homepageUrlInput = document.getElementById('setting-homepage-url');
+            startupBehaviorSelect.addEventListener('change', function() {
+                homepageUrlGroup.style.display = (this.value === 'homepage') ? 'block' : 'none';
+                localStorage.setItem('vernProStartupBehavior', this.value);
+            });
+            homepageUrlInput.addEventListener('input', function() { localStorage.setItem('vernProHomepageUrl', this.value); });
+            
+            document.getElementById('clear-browse-data-btn')?.addEventListener('click', () => { /* ... from previous ... */
+                if(confirm("This will clear local storage data for this site (settings, shortcuts). Continue?")){
+                     localStorage.clear(); alert('Local storage cleared. Please reload.');
+                }
+            });
+            function loadSettings() { /* ... from previous ... */
+                const savedTheme = localStorage.getItem('vernProTheme') || 'dark'; applyTheme(savedTheme);
+                document.querySelectorAll('.theme-option').forEach(opt => opt.classList.toggle('active', opt.dataset.theme === savedTheme));
+                const showProBar = localStorage.getItem('vernProShowProBar') !== 'false'; settingShowProBar.checked = showProBar;
+                document.getElementById('pro-options-bar').style.display = showProBar ? 'flex' : 'none';
+                const startupBehavior = localStorage.getItem('vernProStartupBehavior') || 'newtab'; startupBehaviorSelect.value = startupBehavior;
+                homepageUrlGroup.style.display = (startupBehavior === 'homepage') ? 'block' : 'none';
+                homepageUrlInput.value = localStorage.getItem('vernProHomepageUrl') || 'https://google.com';
+                document.getElementById('setting-do-not-track').checked = localStorage.getItem('vernProDoNotTrack') === 'true';
+                const fontSize = localStorage.getItem('vernProFontSize') || '14px'; document.getElementById('setting-font-size').value = fontSize; document.documentElement.style.fontSize = fontSize;
+                loadShortcuts();
+            }
+            document.getElementById('setting-font-size').addEventListener('change', function() { /* ... from previous ... */
+                document.documentElement.style.fontSize = this.value; localStorage.setItem('vernProFontSize', this.value);
+            });
+            document.getElementById('setting-do-not-track').addEventListener('change', function() { /* ... from previous ... */
+                localStorage.setItem('vernProDoNotTrack', this.checked.toString());
+            });
+
+            // --- Dropdown Menus (General) ---
+            document.querySelectorAll('[data-dropdown-target]').forEach(toggle => { /* ... from previous ... */
+                toggle.addEventListener('click', (event) => {
+                    event.stopPropagation(); const menuId = toggle.dataset.dropdownTarget; const menu = document.getElementById(menuId); if (!menu) return;
+                    document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => { if (openMenu !== menu) openMenu.classList.remove('show');});
+                    menu.classList.toggle('show');
+                });
+            });
+            window.addEventListener('click', (event) => { /* ... from previous ... */
+                if (!event.target.closest('.dropdown')) document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
+            });
+
+            // --- Sidebar Actions & Other Button Actions ---
+            function handleSidebarAction(action) { /* ... from previous, ensure all cases are stubs or implemented ... */
+                console.log("Sidebar/Button action:", action);
+                const currentTab = tabs.find(t => t.id === activeTabId);
+                switch(action) {
+                    case 'show-home': /* implemented */ navigate(DEFAULT_HOME_PAGE); break;
+                    case 'show-bookmarks': case 'manage-bookmarks': alert('Bookmarks not implemented.'); break;
+                    case 'show-history': case 'open-history': alert('History not implemented.'); break;
+                    case 'show-downloads': alert('Downloads not implemented.'); break;
+                    case 'open-devtools': alert('DevTools not implemented.'); break;
+                    case 'open-extensions': alert('Extensions not implemented.'); break;
+                    case 'show-profile': document.getElementById('user-profile-btn')?.click(); break;
+                    // Firebase actions are handled by their own listeners
+                    // Default for unhandled data-actions
+                    default: if (document.querySelector(`[data-action="${action}"]`)) alert(`Action: ${action} (not implemented)`); break;
+                }
+            }
+            // Generic data-action click listener (simplified, as many are handled directly)
+            document.body.addEventListener('click', function(event) {
+                const target = event.target.closest('[data-action]');
+                if (target && target.dataset.action) {
+                    const action = target.dataset.action;
+                    // Avoid re-handling actions with specific listeners (Firebase, settings, dropdown toggles)
+                    if (!['login-google', 'login-email-modal', 'sign-out', 'open-settings-modal', 'clear-browse-data'].includes(action) && !target.hasAttribute('data-dropdown-target')) {
+                        // Check if it's already handled by sidebar specific listener
+                        const isSidebarItem = target.classList.contains('sidebar-item');
+                        if (!isSidebarItem) { // If not a sidebar item (already handled), and not one of the above specific ones
+                           // handleSidebarAction(action); // Generic handler if needed, or rely on specific event listeners.
+                        }
+                    }
+                }
+            });
+
+            // --- Canvas Background ---
+            const canvas = document.getElementById('backgroundCanvas');
+            let ctx;
+            let particlesArray = []; // Renamed to avoid conflict
+
+            function resizeCanvas() {
+                if (!canvas) return;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            if (canvas) {
+                ctx = canvas.getContext('2d');
+                resizeCanvas(); // Initial size
+
+                // Simple particle class (can be expanded)
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.size = Math.random() * 2 + 0.5; // smaller particles
+                        this.speedX = (Math.random() * 1 - 0.5) * 0.5; // slower
+                        this.speedY = (Math.random() * 1 - 0.5) * 0.5; // slower
+                        this.color = `rgba(109, 90, 205, ${Math.random() * 0.3 + 0.1})`; // Fainter
+                    }
+                    update() {
+                        this.x += this.speedX;
+                        this.y += this.speedY;
+                        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                    }
+                    draw() {
+                        ctx.fillStyle = this.color;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                function initParticles() {
+                    particlesArray = [];
+                    const numberOfParticles = 50; // Adjust for density
+                    for (let i = 0; i < numberOfParticles; i++) {
+                        particlesArray.push(new Particle());
+                    }
+                }
+
+                function animateParticles() {
+                    if (!ctx) return;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (let i = 0; i < particlesArray.length; i++) {
+                        particlesArray[i].update();
+                        particlesArray[i].draw();
+                    }
+                    requestAnimationFrame(animateParticles);
+                }
+                initParticles();
+                animateParticles(); // Start animation
+
+                 window.addEventListener('resize', () => { // Ensure this is the only resize listener for canvas
+                    resizeCanvas();
+                    initParticles(); // Reinitialize particles for new size
+                });
+            }
+
+
+            // --- Keyboard Shortcuts ---
+            document.addEventListener('keydown', (e) => { /* ... from previous ... */ 
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+                if (e.ctrlKey || e.metaKey) {
+                    switch (e.key.toLowerCase()) {
+                        case 't': e.preventDefault(); createNewTab(DEFAULT_HOME_PAGE); break;
+                        case 'w': e.preventDefault(); if (activeTabId) closeTab(activeTabId); break;
+                        case 'tab': e.preventDefault(); if (tabs.length > 1) { const currentIndex = tabs.findIndex(t => t.id === activeTabId); const nextIndex = (e.shiftKey ? (currentIndex - 1 + tabs.length) : (currentIndex + 1)) % tabs.length; switchToTab(tabs[nextIndex].id); } break;
+                        case 'r': e.preventDefault(); reloadBtn.click(); break;
+                    }
+                } else if (e.altKey) {
+                     switch (e.key.toLowerCase()) { case 'arrowleft': e.preventDefault(); backBtn.click(); break; case 'arrowright': e.preventDefault(); forwardBtn.click(); break; }
+                } else if (e.key.toLowerCase() === 'f5') { e.preventDefault(); reloadBtn.click(); }
+            });
+
+            // Initialize Browser Systems
+            initializeBrowser();
+        });
+    </script>
 </body>
 </html>
