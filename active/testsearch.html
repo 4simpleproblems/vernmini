@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vern Pro Browser - Optimized</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/x-icon" href="logo.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+
+    <style id="custom-styles">
+        /* Base Elements */
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --navbar-bg: rgba(15, 15, 15, 1);
+            --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            --button-bg: rgba(10, 10, 10, 0.8);
+            --button-hover-bg: rgba(15, 15, 15, 0.9);
+            --input-bg: rgba(10, 10, 10, 0.8);
+            --input-focus-bg: rgba(45, 45, 45, 0.9);
+            --input-focus-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+            --iframe-bg: #202020;
+            --footer-text-color: #fff;
+            --font-family-main: 'Roboto Mono', monospace;
+            --tab-bg: rgba(25, 25, 25, 0.8);
+            --tab-active-bg: rgba(45, 45, 45, 0.9);
+            --tab-border: rgba(60, 60, 60, 0.5);
+            --tab-hover-bg: rgba(35, 35, 35, 0.9);
+            --sidebar-width: 280px;
+            --sidebar-bg: rgba(10, 10, 10, 0.95);
+            --sidebar-item-hover-bg: rgba(30, 30, 30, 0.9);
+            --sidebar-border-color: rgba(255, 255, 255, 0.15);
+            --sidebar-outline-color: rgba(255, 255, 255, 0.25);
+            --button-text-color: #fff;
+            --error-icon-color: var(--text-color);
+        }
+
+        /* Light Theme */
+        body.theme-light {
+            --bg-color: #f4f4f4;
+            --text-color: #333;
+            --navbar-bg: #ffffff;
+            --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --button-bg: #e0e0e0;
+            --button-hover-bg: #d0d0d0;
+            --input-bg: #ffffff;
+            --input-focus-bg: #f0f0f0;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+            --iframe-bg: #ffffff;
+            --footer-text-color: #555;
+            --tab-bg: #e9e9e9;
+            --tab-active-bg: #ffffff;
+            --tab-border: #cccccc;
+            --tab-hover-bg: #f5f5f5;
+            --sidebar-bg: #f8f9fa;
+            --sidebar-item-hover-bg: #e9ecef;
+            --sidebar-border-color: #dee2e6;
+            --sidebar-outline-color: #ced4da;
+            --button-text-color: #333;
+            --error-icon-color: var(--text-color);
+        }
+
+        /* Blue Theme */
+        body.theme-blue {
+            --bg-color: #0d1b2a;
+            --text-color: #e0e1dd;
+            --navbar-bg: #1b263b;
+            --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            --button-bg: #415a77;
+            --button-hover-bg: #778da9;
+            --input-bg: #1b263b;
+            --input-focus-bg: #415a77;
+            --input-focus-shadow: 0 0 0 2px rgba(120, 150, 255, 0.4);
+            --iframe-bg: #0d1b2a;
+            --footer-text-color: #e0e1dd;
+            --tab-bg: #2a3b4e;
+            --tab-active-bg: #415a77;
+            --tab-border: #566f8e;
+            --tab-hover-bg: #3a4f66;
+            --sidebar-bg: #101B27;
+            --sidebar-item-hover-bg: #1b263b;
+            --sidebar-border-color: rgba(255, 255, 255, 0.2);
+            --sidebar-outline-color: rgba(255, 255, 255, 0.3);
+            --button-text-color: #e0e1dd;
+            --error-icon-color: var(--text-color);
+        }
+
+        /* Orange Theme */
+        body.theme-orange {
+            --bg-color: #2c1a00;
+            --text-color: #ffe8cc;
+            --navbar-bg: #4d2d00;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            --button-bg: #e67e22;
+            --button-hover-bg: #d35400;
+            --input-bg: #4d2d00;
+            --input-focus-bg: #663d00;
+            --input-focus-shadow: 0 0 0 2px rgba(230, 126, 34, 0.5);
+            --iframe-bg: #2c1a00;
+            --footer-text-color: #ffe8cc;
+            --tab-bg: #663d00;
+            --tab-active-bg: #e67e22;
+            --tab-border: #804c00;
+            --tab-hover-bg: #805715;
+            --sidebar-bg: #332000;
+            --sidebar-item-hover-bg: #4d2d00;
+            --sidebar-border-color: rgba(255, 232, 204, 0.2);
+            --sidebar-outline-color: rgba(255, 232, 204, 0.3);
+            --button-text-color: #ffffff;
+            --error-icon-color: #e67e22;
+        }
+
+        /* Galaxy Theme */
+        body.theme-galaxy {
+            --bg-color: #0c0a1d;
+            --text-color: #e6e0ff;
+            --navbar-bg: #1c183c;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #7b68ee;
+            --button-hover-bg: #6a5acd;
+            --input-bg: #1c183c;
+            --input-focus-bg: #2c284c;
+            --input-focus-shadow: 0 0 0 2px rgba(123, 104, 238, 0.5);
+            --iframe-bg: #0c0a1d;
+            --footer-text-color: #e6e0ff;
+            --tab-bg: #2c284c;
+            --tab-active-bg: #7b68ee;
+            --tab-border: #3c385c;
+            --tab-hover-bg: #383464;
+            --sidebar-bg: #120f2d;
+            --sidebar-item-hover-bg: #1c183c;
+            --sidebar-border-color: rgba(230, 224, 255, 0.2);
+            --sidebar-outline-color: rgba(230, 224, 255, 0.3);
+            --button-text-color: #ffffff;
+            --error-icon-color: #7b68ee;
+        }
+
+        /* Mint Green Theme */
+        body.theme-mint {
+            --bg-color: #e6fff5;
+            --text-color: #004d33;
+            --navbar-bg: #ccece6;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            --button-bg: #58d68d;
+            --button-hover-bg: #48c97d;
+            --input-bg: #ccece6;
+            --input-focus-bg: #b3e0d9;
+            --input-focus-shadow: 0 0 0 2px rgba(88, 214, 141, 0.4);
+            --iframe-bg: #e6fff5;
+            --footer-text-color: #004d33;
+            --tab-bg: #b3e0d9;
+            --tab-active-bg: #58d68d;
+            --tab-border: #a3d9ce;
+            --tab-hover-bg: #a3d9ce;
+            --sidebar-bg: #d9f7ef;
+            --sidebar-item-hover-bg: #ccece6;
+            --sidebar-border-color: #a3d9ce;
+            --sidebar-outline-color: #7bc4b4;
+            --button-text-color: #003322;
+            --error-icon-color: #58d68d;
+        }
+
+        /* Crimson Red Theme */
+        body.theme-crimson {
+            --bg-color: #2c0b0e;
+            --text-color: #fde8e9;
+            --navbar-bg: #4e1218;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #dc143c;
+            --button-hover-bg: #c21034;
+            --input-bg: #4e1218;
+            --input-focus-bg: #6f1a24;
+            --input-focus-shadow: 0 0 0 2px rgba(220, 20, 60, 0.5);
+            --iframe-bg: #2c0b0e;
+            --footer-text-color: #fde8e9;
+            --tab-bg: #6f1a24;
+            --tab-active-bg: #dc143c;
+            --tab-border: #8f2a34;
+            --tab-hover-bg: #8f2a34;
+            --sidebar-bg: #3b1014;
+            --sidebar-item-hover-bg: #4e1218;
+            --sidebar-border-color: rgba(253, 232, 233, 0.2);
+            --sidebar-outline-color: rgba(253, 232, 233, 0.3);
+            --button-text-color: #ffffff;
+            --error-icon-color: #dc143c;
+        }
+
+        /* Forest Green Theme */
+        body.theme-forest {
+            --bg-color: #0a1a0f;
+            --text-color: #e0f0e3;
+            --navbar-bg: #122f1a;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #228b22;
+            --button-hover-bg: #1e721e;
+            --input-bg: #122f1a;
+            --input-focus-bg: #1a4325;
+            --input-focus-shadow: 0 0 0 2px rgba(34, 139, 34, 0.5);
+            --iframe-bg: #0a1a0f;
+            --footer-text-color: #e0f0e3;
+            --tab-bg: #1a4325;
+            --tab-active-bg: #228b22;
+            --tab-border: #2a5335;
+            --tab-hover-bg: #2a5335;
+            --sidebar-bg: #0f2515;
+            --sidebar-item-hover-bg: #122f1a;
+            --sidebar-border-color: rgba(224, 240, 227, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 227, 0.3);
+            --button-text-color: #ffffff;
+            --error-icon-color: #228b22;
+        }
+
+        /* Solar Flare Theme */
+        body.theme-solarflare {
+            --bg-color: #200000;
+            --text-color: #fff5e6;
+            --navbar-bg: #400000;
+            --button-bg: #ff4500;
+            --button-hover-bg: #ff6347;
+            --input-bg: #501010;
+            --input-focus-bg: #602020;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 69, 0, 0.6);
+            --iframe-bg: #2a0800;
+            --footer-text-color: #ffcc99;
+            --tab-bg: #8b0000;
+            --tab-active-bg: #ff4500;
+            --tab-border: #cc3700;
+            --tab-hover-bg: #dc143c;
+            --sidebar-bg: #300000;
+            --sidebar-item-hover-bg: #500000;
+            --sidebar-border-color: rgba(255, 200, 150, 0.2);
+            --sidebar-outline-color: rgba(255, 100, 50, 0.4);
+            --button-text-color: #ffffff;
+            --error-icon-color: #ff4500;
+        }
+
+        /* Deep Sea Theme */
+        body.theme-deepsea {
+            --bg-color: #030c17;
+            --text-color: #c0e0ff;
+            --navbar-bg: #05162d;
+            --button-bg: #0077be;
+            --button-hover-bg: #005fa3;
+            --input-bg: #08203e;
+            --input-focus-bg: #0b2a52;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 119, 190, 0.5);
+            --iframe-bg: #02080f;
+            --footer-text-color: #a0c0dd;
+            --tab-bg: #0f3057;
+            --tab-active-bg: #0077be;
+            --tab-border: #1a4a7a;
+            --tab-hover-bg: #15406a;
+            --sidebar-bg: #041020;
+            --sidebar-item-hover-bg: #071a33;
+            --sidebar-border-color: rgba(192, 224, 255, 0.2);
+            --sidebar-outline-color: rgba(100, 180, 255, 0.3);
+            --button-text-color: #ffffff;
+            --error-icon-color: #0077be;
+        }
+
+        /* Rose Gold Theme */
+        body.theme-rosegold {
+            --bg-color: #fff0f5;
+            --text-color: #5d4037;
+            --navbar-bg: #f8c8dc;
+            --button-bg: #b76e79;
+            --button-hover-bg: #a75e69;
+            --input-bg: #f8c8dc;
+            --input-focus-bg: #e8b8cc;
+            --input-focus-shadow: 0 0 0 2px rgba(183, 110, 121, 0.5);
+            --iframe-bg: #fff7fa;
+            --footer-text-color: #8c6d62;
+            --tab-bg: #efd9e2;
+            --tab-active-bg: #b76e79;
+            --tab-border: #d3a0ab;
+            --tab-hover-bg: #e0c0ca;
+            --sidebar-bg: #fceef2;
+            --sidebar-item-hover-bg: #f8c8dc;
+            --sidebar-border-color: #e0b0c0;
+            --sidebar-outline-color: #c88a98;
+            --button-text-color: #ffffff;
+            --error-icon-color: #b76e79;
+        }
+
+        /* Emerald Isle Theme */
+        body.theme-emeraldisle {
+            --bg-color: #e8f5e9;
+            --text-color: #1b5e20;
+            --navbar-bg: #a5d6a7;
+            --button-bg: #00897b;
+            --button-hover-bg: #00695c;
+            --input-bg: #a5d6a7;
+            --input-focus-bg: #81c784;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 137, 123, 0.5);
+            --iframe-bg: #f1f8e9;
+            --footer-text-color: #2e7d32;
+            --tab-bg: #c8e6c9;
+            --tab-active-bg: #00897b;
+            --tab-border: #4db6ac;
+            --tab-hover-bg: #b2dfdb;
+            --sidebar-bg: #dcedc8;
+            --sidebar-item-hover-bg: #a5d6a7;
+            --sidebar-border-color: #81c784;
+            --sidebar-outline-color: #26a69a;
+            --button-text-color: #ffffff;
+            --error-icon-color: #00897b;
+        }
+
+        /* रॉयल पर्पल (Royal Purple) Theme */
+        body.theme-royalpurple {
+            --bg-color: #1c0b2c;
+            --text-color: #f3e5f5;
+            --navbar-bg: #391452;
+            --button-bg: #8e24aa;
+            --button-hover-bg: #7b1fa2;
+            --input-bg: #4a148c;
+            --input-focus-bg: #5d10a3;
+            --input-focus-shadow: 0 0 0 2px rgba(142, 36, 170, 0.6);
+            --iframe-bg: #2a0f3f;
+            --footer-text-color: #ce93d8;
+            --tab-bg: #6a1b9a;
+            --tab-active-bg: #8e24aa;
+            --tab-border: #ab47bc;
+            --tab-hover-bg: #7e279d;
+            --sidebar-bg: #300f45;
+            --sidebar-item-hover-bg: #4a148c;
+            --sidebar-border-color: rgba(225, 190, 231, 0.2);
+            --sidebar-outline-color: rgba(206, 147, 216, 0.4);
+            --button-text-color: #ffffff;
+            --error-icon-color: #8e24aa;
+        }
+
+        /* Charcoal Slate Theme */
+        body.theme-charcoalslate {
+            --bg-color: #263238;
+            --text-color: #eceff1;
+            --navbar-bg: #37474f;
+            --button-bg: #00acc1;
+            --button-hover-bg: #00838f;
+            --input-bg: #455a64;
+            --input-focus-bg: #546e7a;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 172, 193, 0.5);
+            --iframe-bg: #1c252b;
+            --footer-text-color: #b0bec5;
+            --tab-bg: #546e7a;
+            --tab-active-bg: #00acc1;
+            --tab-border: #78909c;
+            --tab-hover-bg: #607d8b;
+            --sidebar-bg: #313f46;
+            --sidebar-item-hover-bg: #455a64;
+            --sidebar-border-color: rgba(207, 216, 220, 0.2);
+            --sidebar-outline-color: rgba(120, 144, 156, 0.4);
+            --button-text-color: #ffffff;
+            --error-icon-color: #00acc1;
+        }
+
+        /* Cyberpunk Neon Theme */
+        body.theme-cyberpunk {
+            --bg-color: #0d0208;
+            --text-color: #f0f0f0;
+            --navbar-bg: #1a0a1f;
+            --button-bg: #ff00ff;
+            --button-hover-bg: #cc00cc;
+            --input-bg: #2c003e;
+            --input-focus-bg: #3d0054;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 0, 255, 0.6);
+            --iframe-bg: #000000;
+            --footer-text-color: #00ffff;
+            --tab-bg: #4b0082;
+            --tab-active-bg: #ff00ff;
+            --tab-border: #00ffff;
+            --tab-hover-bg: #9400d3;
+            --sidebar-bg: #100515;
+            --sidebar-item-hover-bg: #1f0f29;
+            --sidebar-border-color: rgba(0, 255, 255, 0.3);
+            --sidebar-outline-color: rgba(255, 0, 255, 0.4);
+            --button-text-color: #000000;
+            --error-icon-color: #ff00ff;
+        }
+
+        /* Mocha Delight Theme */
+        body.theme-mocha {
+            --bg-color: #f5f0e1;
+            --text-color: #4e342e;
+            --navbar-bg: #d7ccc8;
+            --button-bg: #795548;
+            --button-hover-bg: #5d4037;
+            --input-bg: #efebe9;
+            --input-focus-bg: #d7ccc8;
+            --input-focus-shadow: 0 0 0 2px rgba(121, 85, 72, 0.5);
+            --iframe-bg: #fdfbf7;
+            --footer-text-color: #6d4c41;
+            --tab-bg: #bcaaa4;
+            --tab-active-bg: #795548;
+            --tab-border: #a1887f;
+            --tab-hover-bg: #a1887f;
+            --sidebar-bg: #ede7f6;
+            --sidebar-item-hover-bg: #d7ccc8;
+            --sidebar-border-color: #bcaaa4;
+            --sidebar-outline-color: #8d6e63;
+            --button-text-color: #ffffff;
+            --error-icon-color: #795548;
+        }
+
+        /* Arctic Frost Theme */
+        body.theme-arctic {
+            --bg-color: #f0f8ff;
+            --text-color: #2c3e50;
+            --navbar-bg: #e0f0ff;
+            --button-bg: #5dade2;
+            --button-hover-bg: #3498db;
+            --input-bg: #d6eaff;
+            --input-focus-bg: #cce0ff;
+            --input-focus-shadow: 0 0 0 2px rgba(93, 173, 226, 0.5);
+            --iframe-bg: #f8fcff;
+            --footer-text-color: #34495e;
+            --tab-bg: #cce0ff;
+            --tab-active-bg: #5dade2;
+            --tab-border: #a9cce3;
+            --tab-hover-bg: #b9d7f0;
+            --sidebar-bg: #e8f4ff;
+            --sidebar-item-hover-bg: #d6eaff;
+            --sidebar-border-color: #b0c4de;
+            --sidebar-outline-color: #7fb3d5;
+            --button-text-color: #ffffff;
+            --error-icon-color: #5dade2;
+        }
+
+        /* Sakura Sunset Theme */
+        body.theme-sakura {
+            --bg-color: #2a2a2a;
+            --text-color: #fff0f0;
+            --navbar-bg: #4a3a3a;
+            --button-bg: #ff7f50;
+            --button-hover-bg: #ff6347;
+            --input-bg: #5a4a4a;
+            --input-focus-bg: #6a5a5a;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 127, 80, 0.6);
+            --iframe-bg: #3a3a3a;
+            --footer-text-color: #ffd8d8;
+            --tab-bg: #ffb6c1;
+            --tab-active-bg: #ff7f50;
+            --tab-border: #ff9a80;
+            --tab-hover-bg: #ffa07a;
+            --sidebar-bg: #3f3030;
+            --sidebar-item-hover-bg: #5a4a4a;
+            --sidebar-border-color: rgba(255, 200, 200, 0.3);
+            --sidebar-outline-color: rgba(255, 160, 122, 0.5);
+            --button-text-color: #000000;
+            --error-icon-color: #ff7f50;
+        }
+
+        html, body {
+            margin: 0; padding: 0; border: none; box-sizing: border-box;
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: var(--font-family-main);
+            background-color: var(--bg-color); color: var(--text-color);
+            display: flex;
+        }
+
+        canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+        }
+
+        #sidebar {
+            width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border-color);
+            padding: 20px 15px; box-sizing: border-box;
+            overflow-y: auto; transition: margin-left 0.35s ease-in-out, width 0.35s ease-in-out;
+            z-index: 1001; display: flex; flex-direction: column; gap: 25px;
+            font-family: var(--font-family-main);
+        }
+        #sidebar.hidden { margin-left: calc(-1 * var(--sidebar-width)); }
+        #sidebar h3 {
+            margin-top: 0; margin-bottom: 12px; font-size: 1em;
+            border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 10px;
+            font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; }
+        #sidebar ul::-webkit-scrollbar { width: 5px; }
+        #sidebar ul::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+
+        #sidebar li {
+            padding: 10px 18px; margin-bottom: 8px; border-radius: 20px;
+            cursor: pointer; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: var(--button-bg);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            color: var(--button-text-color);
+            position: relative; /* For absolute positioned children like remove button */
+        }
+        #sidebar li:hover {
+            background-color: var(--button-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+        }
+        #sidebar li .bookmark-url, #sidebar li .history-url {
+            font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
+        }
+        /* Specific style for remove button inside sidebar list items */
+        #sidebar li .remove-item-btn {
+            position:absolute; right:12px; top:50%; transform:translateY(-50%);
+            cursor:pointer; padding: 5px; opacity: 0.7;
+            font-size: 0.9em; /* Match icon size better */
+            line-height: 1; /* Ensure consistent vertical alignment */
+        }
+        #sidebar li .remove-item-btn:hover { opacity: 1; }
+
+
+        #sidebar .sidebar-input, #sidebar .sidebar-select {
+            width: 100%; height: 40px; padding: 0 18px; margin-bottom: 12px;
+            background-color: var(--input-bg); color: var(--text-color);
+            border: none; border-radius: 20px; font-family: var(--font-family-main);
+            box-sizing: border-box; box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            font-size: 0.9em;
+        }
+        #sidebar .sidebar-input:focus, #sidebar .sidebar-select:focus {
+            outline: none; background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow);
+        }
+        #sidebar .sidebar-select {
+             appearance: none; -webkit-appearance: none; -moz-appearance: none;
+             /* SVG arrow color will be updated by JS based on theme */
+             background-repeat: no-repeat;
+             background-position: right 15px center;
+             background-size: .65em auto;
+             padding-right: 35px;
+        }
+
+        #sidebar .sidebar-button {
+            width: 100%; height: 40px; padding: 0 18px;
+            background-color: var(--button-bg); color: var(--button-text-color);
+            border: none; border-radius: 20px; cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: var(--font-family-main);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9em; font-weight: 500;
+        }
+        #sidebar .sidebar-button:hover {
+            background-color: var(--button-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+        }
+
+        #main-content-wrapper {
+            flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+        }
+        #top-bar-assembly { overflow: hidden; transition: max-height 0.35s ease-in-out; }
+        #top-bar-assembly.hidden { max-height: 0 !important; }
+
+        #tab-bar {
+            display: flex; background-color: var(--navbar-bg); padding: 10px 12px;
+            overflow-x: auto; white-space: nowrap; scrollbar-width: thin;
+            position: relative; align-items: center; gap: 8px;
+        }
+        #tab-bar::-webkit-scrollbar { height: 3px; }
+        #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+        .tab {
+            display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
+            padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
+            transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
+        }
+        .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
+        .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
+        .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+        .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
+        .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
+        .new-tab-button {
+            width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
+            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+        }
+        .new-tab-button:hover { background-color: var(--button-hover-bg); }
+
+        #nav-bar {
+            display: flex; align-items: center; padding: 10px;
+            background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
+            border-bottom: 1px solid var(--sidebar-border-color);
+        }
+        .nav-button {
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+            margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
+            cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+        }
+        .nav-button:hover { background-color: var(--button-hover-bg); }
+        #search-bar {
+            flex: 1; height: 40px; border-radius: 20px; border: none; background-color: var(--input-bg);
+            color: var(--text-color); padding: 0 18px; font-size: 15px;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-family: var(--font-family-main);
+        }
+        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+
+        #toggle-top-bar-button, #toggle-sidebar-button {
+            position: fixed; z-index: 1002; width: 40px; height: 32px;
+            background-color: var(--navbar-bg); cursor: pointer; display: flex;
+            justify-content: center; align-items: center; color: var(--text-color);
+            transition: top 0.35s ease-in-out, left 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.35s ease-in-out;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+        }
+        #toggle-top-bar-button:hover, #toggle-sidebar-button:hover { background-color: var(--button-hover-bg); }
+        #toggle-top-bar-button .fas, #toggle-sidebar-button .fas { font-size: 14px; transition: transform 0.3s ease-in-out; }
+        #toggle-top-bar-button {
+            right: 2px; border-radius: 0 0 15px 15px;
+        }
+        #toggle-sidebar-button {
+            left: 0px; bottom: 2px; border-radius: 0 15px 15px 0;
+        }
+
+        #tabs-container { flex: 1; position: relative; background-color: var(--iframe-bg); }
+        .tab-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; border: none; }
+        .tab-content.active { display: block; }
+        .footer-label {
+            position: fixed; bottom: 0; right: 0; margin: 1rem; font-family: var(--font-family-main);
+            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+        }
+        .sidebar-setting-label { display:block; margin-bottom:8px; font-size: 0.9em; font-weight: 500; }
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div id="sidebar">
+        <div id="sidebar-header" style="padding-bottom: 10px; border-bottom: 1px solid var(--sidebar-border-color);">
+            <h2 style="text-align: center; margin-bottom: 0; font-size: 1.4em; font-weight: bold;">Vern Pro</h2>
+        </div>
+
+        <div id="bookmarks-section">
+            <h3><i class="fas fa-bookmark"></i> Bookmarks</h3>
+            <input type="text" id="new-bookmark-name" class="sidebar-input" placeholder="Bookmark Name (optional)">
+            <button id="add-current-bookmark-button" class="sidebar-button" style="margin-bottom:10px;">
+                <i class="fas fa-plus" style="margin-right: 8px;"></i>Bookmark Current
+            </button>
+            <ul id="bookmarks-list"></ul>
+        </div>
+
+        <div id="history-section">
+            <h3><i class="fas fa-history"></i> Session History</h3>
+            <ul id="history-list"></ul>
+        </div>
+
+        <div id="settings-section">
+            <h3><i class="fas fa-cog"></i> Settings</h3>
+            <label for="theme-selector" class="sidebar-setting-label">Theme:</label>
+            <select id="theme-selector" class="sidebar-select">
+                <option value="default">Default Dark</option>
+                <option value="light">Light Mode</option>
+                <option value="blue">Ocean Blue</option>
+                <option value="orange">Sunset Orange</option>
+                <option value="galaxy">Cosmic Galaxy</option>
+                <option value="mint">Mint Green</option>
+                <option value="crimson">Crimson Red</option>
+                <option value="forest">Forest Green</option>
+                <option value="solarflare">Solar Flare</option>
+                <option value="deepsea">Deep Sea</option>
+                <option value="rosegold">Rose Gold</option>
+                <option value="emeraldisle">Emerald Isle</option>
+                <option value="royalpurple">रॉयल पर्पल</option>
+                <option value="charcoalslate">Charcoal Slate</option>
+                <option value="cyberpunk">Cyberpunk Neon</option>
+                <option value="mocha">Mocha Delight</option>
+                <option value="arctic">Arctic Frost</option>
+                <option value="sakura">Sakura Sunset</option>
+            </select>
+
+            <label for="search-engine-selector" class="sidebar-setting-label" style="margin-top: 15px;">Search Engine:</label>
+            <select id="search-engine-selector" class="sidebar-select">
+                <option value="duckduckgo">DuckDuckGo</option>
+                <option value="yahoo">Yahoo Search</option>
+                <option value="bing">Bing</option>
+                <option value="qwant">Qwant</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="toggle-sidebar-button" title="Toggle Sidebar">
+        <i id="toggle-sidebar-icon" class="fas fa-chevron-left"></i>
+    </div>
+
+    <div id="main-content-wrapper">
+        <div id="top-bar-assembly">
+            <div id="tab-bar">
+                <div class="new-tab-button" id="new-tab-button" title="New Tab">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </div>
+            <div id="nav-bar">
+                <div class="nav-button" id="home-button" title="Home"> <i class="fas fa-home"></i> </div>
+                <div class="nav-button" id="back-button" title="Back"> <i class="fas fa-arrow-left"></i> </div>
+                <div class="nav-button" id="forward-button" title="Forward"> <i class="fas fa-arrow-right"></i> </div>
+                <div class="nav-button" id="refresh-button" title="Refresh"> <i class="fas fa-redo"></i> </div>
+                <input type="text" id="search-bar" placeholder="Search or type a URL">
+            </div>
+        </div>
+
+        <div id="toggle-top-bar-button" title="Hide Toolbar">
+            <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
+        </div>
+
+        <div id="tabs-container"></div>
+    </div>
+
+    <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Pro by 4SP</a>
+
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script>
+    <script src="stars.js" defer></script>
+
+    <script>
+    // === Vern Pro Browser - Optimized Script === //
+    // Main application logic, refactored for clarity and potential performance.
+    // Using an IIFE (Immediately Invoked Function Expression) to encapsulate the browser logic
+    // and avoid polluting the global scope.
+    (function VernProBrowser() {
+        'use strict'; // Enforce stricter parsing and error handling
+
+        // --- STATE & CONFIGURATION ---
+        const appState = {
+            tabs: [],
+            activeTabId: null,
+            tabCounter: 0,
+            sessionHistory: [],
+            MAX_HISTORY_ITEMS: 50,
+            currentSearchEngineKey: 'duckduckgo',
+            initialTopBarHeight: 0,
+            isTopBarHidden: false,
+            isSidebarHidden: false,
+            domRefs: {}, // To store frequently accessed DOM elements
+            // Stores the original URL that led to an error, for the "Try Again" button
+            urlBeforeErrorByTabId: {}
+        };
+
+        const SEARCH_ENGINES = {
+            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
+            'yahoo': { name: 'Yahoo Search', url: 'https://search.yahoo.com/search?p=%s' },
+            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
+            'qwant': { name: 'Qwant', url: 'https://www.qwant.com/?q=%s' }
+        };
+
+        // --- UTILITY FUNCTIONS ---
+        /**
+         * Debounce function to limit the rate at which a function can fire.
+         * @param {Function} func - The function to debounce.
+         * @param {number} delay - The delay in milliseconds.
+         * @returns {Function} - The debounced function.
+         */
+        function debounce(func, delay) {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        /**
+         * Gets a DOM element by ID and caches it.
+         * @param {string} id - The ID of the element.
+         * @returns {HTMLElement|null}
+         */
+        function getById(id) {
+            if (!appState.domRefs[id]) {
+                appState.domRefs[id] = document.getElementById(id);
+            }
+            return appState.domRefs[id];
+        }
+
+
+        // --- DOM INITIALIZATION & CACHING ---
+        /** Caches references to key DOM elements for faster access. */
+        function cacheDomElements() {
+            const ids = [
+                'tab-bar', 'tabs-container', 'search-bar', 'new-tab-button',
+                'home-button', 'back-button', 'forward-button', 'refresh-button',
+                'top-bar-assembly', 'toggle-top-bar-button', 'toggle-bar-icon',
+                'sidebar', 'toggle-sidebar-button', 'toggle-sidebar-icon',
+                'main-content-wrapper', 'bookmarks-list', 'add-current-bookmark-button',
+                'new-bookmark-name', 'history-list', 'theme-selector', 'search-engine-selector'
+            ];
+            ids.forEach(id => appState.domRefs[id] = document.getElementById(id));
+        }
+
+        // --- CORE INITIALIZATION ---
+        /** Main initialization function, called on DOMContentLoaded. */
+        async function initialize() {
+            cacheDomElements();
+
+            // External UV and ServiceWorker initialization
+            try {
+                await initUV();
+            } catch (err) {
+                console.error("Initialization error during initUV:", err);
+                // Error already rendered by initUV if tab exists
+            }
+
+            setupSearchEngineSelector();
+            loadSettings(); // Loads theme and search engine preferences
+
+            // Initial UI state setup
+            updateInitialTopBarHeight();
+            if (!appState.isTopBarHidden) {
+                getById('top-bar-assembly').style.maxHeight = appState.initialTopBarHeight + 'px';
+            } else {
+                getById('top-bar-assembly').style.maxHeight = '0px';
+                getById('top-bar-assembly').classList.add('hidden');
+                handleTopBarToggle(true); // Ensure icon and title are correct
+            }
+
+            if (appState.isSidebarHidden) {
+                getById('sidebar').classList.add('hidden');
+                getById('toggle-sidebar-icon').className = 'fas fa-chevron-right';
+                getById('toggle-sidebar-button').style.left = '0px';
+                getById('toggle-sidebar-button').title = "Show Sidebar";
+            } else {
+                getById('toggle-sidebar-button').style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                getById('toggle-sidebar-icon').className = 'fas fa-chevron-left';
+                getById('toggle-sidebar-button').title = "Hide Sidebar";
+            }
+
+            setupEventListeners();
+            loadBookmarks();
+
+            // Handle initial URL from query parameters or default to blank
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialUrl = urlParams.get('url');
+            if (appState.tabs.length === 0) {
+                createTab(initialUrl || 'about:blank');
+            }
+            renderHistory();
+            // Ensure theme is fully applied after all elements are potentially ready
+            applyTheme(localStorage.getItem('vernTheme') || 'default');
+            console.log("Vern Pro Optimized Initialized.");
+        }
+
+        async function initUV() {
+            // Using a Promise to handle async nature and potential errors better
+            return new Promise(async (resolve, reject) => {
+                if (typeof window.registerSW !== 'function') {
+                    const msg = "Proxy service worker (registerSW) is missing.";
+                    console.warn(msg);
+                    let currentTab = getActiveTab();
+                    if (!currentTab) currentTab = createTab('about:errorpage'); // Create a tab if none exist for the error
+                    renderErrorPage(currentTab, "Initialization Error", msg, "The browser might not load external websites correctly.");
+                    reject(new Error(msg));
+                    return;
+                }
+                try {
+                    await window.registerSW();
+                    console.log("Service worker registered successfully for Vern Pro.");
+                    resolve();
+                } catch (err) {
+                    console.error("Failed to register UV service worker:", err);
+                    let currentTab = getActiveTab();
+                    if (!currentTab) currentTab = createTab('about:errorpage');
+                    renderErrorPage(currentTab, "Proxy Initialization Failed", err.message, "External websites may not load correctly.");
+                    reject(err);
+                }
+            });
+        }
+
+
+        // --- UI ELEMENT SETUP ---
+        function setupSearchEngineSelector() {
+            const selector = getById('search-engine-selector');
+            selector.innerHTML = ''; // Clear existing options
+            Object.keys(SEARCH_ENGINES).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = SEARCH_ENGINES[key].name;
+                selector.appendChild(option);
+            });
+        }
+
+        /** Updates the color of the custom SVG arrow for select elements based on the current theme. */
+        function updateSelectArrowColor() {
+            // Debounced to prevent rapid calls during theme switching if styles cascade slowly.
+            requestAnimationFrame(() => {
+                try {
+                    const currentTextColorHex = getComputedStyle(document.body).getPropertyValue('--text-color').trim().replace('#','');
+                     const svgArrow = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(currentTextColorHex)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')`;
+                    getById('theme-selector').style.backgroundImage = svgArrow;
+                    getById('search-engine-selector').style.backgroundImage = svgArrow;
+                } catch (e) {
+                    console.warn("Could not update select arrow color:", e);
+                }
+            });
+        }
+
+
+        // --- SETTINGS MANAGEMENT ---
+        function loadSettings() {
+            const savedTheme = localStorage.getItem('vernTheme') || 'default';
+            applyTheme(savedTheme, true); // Pass true to skip re-rendering error page if it's already there
+
+            const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
+            if (SEARCH_ENGINES[savedSearchEngine]) {
+                appState.currentSearchEngineKey = savedSearchEngine;
+            }
+            getById('search-engine-selector').value = appState.currentSearchEngineKey;
+        }
+
+        // --- EVENT LISTENERS ---
+        /** Sets up all primary event listeners for the application. */
+        function setupEventListeners() {
+            const dom = appState.domRefs; // Alias for quicker access
+
+            dom['toggle-top-bar-button']?.addEventListener('click', () => handleTopBarToggle());
+            dom['toggle-sidebar-button']?.addEventListener('click', handleSidebarToggle);
+
+            // Using a debounced resize handler for efficiency
+            window.addEventListener('resize', debounce(() => {
+                if (!appState.isTopBarHidden) updateInitialTopBarHeight();
+                if (!appState.isSidebarHidden) {
+                    dom['toggle-sidebar-button'].style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                }
+            }, 200));
+
+            dom['new-tab-button']?.addEventListener('click', () => createTab('about:blank'));
+            dom['search-bar']?.addEventListener('keydown', handleSearchEnter);
+
+            // Navigation controls using event delegation on a common parent if possible,
+            // or direct listeners if elements are few and static.
+            dom['home-button']?.addEventListener('click', () => navigateTo('about:blank'));
+            dom['back-button']?.addEventListener('click', navigateBack);
+            dom['forward-button']?.addEventListener('click', navigateForward);
+            dom['refresh-button']?.addEventListener('click', refreshCurrentTab);
+
+            // Sidebar interactions - consider event delegation if sections become very dynamic
+            dom['add-current-bookmark-button']?.addEventListener('click', handleAddCurrentBookmark);
+            dom['bookmarks-list']?.addEventListener('click', handleBookmarkListClick);
+            dom['history-list']?.addEventListener('click', handleHistoryListClick);
+
+            dom['theme-selector']?.addEventListener('change', (e) => applyTheme(e.target.value));
+            dom['search-engine-selector']?.addEventListener('change', handleSearchEngineChange);
+
+            // Global keydown listener
+            document.addEventListener('keydown', handleGlobalKeyDown);
+
+            // Event delegation for tab bar clicks (tabs and close buttons)
+            dom['tab-bar']?.addEventListener('click', handleTabBarClick);
+
+            // Capture load events for iframes. Using 'true' for capture phase
+            // to ensure our handler runs, especially for srcdoc iframes.
+            document.addEventListener('load', handleIframeLoad, true);
+            window.addEventListener('message', handleWindowMessage); // For potential communication with iframes/SW
+        }
+
+        // --- TAB MANAGEMENT ---
+        function createTab(url = 'about:blank') {
+            const tabId = `tab-${appState.tabCounter++}`;
+            const iframe = document.createElement('iframe');
+            iframe.id = `content-${tabId}`;
+            iframe.className = 'tab-content';
+            // Stricter sandbox for security, but allow necessary permissions for UV
+            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
+            iframe.loading = 'eager'; // Load active tabs eagerly
+
+            // Create tab element using a template string for readability
+            const tabElementHTML = `
+                <div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div>
+                <div class="tab-title">New Tab</div>
+                <div class="tab-close" data-action="close-tab"><i class="fas fa-times"></i></div>`;
+            const tabElement = document.createElement('div');
+            tabElement.className = 'tab';
+            tabElement.dataset.tabId = tabId;
+            tabElement.innerHTML = tabElementHTML;
+
+            getById('tab-bar').insertBefore(tabElement, getById('new-tab-button'));
+            getById('tabs-container').appendChild(iframe);
+
+            const newTab = {
+                id: tabId,
+                element: tabElement,
+                iframe: iframe,
+                url: url,
+                title: 'New Tab',
+                titleElement: tabElement.querySelector('.tab-title'),
+                faviconElement: tabElement.querySelector('.tab-favicon'),
+                isLoading: false,
+                // titleObserver and locationCheckIntervalId will be set by setupTitleObserver
+            };
+            appState.tabs.push(newTab);
+            activateTab(tabId);
+            navigateTo(url, newTab); // Navigate after tab is activated
+            return newTab;
+        }
+
+        function activateTab(tabId) {
+            if (!tabId && appState.tabs.length > 0) tabId = appState.tabs[0].id;
+            if (!tabId) return;
+
+            appState.tabs.forEach(t => {
+                t.element.classList.remove('active');
+                t.iframe.classList.remove('active');
+            });
+
+            const tab = appState.tabs.find(t => t.id === tabId);
+            if (tab) {
+                tab.element.classList.add('active');
+                tab.iframe.classList.add('active');
+                appState.activeTabId = tabId;
+                // Update search bar only if it's a real URL, not an error/blank page
+                getById('search-bar').value = (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') ? tab.url : '';
+                // Scroll tab into view efficiently
+                requestAnimationFrame(() => {
+                    tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                });
+                updateDocumentTitle(tab);
+            }
+        }
+
+        function closeTab(tabId) {
+            const tabIndex = appState.tabs.findIndex(t => t.id === tabId);
+            if (tabIndex === -1) return;
+
+            const tabToClose = appState.tabs[tabIndex];
+            // Cleanup resources
+            if (tabToClose.titleObserver) tabToClose.titleObserver.disconnect();
+            if (tabToClose.locationCheckIntervalId) clearInterval(tabToClose.locationCheckIntervalId);
+            delete appState.urlBeforeErrorByTabId[tabId];
+
+
+            // Remove DOM elements using requestAnimationFrame for smoother visual update
+            requestAnimationFrame(() => {
+                tabToClose.element.remove();
+                tabToClose.iframe.remove();
+            });
+
+            appState.tabs.splice(tabIndex, 1);
+
+            if (appState.activeTabId === tabId) {
+                if (appState.tabs.length > 0) {
+                    // Activate the previous tab, or the first tab if none previous
+                    activateTab(appState.tabs[Math.max(0, tabIndex - 1)]?.id || appState.tabs[0]?.id);
+                } else {
+                    createTab('about:blank'); // Create a new tab if all are closed
+                }
+            }
+        }
+
+        function getActiveTab() {
+            return appState.tabs.find(t => t.id === appState.activeTabId);
+        }
+
+        function updateTabInfo(tab, title, faviconUrl) {
+            if (!tab) return;
+
+            const displayTitle = title ||
+                (tab.url === 'about:blank' ? 'New Tab' :
+                (tab.url === 'about:errorpage' ? (tab.errorTitle || 'Error') :
+                (tab.url || 'Loading...')));
+
+            tab.title = displayTitle;
+            // Use textContent for performance and security over innerHTML if just setting text
+            tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0, 18) + '...' : displayTitle;
+            tab.titleElement.title = displayTitle; // Full title on hover
+
+            // Favicon logic
+            if (faviconUrl) {
+                tab.faviconElement.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
+            } else if (tab.url === 'about:errorpage') {
+                tab.faviconElement.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 14px; color: var(--error-icon-color);"></i>`;
+            } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
+                try {
+                    const siteUrl = new URL(tab.url);
+                    // Construct favicon URL using the original hostname
+                    tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" style="width:16px;height:16px;object-fit:contain;" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\' style=\\'font-size: 14px;\\'></i>';">`;
+                } catch (e) {
+                    tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
+                }
+            } else {
+                tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
+            }
+
+            if (tab.id === appState.activeTabId) {
+                updateDocumentTitle(tab);
+            }
+        }
+
+        function updateDocumentTitle(tab) {
+            document.title = `${tab ? (tab.title || 'New Tab') : 'New Tab'} - Vern Pro Optimized`;
+        }
+
+
+        // --- NAVIGATION & URL HANDLING ---
+        function formatUrlInput(input) {
+            const trimmedInput = input.trim();
+            // Matches http://, https://, ftp://, file:// etc. OR // (scheme-relative)
+            if (/^(?:[a-z]+:)?\/\//i.test(trimmedInput)) {
+                return trimmedInput.startsWith("//") ? "https:" + trimmedInput : trimmedInput;
+            }
+            // Check for domain pattern (e.g. google.com), localhost, or IP addresses
+            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}(\/.*)*$/.test(trimmedInput) ||
+                trimmedInput.startsWith("localhost:") ||
+                /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(trimmedInput)) {
+                return 'https://' + trimmedInput; // Default to https
+            }
+            return null; // Indicates a search query
+        }
+
+        function navigateTo(urlInput, tab = null) {
+            let currentTab = tab || getActiveTab();
+            if (!currentTab) { // Should ideally not happen if UI always ensures a tab
+                currentTab = createTab(urlInput); // Create tab if none active
+                return; // createTab will call navigateTo
+            }
+
+            currentTab.isLoading = true;
+            currentTab.iframe.srcdoc = ''; // Clear previous srcdoc immediately
+            updateTabInfo(currentTab, "Loading...", null); // Visual feedback
+
+            const SanitizeURLInput = (input) => (!input || typeof input !== 'string' || input.trim() === '') ? 'about:blank' : input.trim();
+            urlInput = SanitizeURLInput(urlInput);
+
+
+            if (urlInput === 'about:blank' || (urlInput.startsWith('about:') && urlInput !== 'about:errorpage')) {
+                currentTab.iframe.src = urlInput;
+                currentTab.url = urlInput;
+                appState.urlBeforeErrorByTabId[currentTab.id] = urlInput; // Store for potential "Try Again"
+                if (currentTab.id === appState.activeTabId) getById('search-bar').value = (urlInput === 'about:blank' ? '' : urlInput);
+                updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput);
+                if (urlInput === 'about:blank') addToHistory('New Tab', urlInput); // Only log actual blank pages to history as "New Tab"
+                currentTab.isLoading = false;
+                return;
+            }
+
+            let targetUrl = formatUrlInput(urlInput);
+            if (!targetUrl) { // Assumed to be a search query
+                const searchEngine = SEARCH_ENGINES[appState.currentSearchEngineKey] || SEARCH_ENGINES['duckduckgo'];
+                targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput));
+            }
+
+            appState.urlBeforeErrorByTabId[currentTab.id] = targetUrl; // Store the intended target URL
+
+            // Check for UV proxy configuration (critical for external sites)
+            if (typeof window.__uv$config === 'undefined' || !window.__uv$config.prefix || typeof window.__uv$config.encodeUrl !== 'function') {
+                console.error("UV configuration is not available.");
+                renderErrorPage(currentTab, "Configuration Error", "Proxy configuration (UV) is missing or invalid.", `Attempted URL: ${targetUrl}`);
+                return; // Error page handles isLoading state
+            }
+
+            try {
+                const proxiedUrl = self.location.origin + window.__uv$config.prefix + window.__uv$config.encodeUrl(targetUrl);
+                currentTab.iframe.src = proxiedUrl;
+                currentTab.url = targetUrl; // Store the original, non-proxied URL
+                if (currentTab.id === appState.activeTabId) getById('search-bar').value = targetUrl;
+                // isLoading will be set to false in handleIframeLoad
+            } catch (err) {
+                console.error("Navigation error during URL processing or proxying:", err);
+                renderErrorPage(currentTab, "Navigation Error", `Could not process the URL: ${err.message}`, `URL: ${targetUrl}`);
+            }
+        }
+
+        function renderErrorPage(tab, errorTitle, message, details = '') {
+            if (!tab) {
+                console.warn("renderErrorPage called with no tab, creating one.");
+                // Pass a specific URL to avoid re-calling navigateTo from createTab for this error page
+                tab = createTab('about:errorpage'); // createTab will internally set a placeholder URL
+                if (!tab) { console.error("Failed to create tab for error page."); return; }
+            }
+
+            tab.isLoading = true; // Ensure loading state is managed
+            tab.errorTitle = errorTitle; // Store error title for tab info
+
+            // Get theme colors dynamically for the error page
+            // Using requestAnimationFrame to ensure styles are computed *after* any potential theme switch
+            requestAnimationFrame(() => {
+                const computedStyle = getComputedStyle(document.body);
+                const errorPageVars = {
+                    textColor: computedStyle.getPropertyValue('--text-color').trim(),
+                    iframeBgColor: computedStyle.getPropertyValue('--iframe-bg').trim(),
+                    buttonBgColor: computedStyle.getPropertyValue('--button-bg').trim(),
+                    buttonHoverBgColor: computedStyle.getPropertyValue('--button-hover-bg').trim(),
+                    buttonTextColor: computedStyle.getPropertyValue('--button-text-color').trim(),
+                    sidebarOutlineColor: computedStyle.getPropertyValue('--sidebar-outline-color').trim(),
+                    fontFamily: computedStyle.getPropertyValue('--font-family-main').trim(),
+                    errorIconColor: computedStyle.getPropertyValue('--error-icon-color').trim()
+                };
+
+                const errorHTML = `
+                <html style="height: 100%;">
+                <head>
+                    <title>${errorTitle}</title>
+                    <style>
+                        body {
+                            font-family: ${errorPageVars.fontFamily}; color: ${errorPageVars.textColor}; background-color: ${errorPageVars.iframeBgColor};
+                            margin: 0; height: 100%; display: flex; flex-direction: column;
+                            align-items: center; justify-content: center; padding: 20px;
+                            box-sizing: border-box; text-align: center; overflow: hidden;
+                        }
+                        h2 { color: ${errorPageVars.textColor}; margin-bottom: 20px; font-size: 1.8em; font-weight: 600;}
+                        p { margin-bottom: 12px; font-size: 1.1em; }
+                        .error-details { font-size: 0.9em; opacity: 0.7; word-break: break-all; max-width: 80%; margin-top:15px; }
+                        .error-icon { font-size: 3.5em; margin-bottom: 20px; color: ${errorPageVars.errorIconColor}; }
+                        .error-actions button {
+                            background-color: ${errorPageVars.buttonBgColor}; color: ${errorPageVars.buttonTextColor}; border: none;
+                            border-radius: 20px; padding: 10px 22px; cursor: pointer;
+                            font-family: ${errorPageVars.fontFamily}; margin: 8px; font-size: 0.95em;
+                            box-shadow: 0 0 0 1px ${errorPageVars.sidebarOutlineColor};
+                            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+                        }
+                        .error-actions button:hover {
+                            background-color: ${errorPageVars.buttonHoverBgColor};
+                            box-shadow: 0 0 0 1.5px ${errorPageVars.sidebarOutlineColor};
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="error-icon">⚠️</div>
+                    <h2>${errorTitle}</h2>
+                    <p>${message}</p>
+                    ${details ? `<p class="error-details">${details}</p>` : ''}
+                    <div class="error-actions">
+                        <button data-action="error-back">Go Back</button>
+                        <button data-action="error-retry">Try Again</button>
+                        <button data-action="error-home">Go Home</button>
+                    </div>
+                    <script>
+                        // Add event listeners for error page buttons
+                        // Must use window.parent to call functions in the main browser script
+                        document.body.addEventListener('click', function(event) {
+                            const action = event.target.dataset.action;
+                            if (action === 'error-back') {
+                                window.parent.VernProBrowser.navigateBack();
+                            } else if (action === 'error-retry') {
+                                window.parent.VernProBrowser.retryFailedNavigation();
+                            } else if (action === 'error-home') {
+                                window.parent.VernProBrowser.navigateToURL('about:blank');
+                            }
+                        });
+                    <\/script>
+                </body>
+                </html>`;
+
+                tab.iframe.srcdoc = errorHTML;
+                tab.url = 'about:errorpage'; // Special internal URL
+                updateTabInfo(tab, errorTitle); // Update tab title to reflect error
+                if (tab.id === appState.activeTabId) getById('search-bar').value = ''; // Clear search bar
+                tab.isLoading = false;
+            });
+        }
+
+        // --- UI TOGGLES & RESIZE ---
+        function handleTopBarToggle(forceState) {
+            if (forceState !== undefined) {
+                appState.isTopBarHidden = forceState;
+            } else {
+                appState.isTopBarHidden = !appState.isTopBarHidden;
+            }
+            const topBar = getById('top-bar-assembly');
+            const toggleButton = getById('toggle-top-bar-button');
+            const toggleIcon = getById('toggle-bar-icon');
+
+            if (appState.isTopBarHidden) {
+                topBar.classList.add('hidden');
+                topBar.style.maxHeight = '0px';
+                toggleButton.style.top = '-1px';
+                toggleIcon.className = 'fas fa-chevron-down';
+                toggleButton.title = "Show Toolbar";
+            } else {
+                topBar.classList.remove('hidden');
+                topBar.style.maxHeight = appState.initialTopBarHeight + 'px';
+                toggleButton.style.top = (appState.initialTopBarHeight > 0 ? appState.initialTopBarHeight - 1 : 0) + 'px';
+                toggleIcon.className = 'fas fa-chevron-up';
+                toggleButton.title = "Hide Toolbar";
+            }
+        }
+
+        function handleSidebarToggle() {
+            appState.isSidebarHidden = !getById('sidebar').classList.contains('hidden'); // Check current state before toggle
+            const sidebar = getById('sidebar');
+            const toggleButton = getById('toggle-sidebar-button');
+            const toggleIcon = getById('toggle-sidebar-icon');
+            const sidebarWidth = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+
+            if (appState.isSidebarHidden) { // Will be hidden after this logic
+                sidebar.classList.add('hidden');
+                toggleIcon.className = 'fas fa-chevron-right';
+                toggleButton.style.left = '0px';
+                toggleButton.title = "Show Sidebar";
+            } else { // Will be shown
+                sidebar.classList.remove('hidden');
+                toggleIcon.className = 'fas fa-chevron-left';
+                toggleButton.style.left = sidebarWidth;
+                toggleButton.title = "Hide Sidebar";
+            }
+            appState.isSidebarHidden = !appState.isSidebarHidden; // Update state
+        }
+
+
+        function updateInitialTopBarHeight() {
+            const topBar = getById('top-bar-assembly');
+            const wasHidden = topBar.classList.contains('hidden');
+            // Temporarily show to measure if hidden, then restore state
+            if (wasHidden) {
+                topBar.classList.remove('hidden');
+                topBar.style.maxHeight = 'none'; // Allow it to take full height for measurement
+            }
+            appState.initialTopBarHeight = topBar.offsetHeight;
+            if (wasHidden) {
+                topBar.classList.add('hidden');
+                topBar.style.maxHeight = '0px';
+            } else {
+                topBar.style.maxHeight = appState.initialTopBarHeight + 'px';
+            }
+            // Adjust toggle button position
+            if (!appState.isTopBarHidden && appState.initialTopBarHeight > 0) {
+                getById('toggle-top-bar-button').style.top = (appState.initialTopBarHeight - 1) + 'px';
+            } else if (!appState.isTopBarHidden && appState.initialTopBarHeight === 0) {
+                getById('toggle-top-bar-button').style.top = '0px';
+            }
+        }
+
+        // --- EVENT HANDLERS (Callbacks) ---
+        function handleTabBarClick(e) {
+            const target = e.target;
+            const tabElement = target.closest('.tab');
+            const closeButton = target.closest('.tab-close');
+
+            if (closeButton && tabElement) {
+                e.stopPropagation(); // Prevent tab activation if close is clicked
+                closeTab(tabElement.dataset.tabId);
+            } else if (tabElement) {
+                activateTab(tabElement.dataset.tabId);
+            }
+        }
+
+        function handleSearchEnter(e) {
+            if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                navigateTo(e.target.value);
+            }
+        }
+
+        function handleIframeLoad(event) {
+            // Ensure we're dealing with one of our tab iframes
+            if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
+                const iframe = event.target;
+                const tab = appState.tabs.find(t => t.iframe === iframe);
+
+                if (tab) {
+                    tab.isLoading = false;
+                    if (tab.url === 'about:errorpage') {
+                        // Error page content and title are handled by renderErrorPage
+                        // No history or title observer for error pages
+                        return;
+                    }
+
+                    let title = 'Untitled';
+                    try {
+                        // Accessing contentDocument can throw if iframe is cross-origin and not yet fully proxied/loaded
+                        if (iframe.contentWindow && iframe.contentDocument && iframe.contentDocument.title) {
+                            title = iframe.contentDocument.title.trim() || new URL(tab.url).hostname || 'Untitled';
+                        } else if (tab.url && tab.url !== 'about:blank') {
+                             try {title = new URL(tab.url).hostname } catch {title = 'Untitled'}
+                        } else {
+                            title = 'New Tab';
+                        }
+                    } catch (e) {
+                        console.warn(`Could not access iframe content for title (tabId: ${tab.id}):`, e.message);
+                        try { title = new URL(tab.url).hostname || 'New Tab'; } catch { title = 'Untitled'; }
+                    }
+                    updateTabInfo(tab, title);
+
+                    if (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') {
+                        addToHistory(title, tab.url);
+                    }
+                    setupTitleObserver(tab); // Setup or re-setup observer
+                }
+            }
+        }
+
+        function handleWindowMessage(event) {
+            // Placeholder for messages from iframes or service worker (e.g., UV proxy messages)
+            // Example: if (event.data && event.data.type === 'uv_some_event') { ... }
+        }
+
+        function handleGlobalKeyDown(e) {
+            const targetTagName = e.target.tagName.toLowerCase();
+            // Ignore keydowns if focused on an input, textarea, or select
+            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) {
+                return;
+            }
+
+            // Keyboard shortcuts
+            if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (appState.activeTabId) closeTab(appState.activeTabId); }
+            if (e.ctrlKey && e.key === 'Tab') {
+                e.preventDefault();
+                if (appState.tabs.length > 1) {
+                    const currentIndex = appState.tabs.findIndex(t => t.id === appState.activeTabId);
+                    const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + appState.tabs.length) % appState.tabs.length;
+                    activateTab(appState.tabs[nextIndex].id);
+                }
+            }
+            if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); navigateBack(); }
+            if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); navigateForward(); }
+            if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshCurrentTab(); }
+            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); /* Or document.documentElement.requestFullscreen(); */ }
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) { // Focus search bar
+                e.preventDefault();
+                getById('search-bar').focus();
+                getById('search-bar').select();
+            }
+        }
+
+        function setupTitleObserver(tab) {
+            if (!tab || !tab.iframe || !tab.iframe.contentWindow || tab.url === 'about:errorpage') return;
+            if (tab.titleObserver) tab.titleObserver.disconnect(); // Disconnect previous if any
+
+            try {
+                // Check if contentDocument is accessible (might not be for cross-origin before UV fully kicks in)
+                if (!tab.iframe.contentDocument) {
+                    console.warn(`Title observer: contentDocument not accessible for tab ${tab.id}`);
+                    return;
+                }
+                const targetNode = tab.iframe.contentDocument.querySelector('title');
+                if (!targetNode) {
+                    // console.warn(`Title observer: <title> element not found for tab ${tab.id}`);
+                    return; // No title element to observe
+                }
+
+                const observer = new MutationObserver(() => {
+                    if (tab.iframe.contentDocument && tab.iframe.contentDocument.title !== tab.title) {
+                        updateTabInfo(tab, tab.iframe.contentDocument.title.trim());
+                    }
+                });
+                observer.observe(targetNode, { subtree: true, characterData: true, childList: true });
+                tab.titleObserver = observer;
+            } catch (e) {
+                console.warn(`Could not set up title observer for tab ${tab.id}:`, e.message);
+                // Fallback: periodic check (less efficient, but better than nothing if observer fails)
+                if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+                tab.locationCheckIntervalId = setInterval(() => {
+                    try {
+                        if (tab.iframe.contentDocument && tab.iframe.contentDocument.title.trim() !== tab.title) {
+                             updateTabInfo(tab, tab.iframe.contentDocument.title.trim());
+                        }
+                    } catch (err) {/* ignore cross-origin issues after initial load */}
+                }, 2500); // Check less frequently
+            }
+        }
+
+
+        // --- NAVIGATION ACTIONS (Publicly callable from error page) ---
+        window.VernProBrowser = { // Expose necessary functions for error page interaction
+            navigateToURL: (url, tab) => navigateTo(url, tab || getActiveTab()),
+            navigateBack: navigateBack,
+            retryFailedNavigation: () => {
+                const tab = getActiveTab();
+                if (tab) {
+                    const originalUrl = appState.urlBeforeErrorByTabId[tab.id] || 'about:blank';
+                    navigateTo(originalUrl, tab);
+                }
+            }
+        };
+
+        function navigateBack() {
+            const activeTab = getActiveTab();
+            if (activeTab?.iframe.contentWindow) {
+                if (activeTab.url === 'about:errorpage') {
+                    // If on an error page, "back" should try to go to the page before the error, or home.
+                    const previousUrl = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
+                    navigateTo(previousUrl, activeTab);
+                } else {
+                    activeTab.iframe.contentWindow.history.back();
+                }
+            }
+        }
+        function navigateForward() {
+            getActiveTab()?.iframe.contentWindow.history.forward();
+        }
+        function refreshCurrentTab() {
+            const activeTab = getActiveTab();
+            if (activeTab?.iframe.contentWindow) {
+                if (activeTab.url === 'about:errorpage' || !activeTab.url || activeTab.url === 'about:blank') {
+                    // For error or blank pages, "refresh" effectively means "try again" or "go home"
+                    const urlToRetry = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
+                    navigateTo(urlToRetry, activeTab);
+                } else if (activeTab.iframe.src && activeTab.iframe.src.includes(window.__uv$config?.prefix) || activeTab.iframe.srcdoc) {
+                    // Re-trigger our navigateTo for proxied pages or srcdoc to correctly reload them through the proxy/logic
+                    navigateTo(activeTab.url, activeTab);
+                } else {
+                    activeTab.iframe.contentWindow.location.reload();
+                }
+            }
+        }
+
+
+        // --- BOOKMARKS ---
+        /** Renders a single bookmark item. */
+        function createBookmarkElement(bookmark) {
+            const li = document.createElement('li');
+            li.dataset.url = bookmark.url;
+            li.title = `${bookmark.name}\n${bookmark.url}`;
+
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = bookmark.name.length > 20 ? bookmark.name.substring(0, 18) + '...' : bookmark.name;
+
+            const urlSpan = document.createElement('span');
+            urlSpan.className = 'bookmark-url';
+            urlSpan.textContent = bookmark.url.length > 25 ? bookmark.url.substring(0, 22) + '...' : bookmark.url;
+
+            const removeBtn = document.createElement('i');
+            removeBtn.className = 'fas fa-times remove-item-btn'; // Added class for specific styling
+            removeBtn.dataset.action = 'remove-bookmark';
+            removeBtn.dataset.url = bookmark.url;
+            removeBtn.title = 'Remove Bookmark';
+
+            li.appendChild(nameSpan);
+            li.appendChild(urlSpan);
+            li.appendChild(removeBtn);
+            return li;
+        }
+
+        /** Loads bookmarks from localStorage and renders them. Uses DocumentFragment for efficiency. */
+        function loadBookmarks() {
+            const bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            const listEl = getById('bookmarks-list');
+            listEl.innerHTML = ''; // Clear existing items
+
+            if (bookmarks.length > 0) {
+                const fragment = document.createDocumentFragment();
+                bookmarks.forEach(bm => fragment.appendChild(createBookmarkElement(bm)));
+                listEl.appendChild(fragment);
+            }
+        }
+
+        function saveBookmarks(bookmarks) {
+            localStorage.setItem('vernBookmarks', JSON.stringify(bookmarks));
+        }
+
+        function handleAddCurrentBookmark() {
+            const activeTab = getActiveTab();
+            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url === 'about:errorpage') {
+                alert("Cannot bookmark this page.");
+                return;
+            }
+            const name = getById('new-bookmark-name').value.trim() || activeTab.title || new URL(activeTab.url).hostname;
+            const url = activeTab.url;
+
+            let bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            if (bookmarks.some(b => b.url === url)) {
+                alert("This page is already bookmarked.");
+                return;
+            }
+            const newBookmark = { name, url };
+            bookmarks.push(newBookmark);
+            saveBookmarks(bookmarks);
+            // Append new item directly for responsiveness, instead of full reloadBookmarks
+            getById('bookmarks-list').appendChild(createBookmarkElement(newBookmark));
+            getById('new-bookmark-name').value = '';
+        }
+
+        function removeBookmark(urlToRemove) {
+            let bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            bookmarks = bookmarks.filter(b => b.url !== urlToRemove);
+            saveBookmarks(bookmarks);
+            loadBookmarks(); // Re-render the list
+        }
+
+        /** Handles clicks within the bookmarks list using event delegation. */
+        function handleBookmarkListClick(e) {
+            const target = e.target;
+            if (target.dataset.action === 'remove-bookmark') {
+                e.stopPropagation();
+                removeBookmark(target.dataset.url);
+            } else {
+                const listItem = target.closest('li[data-url]');
+                if (listItem) {
+                    createTab(listItem.dataset.url);
+                    if (!appState.isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
+                }
+            }
+        }
+
+
+        // --- SESSION HISTORY ---
+        function addToHistory(title, url) {
+            if (!url || url === 'about:blank' || url === 'about:errorpage') return;
+            // Prevent duplicate consecutive entries for the same URL
+            if (appState.sessionHistory.length > 0 && appState.sessionHistory[appState.sessionHistory.length - 1].url === url) return;
+
+            appState.sessionHistory.push({ title, url, timestamp: new Date() });
+            if (appState.sessionHistory.length > appState.MAX_HISTORY_ITEMS) {
+                appState.sessionHistory.shift(); // Keep history list to a manageable size
+            }
+            renderHistory();
+        }
+
+        /** Renders a single history item. */
+        function createHistoryElement(item) {
+            const li = document.createElement('li');
+            li.dataset.url = item.url;
+            li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
+
+            const titleSpan = document.createElement('span');
+            titleSpan.textContent = item.title.length > 22 ? item.title.substring(0, 19) + '...' : item.title;
+
+            const urlSpan = document.createElement('span');
+            urlSpan.className = 'history-url';
+            urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
+
+            li.appendChild(titleSpan);
+            li.appendChild(urlSpan);
+            return li;
+        }
+
+        /** Renders the session history list. Uses DocumentFragment for efficiency. */
+        function renderHistory() {
+            const listEl = getById('history-list');
+            listEl.innerHTML = ''; // Clear existing items
+
+            if (appState.sessionHistory.length > 0) {
+                const fragment = document.createDocumentFragment();
+                // Iterate in reverse for most recent items first, but build fragment in order
+                [...appState.sessionHistory].reverse().forEach(item => fragment.appendChild(createHistoryElement(item)));
+                listEl.appendChild(fragment);
+            }
+        }
+
+         /** Handles clicks within the history list using event delegation. */
+        function handleHistoryListClick(e) {
+            const listItem = e.target.closest('li[data-url]');
+            if (listItem) {
+                navigateTo(listItem.dataset.url);
+                if (!appState.isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
+            }
+        }
+
+
+        // --- THEMES & SETTINGS ---
+        function applyTheme(themeName, isInitialLoad = false) {
+            document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); // Remove old theme classes
+            if (themeName !== 'default') {
+                document.body.classList.add(`theme-${themeName}`);
+            }
+            localStorage.setItem('vernTheme', themeName);
+            if (getById('theme-selector').value !== themeName) {
+                getById('theme-selector').value = themeName;
+            }
+
+            // Use requestAnimationFrame to ensure these run after styles are applied
+            requestAnimationFrame(() => {
+                updateInitialTopBarHeight(); // Recalculate if theme affects sizes
+                if (!appState.isSidebarHidden) {
+                    getById('toggle-sidebar-button').style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                }
+                updateSelectArrowColor();
+
+                // If an error page is active, re-render it with new theme colors,
+                // but only if it's not the initial page load to avoid unnecessary re-renders.
+                if (!isInitialLoad) {
+                    const activeTab = getActiveTab();
+                    if (activeTab && activeTab.url === 'about:errorpage' && activeTab.iframe.contentDocument) {
+                         // Check if it's our custom error page.
+                        const errorDoc = activeTab.iframe.contentDocument;
+                        const errorTitleEl = errorDoc.querySelector('h2');
+                        if(errorTitleEl && errorDoc.querySelector('.error-icon')) { // Good indication it's our page
+                            const title = errorTitleEl.textContent || "Error";
+                            const message = errorDoc.querySelector('p:not(.error-details)')?.textContent || "An error occurred.";
+                            const details = errorDoc.querySelector('p.error-details')?.textContent || "";
+                            renderErrorPage(activeTab, title, message, details);
+                        }
+                    }
+                }
+            });
+        }
+
+        function handleSearchEngineChange(e) {
+            appState.currentSearchEngineKey = e.target.value;
+            localStorage.setItem('vernSearchEngine', appState.currentSearchEngineKey);
+            console.log("Search engine changed to:", SEARCH_ENGINES[appState.currentSearchEngineKey].name);
+        }
+
+        // --- STARTUP ---
+        // Wait for the DOM to be fully loaded before initializing
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initialize);
+        } else {
+            initialize(); // DOM is already ready
+        }
+
+    })(); // End of IIFE
+    </script>
+</body>
+</html>
