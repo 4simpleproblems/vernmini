@@ -18,7 +18,7 @@
             --button-hover-bg: rgba(15, 15, 15, 0.9);
             --input-bg: rgba(10, 10, 10, 0.8);
             --input-focus-bg: rgba(45, 45, 45, 0.9);
-            --input-focus-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+            --input-focus-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3); /* Changed to 2px for consistency */
             --iframe-bg: #202020;
             --footer-text-color: #fff;
             --font-family-main: 'Roboto Mono', monospace;
@@ -29,10 +29,9 @@
             --sidebar-width: 280px;
             --sidebar-bg: rgba(10, 10, 10, 0.95);
             --sidebar-item-hover-bg: rgba(30, 30, 30, 0.9);
-            --sidebar-border-color: rgba(255, 255, 255, 0.15);
-            --sidebar-outline-color: rgba(255, 255, 255, 0.25);
+            --sidebar-border-color: rgba(255, 255, 255, 0.15); /* Unified border color */
+            --sidebar-outline-color: rgba(255, 255, 255, 0.25); /* For pill outlines */
             --button-text-color: #fff;
-            --error-icon-color: var(--text-color);
         }
 
         /* Light Theme */
@@ -57,7 +56,6 @@
             --sidebar-border-color: #dee2e6;
             --sidebar-outline-color: #ced4da;
             --button-text-color: #333;
-            --error-icon-color: var(--text-color);
         }
 
         /* Blue Theme */
@@ -82,7 +80,6 @@
             --sidebar-border-color: rgba(255, 255, 255, 0.2);
             --sidebar-outline-color: rgba(255, 255, 255, 0.3);
             --button-text-color: #e0e1dd;
-            --error-icon-color: var(--text-color);
         }
 
         /* Orange Theme */
@@ -107,7 +104,6 @@
             --sidebar-border-color: rgba(255, 232, 204, 0.2);
             --sidebar-outline-color: rgba(255, 232, 204, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #e67e22;
         }
 
         /* Galaxy Theme */
@@ -132,7 +128,6 @@
             --sidebar-border-color: rgba(230, 224, 255, 0.2);
             --sidebar-outline-color: rgba(230, 224, 255, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #7b68ee;
         }
 
         /* Mint Green Theme */
@@ -157,7 +152,6 @@
             --sidebar-border-color: #a3d9ce;
             --sidebar-outline-color: #7bc4b4;
             --button-text-color: #003322;
-            --error-icon-color: #58d68d;
         }
 
         /* Crimson Red Theme */
@@ -182,7 +176,6 @@
             --sidebar-border-color: rgba(253, 232, 233, 0.2);
             --sidebar-outline-color: rgba(253, 232, 233, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #dc143c;
         }
 
         /* Forest Green Theme */
@@ -191,8 +184,8 @@
             --text-color: #e0f0e3;
             --navbar-bg: #122f1a;
             --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
-            --button-bg: #228b22;
-            --button-hover-bg: #1e721e;
+            --button-bg: #228b22; /* Forest Green */
+            --button-hover-bg: #1e721e; /* Darker Forest Green */
             --input-bg: #122f1a;
             --input-focus-bg: #1a4325;
             --input-focus-shadow: 0 0 0 2px rgba(34, 139, 34, 0.5);
@@ -207,249 +200,7 @@
             --sidebar-border-color: rgba(224, 240, 227, 0.2);
             --sidebar-outline-color: rgba(224, 240, 227, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #228b22;
         }
-
-        /* Solar Flare Theme */
-        body.theme-solarflare {
-            --bg-color: #200000; /* Deep red-black */
-            --text-color: #fff5e6; /* Pale orange white */
-            --navbar-bg: #400000; /* Dark red */
-            --button-bg: #ff4500; /* OrangeRed */
-            --button-hover-bg: #ff6347; /* Tomato */
-            --input-bg: #501010;
-            --input-focus-bg: #602020;
-            --input-focus-shadow: 0 0 0 2px rgba(255, 69, 0, 0.6);
-            --iframe-bg: #2a0800;
-            --footer-text-color: #ffcc99;
-            --tab-bg: #8b0000; /* DarkRed */
-            --tab-active-bg: #ff4500;
-            --tab-border: #cc3700;
-            --tab-hover-bg: #dc143c; /* Crimson */
-            --sidebar-bg: #300000;
-            --sidebar-item-hover-bg: #500000;
-            --sidebar-border-color: rgba(255, 200, 150, 0.2);
-            --sidebar-outline-color: rgba(255, 100, 50, 0.4);
-            --button-text-color: #ffffff;
-            --error-icon-color: #ff4500;
-        }
-
-        /* Deep Sea Theme */
-        body.theme-deepsea {
-            --bg-color: #030c17; /* Very dark blue */
-            --text-color: #c0e0ff; /* Light cyan-blue */
-            --navbar-bg: #05162d; /* Darker blue */
-            --button-bg: #0077be; /* Strong blue */
-            --button-hover-bg: #005fa3;
-            --input-bg: #08203e;
-            --input-focus-bg: #0b2a52;
-            --input-focus-shadow: 0 0 0 2px rgba(0, 119, 190, 0.5);
-            --iframe-bg: #02080f;
-            --footer-text-color: #a0c0dd;
-            --tab-bg: #0f3057;
-            --tab-active-bg: #0077be;
-            --tab-border: #1a4a7a;
-            --tab-hover-bg: #15406a;
-            --sidebar-bg: #041020;
-            --sidebar-item-hover-bg: #071a33;
-            --sidebar-border-color: rgba(192, 224, 255, 0.2);
-            --sidebar-outline-color: rgba(100, 180, 255, 0.3);
-            --button-text-color: #ffffff;
-            --error-icon-color: #0077be;
-        }
-
-        /* Rose Gold Theme */
-        body.theme-rosegold {
-            --bg-color: #fff0f5; /* LavenderBlush (very light pink) */
-            --text-color: #5d4037; /* Dark Brown */
-            --navbar-bg: #f8c8dc; /* Light Pink */
-            --button-bg: #b76e79; /* Rose Gold */
-            --button-hover-bg: #a75e69;
-            --input-bg: #f8c8dc;
-            --input-focus-bg: #e8b8cc;
-            --input-focus-shadow: 0 0 0 2px rgba(183, 110, 121, 0.5);
-            --iframe-bg: #fff7fa;
-            --footer-text-color: #8c6d62;
-            --tab-bg: #efd9e2;
-            --tab-active-bg: #b76e79;
-            --tab-border: #d3a0ab;
-            --tab-hover-bg: #e0c0ca;
-            --sidebar-bg: #fceef2;
-            --sidebar-item-hover-bg: #f8c8dc;
-            --sidebar-border-color: #e0b0c0;
-            --sidebar-outline-color: #c88a98;
-            --button-text-color: #ffffff;
-            --error-icon-color: #b76e79;
-        }
-
-        /* Emerald Isle Theme */
-        body.theme-emeraldisle {
-            --bg-color: #e8f5e9; /* Very light green */
-            --text-color: #1b5e20; /* Dark Green */
-            --navbar-bg: #a5d6a7; /* Light Green */
-            --button-bg: #00897b; /* Tealish Green (Emerald) */
-            --button-hover-bg: #00695c;
-            --input-bg: #a5d6a7;
-            --input-focus-bg: #81c784;
-            --input-focus-shadow: 0 0 0 2px rgba(0, 137, 123, 0.5);
-            --iframe-bg: #f1f8e9;
-            --footer-text-color: #2e7d32;
-            --tab-bg: #c8e6c9;
-            --tab-active-bg: #00897b;
-            --tab-border: #4db6ac;
-            --tab-hover-bg: #b2dfdb;
-            --sidebar-bg: #dcedc8;
-            --sidebar-item-hover-bg: #a5d6a7;
-            --sidebar-border-color: #81c784;
-            --sidebar-outline-color: #26a69a;
-            --button-text-color: #ffffff;
-            --error-icon-color: #00897b;
-        }
-
-        /* रॉयल पर्पल (Royal Purple) Theme */
-        body.theme-royalpurple {
-            --bg-color: #1c0b2c; /* Deep Indigo/Purple */
-            --text-color: #f3e5f5; /* Light Lavender */
-            --navbar-bg: #391452; /* Dark Purple */
-            --button-bg: #8e24aa; /* Purple */
-            --button-hover-bg: #7b1fa2; /* Darker Purple */
-            --input-bg: #4a148c; /* Deep Purple */
-            --input-focus-bg: #5d10a3;
-            --input-focus-shadow: 0 0 0 2px rgba(142, 36, 170, 0.6);
-            --iframe-bg: #2a0f3f;
-            --footer-text-color: #ce93d8; /* Light Purple */
-            --tab-bg: #6a1b9a;
-            --tab-active-bg: #8e24aa;
-            --tab-border: #ab47bc;
-            --tab-hover-bg: #7e279d;
-            --sidebar-bg: #300f45;
-            --sidebar-item-hover-bg: #4a148c;
-            --sidebar-border-color: rgba(225, 190, 231, 0.2); /* Light Lavender Alpha */
-            --sidebar-outline-color: rgba(206, 147, 216, 0.4); /* Lighter Purple Alpha */
-            --button-text-color: #ffffff;
-            --error-icon-color: #8e24aa;
-        }
-
-        /* Charcoal Slate Theme */
-        body.theme-charcoalslate {
-            --bg-color: #263238; /* Blue Grey Darken-2 */
-            --text-color: #eceff1; /* Blue Grey Lighten-5 */
-            --navbar-bg: #37474f; /* Blue Grey Darken-1 */
-            --button-bg: #00acc1; /* Cyan Accent */
-            --button-hover-bg: #00838f; /* Cyan Darken-1 */
-            --input-bg: #455a64; /* Blue Grey */
-            --input-focus-bg: #546e7a;
-            --input-focus-shadow: 0 0 0 2px rgba(0, 172, 193, 0.5);
-            --iframe-bg: #1c252b;
-            --footer-text-color: #b0bec5; /* Blue Grey Lighten-2 */
-            --tab-bg: #546e7a;
-            --tab-active-bg: #00acc1;
-            --tab-border: #78909c;
-            --tab-hover-bg: #607d8b;
-            --sidebar-bg: #313f46;
-            --sidebar-item-hover-bg: #455a64;
-            --sidebar-border-color: rgba(207, 216, 220, 0.2);
-            --sidebar-outline-color: rgba(120, 144, 156, 0.4);
-            --button-text-color: #ffffff;
-            --error-icon-color: #00acc1;
-        }
-
-        /* Cyberpunk Neon Theme */
-        body.theme-cyberpunk {
-            --bg-color: #0d0208; /* Almost Black Purple */
-            --text-color: #f0f0f0; /* Off White */
-            --navbar-bg: #1a0a1f; /* Dark Purple */
-            --button-bg: #ff00ff; /* Magenta Neon */
-            --button-hover-bg: #cc00cc;
-            --input-bg: #2c003e;
-            --input-focus-bg: #3d0054;
-            --input-focus-shadow: 0 0 0 2px rgba(255, 0, 255, 0.6);
-            --iframe-bg: #000000;
-            --footer-text-color: #00ffff; /* Cyan Neon */
-            --tab-bg: #4b0082; /* Indigo */
-            --tab-active-bg: #ff00ff;
-            --tab-border: #00ffff; /* Cyan for contrast */
-            --tab-hover-bg: #9400d3; /* DarkViolet */
-            --sidebar-bg: #100515;
-            --sidebar-item-hover-bg: #1f0f29;
-            --sidebar-border-color: rgba(0, 255, 255, 0.3); /* Cyan outline */
-            --sidebar-outline-color: rgba(255, 0, 255, 0.4); /* Magenta outline */
-            --button-text-color: #000000; /* Black text on bright neon */
-            --error-icon-color: #ff00ff;
-        }
-
-        /* Mocha Delight Theme */
-        body.theme-mocha {
-            --bg-color: #f5f0e1; /* Cream */
-            --text-color: #4e342e; /* Dark Brown */
-            --navbar-bg: #d7ccc8; /* Light Brown/Beige */
-            --button-bg: #795548; /* Brown */
-            --button-hover-bg: #5d4037; /* Darker Brown */
-            --input-bg: #efebe9; /* Lightest Brown */
-            --input-focus-bg: #d7ccc8;
-            --input-focus-shadow: 0 0 0 2px rgba(121, 85, 72, 0.5);
-            --iframe-bg: #fdfbf7;
-            --footer-text-color: #6d4c41;
-            --tab-bg: #bcaaa4;
-            --tab-active-bg: #795548;
-            --tab-border: #a1887f;
-            --tab-hover-bg: #a1887f;
-            --sidebar-bg: #ede7f6; /* Slightly off-cream for sidebar */
-            --sidebar-item-hover-bg: #d7ccc8;
-            --sidebar-border-color: #bcaaa4;
-            --sidebar-outline-color: #8d6e63;
-            --button-text-color: #ffffff;
-            --error-icon-color: #795548;
-        }
-
-        /* Arctic Frost Theme */
-        body.theme-arctic {
-            --bg-color: #f0f8ff; /* AliceBlue */
-            --text-color: #2c3e50; /* Dark Slate Blue */
-            --navbar-bg: #e0f0ff; /* Lighter AliceBlue */
-            --button-bg: #5dade2; /* Light Blue */
-            --button-hover-bg: #3498db; /* Standard Blue */
-            --input-bg: #d6eaff;
-            --input-focus-bg: #cce0ff;
-            --input-focus-shadow: 0 0 0 2px rgba(93, 173, 226, 0.5);
-            --iframe-bg: #f8fcff;
-            --footer-text-color: #34495e; /* Wet Asphalt */
-            --tab-bg: #cce0ff;
-            --tab-active-bg: #5dade2;
-            --tab-border: #a9cce3;
-            --tab-hover-bg: #b9d7f0;
-            --sidebar-bg: #e8f4ff;
-            --sidebar-item-hover-bg: #d6eaff;
-            --sidebar-border-color: #b0c4de; /* LightSteelBlue */
-            --sidebar-outline-color: #7fb3d5;
-            --button-text-color: #ffffff;
-            --error-icon-color: #5dade2;
-        }
-
-        /* Sakura Sunset Theme */
-        body.theme-sakura {
-            --bg-color: #2a2a2a; /* Dark gray for sunset contrast */
-            --text-color: #fff0f0; /* Very soft pink-white */
-            --navbar-bg: #4a3a3a; /* Muted dark red-brown */
-            --button-bg: #ff7f50; /* Coral */
-            --button-hover-bg: #ff6347; /* Tomato */
-            --input-bg: #5a4a4a;
-            --input-focus-bg: #6a5a5a;
-            --input-focus-shadow: 0 0 0 2px rgba(255, 127, 80, 0.6);
-            --iframe-bg: #3a3a3a;
-            --footer-text-color: #ffd8d8; /* Soft pink */
-            --tab-bg: #ffb6c1; /* LightPink */
-            --tab-active-bg: #ff7f50;
-            --tab-border: #ff9a80;
-            --tab-hover-bg: #ffa07a; /* LightSalmon */
-            --sidebar-bg: #3f3030;
-            --sidebar-item-hover-bg: #5a4a4a;
-            --sidebar-border-color: rgba(255, 200, 200, 0.3);
-            --sidebar-outline-color: rgba(255, 160, 122, 0.5); /* LightSalmon outline */
-            --button-text-color: #000000; /* Black text on coral/pink for readability */
-            --error-icon-color: #ff7f50;
-        }
-
 
         html, body {
             margin: 0; padding: 0; border: none; box-sizing: border-box;
@@ -465,48 +216,60 @@
 
         #sidebar {
             width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--sidebar-border-color);
-            padding: 20px 15px; box-sizing: border-box;
+            border-right: 1px solid var(--sidebar-border-color); /* Lightened border */
+            padding: 20px 15px; box-sizing: border-box; /* Adjusted padding */
             overflow-y: auto; transition: margin-left 0.35s ease-in-out, width 0.35s ease-in-out;
-            z-index: 1001; display: flex; flex-direction: column; gap: 25px;
-            font-family: var(--font-family-main);
+            z-index: 1001; display: flex; flex-direction: column; gap: 25px; /* Increased gap */
+            font-family: var(--font-family-main); /* Ensure font */
         }
         #sidebar.hidden { margin-left: calc(-1 * var(--sidebar-width)); }
         #sidebar h3 {
-            margin-top: 0; margin-bottom: 12px; font-size: 1em;
+            margin-top: 0; margin-bottom: 12px; font-size: 1em; /* Slightly smaller */
             border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 10px;
-            font-weight: 600; display: flex; align-items: center; gap: 8px;
+            font-weight: 600; /* Bolder like top bar items if needed */
+            display: flex; align-items: center; gap: 8px; /* For potential icons */
         }
         #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; }
         #sidebar ul::-webkit-scrollbar { width: 5px; }
         #sidebar ul::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
 
         #sidebar li {
-            padding: 10px 18px; margin-bottom: 8px; border-radius: 20px;
-            cursor: pointer; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            padding: 10px 18px; /* Adjusted padding */
+            margin-bottom: 8px; /* Spacing */
+            border-radius: 20px; /* Pill shape */
+            cursor: pointer;
+            font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
-            background-color: var(--button-bg);
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            background-color: var(--button-bg); /* Using button bg for consistency */
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
             color: var(--button-text-color);
         }
         #sidebar li:hover {
             background-color: var(--button-hover-bg);
-            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color); /* Slightly thicker outline on hover */
         }
         #sidebar li .bookmark-url, #sidebar li .history-url {
             font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
         }
 
         #sidebar .sidebar-input, #sidebar .sidebar-select {
-            width: 100%; height: 40px; padding: 0 18px; margin-bottom: 12px;
-            background-color: var(--input-bg); color: var(--text-color);
-            border: none; border-radius: 20px; font-family: var(--font-family-main);
-            box-sizing: border-box; box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            width: 100%; /* Full width */
+            height: 40px; /* Consistent height */
+            padding: 0 18px; /* Padding like search bar */
+            margin-bottom: 12px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: none; /* Remove default border */
+            border-radius: 20px; /* Pill shape */
+            font-family: var(--font-family-main);
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
             font-size: 0.9em;
         }
         #sidebar .sidebar-input:focus, #sidebar .sidebar-select:focus {
-            outline: none; background-color: var(--input-focus-bg);
-            box-shadow: var(--input-focus-shadow);
+            outline: none;
+            background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow); /* Use theme's focus shadow */
         }
         #sidebar .sidebar-select {
              appearance: none; -webkit-appearance: none; -moz-appearance: none;
@@ -514,23 +277,31 @@
              background-repeat: no-repeat;
              background-position: right 15px center;
              background-size: .65em auto;
-             padding-right: 35px;
+             padding-right: 35px; /* Make space for arrow */
         }
 
+
         #sidebar .sidebar-button {
-            width: 100%; height: 40px; padding: 0 18px;
-            background-color: var(--button-bg); color: var(--button-text-color);
-            border: none; border-radius: 20px; cursor: pointer;
+            width: 100%; /* Full width */
+            height: 40px; /* Consistent height */
+            padding: 0 18px; /* Horizontal padding */
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 20px; /* Pill shape */
+            cursor: pointer;
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
             font-family: var(--font-family-main);
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.9em; font-weight: 500;
+            font-size: 0.9em;
+            font-weight: 500;
         }
         #sidebar .sidebar-button:hover {
             background-color: var(--button-hover-bg);
             box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
         }
+
 
         #main-content-wrapper {
             flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
@@ -556,26 +327,26 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
         .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
         .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
-        .new-tab-button {
+        .new-tab-button { /* Circle */
             width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
-            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Using sidebar outline for consistency */
         }
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
 
         #nav-bar {
             display: flex; align-items: center; padding: 10px;
             background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
-            border-bottom: 1px solid var(--sidebar-border-color);
+            border-bottom: 1px solid var(--sidebar-border-color); /* Using sidebar border color */
         }
-        .nav-button {
+        .nav-button { /* Circle */
             width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
             margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
-        #search-bar {
+        #search-bar { /* Pill shape */
             flex: 1; height: 40px; border-radius: 20px; border: none; background-color: var(--input-bg);
             color: var(--text-color); padding: 0 18px; font-size: 15px;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-family: var(--font-family-main);
@@ -587,15 +358,15 @@
             background-color: var(--navbar-bg); cursor: pointer; display: flex;
             justify-content: center; align-items: center; color: var(--text-color);
             transition: top 0.35s ease-in-out, left 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.35s ease-in-out;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline for toggles */
         }
         #toggle-top-bar-button:hover, #toggle-sidebar-button:hover { background-color: var(--button-hover-bg); }
         #toggle-top-bar-button .fas, #toggle-sidebar-button .fas { font-size: 14px; transition: transform 0.3s ease-in-out; }
         #toggle-top-bar-button {
-            right: 2px; border-radius: 0 0 15px 15px;
+            right: 2px; border-radius: 0 0 15px 15px; /* Rounded pill bottom */
         }
         #toggle-sidebar-button {
-            left: 0px; bottom: 2px; border-radius: 0 15px 15px 0;
+            left: 0px; bottom: 2px; border-radius: 0 15px 15px 0; /* Rounded pill right */
         }
 
         #tabs-container { flex: 1; position: relative; background-color: var(--iframe-bg); }
@@ -643,24 +414,14 @@
                 <option value="mint">Mint Green</option>
                 <option value="crimson">Crimson Red</option>
                 <option value="forest">Forest Green</option>
-                <option value="solarflare">Solar Flare</option>
-                <option value="deepsea">Deep Sea</option>
-                <option value="rosegold">Rose Gold</option>
-                <option value="emeraldisle">Emerald Isle</option>
-                <option value="royalpurple">रॉयल पर्पल</option>
-                <option value="charcoalslate">Charcoal Slate</option>
-                <option value="cyberpunk">Cyberpunk Neon</option>
-                <option value="mocha">Mocha Delight</option>
-                <option value="arctic">Arctic Frost</option>
-                <option value="sakura">Sakura Sunset</option>
             </select>
 
             <label for="search-engine-selector" class="sidebar-setting-label" style="margin-top: 15px;">Search Engine:</label>
             <select id="search-engine-selector" class="sidebar-select">
                 <option value="duckduckgo">DuckDuckGo</option>
-                <option value="yahoo">Yahoo Search</option>
+                <option value="google">Google</option>
                 <option value="bing">Bing</option>
-                <option value="qwant">Qwant</option>
+                <option value="brave">Brave Search</option>
             </select>
         </div>
     </div>
@@ -709,9 +470,9 @@
 
         const searchEngines = {
             'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
-            'yahoo': { name: 'Yahoo Search', url: 'https://search.yahoo.com/search?p=%s' },
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
             'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
-            'qwant': { name: 'Qwant', url: 'https://www.qwant.com/?q=%s' }
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
         };
         let currentSearchEngineKey = 'duckduckgo'; // Default
 
@@ -729,6 +490,7 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize DOM elements
             tabBarEl = document.getElementById('tab-bar');
             tabsContainerEl = document.getElementById('tabs-container');
             searchBarEl = document.getElementById('search-bar');
@@ -737,13 +499,16 @@
             backButtonEl = document.getElementById('back-button');
             forwardButtonEl = document.getElementById('forward-button');
             refreshButtonEl = document.getElementById('refresh-button');
+
             topBarAssemblyEl = document.getElementById('top-bar-assembly');
             toggleTopBarButtonEl = document.getElementById('toggle-top-bar-button');
             toggleBarIconEl = document.getElementById('toggle-bar-icon');
+
             sidebarEl = document.getElementById('sidebar');
             toggleSidebarButtonEl = document.getElementById('toggle-sidebar-button');
             toggleSidebarIconEl = document.getElementById('toggle-sidebar-icon');
             mainContentWrapperEl = document.getElementById('main-content-wrapper');
+
             bookmarksListEl = document.getElementById('bookmarks-list');
             addCurrentBookmarkButtonEl = document.getElementById('add-current-bookmark-button');
             newBookmarkNameInputEl = document.getElementById('new-bookmark-name');
@@ -752,8 +517,8 @@
             searchEngineSelectorEl = document.getElementById('search-engine-selector');
 
             await initUV();
-            setupSearchEngineSelector();
-            loadSettings();
+            setupSearchEngineSelector(); // Populate dropdown
+            loadSettings(); // Load theme and search engine
 
             updateInitialTopBarHeight();
             if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
@@ -781,26 +546,25 @@
             const initialUrl = urlParams.get('url');
             if (tabs.length === 0) createTab(initialUrl || 'about:blank');
             renderHistory();
-            applyTheme(localStorage.getItem('vernTheme') || 'default');
+            applyTheme(localStorage.getItem('vernTheme') || 'default'); // Ensure theme is applied correctly on load
         });
 
         async function initUV() {
             try {
                 if (typeof registerSW !== 'function') {
                     console.warn("registerSW() function not found. UV Service Worker might not be registered.");
-                    renderErrorPage(getActiveTab() || createTab(), "Initialization Error", "Proxy service worker (registerSW) is missing.", "The browser might not load external websites correctly.");
                     return;
                 }
                 await registerSW();
                 console.log("Service worker registered successfully for Vern Pro.");
             } catch (err) {
                 console.error("Failed to register UV service worker:", err);
-                renderErrorPage(getActiveTab() || createTab(), "Proxy Initialization Failed", err.message, "External websites may not load correctly.");
+                alert("Error: Could not initialize proxy service. Some websites may not load correctly.");
             }
         }
 
         function setupSearchEngineSelector() {
-            searchEngineSelectorEl.innerHTML = '';
+            searchEngineSelectorEl.innerHTML = ''; // Clear existing options
             for (const key in searchEngines) {
                 const option = document.createElement('option');
                 option.value = key;
@@ -814,9 +578,13 @@
             document.querySelectorAll('#sidebar .sidebar-select').forEach(sel => sel.style.backgroundImage = svgArrow);
         }
 
+
         function loadSettings() {
+            // Load Theme
             const savedTheme = localStorage.getItem('vernTheme') || 'default';
             applyTheme(savedTheme);
+
+            // Load Search Engine
             const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
             if (searchEngines[savedSearchEngine]) {
                 currentSearchEngineKey = savedSearchEngine;
@@ -824,51 +592,51 @@
             searchEngineSelectorEl.value = currentSearchEngineKey;
         }
 
+        // --- EVENT LISTENERS SETUP ---
         function setupEventListeners() {
             if(toggleTopBarButtonEl) toggleTopBarButtonEl.addEventListener('click', () => handleTopBarToggle());
             if(toggleSidebarButtonEl) toggleSidebarButtonEl.addEventListener('click', handleSidebarToggle);
+
             window.addEventListener('resize', () => {
                 if (!isTopBarHidden) updateInitialTopBarHeight();
                 if (!isSidebarHidden) {
                      toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
                 }
             });
+
             if(newTabButtonEl) newTabButtonEl.addEventListener('click', () => createTab('about:blank'));
             if(tabBarEl) tabBarEl.addEventListener('click', handleTabBarClick);
             if(searchBarEl) searchBarEl.addEventListener('keydown', handleSearchEnter);
+
             if(homeButtonEl) homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
-            if(backButtonEl) backButtonEl.addEventListener('click', () => {
-                const activeTab = getActiveTab();
-                if (activeTab?.iframe.contentWindow) {
-                    if (activeTab.url === 'about:errorpage') navigateTo('about:blank', activeTab); // Go home from error page
-                    else activeTab.iframe.contentWindow.history.back();
-                }
-            });
+            if(backButtonEl) backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back());
             if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward());
             if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => {
                 const activeTab = getActiveTab();
                 if (activeTab?.iframe.contentWindow) {
                     try {
-                        if (activeTab.url === 'about:errorpage' || !activeTab.url || activeTab.url === 'about:blank' ) {
-                             navigateTo('about:blank', activeTab); // Refresh to home for these
-                        } else if (activeTab.iframe.src.includes(__uv$config.prefix) || activeTab.iframe.srcdoc) {
-                             navigateTo(activeTab.url, activeTab); // Re-trigger navigation for proxied or srcdoc pages
+                        // Forcing reload for proxied pages, direct reload for others
+                        if (activeTab.iframe.src.includes(__uv$config.prefix)) {
+                             activeTab.iframe.contentWindow.location.reload(true); // Force reload for proxied content
                         } else {
                             activeTab.iframe.contentWindow.location.reload();
                         }
-                    } catch (e) { navigateTo(activeTab.url, activeTab); }
+                    } catch (e) { activeTab.iframe.src = activeTab.iframe.src; } // Fallback to re-assigning src
                 }
             });
+
             if(addCurrentBookmarkButtonEl) addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark);
             if(bookmarksListEl) bookmarksListEl.addEventListener('click', handleBookmarkClick);
             if(historyListEl) historyListEl.addEventListener('click', handleHistoryClick);
             if(themeSelectorEl) themeSelectorEl.addEventListener('change', handleThemeChange);
             if(searchEngineSelectorEl) searchEngineSelectorEl.addEventListener('change', handleSearchEngineChange);
+
             document.addEventListener('keydown', handleGlobalKeyDown);
-            document.addEventListener('load', handleIframeLoad, true);
+            document.addEventListener('load', handleIframeLoad, true); // Use capture phase
             window.addEventListener('message', handleWindowMessage);
         }
 
+        // --- TAB MANAGEMENT ---
         function createTab(url = null) {
             const tabId = `tab-${tabCounter++}`;
             const contentId = `content-${tabId}`;
@@ -877,12 +645,17 @@
             tabElement.dataset.tabId = tabId;
             tabElement.innerHTML = `<div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div><div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>`;
             tabBarEl.insertBefore(tabElement, newTabButtonEl);
+
             const iframe = document.createElement('iframe');
             iframe.id = contentId;
             iframe.className = 'tab-content';
+            // Sandbox attributes: allow-scripts (for website functionality), allow-same-origin (for UV proxy interaction),
+            // allow-forms, allow-popups, allow-presentation, allow-downloads.
+            // allow-top-navigation-by-user-activation (might be useful but can be risky with proxies)
             iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
-            iframe.loading = 'eager';
+            iframe.loading = 'eager'; // Load iframes eagerly for active tabs
             tabsContainerEl.appendChild(iframe);
+
             const tab = { id: tabId, contentId, element: tabElement, iframe, url: url || 'about:blank', title: 'New Tab', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false };
             tabs.push(tab);
             activateTab(tabId);
@@ -899,7 +672,7 @@
                 tab.element.classList.add('active');
                 tab.iframe.classList.add('active');
                 activeTabId = tabId;
-                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') ? tab.url : '';
+                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : '';
                 tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
                 updateDocumentTitle(tab);
             }
@@ -914,28 +687,26 @@
             tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1);
             if (activeTabId === tabId) {
                 if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id);
-                else createTab('about:blank');
+                else createTab('about:blank'); // Create a new blank tab if all are closed
             }
         }
         function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
 
         function updateTabInfo(tab, title, faviconUrl) {
             if (!tab) return;
-            const displayTitle = title || (tab.url === 'about:blank' ? 'New Tab' : (tab.url === 'about:errorpage' ? 'Error' : (tab.url || 'Loading...')));
+            const displayTitle = title || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
             tab.title = displayTitle;
             tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0,18) + '...' : displayTitle;
-            tab.titleElement.title = displayTitle;
+            tab.titleElement.title = displayTitle; // Full title on hover
+
             if (faviconUrl) {
                 tab.faviconElement.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
-            } else if (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage' && tab.url.startsWith('http')) {
+            } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
                 try {
                     const siteUrl = new URL(tab.url);
                     tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" style="width:16px;height:16px;object-fit:contain;" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\' style=\\'font-size: 14px;\\'></i>';">`;
                 } catch (e) { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
-            } else if (tab.url === 'about:errorpage') {
-                 tab.faviconElement.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 14px; color: var(--error-icon-color);"></i>`;
-            }
-            else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
+            } else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
             if (tab.id === activeTabId) updateDocumentTitle(tab);
         }
         function updateDocumentTitle(tab) {
@@ -943,13 +714,14 @@
             document.title = `${tab ? (tab.title || 'New Tab') : 'New Tab'} - Vern Browser Pro`;
         }
 
+        // --- NAVIGATION ---
         function formatUrlInput(input) {
             if (/^(?:[a-z]+:)?\/\//i.test(input)) {
                 if(input.startsWith("//")) return "https:" + input;
                 return input;
             }
             if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) ||
-                input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) {
+                input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) { // Added localhost and IP support
                 return 'https://' + input;
             }
             return null;
@@ -961,39 +733,37 @@
                 currentTab = createTab(urlInput); return;
             }
             currentTab.isLoading = true;
-            currentTab.iframe.srcdoc = ''; // Clear previous srcdoc if any
             updateTabInfo(currentTab, "Loading...", null);
 
             if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
 
             if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
-                 if(urlInput.startsWith('about:errorpage')) { // If it's an explicit call to our error page scheme
-                    // This case should ideally be handled by renderErrorPage directly.
-                    // For now, just prevent it from being treated as a normal 'about:' page if passed here.
-                    renderErrorPage(currentTab, "Information", "Displaying an internal page.", urlInput);
-                    currentTab.isLoading = false;
-                    return;
-                }
-                currentTab.iframe.src = urlInput; // For normal about:blank etc.
+                currentTab.iframe.src = urlInput;
                 currentTab.url = urlInput;
-                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank') ? '' : urlInput;
+                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput;
                 updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput);
-                if (urlInput === 'about:blank') addToHistory('New Tab', urlInput);
+                if (!urlInput.startsWith('about:error')) addToHistory(urlInput === 'about:blank' ? 'New Tab' : urlInput, urlInput);
                 currentTab.isLoading = false;
                 return;
             }
 
             let targetUrl = formatUrlInput(urlInput.trim());
 
-            if (!targetUrl) { // It's a search query
+            if (targetUrl) {
+                // URL already formatted
+            } else { // It's a search query
                 const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
                 targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
             }
 
             if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
                 console.error("UV configuration is not available.");
-                renderErrorPage(currentTab, "Configuration Error", "Proxy configuration (UV) is missing or invalid.", `Attempted URL: ${targetUrl}`);
+                const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`;
+                currentTab.iframe.src = errorUrl;
+                currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Error: UV Config Missing");
                 currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = '';
                 return;
             }
 
@@ -1004,76 +774,16 @@
                 if (currentTab.id === activeTabId) searchBarEl.value = targetUrl;
             } catch (err) {
                 console.error("Navigation error:", err);
-                renderErrorPage(currentTab, "Navigation Error", `Could not process the URL: ${err.message}`, `URL: ${targetUrl}`);
+                const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                currentTab.iframe.src = errorUrl;
+                currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Navigation Error");
                 currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = '';
             }
         }
 
-        function renderErrorPage(tab, errorTitle, message, details = '') {
-            if (!tab) { // If no active tab, create one for the error
-                tab = createTab('about:errorpage'); // Create tab first, then set srcdoc
-                if (!tab) { console.error("Could not create tab for error page."); return; }
-            }
-
-            const textColor = getComputedStyle(document.body).getPropertyValue('--text-color').trim();
-            const iframeBgColor = getComputedStyle(document.body).getPropertyValue('--iframe-bg').trim();
-            const buttonBgColor = getComputedStyle(document.body).getPropertyValue('--button-bg').trim();
-            const buttonHoverBgColor = getComputedStyle(document.body).getPropertyValue('--button-hover-bg').trim();
-            const buttonTextColor = getComputedStyle(document.body).getPropertyValue('--button-text-color').trim();
-            const sidebarOutlineColor = getComputedStyle(document.body).getPropertyValue('--sidebar-outline-color').trim();
-            const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-family-main').trim();
-            const errorIconColor = getComputedStyle(document.body).getPropertyValue('--error-icon-color').trim();
-
-            const errorHTML = `
-            <html style="height: 100%;">
-            <head>
-                <title>${errorTitle}</title>
-                <style>
-                    body {
-                        font-family: ${fontFamily}; color: ${textColor}; background-color: ${iframeBgColor};
-                        margin: 0; height: 100%; display: flex; flex-direction: column;
-                        align-items: center; justify-content: center; padding: 20px;
-                        box-sizing: border-box; text-align: center; overflow: hidden;
-                    }
-                    h2 { color: ${textColor}; margin-bottom: 20px; font-size: 1.8em; font-weight: 600;}
-                    p { margin-bottom: 12px; font-size: 1.1em; }
-                    .error-details { font-size: 0.9em; opacity: 0.7; word-break: break-all; max-width: 80%; margin-top:15px; }
-                    .error-icon { font-size: 3.5em; margin-bottom: 20px; color: ${errorIconColor}; }
-                    .error-actions button {
-                        background-color: ${buttonBgColor}; color: ${buttonTextColor}; border: none;
-                        border-radius: 20px; padding: 10px 22px; cursor: pointer;
-                        font-family: ${fontFamily}; margin: 8px; font-size: 0.95em;
-                        box-shadow: 0 0 0 1px ${sidebarOutlineColor};
-                        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-                    }
-                    .error-actions button:hover {
-                        background-color: ${buttonHoverBgColor};
-                        box-shadow: 0 0 0 1.5px ${sidebarOutlineColor};
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="error-icon">⚠️</div>
-                <h2>${errorTitle}</h2>
-                <p>${message}</p>
-                ${details ? `<p class="error-details">${details}</p>` : ''}
-                <div class="error-actions">
-                    <button onclick="window.parent.getActiveTab()?.iframe.contentWindow.history.back()">Go Back</button>
-                    <button onclick="window.parent.navigateTo(window.parent.getActiveTab()?.urlBeforeError || 'about:blank', window.parent.getActiveTab())">Try Again</button>
-                    <button onclick="window.parent.navigateTo('about:blank', window.parent.getActiveTab())">Go Home</button>
-                </div>
-            </body>
-            </html>`;
-
-            tab.iframe.srcdoc = errorHTML;
-            tab.urlBeforeError = tab.url; // Store the URL that caused the error
-            tab.url = 'about:errorpage';
-            updateTabInfo(tab, errorTitle);
-            if (tab.id === activeTabId) searchBarEl.value = '';
-            tab.isLoading = false;
-        }
-
-
+        // --- UI TOGGLES & RESIZE ---
         function handleTopBarToggle(forceState) {
             if (forceState !== undefined) isTopBarHidden = forceState; else isTopBarHidden = !isTopBarHidden;
             if (isTopBarHidden) {
@@ -1098,17 +808,18 @@
         }
         function updateInitialTopBarHeight() {
             const wasHidden = topBarAssemblyEl.classList.contains('hidden');
-            if (wasHidden) { topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = 'none'; }
+            if (wasHidden) { topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = 'none'; } // Temporarily show to measure
             initialTopBarHeight = topBarAssemblyEl.offsetHeight;
-            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = '0px';}
-            else { topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; }
+            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = '0px';} // Re-hide if it was
+            else { topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; } // Apply measured height
             if (!isTopBarHidden && initialTopBarHeight > 0) {
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight -1) + 'px';
-            } else if (!isTopBarHidden && initialTopBarHeight === 0) {
+                toggleTopBarButtonEl.style.top = (initialTopBarHeight -1) + 'px'; // Adjust button position
+            } else if (!isTopBarHidden && initialTopBarHeight === 0) { // Case where it might be 0 if display none initially
                  toggleTopBarButtonEl.style.top = '0px';
             }
         }
 
+        // --- EVENT HANDLERS ---
         function handleTabBarClick(e) {
             const tabElement = e.target.closest('.tab'); const closeButton = e.target.closest('.tab-close');
             if (closeButton && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); }
@@ -1117,43 +828,65 @@
         function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
 
         function handleIframeLoad(event) {
+            // Only act on iframes that are part of our tabs
             if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
                 const iframe = event.target;
                 const tab = tabs.find(t => t.iframe === iframe);
                 if (tab) {
                     tab.isLoading = false;
-                    if (tab.url === 'about:errorpage') { // Handled by renderErrorPage
-                        return;
-                    }
                     let title = 'Untitled';
+                    let actualUrl = tab.url; // Default to stored URL
+
                     try {
-                        if (iframe.contentWindow && iframe.contentDocument && iframe.contentDocument.title) {
-                            title = iframe.contentDocument.title;
-                        } else if (tab.url && tab.url !== 'about:blank') {
-                           try { title = new URL(tab.url).hostname; } catch { title = 'Untitled';}
-                        }
-                         else {
-                            title = 'New Tab';
+                        if (iframe.contentWindow && iframe.contentDocument) {
+                            title = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
+                            // Attempt to get the "real" URL from inside the iframe (UV might change it)
+                            // This might be blocked by cross-origin policies if not careful with UV setup
+                            // For now, we rely on the tab.url which is the one we sent to UV
                         }
                     } catch (e) {
+                        // If accessing contentDocument fails (cross-origin), fallback to hostname
                         try { title = new URL(tab.url).hostname || 'New Tab'; } catch {}
                         console.warn("Could not access iframe contentDocument for title:", e.message);
                     }
+
+                    // Special handling for about:error pages
+                    if(tab.url && tab.url.startsWith('about:error')) {
+                        title = "Error Page";
+                        // Potentially parse details from #hash if you added them
+                    }
+
                     updateTabInfo(tab, title);
-                    if (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') {
+                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) {
                          addToHistory(title, tab.url);
                     }
-                    setupTitleObserver(tab);
+                    setupTitleObserver(tab); // Re-setup observer if needed
                 }
             }
         }
-        function handleWindowMessage(event) { /* For future use if UV posts messages */ }
+        function handleWindowMessage(event) {
+            // Example: if UV posts a message about URL change within the iframe
+            if (event.data && event.data.type === 'uv_url_changed') {
+                const activeTab = getActiveTab();
+                if (activeTab && event.source === activeTab.iframe.contentWindow) {
+                    const newUrl = event.data.url; // This would be the "real" URL from inside UV
+                    // You might need to decode this if UV encodes it
+                    // activeTab.url = newUrl; // Update the tab's stored URL
+                    // searchBarEl.value = newUrl;
+                    // updateTabInfo(activeTab, event.data.title || "Loading...");
+                    // addToHistory(event.data.title || newUrl, newUrl);
+                    console.log("UV URL Changed (message):", newUrl);
+                }
+            }
+        }
         function handleGlobalKeyDown(e) {
+            // Ignore if typing in an input field (search bar, sidebar inputs)
             const targetTagName = e.target.tagName.toLowerCase();
             if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return;
+
             if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
             if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); }
-            if (e.ctrlKey && e.key === 'Tab') {
+            if (e.ctrlKey && e.key === 'Tab') { // Cycle tabs
                 e.preventDefault();
                 if (tabs.length > 1) {
                     const currentIndex = tabs.findIndex(t => t.id === activeTabId);
@@ -1164,18 +897,20 @@
             if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); }
             if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); }
             if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); }
-            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); }
+            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); /* Or document.documentElement.requestFullscreen(); */ }
             if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }
         }
 
         function setupTitleObserver(tab) {
-            if (!tab || !tab.iframe.contentWindow || tab.url === 'about:errorpage') return;
-            if (tab.titleObserver) tab.titleObserver.disconnect();
+            if (!tab || !tab.iframe.contentWindow) return;
+            if (tab.titleObserver) tab.titleObserver.disconnect(); // Disconnect previous if any
+
             try {
                 const targetNode = tab.iframe.contentDocument.querySelector('title');
                 if (!targetNode) return;
+
                 const observer = new MutationObserver(() => {
-                    if (tab.iframe.contentDocument && tab.iframe.contentDocument.title !== tab.title) {
+                    if (tab.iframe.contentDocument) {
                         updateTabInfo(tab, tab.iframe.contentDocument.title);
                     }
                 });
@@ -1183,10 +918,11 @@
                 tab.titleObserver = observer;
             } catch (e) {
                 console.warn("Could not set up title observer for tab:", tab.id, e.message);
+                // Fallback: periodically check title if observer fails (e.g., cross-origin)
                 if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
                 tab.locationCheckIntervalId = setInterval(() => {
                     try {
-                        if (tab.iframe.contentDocument && tab.iframe.contentDocument.title !== tab.title) {
+                        if (tab.iframe.contentDocument && tab.title !== tab.iframe.contentDocument.title) {
                              updateTabInfo(tab, tab.iframe.contentDocument.title);
                         }
                     } catch (err) {/* ignore */}
@@ -1194,12 +930,14 @@
             }
         }
 
+
+        // --- BOOKMARKS ---
         function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm));}
         function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
         function renderBookmarkItem(bm) {
             const li = document.createElement('li'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`;
             const nameSpan = document.createElement('span'); nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name;
-            const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url'; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url;
+            const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url'; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; // Adjusted length for pill
             const removeBtn = document.createElement('i'); removeBtn.className = 'fas fa-times';
             removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7;';
             removeBtn.onmouseover = () => removeBtn.style.opacity = '1';
@@ -1207,12 +945,12 @@
             removeBtn.title = 'Remove Bookmark';
             removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); };
             li.appendChild(nameSpan); li.appendChild(urlSpan); li.appendChild(removeBtn);
-            li.style.position = 'relative';
+            li.style.position = 'relative'; // For absolute positioning of remove button
             bookmarksListEl.appendChild(li);
         }
         function handleAddCurrentBookmark() {
             const activeTab = getActiveTab();
-            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url === 'about:errorpage') {
+            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) {
                 alert("Cannot bookmark this page."); return;
             }
             const name = newBookmarkNameInputEl.value.trim() || activeTab.title || new URL(activeTab.url).hostname;
@@ -1224,14 +962,16 @@
         function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
         function handleBookmarkClick(e) {
             const li = e.target.closest('li[data-url]');
-            if (li && !e.target.classList.contains('fa-times')) {
+            if (li && !e.target.classList.contains('fa-times')) { // Make sure not clicking the remove button
                 createTab(li.dataset.url);
-                if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
+                if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle(); // Auto-hide sidebar on mobile after click
             }
         }
 
+        // --- SESSION HISTORY ---
         function addToHistory(title, url) {
-            if (!url || url === 'about:blank' || url === 'about:errorpage') return;
+            if (!url || url === 'about:blank' || url.startsWith('about:')) return;
+            // Prevent duplicate consecutive entries
             if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url) return;
             sessionHistory.push({ title, url, timestamp: new Date() });
             if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
@@ -1242,49 +982,42 @@
             [...sessionHistory].reverse().forEach(item => {
                 const li = document.createElement('li'); li.dataset.url = item.url;
                 li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
-                const titleSpan = document.createElement('span'); titleSpan.textContent = item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title;
-                const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
+                const titleSpan = document.createElement('span'); titleSpan.textContent = item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title; // Adjusted length
+                const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; // Adjusted length
                 li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li);
             });
         }
         function handleHistoryClick(e) {
             const li = e.target.closest('li[data-url]');
             if (li) {
-                navigateTo(li.dataset.url);
+                navigateTo(li.dataset.url); // Use navigateTo for consistency
                 if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
             }
         }
 
+        // --- THEMES & SETTINGS ---
         function applyTheme(themeName) {
-            document.body.className = document.body.className.replace(/\btheme-\S+/g, '');
+            document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); // Remove old theme classes
             if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
             localStorage.setItem('vernTheme', themeName);
             if (themeSelectorEl.value !== themeName) themeSelectorEl.value = themeName;
+
+            // After applying theme, re-calculate heights and positions if necessary
+            // This is crucial if theme changes affect element sizes (padding, borders etc.)
             updateInitialTopBarHeight();
             if (!isSidebarHidden) {
                 toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
             }
-            updateSelectArrowColor();
-            // If an error page is currently displayed, re-render it with new theme colors
-            const activeTab = getActiveTab();
-            if (activeTab && activeTab.url === 'about:errorpage' && activeTab.iframe.srcdoc.includes("error-icon")) {
-                 // Crude check for our error page; re-render with the error details
-                 const currentSrcDoc = activeTab.iframe.contentDocument;
-                 if(currentSrcDoc) {
-                    const title = currentSrcDoc.querySelector('h2')?.textContent || "Error";
-                    const message = currentSrcDoc.querySelector('p:not(.error-details)')?.textContent || "An error occurred.";
-                    const details = currentSrcDoc.querySelector('p.error-details')?.textContent || "";
-                    renderErrorPage(activeTab, title, message, details);
-                 }
-            }
+             updateSelectArrowColor(); // Update select arrow color based on new theme
         }
         function handleThemeChange(e) { applyTheme(e.target.value); }
         function handleSearchEngineChange(e) {
             currentSearchEngineKey = e.target.value;
             localStorage.setItem('vernSearchEngine', currentSearchEngineKey);
+            console.log("Search engine changed to:", searchEngines[currentSearchEngineKey].name);
         }
 
-        console.log("Vern Pro Initialized with new themes, error pages, and search engines.");
+        console.log("Vern Pro Initialized with new sidebar styles and themes.");
     </script>
 </body>
 </html>
