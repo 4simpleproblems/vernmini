@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Pro Browser - Optimized</title>
+    <title>Vern Pro Browser - Optimized v2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
@@ -487,7 +487,7 @@
             background-color: var(--button-bg);
             box-shadow: 0 0 0 1px var(--sidebar-outline-color);
             color: var(--button-text-color);
-            position: relative; /* For absolute positioned children like remove button */
+            position: relative;
         }
         #sidebar li:hover {
             background-color: var(--button-hover-bg);
@@ -496,12 +496,10 @@
         #sidebar li .bookmark-url, #sidebar li .history-url {
             font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
         }
-        /* Specific style for remove button inside sidebar list items */
         #sidebar li .remove-item-btn {
             position:absolute; right:12px; top:50%; transform:translateY(-50%);
             cursor:pointer; padding: 5px; opacity: 0.7;
-            font-size: 0.9em; /* Match icon size better */
-            line-height: 1; /* Ensure consistent vertical alignment */
+            font-size: 0.9em; line-height: 1;
         }
         #sidebar li .remove-item-btn:hover { opacity: 1; }
 
@@ -519,7 +517,6 @@
         }
         #sidebar .sidebar-select {
              appearance: none; -webkit-appearance: none; -moz-appearance: none;
-             /* SVG arrow color will be updated by JS based on theme */
              background-repeat: no-repeat;
              background-position: right 15px center;
              background-size: .65em auto;
@@ -709,14 +706,10 @@
     <script src="stars.js" defer></script>
 
     <script>
-    // === Vern Pro Browser - Optimized Script === //
-    // Main application logic, refactored for clarity and potential performance.
-    // Using an IIFE (Immediately Invoked Function Expression) to encapsulate the browser logic
-    // and avoid polluting the global scope.
+    // === Vern Pro Browser - Optimized Script v2 === //
     (function VernProBrowser() {
-        'use strict'; // Enforce stricter parsing and error handling
+        'use strict';
 
-        // --- STATE & CONFIGURATION ---
         const appState = {
             tabs: [],
             activeTabId: null,
@@ -727,8 +720,7 @@
             initialTopBarHeight: 0,
             isTopBarHidden: false,
             isSidebarHidden: false,
-            domRefs: {}, // To store frequently accessed DOM elements
-            // Stores the original URL that led to an error, for the "Try Again" button
+            domRefs: {},
             urlBeforeErrorByTabId: {}
         };
 
@@ -739,13 +731,6 @@
             'qwant': { name: 'Qwant', url: 'https://www.qwant.com/?q=%s' }
         };
 
-        // --- UTILITY FUNCTIONS ---
-        /**
-         * Debounce function to limit the rate at which a function can fire.
-         * @param {Function} func - The function to debounce.
-         * @param {number} delay - The delay in milliseconds.
-         * @returns {Function} - The debounced function.
-         */
         function debounce(func, delay) {
             let timeoutId;
             return function(...args) {
@@ -754,11 +739,6 @@
             };
         }
 
-        /**
-         * Gets a DOM element by ID and caches it.
-         * @param {string} id - The ID of the element.
-         * @returns {HTMLElement|null}
-         */
         function getById(id) {
             if (!appState.domRefs[id]) {
                 appState.domRefs[id] = document.getElementById(id);
@@ -766,9 +746,6 @@
             return appState.domRefs[id];
         }
 
-
-        // --- DOM INITIALIZATION & CACHING ---
-        /** Caches references to key DOM elements for faster access. */
         function cacheDomElements() {
             const ids = [
                 'tab-bar', 'tabs-container', 'search-bar', 'new-tab-button',
@@ -778,92 +755,107 @@
                 'main-content-wrapper', 'bookmarks-list', 'add-current-bookmark-button',
                 'new-bookmark-name', 'history-list', 'theme-selector', 'search-engine-selector'
             ];
-            ids.forEach(id => appState.domRefs[id] = document.getElementById(id));
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) console.warn(`DOM element not found during cache: ${id}`);
+                appState.domRefs[id] = el;
+            });
         }
 
-        // --- CORE INITIALIZATION ---
-        /** Main initialization function, called on DOMContentLoaded. */
         async function initialize() {
             cacheDomElements();
 
-            // External UV and ServiceWorker initialization
             try {
                 await initUV();
-            } catch (err) {
-                console.error("Initialization error during initUV:", err);
-                // Error already rendered by initUV if tab exists
+            } catch (initializationError) {
+                console.error("Vern Pro Critical Initialization Failed:", initializationError.message);
+                let startupTab = getActiveTab(); // Try to get an existing tab
+                if (!startupTab && appState.tabs.length === 0) {
+                    // If no tabs exist, we must create one to show the error.
+                    // Call createTab with a non-error URL first to ensure it sets up correctly.
+                    startupTab = createTab('about:blank');
+                }
+                // Now startupTab should exist. Render the critical error.
+                if (startupTab) {
+                    renderErrorPage(
+                        startupTab,
+                        "Browser Initialization Error",
+                        initializationError.message,
+                        "Key browser components (like the proxy service) failed to load. External websites may not be accessible. Please check the browser console (F12) for more details and ensure all files (uv.bundle.js, registerSW.js, etc.) are correctly placed and accessible."
+                    );
+                } else {
+                    // Absolute fallback if tab creation itself fails.
+                    alert(`Critical Initialization Error: ${initializationError.message}. The browser may not function.`);
+                }
+                // Do not proceed with further UI setup if UV fails critically, as basic functionality is impaired.
+                // However, event listeners for theme changes etc. might still be useful.
             }
 
-            setupSearchEngineSelector();
-            loadSettings(); // Loads theme and search engine preferences
 
-            // Initial UI state setup
+            setupSearchEngineSelector();
+            loadSettings();
             updateInitialTopBarHeight();
+
             if (!appState.isTopBarHidden) {
                 getById('top-bar-assembly').style.maxHeight = appState.initialTopBarHeight + 'px';
             } else {
                 getById('top-bar-assembly').style.maxHeight = '0px';
                 getById('top-bar-assembly').classList.add('hidden');
-                handleTopBarToggle(true); // Ensure icon and title are correct
+                handleTopBarToggle(true);
             }
 
-            if (appState.isSidebarHidden) {
-                getById('sidebar').classList.add('hidden');
-                getById('toggle-sidebar-icon').className = 'fas fa-chevron-right';
-                getById('toggle-sidebar-button').style.left = '0px';
-                getById('toggle-sidebar-button').title = "Show Sidebar";
+            const sidebarWidth = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+            if (localStorage.getItem('vernSidebarHidden') === 'true') { // Load sidebar state
+                appState.isSidebarHidden = true; // Set state before calling toggle
+                handleSidebarToggle(true); // Pass true to force hidden state
             } else {
-                getById('toggle-sidebar-button').style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-                getById('toggle-sidebar-icon').className = 'fas fa-chevron-left';
-                getById('toggle-sidebar-button').title = "Hide Sidebar";
+                 appState.isSidebarHidden = false;
+                 handleSidebarToggle(false); // Pass false to force shown state
             }
+
 
             setupEventListeners();
             loadBookmarks();
 
-            // Handle initial URL from query parameters or default to blank
             const urlParams = new URLSearchParams(window.location.search);
             const initialUrl = urlParams.get('url');
-            if (appState.tabs.length === 0) {
-                createTab(initialUrl || 'about:blank');
+
+            // If initialize had an error, a tab might already exist showing the error.
+            // Only create a new tab if no tabs exist OR if the existing tab isn't an error page.
+            const existingActiveTab = getActiveTab();
+            if (!existingActiveTab || (existingActiveTab.url !== 'about:errorpage' && appState.tabs.length === 0) ) {
+                 if (appState.tabs.length === 0) createTab(initialUrl || 'about:blank');
+            } else if (existingActiveTab && appState.tabs.length === 0) {
+                // This case should ideally not happen if getActiveTab() implies tabs.length > 0
+                // but as a safeguard:
+                 createTab(initialUrl || 'about:blank');
             }
+
+
             renderHistory();
-            // Ensure theme is fully applied after all elements are potentially ready
-            applyTheme(localStorage.getItem('vernTheme') || 'default');
-            console.log("Vern Pro Optimized Initialized.");
+            applyTheme(localStorage.getItem('vernTheme') || 'default', true); // isInitialLoad = true
+            console.log("Vern Pro Optimized v2 Initialized.");
         }
 
         async function initUV() {
-            // Using a Promise to handle async nature and potential errors better
-            return new Promise(async (resolve, reject) => {
-                if (typeof window.registerSW !== 'function') {
-                    const msg = "Proxy service worker (registerSW) is missing.";
-                    console.warn(msg);
-                    let currentTab = getActiveTab();
-                    if (!currentTab) currentTab = createTab('about:errorpage'); // Create a tab if none exist for the error
-                    renderErrorPage(currentTab, "Initialization Error", msg, "The browser might not load external websites correctly.");
-                    reject(new Error(msg));
-                    return;
-                }
-                try {
-                    await window.registerSW();
-                    console.log("Service worker registered successfully for Vern Pro.");
-                    resolve();
-                } catch (err) {
-                    console.error("Failed to register UV service worker:", err);
-                    let currentTab = getActiveTab();
-                    if (!currentTab) currentTab = createTab('about:errorpage');
-                    renderErrorPage(currentTab, "Proxy Initialization Failed", err.message, "External websites may not load correctly.");
-                    reject(err);
-                }
-            });
+            if (typeof window.registerSW !== 'function') {
+                const msg = "Proxy service worker (registerSW) is missing.";
+                console.error("initUV Error:", msg);
+                throw new Error(msg);
+            }
+            try {
+                await window.registerSW();
+                console.log("Service worker registered successfully for Vern Pro.");
+            } catch (err) {
+                console.error("Failed to register UV service worker:", err);
+                throw new Error(`Failed to register UV service worker: ${err.message || 'Unknown error'}`);
+            }
         }
 
-
-        // --- UI ELEMENT SETUP ---
         function setupSearchEngineSelector() {
             const selector = getById('search-engine-selector');
-            selector.innerHTML = ''; // Clear existing options
+            if (!selector) return;
+            selector.innerHTML = '';
             Object.keys(SEARCH_ENGINES).forEach(key => {
                 const option = document.createElement('option');
                 option.value = key;
@@ -872,91 +864,79 @@
             });
         }
 
-        /** Updates the color of the custom SVG arrow for select elements based on the current theme. */
         function updateSelectArrowColor() {
-            // Debounced to prevent rapid calls during theme switching if styles cascade slowly.
             requestAnimationFrame(() => {
                 try {
-                    const currentTextColorHex = getComputedStyle(document.body).getPropertyValue('--text-color').trim().replace('#','');
-                     const svgArrow = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(currentTextColorHex)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')`;
-                    getById('theme-selector').style.backgroundImage = svgArrow;
-                    getById('search-engine-selector').style.backgroundImage = svgArrow;
+                    const computedStyle = getComputedStyle(document.body);
+                    const textColor = computedStyle.getPropertyValue('--text-color').trim();
+                    if (!textColor) { // Guard against empty color string
+                        console.warn("Text color for select arrow is empty.");
+                        return;
+                    }
+                    const currentTextColorHex = textColor.startsWith('#') ? textColor.substring(1) : "000000"; // Default if not hex
+
+                    const svgArrow = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(currentTextColorHex)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')`;
+                    const themeSel = getById('theme-selector');
+                    const searchSel = getById('search-engine-selector');
+                    if (themeSel) themeSel.style.backgroundImage = svgArrow;
+                    if (searchSel) searchSel.style.backgroundImage = svgArrow;
                 } catch (e) {
                     console.warn("Could not update select arrow color:", e);
                 }
             });
         }
 
-
-        // --- SETTINGS MANAGEMENT ---
         function loadSettings() {
             const savedTheme = localStorage.getItem('vernTheme') || 'default';
-            applyTheme(savedTheme, true); // Pass true to skip re-rendering error page if it's already there
+            applyTheme(savedTheme, true);
 
             const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
             if (SEARCH_ENGINES[savedSearchEngine]) {
                 appState.currentSearchEngineKey = savedSearchEngine;
             }
-            getById('search-engine-selector').value = appState.currentSearchEngineKey;
+            const searchEngineSelector = getById('search-engine-selector');
+            if (searchEngineSelector) searchEngineSelector.value = appState.currentSearchEngineKey;
+
+            // Load sidebar visibility state
+            appState.isSidebarHidden = localStorage.getItem('vernSidebarHidden') === 'true';
         }
 
-        // --- EVENT LISTENERS ---
-        /** Sets up all primary event listeners for the application. */
         function setupEventListeners() {
-            const dom = appState.domRefs; // Alias for quicker access
+            const dom = appState.domRefs;
 
             dom['toggle-top-bar-button']?.addEventListener('click', () => handleTopBarToggle());
-            dom['toggle-sidebar-button']?.addEventListener('click', handleSidebarToggle);
-
-            // Using a debounced resize handler for efficiency
+            dom['toggle-sidebar-button']?.addEventListener('click', () => handleSidebarToggle());
             window.addEventListener('resize', debounce(() => {
                 if (!appState.isTopBarHidden) updateInitialTopBarHeight();
                 if (!appState.isSidebarHidden) {
                     dom['toggle-sidebar-button'].style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
                 }
             }, 200));
-
             dom['new-tab-button']?.addEventListener('click', () => createTab('about:blank'));
             dom['search-bar']?.addEventListener('keydown', handleSearchEnter);
-
-            // Navigation controls using event delegation on a common parent if possible,
-            // or direct listeners if elements are few and static.
-            dom['home-button']?.addEventListener('click', () => navigateTo('about:blank'));
-            dom['back-button']?.addEventListener('click', navigateBack);
-            dom['forward-button']?.addEventListener('click', navigateForward);
-            dom['refresh-button']?.addEventListener('click', refreshCurrentTab);
-
-            // Sidebar interactions - consider event delegation if sections become very dynamic
+            dom['home-button']?.addEventListener('click', () => PublicAPIMethods.navigateToURL('about:blank'));
+            dom['back-button']?.addEventListener('click', PublicAPIMethods.navigateBack);
+            dom['forward-button']?.addEventListener('click', PublicAPIMethods.navigateForward);
+            dom['refresh-button']?.addEventListener('click', PublicAPIMethods.refreshCurrentTab);
             dom['add-current-bookmark-button']?.addEventListener('click', handleAddCurrentBookmark);
             dom['bookmarks-list']?.addEventListener('click', handleBookmarkListClick);
             dom['history-list']?.addEventListener('click', handleHistoryListClick);
-
             dom['theme-selector']?.addEventListener('change', (e) => applyTheme(e.target.value));
             dom['search-engine-selector']?.addEventListener('change', handleSearchEngineChange);
-
-            // Global keydown listener
             document.addEventListener('keydown', handleGlobalKeyDown);
-
-            // Event delegation for tab bar clicks (tabs and close buttons)
             dom['tab-bar']?.addEventListener('click', handleTabBarClick);
-
-            // Capture load events for iframes. Using 'true' for capture phase
-            // to ensure our handler runs, especially for srcdoc iframes.
             document.addEventListener('load', handleIframeLoad, true);
-            window.addEventListener('message', handleWindowMessage); // For potential communication with iframes/SW
+            window.addEventListener('message', handleWindowMessage);
         }
 
-        // --- TAB MANAGEMENT ---
         function createTab(url = 'about:blank') {
             const tabId = `tab-${appState.tabCounter++}`;
             const iframe = document.createElement('iframe');
             iframe.id = `content-${tabId}`;
             iframe.className = 'tab-content';
-            // Stricter sandbox for security, but allow necessary permissions for UV
             iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
-            iframe.loading = 'eager'; // Load active tabs eagerly
+            iframe.loading = 'eager';
 
-            // Create tab element using a template string for readability
             const tabElementHTML = `
                 <div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div>
                 <div class="tab-title">New Tab</div>
@@ -966,43 +946,37 @@
             tabElement.dataset.tabId = tabId;
             tabElement.innerHTML = tabElementHTML;
 
-            getById('tab-bar').insertBefore(tabElement, getById('new-tab-button'));
-            getById('tabs-container').appendChild(iframe);
+            getById('tab-bar')?.insertBefore(tabElement, getById('new-tab-button'));
+            getById('tabs-container')?.appendChild(iframe);
 
             const newTab = {
-                id: tabId,
-                element: tabElement,
-                iframe: iframe,
-                url: url,
-                title: 'New Tab',
+                id: tabId, element: tabElement, iframe: iframe, url: url, title: 'New Tab',
                 titleElement: tabElement.querySelector('.tab-title'),
                 faviconElement: tabElement.querySelector('.tab-favicon'),
-                isLoading: false,
-                // titleObserver and locationCheckIntervalId will be set by setupTitleObserver
+                isLoading: false, errorTitle: null
             };
             appState.tabs.push(newTab);
             activateTab(tabId);
-            navigateTo(url, newTab); // Navigate after tab is activated
+             // Navigate only if not creating a tab for an error page initially set by renderErrorPage
+            if (url !== 'about:errorpage') {
+                navigateTo(url, newTab);
+            }
             return newTab;
         }
 
         function activateTab(tabId) {
             if (!tabId && appState.tabs.length > 0) tabId = appState.tabs[0].id;
             if (!tabId) return;
-
             appState.tabs.forEach(t => {
                 t.element.classList.remove('active');
                 t.iframe.classList.remove('active');
             });
-
             const tab = appState.tabs.find(t => t.id === tabId);
             if (tab) {
                 tab.element.classList.add('active');
                 tab.iframe.classList.add('active');
                 appState.activeTabId = tabId;
-                // Update search bar only if it's a real URL, not an error/blank page
                 getById('search-bar').value = (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') ? tab.url : '';
-                // Scroll tab into view efficiently
                 requestAnimationFrame(() => {
                     tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
                 });
@@ -1013,28 +987,20 @@
         function closeTab(tabId) {
             const tabIndex = appState.tabs.findIndex(t => t.id === tabId);
             if (tabIndex === -1) return;
-
             const tabToClose = appState.tabs[tabIndex];
-            // Cleanup resources
             if (tabToClose.titleObserver) tabToClose.titleObserver.disconnect();
             if (tabToClose.locationCheckIntervalId) clearInterval(tabToClose.locationCheckIntervalId);
             delete appState.urlBeforeErrorByTabId[tabId];
-
-
-            // Remove DOM elements using requestAnimationFrame for smoother visual update
             requestAnimationFrame(() => {
                 tabToClose.element.remove();
                 tabToClose.iframe.remove();
             });
-
             appState.tabs.splice(tabIndex, 1);
-
             if (appState.activeTabId === tabId) {
                 if (appState.tabs.length > 0) {
-                    // Activate the previous tab, or the first tab if none previous
                     activateTab(appState.tabs[Math.max(0, tabIndex - 1)]?.id || appState.tabs[0]?.id);
                 } else {
-                    createTab('about:blank'); // Create a new tab if all are closed
+                    createTab('about:blank');
                 }
             }
         }
@@ -1045,126 +1011,112 @@
 
         function updateTabInfo(tab, title, faviconUrl) {
             if (!tab) return;
-
             const displayTitle = title ||
                 (tab.url === 'about:blank' ? 'New Tab' :
                 (tab.url === 'about:errorpage' ? (tab.errorTitle || 'Error') :
                 (tab.url || 'Loading...')));
-
             tab.title = displayTitle;
-            // Use textContent for performance and security over innerHTML if just setting text
             tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0, 18) + '...' : displayTitle;
-            tab.titleElement.title = displayTitle; // Full title on hover
-
-            // Favicon logic
+            tab.titleElement.title = displayTitle;
             if (faviconUrl) {
                 tab.faviconElement.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
             } else if (tab.url === 'about:errorpage') {
-                tab.faviconElement.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 14px; color: var(--error-icon-color);"></i>`;
+                 tab.faviconElement.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 14px; color: var(--error-icon-color);"></i>`;
             } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
                 try {
                     const siteUrl = new URL(tab.url);
-                    // Construct favicon URL using the original hostname
                     tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" style="width:16px;height:16px;object-fit:contain;" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\' style=\\'font-size: 14px;\\'></i>';">`;
-                } catch (e) {
-                    tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
-                }
+                } catch (e) { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
             } else {
                 tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
             }
-
             if (tab.id === appState.activeTabId) {
                 updateDocumentTitle(tab);
             }
         }
 
         function updateDocumentTitle(tab) {
-            document.title = `${tab ? (tab.title || 'New Tab') : 'New Tab'} - Vern Pro Optimized`;
+            document.title = `${tab ? (tab.title || 'New Tab') : 'New Tab'} - Vern Pro Optimized v2`;
         }
 
-
-        // --- NAVIGATION & URL HANDLING ---
         function formatUrlInput(input) {
             const trimmedInput = input.trim();
-            // Matches http://, https://, ftp://, file:// etc. OR // (scheme-relative)
             if (/^(?:[a-z]+:)?\/\//i.test(trimmedInput)) {
                 return trimmedInput.startsWith("//") ? "https:" + trimmedInput : trimmedInput;
             }
-            // Check for domain pattern (e.g. google.com), localhost, or IP addresses
             if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}(\/.*)*$/.test(trimmedInput) ||
                 trimmedInput.startsWith("localhost:") ||
                 /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(trimmedInput)) {
-                return 'https://' + trimmedInput; // Default to https
+                return 'https://' + trimmedInput;
             }
-            return null; // Indicates a search query
+            return null;
         }
 
         function navigateTo(urlInput, tab = null) {
             let currentTab = tab || getActiveTab();
-            if (!currentTab) { // Should ideally not happen if UI always ensures a tab
-                currentTab = createTab(urlInput); // Create tab if none active
-                return; // createTab will call navigateTo
-            }
+            if (!currentTab) { currentTab = createTab(urlInput); return; }
 
             currentTab.isLoading = true;
-            currentTab.iframe.srcdoc = ''; // Clear previous srcdoc immediately
-            updateTabInfo(currentTab, "Loading...", null); // Visual feedback
+            currentTab.iframe.srcdoc = ''; // Clear srcdoc for new navigation
+            updateTabInfo(currentTab, "Loading...", null);
 
             const SanitizeURLInput = (input) => (!input || typeof input !== 'string' || input.trim() === '') ? 'about:blank' : input.trim();
             urlInput = SanitizeURLInput(urlInput);
 
+            if (urlInput === 'about:errorpage') {
+                // This is an internal state. renderErrorPage is responsible for content.
+                // Avoid further processing or trying to navigate to "about:errorpage" as a URL.
+                console.warn("navigateTo called with 'about:errorpage'. Tab state should be managed by renderErrorPage.");
+                 if (!currentTab.iframe.srcdoc || !currentTab.iframe.srcdoc.includes("error-icon")) {
+                    renderErrorPage(currentTab, "Error State", "This tab is in an error state.", `Intended URL: ${appState.urlBeforeErrorByTabId[currentTab.id] || 'Unknown'}`);
+                }
+                currentTab.isLoading = false; // Error page itself is "loaded"
+                return;
+            }
 
-            if (urlInput === 'about:blank' || (urlInput.startsWith('about:') && urlInput !== 'about:errorpage')) {
+            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
                 currentTab.iframe.src = urlInput;
                 currentTab.url = urlInput;
-                appState.urlBeforeErrorByTabId[currentTab.id] = urlInput; // Store for potential "Try Again"
+                appState.urlBeforeErrorByTabId[currentTab.id] = urlInput;
                 if (currentTab.id === appState.activeTabId) getById('search-bar').value = (urlInput === 'about:blank' ? '' : urlInput);
                 updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput);
-                if (urlInput === 'about:blank') addToHistory('New Tab', urlInput); // Only log actual blank pages to history as "New Tab"
+                if (urlInput === 'about:blank') addToHistory('New Tab', urlInput);
                 currentTab.isLoading = false;
                 return;
             }
 
             let targetUrl = formatUrlInput(urlInput);
-            if (!targetUrl) { // Assumed to be a search query
+            if (!targetUrl) {
                 const searchEngine = SEARCH_ENGINES[appState.currentSearchEngineKey] || SEARCH_ENGINES['duckduckgo'];
                 targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput));
             }
+            appState.urlBeforeErrorByTabId[currentTab.id] = targetUrl;
 
-            appState.urlBeforeErrorByTabId[currentTab.id] = targetUrl; // Store the intended target URL
-
-            // Check for UV proxy configuration (critical for external sites)
             if (typeof window.__uv$config === 'undefined' || !window.__uv$config.prefix || typeof window.__uv$config.encodeUrl !== 'function') {
-                console.error("UV configuration is not available.");
                 renderErrorPage(currentTab, "Configuration Error", "Proxy configuration (UV) is missing or invalid.", `Attempted URL: ${targetUrl}`);
-                return; // Error page handles isLoading state
+                return;
             }
-
             try {
                 const proxiedUrl = self.location.origin + window.__uv$config.prefix + window.__uv$config.encodeUrl(targetUrl);
                 currentTab.iframe.src = proxiedUrl;
-                currentTab.url = targetUrl; // Store the original, non-proxied URL
+                currentTab.url = targetUrl;
                 if (currentTab.id === appState.activeTabId) getById('search-bar').value = targetUrl;
-                // isLoading will be set to false in handleIframeLoad
             } catch (err) {
-                console.error("Navigation error during URL processing or proxying:", err);
                 renderErrorPage(currentTab, "Navigation Error", `Could not process the URL: ${err.message}`, `URL: ${targetUrl}`);
             }
         }
 
         function renderErrorPage(tab, errorTitle, message, details = '') {
             if (!tab) {
-                console.warn("renderErrorPage called with no tab, creating one.");
-                // Pass a specific URL to avoid re-calling navigateTo from createTab for this error page
-                tab = createTab('about:errorpage'); // createTab will internally set a placeholder URL
+                tab = createTab('about:errorpage'); // Will set url to about:errorpage
                 if (!tab) { console.error("Failed to create tab for error page."); return; }
+            } else {
+                 // If tab exists, ensure its URL reflects it's an error page internally
+                tab.url = 'about:errorpage';
             }
+            tab.isLoading = true;
+            tab.errorTitle = errorTitle;
 
-            tab.isLoading = true; // Ensure loading state is managed
-            tab.errorTitle = errorTitle; // Store error title for tab info
-
-            // Get theme colors dynamically for the error page
-            // Using requestAnimationFrame to ensure styles are computed *after* any potential theme switch
             requestAnimationFrame(() => {
                 const computedStyle = getComputedStyle(document.body);
                 const errorPageVars = {
@@ -1175,41 +1127,23 @@
                     buttonTextColor: computedStyle.getPropertyValue('--button-text-color').trim(),
                     sidebarOutlineColor: computedStyle.getPropertyValue('--sidebar-outline-color').trim(),
                     fontFamily: computedStyle.getPropertyValue('--font-family-main').trim(),
-                    errorIconColor: computedStyle.getPropertyValue('--error-icon-color').trim()
+                    errorIconColor: computedStyle.getPropertyValue('--error-icon-color').trim() || 'inherit'
                 };
-
                 const errorHTML = `
                 <html style="height: 100%;">
-                <head>
-                    <title>${errorTitle}</title>
+                <head><title>${errorTitle}</title>
                     <style>
-                        body {
-                            font-family: ${errorPageVars.fontFamily}; color: ${errorPageVars.textColor}; background-color: ${errorPageVars.iframeBgColor};
-                            margin: 0; height: 100%; display: flex; flex-direction: column;
-                            align-items: center; justify-content: center; padding: 20px;
-                            box-sizing: border-box; text-align: center; overflow: hidden;
-                        }
+                        body { font-family: ${errorPageVars.fontFamily}; color: ${errorPageVars.textColor}; background-color: ${errorPageVars.iframeBgColor}; margin: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden; }
                         h2 { color: ${errorPageVars.textColor}; margin-bottom: 20px; font-size: 1.8em; font-weight: 600;}
                         p { margin-bottom: 12px; font-size: 1.1em; }
                         .error-details { font-size: 0.9em; opacity: 0.7; word-break: break-all; max-width: 80%; margin-top:15px; }
                         .error-icon { font-size: 3.5em; margin-bottom: 20px; color: ${errorPageVars.errorIconColor}; }
-                        .error-actions button {
-                            background-color: ${errorPageVars.buttonBgColor}; color: ${errorPageVars.buttonTextColor}; border: none;
-                            border-radius: 20px; padding: 10px 22px; cursor: pointer;
-                            font-family: ${errorPageVars.fontFamily}; margin: 8px; font-size: 0.95em;
-                            box-shadow: 0 0 0 1px ${errorPageVars.sidebarOutlineColor};
-                            transition: background-color 0.2s ease, box-shadow 0.2s ease;
-                        }
-                        .error-actions button:hover {
-                            background-color: ${errorPageVars.buttonHoverBgColor};
-                            box-shadow: 0 0 0 1.5px ${errorPageVars.sidebarOutlineColor};
-                        }
+                        .error-actions button { background-color: ${errorPageVars.buttonBgColor}; color: ${errorPageVars.buttonTextColor}; border: none; border-radius: 20px; padding: 10px 22px; cursor: pointer; font-family: ${errorPageVars.fontFamily}; margin: 8px; font-size: 0.95em; box-shadow: 0 0 0 1px ${errorPageVars.sidebarOutlineColor}; transition: background-color 0.2s ease, box-shadow 0.2s ease; }
+                        .error-actions button:hover { background-color: ${errorPageVars.buttonHoverBgColor}; box-shadow: 0 0 0 1.5px ${errorPageVars.sidebarOutlineColor}; }
                     </style>
                 </head>
                 <body>
-                    <div class="error-icon">⚠️</div>
-                    <h2>${errorTitle}</h2>
-                    <p>${message}</p>
+                    <div class="error-icon">⚠️</div><h2>${errorTitle}</h2><p>${message}</p>
                     ${details ? `<p class="error-details">${details}</p>` : ''}
                     <div class="error-actions">
                         <button data-action="error-back">Go Back</button>
@@ -1217,172 +1151,129 @@
                         <button data-action="error-home">Go Home</button>
                     </div>
                     <script>
-                        // Add event listeners for error page buttons
-                        // Must use window.parent to call functions in the main browser script
                         document.body.addEventListener('click', function(event) {
                             const action = event.target.dataset.action;
-                            if (action === 'error-back') {
-                                window.parent.VernProBrowser.navigateBack();
-                            } else if (action === 'error-retry') {
-                                window.parent.VernProBrowser.retryFailedNavigation();
-                            } else if (action === 'error-home') {
-                                window.parent.VernProBrowser.navigateToURL('about:blank');
-                            }
+                            if (action === 'error-back') window.parent.VernProBrowser.navigateBack();
+                            else if (action === 'error-retry') window.parent.VernProBrowser.retryFailedNavigation();
+                            else if (action === 'error-home') window.parent.VernProBrowser.navigateToURL('about:blank');
                         });
                     <\/script>
-                </body>
-                </html>`;
-
+                </body></html>`;
                 tab.iframe.srcdoc = errorHTML;
-                tab.url = 'about:errorpage'; // Special internal URL
-                updateTabInfo(tab, errorTitle); // Update tab title to reflect error
-                if (tab.id === appState.activeTabId) getById('search-bar').value = ''; // Clear search bar
+                updateTabInfo(tab, errorTitle);
+                if (tab.id === appState.activeTabId) getById('search-bar').value = '';
                 tab.isLoading = false;
             });
         }
 
-        // --- UI TOGGLES & RESIZE ---
         function handleTopBarToggle(forceState) {
-            if (forceState !== undefined) {
-                appState.isTopBarHidden = forceState;
-            } else {
-                appState.isTopBarHidden = !appState.isTopBarHidden;
-            }
+            if (forceState !== undefined) appState.isTopBarHidden = forceState;
+            else appState.isTopBarHidden = !appState.isTopBarHidden;
+
             const topBar = getById('top-bar-assembly');
             const toggleButton = getById('toggle-top-bar-button');
             const toggleIcon = getById('toggle-bar-icon');
 
             if (appState.isTopBarHidden) {
-                topBar.classList.add('hidden');
-                topBar.style.maxHeight = '0px';
-                toggleButton.style.top = '-1px';
-                toggleIcon.className = 'fas fa-chevron-down';
+                topBar.classList.add('hidden'); topBar.style.maxHeight = '0px';
+                toggleButton.style.top = '-1px'; toggleIcon.className = 'fas fa-chevron-down';
                 toggleButton.title = "Show Toolbar";
             } else {
-                topBar.classList.remove('hidden');
-                topBar.style.maxHeight = appState.initialTopBarHeight + 'px';
+                topBar.classList.remove('hidden'); topBar.style.maxHeight = appState.initialTopBarHeight + 'px';
                 toggleButton.style.top = (appState.initialTopBarHeight > 0 ? appState.initialTopBarHeight - 1 : 0) + 'px';
-                toggleIcon.className = 'fas fa-chevron-up';
-                toggleButton.title = "Hide Toolbar";
+                toggleIcon.className = 'fas fa-chevron-up'; toggleButton.title = "Hide Toolbar";
             }
         }
 
-        function handleSidebarToggle() {
-            appState.isSidebarHidden = !getById('sidebar').classList.contains('hidden'); // Check current state before toggle
+        function handleSidebarToggle(forceState) {
             const sidebar = getById('sidebar');
             const toggleButton = getById('toggle-sidebar-button');
             const toggleIcon = getById('toggle-sidebar-icon');
             const sidebarWidth = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
 
-            if (appState.isSidebarHidden) { // Will be hidden after this logic
+            let shouldBeHidden;
+            if (forceState !== undefined) {
+                shouldBeHidden = forceState;
+            } else {
+                shouldBeHidden = !appState.isSidebarHidden;
+            }
+
+            if (shouldBeHidden) {
                 sidebar.classList.add('hidden');
                 toggleIcon.className = 'fas fa-chevron-right';
                 toggleButton.style.left = '0px';
                 toggleButton.title = "Show Sidebar";
-            } else { // Will be shown
+            } else {
                 sidebar.classList.remove('hidden');
                 toggleIcon.className = 'fas fa-chevron-left';
                 toggleButton.style.left = sidebarWidth;
                 toggleButton.title = "Hide Sidebar";
             }
-            appState.isSidebarHidden = !appState.isSidebarHidden; // Update state
+            appState.isSidebarHidden = shouldBeHidden;
+            localStorage.setItem('vernSidebarHidden', appState.isSidebarHidden); // Save state
         }
 
 
         function updateInitialTopBarHeight() {
             const topBar = getById('top-bar-assembly');
+            if(!topBar) return;
             const wasHidden = topBar.classList.contains('hidden');
-            // Temporarily show to measure if hidden, then restore state
-            if (wasHidden) {
-                topBar.classList.remove('hidden');
-                topBar.style.maxHeight = 'none'; // Allow it to take full height for measurement
-            }
+            if (wasHidden) { topBar.classList.remove('hidden'); topBar.style.maxHeight = 'none'; }
             appState.initialTopBarHeight = topBar.offsetHeight;
-            if (wasHidden) {
-                topBar.classList.add('hidden');
-                topBar.style.maxHeight = '0px';
-            } else {
-                topBar.style.maxHeight = appState.initialTopBarHeight + 'px';
-            }
-            // Adjust toggle button position
-            if (!appState.isTopBarHidden && appState.initialTopBarHeight > 0) {
-                getById('toggle-top-bar-button').style.top = (appState.initialTopBarHeight - 1) + 'px';
-            } else if (!appState.isTopBarHidden && appState.initialTopBarHeight === 0) {
-                getById('toggle-top-bar-button').style.top = '0px';
+            if (wasHidden) { topBar.classList.add('hidden'); topBar.style.maxHeight = '0px';}
+            else { topBar.style.maxHeight = appState.initialTopBarHeight + 'px'; }
+            const toggleButton = getById('toggle-top-bar-button');
+            if (toggleButton && !appState.isTopBarHidden && appState.initialTopBarHeight > 0) {
+                toggleButton.style.top = (appState.initialTopBarHeight - 1) + 'px';
+            } else if (toggleButton && !appState.isTopBarHidden && appState.initialTopBarHeight === 0) {
+                 toggleButton.style.top = '0px';
             }
         }
 
-        // --- EVENT HANDLERS (Callbacks) ---
         function handleTabBarClick(e) {
             const target = e.target;
             const tabElement = target.closest('.tab');
-            const closeButton = target.closest('.tab-close');
-
+            const closeButton = target.closest('.tab-close[data-action="close-tab"]');
             if (closeButton && tabElement) {
-                e.stopPropagation(); // Prevent tab activation if close is clicked
-                closeTab(tabElement.dataset.tabId);
+                e.stopPropagation(); closeTab(tabElement.dataset.tabId);
             } else if (tabElement) {
                 activateTab(tabElement.dataset.tabId);
             }
         }
 
         function handleSearchEnter(e) {
-            if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                navigateTo(e.target.value);
-            }
+            if (e.key === 'Enter' && e.target.value.trim() !== '') navigateTo(e.target.value);
         }
 
         function handleIframeLoad(event) {
-            // Ensure we're dealing with one of our tab iframes
             if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
                 const iframe = event.target;
                 const tab = appState.tabs.find(t => t.iframe === iframe);
-
                 if (tab) {
                     tab.isLoading = false;
-                    if (tab.url === 'about:errorpage') {
-                        // Error page content and title are handled by renderErrorPage
-                        // No history or title observer for error pages
-                        return;
-                    }
-
+                    if (tab.url === 'about:errorpage') return;
                     let title = 'Untitled';
                     try {
-                        // Accessing contentDocument can throw if iframe is cross-origin and not yet fully proxied/loaded
                         if (iframe.contentWindow && iframe.contentDocument && iframe.contentDocument.title) {
                             title = iframe.contentDocument.title.trim() || new URL(tab.url).hostname || 'Untitled';
                         } else if (tab.url && tab.url !== 'about:blank') {
                              try {title = new URL(tab.url).hostname } catch {title = 'Untitled'}
-                        } else {
-                            title = 'New Tab';
-                        }
+                        } else { title = 'New Tab'; }
                     } catch (e) {
-                        console.warn(`Could not access iframe content for title (tabId: ${tab.id}):`, e.message);
-                        try { title = new URL(tab.url).hostname || 'New Tab'; } catch { title = 'Untitled'; }
+                        try { title = new URL(tab.url).hostname || 'New Tab'; } catch {}
                     }
                     updateTabInfo(tab, title);
-
                     if (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') {
-                        addToHistory(title, tab.url);
+                         addToHistory(title, tab.url);
                     }
-                    setupTitleObserver(tab); // Setup or re-setup observer
+                    setupTitleObserver(tab);
                 }
             }
         }
-
-        function handleWindowMessage(event) {
-            // Placeholder for messages from iframes or service worker (e.g., UV proxy messages)
-            // Example: if (event.data && event.data.type === 'uv_some_event') { ... }
-        }
-
+        function handleWindowMessage(event) { /* Placeholder */ }
         function handleGlobalKeyDown(e) {
             const targetTagName = e.target.tagName.toLowerCase();
-            // Ignore keydowns if focused on an input, textarea, or select
-            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) {
-                return;
-            }
-
-            // Keyboard shortcuts
+            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return;
             if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
             if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (appState.activeTabId) closeTab(appState.activeTabId); }
             if (e.ctrlKey && e.key === 'Tab') {
@@ -1393,33 +1284,22 @@
                     activateTab(appState.tabs[nextIndex].id);
                 }
             }
-            if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); navigateBack(); }
-            if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); navigateForward(); }
-            if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshCurrentTab(); }
-            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); /* Or document.documentElement.requestFullscreen(); */ }
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) { // Focus search bar
-                e.preventDefault();
-                getById('search-bar').focus();
-                getById('search-bar').select();
+            if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); PublicAPIMethods.navigateBack(); }
+            if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); PublicAPIMethods.navigateForward(); }
+            if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); PublicAPIMethods.refreshCurrentTab(); }
+            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); }
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) {
+                e.preventDefault(); getById('search-bar')?.focus(); getById('search-bar')?.select();
             }
         }
 
         function setupTitleObserver(tab) {
             if (!tab || !tab.iframe || !tab.iframe.contentWindow || tab.url === 'about:errorpage') return;
-            if (tab.titleObserver) tab.titleObserver.disconnect(); // Disconnect previous if any
-
+            if (tab.titleObserver) tab.titleObserver.disconnect();
             try {
-                // Check if contentDocument is accessible (might not be for cross-origin before UV fully kicks in)
-                if (!tab.iframe.contentDocument) {
-                    console.warn(`Title observer: contentDocument not accessible for tab ${tab.id}`);
-                    return;
-                }
+                if (!tab.iframe.contentDocument) return;
                 const targetNode = tab.iframe.contentDocument.querySelector('title');
-                if (!targetNode) {
-                    // console.warn(`Title observer: <title> element not found for tab ${tab.id}`);
-                    return; // No title element to observe
-                }
-
+                if (!targetNode) return;
                 const observer = new MutationObserver(() => {
                     if (tab.iframe.contentDocument && tab.iframe.contentDocument.title !== tab.title) {
                         updateTabInfo(tab, tab.iframe.contentDocument.title.trim());
@@ -1428,24 +1308,40 @@
                 observer.observe(targetNode, { subtree: true, characterData: true, childList: true });
                 tab.titleObserver = observer;
             } catch (e) {
-                console.warn(`Could not set up title observer for tab ${tab.id}:`, e.message);
-                // Fallback: periodic check (less efficient, but better than nothing if observer fails)
                 if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
                 tab.locationCheckIntervalId = setInterval(() => {
                     try {
                         if (tab.iframe.contentDocument && tab.iframe.contentDocument.title.trim() !== tab.title) {
                              updateTabInfo(tab, tab.iframe.contentDocument.title.trim());
                         }
-                    } catch (err) {/* ignore cross-origin issues after initial load */}
-                }, 2500); // Check less frequently
+                    } catch (err) {/* ignore */}
+                }, 2500);
             }
         }
 
-
-        // --- NAVIGATION ACTIONS (Publicly callable from error page) ---
-        window.VernProBrowser = { // Expose necessary functions for error page interaction
+        const PublicAPIMethods = {
             navigateToURL: (url, tab) => navigateTo(url, tab || getActiveTab()),
-            navigateBack: navigateBack,
+            navigateBack: () => {
+                const activeTab = getActiveTab();
+                if (activeTab?.iframe.contentWindow) {
+                    if (activeTab.url === 'about:errorpage') {
+                        const previousUrl = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
+                        navigateTo(previousUrl, activeTab);
+                    } else { activeTab.iframe.contentWindow.history.back(); }
+                }
+            },
+            navigateForward: () => getActiveTab()?.iframe.contentWindow.history.forward(),
+            refreshCurrentTab: () => {
+                const activeTab = getActiveTab();
+                if (activeTab?.iframe.contentWindow) {
+                    if (activeTab.url === 'about:errorpage' || !activeTab.url || activeTab.url === 'about:blank' ) {
+                        const urlToRetry = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
+                        navigateTo(urlToRetry, activeTab);
+                    } else if ( (activeTab.iframe.src && typeof window.__uv$config !== 'undefined' && activeTab.iframe.src.includes(window.__uv$config.prefix)) || activeTab.iframe.srcdoc) {
+                        navigateTo(activeTab.url, activeTab);
+                    } else { activeTab.iframe.contentWindow.location.reload(); }
+                }
+            },
             retryFailedNavigation: () => {
                 const tab = getActiveTab();
                 if (tab) {
@@ -1454,117 +1350,54 @@
                 }
             }
         };
+        window.VernProBrowser = PublicAPIMethods;
 
-        function navigateBack() {
-            const activeTab = getActiveTab();
-            if (activeTab?.iframe.contentWindow) {
-                if (activeTab.url === 'about:errorpage') {
-                    // If on an error page, "back" should try to go to the page before the error, or home.
-                    const previousUrl = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
-                    navigateTo(previousUrl, activeTab);
-                } else {
-                    activeTab.iframe.contentWindow.history.back();
-                }
-            }
-        }
-        function navigateForward() {
-            getActiveTab()?.iframe.contentWindow.history.forward();
-        }
-        function refreshCurrentTab() {
-            const activeTab = getActiveTab();
-            if (activeTab?.iframe.contentWindow) {
-                if (activeTab.url === 'about:errorpage' || !activeTab.url || activeTab.url === 'about:blank') {
-                    // For error or blank pages, "refresh" effectively means "try again" or "go home"
-                    const urlToRetry = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
-                    navigateTo(urlToRetry, activeTab);
-                } else if (activeTab.iframe.src && activeTab.iframe.src.includes(window.__uv$config?.prefix) || activeTab.iframe.srcdoc) {
-                    // Re-trigger our navigateTo for proxied pages or srcdoc to correctly reload them through the proxy/logic
-                    navigateTo(activeTab.url, activeTab);
-                } else {
-                    activeTab.iframe.contentWindow.location.reload();
-                }
-            }
-        }
-
-
-        // --- BOOKMARKS ---
-        /** Renders a single bookmark item. */
         function createBookmarkElement(bookmark) {
-            const li = document.createElement('li');
-            li.dataset.url = bookmark.url;
+            const li = document.createElement('li'); li.dataset.url = bookmark.url;
             li.title = `${bookmark.name}\n${bookmark.url}`;
-
             const nameSpan = document.createElement('span');
             nameSpan.textContent = bookmark.name.length > 20 ? bookmark.name.substring(0, 18) + '...' : bookmark.name;
-
-            const urlSpan = document.createElement('span');
-            urlSpan.className = 'bookmark-url';
+            const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url';
             urlSpan.textContent = bookmark.url.length > 25 ? bookmark.url.substring(0, 22) + '...' : bookmark.url;
-
             const removeBtn = document.createElement('i');
-            removeBtn.className = 'fas fa-times remove-item-btn'; // Added class for specific styling
-            removeBtn.dataset.action = 'remove-bookmark';
-            removeBtn.dataset.url = bookmark.url;
-            removeBtn.title = 'Remove Bookmark';
-
-            li.appendChild(nameSpan);
-            li.appendChild(urlSpan);
-            li.appendChild(removeBtn);
+            removeBtn.className = 'fas fa-times remove-item-btn'; removeBtn.dataset.action = 'remove-bookmark';
+            removeBtn.dataset.url = bookmark.url; removeBtn.title = 'Remove Bookmark';
+            li.appendChild(nameSpan); li.appendChild(urlSpan); li.appendChild(removeBtn);
             return li;
         }
-
-        /** Loads bookmarks from localStorage and renders them. Uses DocumentFragment for efficiency. */
         function loadBookmarks() {
             const bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            const listEl = getById('bookmarks-list');
-            listEl.innerHTML = ''; // Clear existing items
-
+            const listEl = getById('bookmarks-list'); if(!listEl) return; listEl.innerHTML = '';
             if (bookmarks.length > 0) {
                 const fragment = document.createDocumentFragment();
                 bookmarks.forEach(bm => fragment.appendChild(createBookmarkElement(bm)));
                 listEl.appendChild(fragment);
             }
         }
-
-        function saveBookmarks(bookmarks) {
-            localStorage.setItem('vernBookmarks', JSON.stringify(bookmarks));
-        }
-
+        function saveBookmarks(bookmarks) { localStorage.setItem('vernBookmarks', JSON.stringify(bookmarks)); }
         function handleAddCurrentBookmark() {
             const activeTab = getActiveTab();
             if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url === 'about:errorpage') {
-                alert("Cannot bookmark this page.");
-                return;
+                alert("Cannot bookmark this page."); return;
             }
-            const name = getById('new-bookmark-name').value.trim() || activeTab.title || new URL(activeTab.url).hostname;
+            const nameInput = getById('new-bookmark-name');
+            const name = nameInput.value.trim() || activeTab.title || new URL(activeTab.url).hostname;
             const url = activeTab.url;
-
             let bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            if (bookmarks.some(b => b.url === url)) {
-                alert("This page is already bookmarked.");
-                return;
-            }
-            const newBookmark = { name, url };
-            bookmarks.push(newBookmark);
-            saveBookmarks(bookmarks);
-            // Append new item directly for responsiveness, instead of full reloadBookmarks
+            if (bookmarks.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
+            const newBookmark = { name, url }; bookmarks.push(newBookmark); saveBookmarks(bookmarks);
             getById('bookmarks-list').appendChild(createBookmarkElement(newBookmark));
-            getById('new-bookmark-name').value = '';
+            nameInput.value = '';
         }
-
         function removeBookmark(urlToRemove) {
             let bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
             bookmarks = bookmarks.filter(b => b.url !== urlToRemove);
-            saveBookmarks(bookmarks);
-            loadBookmarks(); // Re-render the list
+            saveBookmarks(bookmarks); loadBookmarks();
         }
-
-        /** Handles clicks within the bookmarks list using event delegation. */
         function handleBookmarkListClick(e) {
             const target = e.target;
             if (target.dataset.action === 'remove-bookmark') {
-                e.stopPropagation();
-                removeBookmark(target.dataset.url);
+                e.stopPropagation(); removeBookmark(target.dataset.url);
             } else {
                 const listItem = target.closest('li[data-url]');
                 if (listItem) {
@@ -1574,52 +1407,30 @@
             }
         }
 
-
-        // --- SESSION HISTORY ---
         function addToHistory(title, url) {
             if (!url || url === 'about:blank' || url === 'about:errorpage') return;
-            // Prevent duplicate consecutive entries for the same URL
             if (appState.sessionHistory.length > 0 && appState.sessionHistory[appState.sessionHistory.length - 1].url === url) return;
-
             appState.sessionHistory.push({ title, url, timestamp: new Date() });
-            if (appState.sessionHistory.length > appState.MAX_HISTORY_ITEMS) {
-                appState.sessionHistory.shift(); // Keep history list to a manageable size
-            }
+            if (appState.sessionHistory.length > appState.MAX_HISTORY_ITEMS) appState.sessionHistory.shift();
             renderHistory();
         }
-
-        /** Renders a single history item. */
         function createHistoryElement(item) {
-            const li = document.createElement('li');
-            li.dataset.url = item.url;
+            const li = document.createElement('li'); li.dataset.url = item.url;
             li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
-
             const titleSpan = document.createElement('span');
             titleSpan.textContent = item.title.length > 22 ? item.title.substring(0, 19) + '...' : item.title;
-
-            const urlSpan = document.createElement('span');
-            urlSpan.className = 'history-url';
+            const urlSpan = document.createElement('span'); urlSpan.className = 'history-url';
             urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
-
-            li.appendChild(titleSpan);
-            li.appendChild(urlSpan);
-            return li;
+            li.appendChild(titleSpan); li.appendChild(urlSpan); return li;
         }
-
-        /** Renders the session history list. Uses DocumentFragment for efficiency. */
         function renderHistory() {
-            const listEl = getById('history-list');
-            listEl.innerHTML = ''; // Clear existing items
-
+            const listEl = getById('history-list'); if(!listEl) return; listEl.innerHTML = '';
             if (appState.sessionHistory.length > 0) {
                 const fragment = document.createDocumentFragment();
-                // Iterate in reverse for most recent items first, but build fragment in order
                 [...appState.sessionHistory].reverse().forEach(item => fragment.appendChild(createHistoryElement(item)));
                 listEl.appendChild(fragment);
             }
         }
-
-         /** Handles clicks within the history list using event delegation. */
         function handleHistoryListClick(e) {
             const listItem = e.target.closest('li[data-url]');
             if (listItem) {
@@ -1628,35 +1439,24 @@
             }
         }
 
-
-        // --- THEMES & SETTINGS ---
         function applyTheme(themeName, isInitialLoad = false) {
-            document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); // Remove old theme classes
-            if (themeName !== 'default') {
-                document.body.classList.add(`theme-${themeName}`);
-            }
+            document.body.className = document.body.className.replace(/\btheme-\S+/g, '');
+            if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
             localStorage.setItem('vernTheme', themeName);
-            if (getById('theme-selector').value !== themeName) {
-                getById('theme-selector').value = themeName;
-            }
-
-            // Use requestAnimationFrame to ensure these run after styles are applied
+            const themeSelector = getById('theme-selector');
+            if (themeSelector && themeSelector.value !== themeName) themeSelector.value = themeName;
             requestAnimationFrame(() => {
-                updateInitialTopBarHeight(); // Recalculate if theme affects sizes
+                updateInitialTopBarHeight();
                 if (!appState.isSidebarHidden) {
                     getById('toggle-sidebar-button').style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
                 }
                 updateSelectArrowColor();
-
-                // If an error page is active, re-render it with new theme colors,
-                // but only if it's not the initial page load to avoid unnecessary re-renders.
                 if (!isInitialLoad) {
                     const activeTab = getActiveTab();
                     if (activeTab && activeTab.url === 'about:errorpage' && activeTab.iframe.contentDocument) {
-                         // Check if it's our custom error page.
                         const errorDoc = activeTab.iframe.contentDocument;
                         const errorTitleEl = errorDoc.querySelector('h2');
-                        if(errorTitleEl && errorDoc.querySelector('.error-icon')) { // Good indication it's our page
+                        if(errorTitleEl && errorDoc.querySelector('.error-icon')) {
                             const title = errorTitleEl.textContent || "Error";
                             const message = errorDoc.querySelector('p:not(.error-details)')?.textContent || "An error occurred.";
                             const details = errorDoc.querySelector('p.error-details')?.textContent || "";
@@ -1666,22 +1466,17 @@
                 }
             });
         }
-
         function handleSearchEngineChange(e) {
             appState.currentSearchEngineKey = e.target.value;
             localStorage.setItem('vernSearchEngine', appState.currentSearchEngineKey);
-            console.log("Search engine changed to:", SEARCH_ENGINES[appState.currentSearchEngineKey].name);
         }
 
-        // --- STARTUP ---
-        // Wait for the DOM to be fully loaded before initializing
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initialize);
         } else {
-            initialize(); // DOM is already ready
+            initialize();
         }
-
-    })(); // End of IIFE
+    })();
     </script>
 </body>
 </html>
