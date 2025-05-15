@@ -2,9 +2,10 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Browser Pro</title>
+    <title>Vern Pro Browser</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/x-icon" href="logo.png" /> <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="logo.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
 
     <style id="custom-styles">
         /* Base Elements */
@@ -15,9 +16,9 @@
             --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             --button-bg: rgba(10, 10, 10, 0.8);
             --button-hover-bg: rgba(15, 15, 15, 0.9);
-            --input-bg: rgba(10, 10, 10, 0.8); /* Renamed from --search-bg for broader use */
+            --input-bg: rgba(10, 10, 10, 0.8);
             --input-focus-bg: rgba(45, 45, 45, 0.9);
-            --input-focus-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+            --input-focus-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3); /* Changed to 2px for consistency */
             --iframe-bg: #202020;
             --footer-text-color: #fff;
             --font-family-main: 'Roboto Mono', monospace;
@@ -28,7 +29,8 @@
             --sidebar-width: 280px;
             --sidebar-bg: rgba(10, 10, 10, 0.95);
             --sidebar-item-hover-bg: rgba(30, 30, 30, 0.9);
-            --sidebar-border-color: rgba(255, 255, 255, 0.1);
+            --sidebar-border-color: rgba(255, 255, 255, 0.15); /* Unified border color */
+            --sidebar-outline-color: rgba(255, 255, 255, 0.25); /* For pill outlines */
             --button-text-color: #fff;
         }
 
@@ -42,7 +44,7 @@
             --button-hover-bg: #d0d0d0;
             --input-bg: #ffffff;
             --input-focus-bg: #f0f0f0;
-            --input-focus-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+            --input-focus-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
             --iframe-bg: #ffffff;
             --footer-text-color: #555;
             --tab-bg: #e9e9e9;
@@ -52,20 +54,21 @@
             --sidebar-bg: #f8f9fa;
             --sidebar-item-hover-bg: #e9ecef;
             --sidebar-border-color: #dee2e6;
-            --button-text-color: #333; /* Text color for buttons in light mode */
+            --sidebar-outline-color: #ced4da;
+            --button-text-color: #333;
         }
 
         /* Blue Theme */
         body.theme-blue {
-            --bg-color: #0d1b2a; /* Dark Blue */
-            --text-color: #e0e1dd; /* Light Gray/Blue */
-            --navbar-bg: #1b263b; /* Darker Blue */
+            --bg-color: #0d1b2a;
+            --text-color: #e0e1dd;
+            --navbar-bg: #1b263b;
             --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            --button-bg: #415a77; /* Muted Blue */
-            --button-hover-bg: #778da9; /* Lighter Muted Blue */
+            --button-bg: #415a77;
+            --button-hover-bg: #778da9;
             --input-bg: #1b263b;
             --input-focus-bg: #415a77;
-            --input-focus-shadow: 0 0 0 3px rgba(120, 150, 255, 0.4);
+            --input-focus-shadow: 0 0 0 2px rgba(120, 150, 255, 0.4);
             --iframe-bg: #0d1b2a;
             --footer-text-color: #e0e1dd;
             --tab-bg: #2a3b4e;
@@ -74,151 +77,245 @@
             --tab-hover-bg: #3a4f66;
             --sidebar-bg: #101B27;
             --sidebar-item-hover-bg: #1b263b;
-            --sidebar-border-color: rgba(255, 255, 255, 0.15);
+            --sidebar-border-color: rgba(255, 255, 255, 0.2);
+            --sidebar-outline-color: rgba(255, 255, 255, 0.3);
             --button-text-color: #e0e1dd;
         }
 
+        /* Orange Theme */
+        body.theme-orange {
+            --bg-color: #2c1a00;
+            --text-color: #ffe8cc;
+            --navbar-bg: #4d2d00;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            --button-bg: #e67e22;
+            --button-hover-bg: #d35400;
+            --input-bg: #4d2d00;
+            --input-focus-bg: #663d00;
+            --input-focus-shadow: 0 0 0 2px rgba(230, 126, 34, 0.5);
+            --iframe-bg: #2c1a00;
+            --footer-text-color: #ffe8cc;
+            --tab-bg: #663d00;
+            --tab-active-bg: #e67e22;
+            --tab-border: #804c00;
+            --tab-hover-bg: #805715;
+            --sidebar-bg: #332000;
+            --sidebar-item-hover-bg: #4d2d00;
+            --sidebar-border-color: rgba(255, 232, 204, 0.2);
+            --sidebar-outline-color: rgba(255, 232, 204, 0.3);
+            --button-text-color: #ffffff;
+        }
+
+        /* Galaxy Theme */
+        body.theme-galaxy {
+            --bg-color: #0c0a1d;
+            --text-color: #e6e0ff;
+            --navbar-bg: #1c183c;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #7b68ee;
+            --button-hover-bg: #6a5acd;
+            --input-bg: #1c183c;
+            --input-focus-bg: #2c284c;
+            --input-focus-shadow: 0 0 0 2px rgba(123, 104, 238, 0.5);
+            --iframe-bg: #0c0a1d;
+            --footer-text-color: #e6e0ff;
+            --tab-bg: #2c284c;
+            --tab-active-bg: #7b68ee;
+            --tab-border: #3c385c;
+            --tab-hover-bg: #383464;
+            --sidebar-bg: #120f2d;
+            --sidebar-item-hover-bg: #1c183c;
+            --sidebar-border-color: rgba(230, 224, 255, 0.2);
+            --sidebar-outline-color: rgba(230, 224, 255, 0.3);
+            --button-text-color: #ffffff;
+        }
+
+        /* Mint Green Theme */
+        body.theme-mint {
+            --bg-color: #e6fff5;
+            --text-color: #004d33;
+            --navbar-bg: #ccece6;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            --button-bg: #58d68d;
+            --button-hover-bg: #48c97d;
+            --input-bg: #ccece6;
+            --input-focus-bg: #b3e0d9;
+            --input-focus-shadow: 0 0 0 2px rgba(88, 214, 141, 0.4);
+            --iframe-bg: #e6fff5;
+            --footer-text-color: #004d33;
+            --tab-bg: #b3e0d9;
+            --tab-active-bg: #58d68d;
+            --tab-border: #a3d9ce;
+            --tab-hover-bg: #a3d9ce;
+            --sidebar-bg: #d9f7ef;
+            --sidebar-item-hover-bg: #ccece6;
+            --sidebar-border-color: #a3d9ce;
+            --sidebar-outline-color: #7bc4b4;
+            --button-text-color: #003322;
+        }
+
+        /* Crimson Red Theme */
+        body.theme-crimson {
+            --bg-color: #2c0b0e;
+            --text-color: #fde8e9;
+            --navbar-bg: #4e1218;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #dc143c;
+            --button-hover-bg: #c21034;
+            --input-bg: #4e1218;
+            --input-focus-bg: #6f1a24;
+            --input-focus-shadow: 0 0 0 2px rgba(220, 20, 60, 0.5);
+            --iframe-bg: #2c0b0e;
+            --footer-text-color: #fde8e9;
+            --tab-bg: #6f1a24;
+            --tab-active-bg: #dc143c;
+            --tab-border: #8f2a34;
+            --tab-hover-bg: #8f2a34;
+            --sidebar-bg: #3b1014;
+            --sidebar-item-hover-bg: #4e1218;
+            --sidebar-border-color: rgba(253, 232, 233, 0.2);
+            --sidebar-outline-color: rgba(253, 232, 233, 0.3);
+            --button-text-color: #ffffff;
+        }
+
+        /* Forest Green Theme */
+        body.theme-forest {
+            --bg-color: #0a1a0f;
+            --text-color: #e0f0e3;
+            --navbar-bg: #122f1a;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #228b22; /* Forest Green */
+            --button-hover-bg: #1e721e; /* Darker Forest Green */
+            --input-bg: #122f1a;
+            --input-focus-bg: #1a4325;
+            --input-focus-shadow: 0 0 0 2px rgba(34, 139, 34, 0.5);
+            --iframe-bg: #0a1a0f;
+            --footer-text-color: #e0f0e3;
+            --tab-bg: #1a4325;
+            --tab-active-bg: #228b22;
+            --tab-border: #2a5335;
+            --tab-hover-bg: #2a5335;
+            --sidebar-bg: #0f2515;
+            --sidebar-item-hover-bg: #122f1a;
+            --sidebar-border-color: rgba(224, 240, 227, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 227, 0.3);
+            --button-text-color: #ffffff;
+        }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            border: none;
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+            margin: 0; padding: 0; border: none; box-sizing: border-box;
+            width: 100%; height: 100%; overflow: hidden;
             font-family: var(--font-family-main);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex; /* For sidebar layout */
+            background-color: var(--bg-color); color: var(--text-color);
+            display: flex;
         }
 
         canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
 
-        /* Sidebar */
         #sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--sidebar-border-color);
-            padding: 15px;
-            box-sizing: border-box;
-            overflow-y: auto;
-            transition: margin-left 0.35s ease-in-out, width 0.35s ease-in-out;
-            z-index: 1001; /* Above canvas, below modals if any */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border-color); /* Lightened border */
+            padding: 20px 15px; box-sizing: border-box; /* Adjusted padding */
+            overflow-y: auto; transition: margin-left 0.35s ease-in-out, width 0.35s ease-in-out;
+            z-index: 1001; display: flex; flex-direction: column; gap: 25px; /* Increased gap */
+            font-family: var(--font-family-main); /* Ensure font */
         }
-
-        #sidebar.hidden {
-            margin-left: calc(-1 * var(--sidebar-width));
-            /* width: 0; Could also animate width, but margin-left is often smoother for content shift */
-        }
-
+        #sidebar.hidden { margin-left: calc(-1 * var(--sidebar-width)); }
         #sidebar h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-            border-bottom: 1px solid var(--sidebar-border-color);
-            padding-bottom: 8px;
+            margin-top: 0; margin-bottom: 12px; font-size: 1em; /* Slightly smaller */
+            border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 10px;
+            font-weight: 600; /* Bolder like top bar items if needed */
+            display: flex; align-items: center; gap: 8px; /* For potential icons */
         }
-
-        #sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 200px; /* Example height, adjust as needed */
-            overflow-y: auto;
-        }
-         #sidebar ul::-webkit-scrollbar { width: 5px; }
-         #sidebar ul::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
-
+        #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; }
+        #sidebar ul::-webkit-scrollbar { width: 5px; }
+        #sidebar ul::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
 
         #sidebar li {
-            padding: 8px 10px;
-            margin-bottom: 5px;
-            border-radius: 4px;
+            padding: 10px 18px; /* Adjusted padding */
+            margin-bottom: 8px; /* Spacing */
+            border-radius: 20px; /* Pill shape */
             cursor: pointer;
-            font-size: 0.9em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            transition: background-color 0.2s ease;
+            font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: var(--button-bg); /* Using button bg for consistency */
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
+            color: var(--button-text-color);
         }
         #sidebar li:hover {
-            background-color: var(--sidebar-item-hover-bg);
+            background-color: var(--button-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color); /* Slightly thicker outline on hover */
         }
         #sidebar li .bookmark-url, #sidebar li .history-url {
-            font-size: 0.8em;
-            opacity: 0.7;
-            display: block;
+            font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
         }
+
         #sidebar .sidebar-input, #sidebar .sidebar-select {
-            width: calc(100% - 20px);
-            padding: 8px 10px;
-            margin-bottom: 10px;
+            width: 100%; /* Full width */
+            height: 40px; /* Consistent height */
+            padding: 0 18px; /* Padding like search bar */
+            margin-bottom: 12px;
             background-color: var(--input-bg);
             color: var(--text-color);
-            border: 1px solid var(--sidebar-border-color);
-            border-radius: 4px;
+            border: none; /* Remove default border */
+            border-radius: 20px; /* Pill shape */
             font-family: var(--font-family-main);
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
+            font-size: 0.9em;
         }
+        #sidebar .sidebar-input:focus, #sidebar .sidebar-select:focus {
+            outline: none;
+            background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow); /* Use theme's focus shadow */
+        }
+        #sidebar .sidebar-select {
+             appearance: none; -webkit-appearance: none; -moz-appearance: none;
+             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(getComputedStyle(document.body).getPropertyValue('--text-color').substring(1))}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
+             background-repeat: no-repeat;
+             background-position: right 15px center;
+             background-size: .65em auto;
+             padding-right: 35px; /* Make space for arrow */
+        }
+
+
         #sidebar .sidebar-button {
-            padding: 8px 15px;
+            width: 100%; /* Full width */
+            height: 40px; /* Consistent height */
+            padding: 0 18px; /* Horizontal padding */
             background-color: var(--button-bg);
             color: var(--button-text-color);
             border: none;
-            border-radius: 4px;
+            border-radius: 20px; /* Pill shape */
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
             font-family: var(--font-family-main);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9em;
+            font-weight: 500;
         }
         #sidebar .sidebar-button:hover {
             background-color: var(--button-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
         }
 
 
-        /* Main Content Area */
         #main-content-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden; /* Important */
-            transition: margin-left 0.35s ease-in-out; /* For when sidebar is truly removed with width */
+            flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
+        #top-bar-assembly { overflow: hidden; transition: max-height 0.35s ease-in-out; }
+        #top-bar-assembly.hidden { max-height: 0 !important; }
 
-        #top-bar-assembly {
-            overflow: hidden;
-            transition: max-height 0.35s ease-in-out;
-        }
-        #top-bar-assembly.hidden {
-            max-height: 0 !important;
-        }
-
-        /* Tab Bar */
         #tab-bar {
-            display: flex;
-            background-color: var(--navbar-bg);
-            padding: 10px 12px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-            position: relative;
-            align-items: center;
-            gap: 8px;
+            display: flex; background-color: var(--navbar-bg); padding: 10px 12px;
+            overflow-x: auto; white-space: nowrap; scrollbar-width: thin;
+            position: relative; align-items: center; gap: 8px;
         }
         #tab-bar::-webkit-scrollbar { height: 3px; }
         #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
-
         .tab {
             display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
             padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
@@ -230,95 +327,56 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
         .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
         .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
-
-        .new-tab-button {
+        .new-tab-button { /* Circle */
             width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
-            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Using sidebar outline for consistency */
         }
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
 
-        /* Navigation Bar */
         #nav-bar {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: var(--navbar-bg);
-            box-shadow: var(--navbar-shadow);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            display: flex; align-items: center; padding: 10px;
+            background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
+            border-bottom: 1px solid var(--sidebar-border-color); /* Using sidebar border color */
         }
-
-        .nav-button {
+        .nav-button { /* Circle */
             width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
             margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
-
-        #search-bar {
-            flex: 1; height: 40px; border-radius: 30px; border: none; background-color: var(--input-bg);
-            color: var(--text-color); padding: 0 18px; font-size: 15px; font-weight: 700;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); font-family: var(--font-family-main);
+        #search-bar { /* Pill shape */
+            flex: 1; height: 40px; border-radius: 20px; border: none; background-color: var(--input-bg);
+            color: var(--text-color); padding: 0 18px; font-size: 15px;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-family: var(--font-family-main);
         }
-        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); font-weight: 700; }
+        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
 
-        /* Toggle Buttons */
         #toggle-top-bar-button, #toggle-sidebar-button {
-            position: fixed;
-            z-index: 1002; /* Above sidebar if sidebar uses margin, same level if sidebar uses transform */
-            width: 40px;
-            height: 32px;
-            background-color: var(--navbar-bg);
-            border-radius: 0 0 100px 100px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-color);
+            position: fixed; z-index: 1002; width: 40px; height: 32px;
+            background-color: var(--navbar-bg); cursor: pointer; display: flex;
+            justify-content: center; align-items: center; color: var(--text-color);
             transition: top 0.35s ease-in-out, left 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.35s ease-in-out;
-            box-shadow: -2px 0 0 0 rgba(255, 255, 255, 0.5), 2px 0 0 0 rgba(255, 255, 255, 0.5), 0 2px 0 0 rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline for toggles */
         }
-        #toggle-top-bar-button:hover, #toggle-sidebar-button:hover {
-            background-color: var(--button-hover-bg);
-        }
-        #toggle-top-bar-button .fas, #toggle-sidebar-button .fas {
-            font-size: 14px;
-            transition: transform 0.3s ease-in-out;
-        }
-
+        #toggle-top-bar-button:hover, #toggle-sidebar-button:hover { background-color: var(--button-hover-bg); }
+        #toggle-top-bar-button .fas, #toggle-sidebar-button .fas { font-size: 14px; transition: transform 0.3s ease-in-out; }
         #toggle-top-bar-button {
-            right: 2px;
-            /* top position is set by JS */
+            right: 2px; border-radius: 0 0 15px 15px; /* Rounded pill bottom */
         }
         #toggle-sidebar-button {
-            left: 0px; /* Initial position, will be updated by JS */
-            top: 2px; /* Position it near the top left */
-            border-radius: 0 100px 100px 0; /* Rounded on the right */
-             box-shadow: /* Adjust shadow for left-side button */
-               0 -2px 0 0 rgba(255, 255, 255, 0.5), /* top */
-               2px 0 0 0 rgba(255, 255, 255, 0.5), /* right */
-               0 2px 0 0 rgba(255, 255, 255, 0.5); /* bottom */
+            left: 0px; bottom: 2px; border-radius: 0 15px 15px 0; /* Rounded pill right */
         }
 
-
-        /* Content Area */
-        #tabs-container {
-            flex: 1; position: relative; background-color: var(--iframe-bg);
-        }
-        .tab-content {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none;
-            border: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
+        #tabs-container { flex: 1; position: relative; background-color: var(--iframe-bg); }
+        .tab-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; border: none; }
+        .tab-content.active { display: block; }
         .footer-label {
             position: fixed; bottom: 0; right: 0; margin: 1rem; font-family: var(--font-family-main);
             font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
         }
+        .sidebar-setting-label { display:block; margin-bottom:8px; font-size: 0.9em; font-weight: 500; }
 
     </style>
 </head>
@@ -326,14 +384,16 @@
     <canvas id="canvas"></canvas>
 
     <div id="sidebar">
-        <div id="sidebar-header">
-            <h2 style="text-align: center; margin-bottom: 20px;">Vern Pro</h2>
+        <div id="sidebar-header" style="padding-bottom: 10px; border-bottom: 1px solid var(--sidebar-border-color);">
+            <h2 style="text-align: center; margin-bottom: 0; font-size: 1.4em; font-weight: bold;">Vern Pro</h2>
         </div>
 
         <div id="bookmarks-section">
             <h3><i class="fas fa-bookmark"></i> Bookmarks</h3>
-            <input type="text" id="new-bookmark-name" class="sidebar-input" placeholder="Name (optional)">
-            <button id="add-current-bookmark-button" class="sidebar-button" style="width:100%; margin-bottom:10px;">Bookmark Current Page</button>
+            <input type="text" id="new-bookmark-name" class="sidebar-input" placeholder="Bookmark Name (optional)">
+            <button id="add-current-bookmark-button" class="sidebar-button" style="margin-bottom:10px;">
+                <i class="fas fa-plus" style="margin-right: 8px;"></i>Bookmark Current
+            </button>
             <ul id="bookmarks-list"></ul>
         </div>
 
@@ -344,11 +404,24 @@
 
         <div id="settings-section">
             <h3><i class="fas fa-cog"></i> Settings</h3>
-            <label for="theme-selector" style="display:block; margin-bottom:5px;">Theme:</label>
+            <label for="theme-selector" class="sidebar-setting-label">Theme:</label>
             <select id="theme-selector" class="sidebar-select">
                 <option value="default">Default Dark</option>
                 <option value="light">Light Mode</option>
                 <option value="blue">Ocean Blue</option>
+                <option value="orange">Sunset Orange</option>
+                <option value="galaxy">Cosmic Galaxy</option>
+                <option value="mint">Mint Green</option>
+                <option value="crimson">Crimson Red</option>
+                <option value="forest">Forest Green</option>
+            </select>
+
+            <label for="search-engine-selector" class="sidebar-setting-label" style="margin-top: 15px;">Search Engine:</label>
+            <select id="search-engine-selector" class="sidebar-select">
+                <option value="duckduckgo">DuckDuckGo</option>
+                <option value="google">Google</option>
+                <option value="bing">Bing</option>
+                <option value="brave">Brave Search</option>
             </select>
         </div>
     </div>
@@ -377,11 +450,12 @@
             <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
         </div>
 
-        <div id="tabs-container">
-            </div>
+        <div id="tabs-container"></div>
     </div>
 
-    <a href="https://github.com/4simpleproblems/vern" target="_blank" class="footer-label">Vern Proxy by 4SP</a> <script src="uv/uv.bundle.js" defer></script>
+    <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Pro by 4SP</a>
+
+    <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
     <script src="register-sw.js" defer></script>
     <script src="stars.js" defer></script>
@@ -391,8 +465,16 @@
         let tabs = [];
         let activeTabId = null;
         let tabCounter = 0;
-        let sessionHistory = []; // For session history
-        const MAX_HISTORY_ITEMS = 50; // Max items in session history
+        let sessionHistory = [];
+        const MAX_HISTORY_ITEMS = 50;
+
+        const searchEngines = {
+            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
+            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+        };
+        let currentSearchEngineKey = 'duckduckgo'; // Default
 
         // --- DOM ELEMENT REFERENCES ---
         let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl;
@@ -400,23 +482,11 @@
         let sidebarEl, toggleSidebarButtonEl, toggleSidebarIconEl, mainContentWrapperEl;
         let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
         let historyListEl;
-        let themeSelectorEl;
+        let themeSelectorEl, searchEngineSelectorEl;
 
         let initialTopBarHeight = 0;
         let isTopBarHidden = false;
-        let isSidebarHidden = false; //localStorage.getItem('vernSidebarHidden') === 'true'; // Optional: Persist sidebar state
-
-        // --- PROXY & SEARCH CONFIG (Assumed from uv.config.js and search.js) ---
-        // Ensure __uv$config is available globally from uv.config.js
-        // Ensure searchFast is available (either from a search.js or define it here)
-        function searchFast(query, searchEngineUrl = 'https://duckduckgo.com/?q=%s') {
-            try {
-                new URL(query); // Check if it's a valid URL
-                return query.startsWith('http://') || query.startsWith('https://') ? query : 'https://' + query;
-            } catch (err) {
-                return searchEngineUrl.replace('%s', encodeURIComponent(query));
-            }
-        }
+        let isSidebarHidden = false;
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
@@ -444,56 +514,45 @@
             newBookmarkNameInputEl = document.getElementById('new-bookmark-name');
             historyListEl = document.getElementById('history-list');
             themeSelectorEl = document.getElementById('theme-selector');
+            searchEngineSelectorEl = document.getElementById('search-engine-selector');
 
-            // Initialize UV service worker
             await initUV();
+            setupSearchEngineSelector(); // Populate dropdown
+            loadSettings(); // Load theme and search engine
 
-            // Initial UI setup
             updateInitialTopBarHeight();
             if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
             else {
                 topBarAssemblyEl.style.maxHeight = '0px';
                 topBarAssemblyEl.classList.add('hidden');
-                handleTopBarToggle(true); // Set icon and title correctly
+                handleTopBarToggle(true);
             }
 
-            // Sidebar initial state
             if (isSidebarHidden) {
                 sidebarEl.classList.add('hidden');
-                // mainContentWrapperEl.style.marginLeft = '0'; // If sidebar has width 0
                 toggleSidebarIconEl.className = 'fas fa-chevron-right';
                 toggleSidebarButtonEl.style.left = '0px';
                 toggleSidebarButtonEl.title = "Show Sidebar";
             } else {
-                // mainContentWrapperEl.style.marginLeft = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-                 toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
                 toggleSidebarIconEl.className = 'fas fa-chevron-left';
                 toggleSidebarButtonEl.title = "Hide Sidebar";
             }
 
-
-            // Event Listeners
             setupEventListeners();
-
-            // Load persisted data
             loadBookmarks();
-            loadSavedTheme(); // Also applies the theme
 
-            // Create initial tab
             const urlParams = new URLSearchParams(window.location.search);
             const initialUrl = urlParams.get('url');
-            if (tabs.length === 0) {
-                createTab(initialUrl || 'about:blank');
-            }
-
-            // Initial render of history (empty at start)
+            if (tabs.length === 0) createTab(initialUrl || 'about:blank');
             renderHistory();
+            applyTheme(localStorage.getItem('vernTheme') || 'default'); // Ensure theme is applied correctly on load
         });
 
         async function initUV() {
             try {
                 if (typeof registerSW !== 'function') {
-                    console.warn("registerSW() function not found. UV Service Worker might not be registered. Ensure register-sw.js is loaded.");
+                    console.warn("registerSW() function not found. UV Service Worker might not be registered.");
                     return;
                 }
                 await registerSW();
@@ -504,6 +563,35 @@
             }
         }
 
+        function setupSearchEngineSelector() {
+            searchEngineSelectorEl.innerHTML = ''; // Clear existing options
+            for (const key in searchEngines) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = searchEngines[key].name;
+                searchEngineSelectorEl.appendChild(option);
+            }
+        }
+        function updateSelectArrowColor() {
+            const currentTextColor = getComputedStyle(document.body).getPropertyValue('--text-color').trim().substring(1);
+            const svgArrow = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(currentTextColor)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')`;
+            document.querySelectorAll('#sidebar .sidebar-select').forEach(sel => sel.style.backgroundImage = svgArrow);
+        }
+
+
+        function loadSettings() {
+            // Load Theme
+            const savedTheme = localStorage.getItem('vernTheme') || 'default';
+            applyTheme(savedTheme);
+
+            // Load Search Engine
+            const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
+            if (searchEngines[savedSearchEngine]) {
+                currentSearchEngineKey = savedSearchEngine;
+            }
+            searchEngineSelectorEl.value = currentSearchEngineKey;
+        }
+
         // --- EVENT LISTENERS SETUP ---
         function setupEventListeners() {
             if(toggleTopBarButtonEl) toggleTopBarButtonEl.addEventListener('click', () => handleTopBarToggle());
@@ -511,7 +599,7 @@
 
             window.addEventListener('resize', () => {
                 if (!isTopBarHidden) updateInitialTopBarHeight();
-                if (!isSidebarHidden) { // Adjust sidebar toggle button position on resize
+                if (!isSidebarHidden) {
                      toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
                 }
             });
@@ -520,49 +608,38 @@
             if(tabBarEl) tabBarEl.addEventListener('click', handleTabBarClick);
             if(searchBarEl) searchBarEl.addEventListener('keydown', handleSearchEnter);
 
-            // Nav buttons
-            if(homeButtonEl) homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); // Or your desired home URL
+            if(homeButtonEl) homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
             if(backButtonEl) backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back());
             if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward());
             if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => {
                 const activeTab = getActiveTab();
-                if (activeTab && activeTab.iframe.contentWindow) {
+                if (activeTab?.iframe.contentWindow) {
                     try {
-                        // If it's a UV proxied page, refreshing the iframe source is better
+                        // Forcing reload for proxied pages, direct reload for others
                         if (activeTab.iframe.src.includes(__uv$config.prefix)) {
-                             activeTab.iframe.src = activeTab.iframe.src; // Re-assign to force reload
+                             activeTab.iframe.contentWindow.location.reload(true); // Force reload for proxied content
                         } else {
-                             activeTab.iframe.contentWindow.location.reload();
+                            activeTab.iframe.contentWindow.location.reload();
                         }
-                    } catch (e) {
-                        console.warn("Error trying to reload, attempting src reassignment:", e);
-                        activeTab.iframe.src = activeTab.iframe.src; // Fallback
-                    }
+                    } catch (e) { activeTab.iframe.src = activeTab.iframe.src; } // Fallback to re-assigning src
                 }
             });
 
-
-            // Sidebar features
             if(addCurrentBookmarkButtonEl) addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark);
             if(bookmarksListEl) bookmarksListEl.addEventListener('click', handleBookmarkClick);
             if(historyListEl) historyListEl.addEventListener('click', handleHistoryClick);
             if(themeSelectorEl) themeSelectorEl.addEventListener('change', handleThemeChange);
+            if(searchEngineSelectorEl) searchEngineSelectorEl.addEventListener('change', handleSearchEngineChange);
 
-            // Global keyboard shortcuts
             document.addEventListener('keydown', handleGlobalKeyDown);
-
-            // Iframe load and message listeners
-            // Using event delegation for iframe load events
-            document.addEventListener('load', handleIframeLoad, true); // Capture phase
+            document.addEventListener('load', handleIframeLoad, true); // Use capture phase
             window.addEventListener('message', handleWindowMessage);
         }
-
 
         // --- TAB MANAGEMENT ---
         function createTab(url = null) {
             const tabId = `tab-${tabCounter++}`;
             const contentId = `content-${tabId}`;
-
             const tabElement = document.createElement('div');
             tabElement.className = 'tab';
             tabElement.dataset.tabId = tabId;
@@ -572,45 +649,30 @@
             const iframe = document.createElement('iframe');
             iframe.id = contentId;
             iframe.className = 'tab-content';
-            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads'; // Common sandbox attributes
-            iframe.loading = 'eager'; // Load active tabs eagerly
-            // For advanced speed: Consider 'allow-top-navigation-by-user-activation' if needed and understood.
-            // CSP can be set here too: iframe.setAttribute('csp', "frame-src *; object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' *;"); // EXAMPLE ONLY, TIGHTEN THIS!
+            // Sandbox attributes: allow-scripts (for website functionality), allow-same-origin (for UV proxy interaction),
+            // allow-forms, allow-popups, allow-presentation, allow-downloads.
+            // allow-top-navigation-by-user-activation (might be useful but can be risky with proxies)
+            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
+            iframe.loading = 'eager'; // Load iframes eagerly for active tabs
             tabsContainerEl.appendChild(iframe);
 
-            const tab = {
-                id: tabId,
-                contentId: contentId,
-                element: tabElement,
-                iframe: iframe,
-                url: url || 'about:blank', // Store the intended, unproxied URL
-                title: 'New Tab',
-                titleElement: tabElement.querySelector('.tab-title'),
-                faviconElement: tabElement.querySelector('.tab-favicon'),
-                history: [], // Simple back/forward history for this tab (optional if relying on iframe's history)
-                isLoading: false
-            };
+            const tab = { id: tabId, contentId, element: tabElement, iframe, url: url || 'about:blank', title: 'New Tab', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false };
             tabs.push(tab);
             activateTab(tabId);
-            navigateTo(tab.url, tab); // This will handle if it's about:blank or needs proxying
-
+            navigateTo(tab.url, tab);
             return tab;
         }
 
         function activateTab(tabId) {
-            if (!tabId && tabs.length > 0) tabId = tabs[0].id; // Fallback
+            if (!tabId && tabs.length > 0) tabId = tabs[0].id;
             if (!tabId) return;
-
-            tabs.forEach(t => {
-                t.element.classList.remove('active');
-                t.iframe.classList.remove('active');
-            });
+            tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
             const tab = tabs.find(t => t.id === tabId);
             if (tab) {
                 tab.element.classList.add('active');
                 tab.iframe.classList.add('active');
                 activeTabId = tabId;
-                searchBarEl.value = (tab.url && tab.url !== 'about:blank') ? tab.url : '';
+                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : '';
                 tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
                 updateDocumentTitle(tab);
             }
@@ -620,250 +682,211 @@
             const tabIndex = tabs.findIndex(t => t.id === tabId);
             if (tabIndex === -1) return;
             const tab = tabs[tabIndex];
-
-            // Cleanup (if any specific cleanup for this tab is needed, e.g., observers)
             if (tab.titleObserver) tab.titleObserver.disconnect();
             if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
-
-
-            tab.element.remove();
-            tab.iframe.remove();
-            tabs.splice(tabIndex, 1);
-
+            tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1);
             if (activeTabId === tabId) {
-                if (tabs.length > 0) {
-                    activateTab(tabs[Math.max(0, tabIndex - 1)].id);
-                } else {
-                    createTab('about:blank'); // Create a new blank tab if all are closed
-                }
+                if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id);
+                else createTab('about:blank'); // Create a new blank tab if all are closed
             }
         }
-
-        function getActiveTab() {
-            return tabs.find(t => t.id === activeTabId);
-        }
+        function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
 
         function updateTabInfo(tab, title, faviconUrl) {
             if (!tab) return;
-
             const displayTitle = title || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
             tab.title = displayTitle;
-            tab.titleElement.textContent = displayTitle;
-            tab.titleElement.title = displayTitle; // For tooltip
+            tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0,18) + '...' : displayTitle;
+            tab.titleElement.title = displayTitle; // Full title on hover
 
             if (faviconUrl) {
                 tab.faviconElement.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
             } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
-                // Basic favicon guess (can be improved with a fetcher)
                 try {
                     const siteUrl = new URL(tab.url);
                     tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" style="width:16px;height:16px;object-fit:contain;" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\' style=\\'font-size: 14px;\\'></i>';">`;
-                } catch (e) {
-                    tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
-                }
-            } else {
-                tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
-            }
-
-            if (tab.id === activeTabId) {
-                updateDocumentTitle(tab);
-            }
+                } catch (e) { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
+            } else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
+            if (tab.id === activeTabId) updateDocumentTitle(tab);
         }
-
         function updateDocumentTitle(tab) {
             if (!tab) tab = getActiveTab();
-            if (tab) {
-                document.title = `${tab.title || 'New Tab'} - Vern Browser Pro`;
-            } else {
-                document.title = 'Vern Browser Pro';
-            }
+            document.title = `${tab ? (tab.title || 'New Tab') : 'New Tab'} - Vern Browser Pro`;
         }
 
         // --- NAVIGATION ---
+        function formatUrlInput(input) {
+            if (/^(?:[a-z]+:)?\/\//i.test(input)) {
+                if(input.startsWith("//")) return "https:" + input;
+                return input;
+            }
+            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) ||
+                input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) { // Added localhost and IP support
+                return 'https://' + input;
+            }
+            return null;
+        }
+
         function navigateTo(urlInput, tab = null) {
             let currentTab = tab || getActiveTab();
             if (!currentTab) {
-                console.warn("NavigateTo called without an active tab, creating one.");
-                currentTab = createTab(urlInput); // Create new tab if none active
-                return; // createTab will call navigateTo again
+                currentTab = createTab(urlInput); return;
             }
-
             currentTab.isLoading = true;
             updateTabInfo(currentTab, "Loading...", null);
 
-
-            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') {
-                urlInput = 'about:blank';
-            }
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
 
             if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
                 currentTab.iframe.src = urlInput;
                 currentTab.url = urlInput;
-                if (currentTab.id === activeTabId) searchBarEl.value = '';
+                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput;
                 updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput);
-                addToHistory(urlInput === 'about:blank' ? 'New Tab' : urlInput, urlInput);
+                if (!urlInput.startsWith('about:error')) addToHistory(urlInput === 'about:blank' ? 'New Tab' : urlInput, urlInput);
                 currentTab.isLoading = false;
                 return;
             }
 
-            const formattedUrl = searchFast(urlInput); // Uses your searchFast logic
+            let targetUrl = formatUrlInput(urlInput.trim());
 
-            if (typeof __uv$config === 'undefined' || typeof __uv$config.prefix === 'undefined' || typeof __uv$config.encodeUrl !== 'function') {
-                console.error("UV configuration (__uv$config) is not available. Ensure uv.config.js is loaded.");
-                currentTab.iframe.src = `about:blank#error=uv_config_missing&url=${encodeURIComponent(formattedUrl)}`;
+            if (targetUrl) {
+                // URL already formatted
+            } else { // It's a search query
+                const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
+                targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+            }
+
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                console.error("UV configuration is not available.");
+                const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`;
+                currentTab.iframe.src = errorUrl;
+                currentTab.url = errorUrl;
                 updateTabInfo(currentTab, "Error: UV Config Missing");
                 currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = '';
                 return;
             }
 
             try {
-                const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+                const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl);
                 currentTab.iframe.src = proxiedUrl;
-                currentTab.url = formattedUrl; // Store the original, unproxied URL
-                if (currentTab.id === activeTabId) searchBarEl.value = formattedUrl;
-                // Title will be updated by iframe load event or MutationObserver
+                currentTab.url = targetUrl;
+                if (currentTab.id === activeTabId) searchBarEl.value = targetUrl;
             } catch (err) {
                 console.error("Navigation error:", err);
-                currentTab.iframe.src = `about:blank#error=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                currentTab.iframe.src = errorUrl;
+                currentTab.url = errorUrl;
                 updateTabInfo(currentTab, "Navigation Error");
                 currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = '';
             }
         }
-
 
         // --- UI TOGGLES & RESIZE ---
-        function handleTopBarToggle(forceState) { // forceState true = hidden, false = shown
-            if (forceState !== undefined) isTopBarHidden = forceState;
-            else isTopBarHidden = !isTopBarHidden;
-
+        function handleTopBarToggle(forceState) {
+            if (forceState !== undefined) isTopBarHidden = forceState; else isTopBarHidden = !isTopBarHidden;
             if (isTopBarHidden) {
-                topBarAssemblyEl.classList.add('hidden');
-                toggleTopBarButtonEl.style.top = '-1px';
-                toggleBarIconEl.className = 'fas fa-chevron-down';
-                toggleTopBarButtonEl.title = "Show Toolbar";
+                topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = '0px'; toggleTopBarButtonEl.style.top = '-1px';
+                toggleBarIconEl.className = 'fas fa-chevron-down'; toggleTopBarButtonEl.title = "Show Toolbar";
             } else {
-                topBarAssemblyEl.classList.remove('hidden');
-                topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
                 toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
-                toggleBarIconEl.className = 'fas fa-chevron-up';
-                toggleTopBarButtonEl.title = "Hide Toolbar";
+                toggleBarIconEl.className = 'fas fa-chevron-up'; toggleTopBarButtonEl.title = "Hide Toolbar";
             }
         }
-
         function handleSidebarToggle() {
             isSidebarHidden = !isSidebarHidden;
             const sidebarWidth = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-
             if (isSidebarHidden) {
-                sidebarEl.classList.add('hidden'); // Uses margin-left for animation
-                // mainContentWrapperEl.style.marginLeft = '0px'; // If sidebar itself animates width to 0
-                toggleSidebarIconEl.className = 'fas fa-chevron-right';
-                toggleSidebarButtonEl.style.left = '0px';
-                toggleSidebarButtonEl.title = "Show Sidebar";
+                sidebarEl.classList.add('hidden'); toggleSidebarIconEl.className = 'fas fa-chevron-right';
+                toggleSidebarButtonEl.style.left = '0px'; toggleSidebarButtonEl.title = "Show Sidebar";
             } else {
-                sidebarEl.classList.remove('hidden');
-                // mainContentWrapperEl.style.marginLeft = sidebarWidth; // If sidebar itself animates width to 0
-                toggleSidebarIconEl.className = 'fas fa-chevron-left';
-                toggleSidebarButtonEl.style.left = sidebarWidth;
-                toggleSidebarButtonEl.title = "Hide Sidebar";
+                sidebarEl.classList.remove('hidden'); toggleSidebarIconEl.className = 'fas fa-chevron-left';
+                toggleSidebarButtonEl.style.left = sidebarWidth; toggleSidebarButtonEl.title = "Hide Sidebar";
             }
-            // localStorage.setItem('vernSidebarHidden', isSidebarHidden); // Optional: Persist
         }
-
-
         function updateInitialTopBarHeight() {
             const wasHidden = topBarAssemblyEl.classList.contains('hidden');
-            if (wasHidden) {
-                topBarAssemblyEl.classList.remove('hidden');
-                topBarAssemblyEl.style.maxHeight = 'none'; // Let it expand fully
-            }
-
+            if (wasHidden) { topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = 'none'; } // Temporarily show to measure
             initialTopBarHeight = topBarAssemblyEl.offsetHeight;
-
-            if (wasHidden) {
-                topBarAssemblyEl.classList.add('hidden');
-                topBarAssemblyEl.style.maxHeight = '0px';
-            } else {
-                topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-            }
-
-            if (!isTopBarHidden) {
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
+            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = '0px';} // Re-hide if it was
+            else { topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; } // Apply measured height
+            if (!isTopBarHidden && initialTopBarHeight > 0) {
+                toggleTopBarButtonEl.style.top = (initialTopBarHeight -1) + 'px'; // Adjust button position
+            } else if (!isTopBarHidden && initialTopBarHeight === 0) { // Case where it might be 0 if display none initially
+                 toggleTopBarButtonEl.style.top = '0px';
             }
         }
 
         // --- EVENT HANDLERS ---
         function handleTabBarClick(e) {
-            const tabElement = e.target.closest('.tab');
-            const closeButton = e.target.closest('.tab-close');
-            if (closeButton && tabElement) {
-                e.stopPropagation();
-                closeTab(tabElement.dataset.tabId);
-            } else if (tabElement) {
-                activateTab(tabElement.dataset.tabId);
-            }
+            const tabElement = e.target.closest('.tab'); const closeButton = e.target.closest('.tab-close');
+            if (closeButton && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); }
+            else if (tabElement) activateTab(tabElement.dataset.tabId);
         }
+        function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
 
-        function handleSearchEnter(e) {
-            if (e.key === 'Enter') {
-                navigateTo(e.target.value);
-            }
-        }
-
-        function handleIframeLoad(event) { // Catches load events from iframes
+        function handleIframeLoad(event) {
+            // Only act on iframes that are part of our tabs
             if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
                 const iframe = event.target;
                 const tab = tabs.find(t => t.iframe === iframe);
                 if (tab) {
                     tab.isLoading = false;
                     let title = 'Untitled';
-                    let currentFrameUrl = tab.url; // Default to the intended URL
+                    let actualUrl = tab.url; // Default to stored URL
 
                     try {
                         if (iframe.contentWindow && iframe.contentDocument) {
                             title = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
-                             // For UV, the contentWindow.location.href will be the proxied one.
-                             // We want to keep tab.url as the original.
-                             // If we need to get the *actual* current URL from inside the proxy frame:
-                             // This is tricky with cross-origin. UV might post messages for this.
+                            // Attempt to get the "real" URL from inside the iframe (UV might change it)
+                            // This might be blocked by cross-origin policies if not careful with UV setup
+                            // For now, we rely on the tab.url which is the one we sent to UV
                         }
                     } catch (e) {
-                        console.warn(`Could not access iframe content for title/URL for tab ${tab.id} (likely cross-origin or about:blank):`, e.message);
-                        try { title = new URL(tab.url).hostname || 'Untitled'; }
-                        catch { /* keep 'Untitled' or tab.url */ }
+                        // If accessing contentDocument fails (cross-origin), fallback to hostname
+                        try { title = new URL(tab.url).hostname || 'New Tab'; } catch {}
+                        console.warn("Could not access iframe contentDocument for title:", e.message);
+                    }
+
+                    // Special handling for about:error pages
+                    if(tab.url && tab.url.startsWith('about:error')) {
+                        title = "Error Page";
+                        // Potentially parse details from #hash if you added them
                     }
 
                     updateTabInfo(tab, title);
-                    addToHistory(title, tab.url); // Add to session history on load
-
-                    // Setup title observer if not already (for dynamic title changes post-load)
-                    setupTitleObserver(tab);
+                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) {
+                         addToHistory(title, tab.url);
+                    }
+                    setupTitleObserver(tab); // Re-setup observer if needed
                 }
             }
         }
-
         function handleWindowMessage(event) {
-            // Example: if UV service worker or script inside iframe sends messages
-            if (event.data && event.data.type === 'uvLocationChanged') {
+            // Example: if UV posts a message about URL change within the iframe
+            if (event.data && event.data.type === 'uv_url_changed') {
                 const activeTab = getActiveTab();
                 if (activeTab && event.source === activeTab.iframe.contentWindow) {
-                    const newUrl = event.data.url; // This should be the decoded, original URL
-                    activeTab.url = newUrl;
-                    searchBarEl.value = newUrl;
-                    updateTabInfo(activeTab, event.data.title || new URL(newUrl).hostname);
-                    addToHistory(event.data.title || new URL(newUrl).hostname, newUrl);
+                    const newUrl = event.data.url; // This would be the "real" URL from inside UV
+                    // You might need to decode this if UV encodes it
+                    // activeTab.url = newUrl; // Update the tab's stored URL
+                    // searchBarEl.value = newUrl;
+                    // updateTabInfo(activeTab, event.data.title || "Loading...");
+                    // addToHistory(event.data.title || newUrl, newUrl);
+                    console.log("UV URL Changed (message):", newUrl);
                 }
             }
-             // You can extend this to handle other messages like favicons, etc.
         }
-
-
         function handleGlobalKeyDown(e) {
-            if (e.target === searchBarEl || e.target.closest('.sidebar-input')) return; // Ignore if typing in inputs
+            // Ignore if typing in an input field (search bar, sidebar inputs)
+            const targetTagName = e.target.tagName.toLowerCase();
+            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return;
 
             if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
             if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); }
-            if (e.ctrlKey && e.key === 'Tab') {
+            if (e.ctrlKey && e.key === 'Tab') { // Cycle tabs
                 e.preventDefault();
                 if (tabs.length > 1) {
                     const currentIndex = tabs.findIndex(t => t.id === activeTabId);
@@ -874,210 +897,127 @@
             if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); }
             if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); }
             if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); }
-            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); }
-            // Add more shortcuts (e.g., Ctrl+L to focus search bar)
+            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); /* Or document.documentElement.requestFullscreen(); */ }
             if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }
         }
 
-        // --- IFRAME CONTENT TRACKING ---
         function setupTitleObserver(tab) {
-            if (!tab || tab.titleObserver || tab.url === 'about:blank') return; // Don't observe blank pages or if already observing
+            if (!tab || !tab.iframe.contentWindow) return;
+            if (tab.titleObserver) tab.titleObserver.disconnect(); // Disconnect previous if any
 
             try {
-                const iframeDocument = tab.iframe.contentDocument;
-                if (iframeDocument) {
-                    const titleEl = iframeDocument.querySelector('title');
-                    if (titleEl) {
-                        tab.titleObserver = new MutationObserver(() => {
-                            if (iframeDocument.title) {
-                                updateTabInfo(tab, iframeDocument.title);
-                            }
-                        });
-                        tab.titleObserver.observe(titleEl, { subtree: true, characterData: true, childList: true });
+                const targetNode = tab.iframe.contentDocument.querySelector('title');
+                if (!targetNode) return;
+
+                const observer = new MutationObserver(() => {
+                    if (tab.iframe.contentDocument) {
+                        updateTabInfo(tab, tab.iframe.contentDocument.title);
                     }
-                }
+                });
+                observer.observe(targetNode, { subtree: true, characterData: true, childList: true });
+                tab.titleObserver = observer;
             } catch (e) {
-                // console.warn("Cannot set up title observer for tab (cross-origin):", tab.url, e.message);
-                // For cross-origin, rely on initial load title and potential messages from UV
+                console.warn("Could not set up title observer for tab:", tab.id, e.message);
+                // Fallback: periodically check title if observer fails (e.g., cross-origin)
+                if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+                tab.locationCheckIntervalId = setInterval(() => {
+                    try {
+                        if (tab.iframe.contentDocument && tab.title !== tab.iframe.contentDocument.title) {
+                             updateTabInfo(tab, tab.iframe.contentDocument.title);
+                        }
+                    } catch (err) {/* ignore */}
+                }, 2000);
             }
         }
 
+
         // --- BOOKMARKS ---
-        function loadBookmarks() {
-            const bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            bookmarksListEl.innerHTML = '';
-            bookmarks.forEach(bm => renderBookmarkItem(bm));
-        }
-
-        function saveBookmarks(bookmarks) {
-            localStorage.setItem('vernBookmarks', JSON.stringify(bookmarks));
-        }
-
-        function renderBookmarkItem(bookmark) {
-            const li = document.createElement('li');
-            li.dataset.url = bookmark.url;
-            li.title = `${bookmark.name}\n${bookmark.url}`;
-            const nameSpan = document.createElement('span');
-            nameSpan.textContent = bookmark.name;
-            const urlSpan = document.createElement('span');
-            urlSpan.className = 'bookmark-url';
-            urlSpan.textContent = bookmark.url.length > 30 ? bookmark.url.substring(0, 27) + '...' : bookmark.url;
-
-            const removeBtn = document.createElement('i');
-            removeBtn.className = 'fas fa-times';
-            removeBtn.style.float = 'right';
-            removeBtn.style.cursor = 'pointer';
-            removeBtn.style.marginLeft = '5px';
-            removeBtn.title = 'Remove bookmark';
-            removeBtn.onclick = (e) => {
-                e.stopPropagation();
-                removeBookmark(bookmark.url);
-            };
-
-            li.appendChild(nameSpan);
-            li.appendChild(removeBtn);
-            li.appendChild(urlSpan);
+        function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm));}
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+        function renderBookmarkItem(bm) {
+            const li = document.createElement('li'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`;
+            const nameSpan = document.createElement('span'); nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name;
+            const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url'; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; // Adjusted length for pill
+            const removeBtn = document.createElement('i'); removeBtn.className = 'fas fa-times';
+            removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7;';
+            removeBtn.onmouseover = () => removeBtn.style.opacity = '1';
+            removeBtn.onmouseout = () => removeBtn.style.opacity = '0.7';
+            removeBtn.title = 'Remove Bookmark';
+            removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); };
+            li.appendChild(nameSpan); li.appendChild(urlSpan); li.appendChild(removeBtn);
+            li.style.position = 'relative'; // For absolute positioning of remove button
             bookmarksListEl.appendChild(li);
         }
-
         function handleAddCurrentBookmark() {
             const activeTab = getActiveTab();
-            if (!activeTab || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) {
-                alert("Cannot bookmark this page.");
-                return;
+            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) {
+                alert("Cannot bookmark this page."); return;
             }
             const name = newBookmarkNameInputEl.value.trim() || activeTab.title || new URL(activeTab.url).hostname;
             const url = activeTab.url;
-
-            const bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            if (bookmarks.some(bm => bm.url === url)) {
-                alert("This page is already bookmarked.");
-                return;
-            }
-            bookmarks.push({ name, url });
-            saveBookmarks(bookmarks);
-            renderBookmarkItem({ name, url });
-            newBookmarkNameInputEl.value = ''; // Clear input
+            let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
+            bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputEl.value = '';
         }
-
-        function removeBookmark(urlToRemove) {
-            let bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            bookmarks = bookmarks.filter(bm => bm.url !== urlToRemove);
-            saveBookmarks(bookmarks);
-            loadBookmarks(); // Re-render
-        }
-
+        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
         function handleBookmarkClick(e) {
             const li = e.target.closest('li[data-url]');
-            if (li) {
+            if (li && !e.target.classList.contains('fa-times')) { // Make sure not clicking the remove button
                 createTab(li.dataset.url);
-                if (isSidebarHidden === false && window.innerWidth < 768) { // Auto-hide sidebar on mobile after click
-                    handleSidebarToggle();
-                }
+                if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle(); // Auto-hide sidebar on mobile after click
             }
         }
 
         // --- SESSION HISTORY ---
         function addToHistory(title, url) {
-            if (!url || url === 'about:blank' || url.startsWith('about:')) return; // Don't log blank pages
-
-            // Avoid consecutive duplicates
-            if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url) {
-                return;
-            }
-
+            if (!url || url === 'about:blank' || url.startsWith('about:')) return;
+            // Prevent duplicate consecutive entries
+            if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url) return;
             sessionHistory.push({ title, url, timestamp: new Date() });
-            if (sessionHistory.length > MAX_HISTORY_ITEMS) {
-                sessionHistory.shift(); // Keep history to a manageable size
-            }
+            if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
             renderHistory();
         }
-
         function renderHistory() {
             historyListEl.innerHTML = '';
-            // Display in reverse chronological order (newest first)
             [...sessionHistory].reverse().forEach(item => {
-                const li = document.createElement('li');
-                li.dataset.url = item.url;
+                const li = document.createElement('li'); li.dataset.url = item.url;
                 li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
-
-                const titleSpan = document.createElement('span');
-                titleSpan.textContent = item.title.length > 25 ? item.title.substring(0,22) + '...' : item.title;
-
-                const urlSpan = document.createElement('span');
-                urlSpan.className = 'history-url';
-                urlSpan.textContent = item.url.length > 30 ? item.url.substring(0, 27) + '...' : item.url;
-
-
-                li.appendChild(titleSpan);
-                li.appendChild(urlSpan);
-                historyListEl.appendChild(li);
+                const titleSpan = document.createElement('span'); titleSpan.textContent = item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title; // Adjusted length
+                const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; // Adjusted length
+                li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li);
             });
         }
-
         function handleHistoryClick(e) {
             const li = e.target.closest('li[data-url]');
             if (li) {
-                navigateTo(li.dataset.url); // Navigate in current tab
-                if (isSidebarHidden === false && window.innerWidth < 768) { // Auto-hide sidebar on mobile after click
-                    handleSidebarToggle();
-                }
+                navigateTo(li.dataset.url); // Use navigateTo for consistency
+                if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
             }
         }
 
-        // --- THEMES ---
+        // --- THEMES & SETTINGS ---
         function applyTheme(themeName) {
-            document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); // Remove old theme
-            if (themeName !== 'default') {
-                document.body.classList.add(`theme-${themeName}`);
-            }
+            document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); // Remove old theme classes
+            if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
             localStorage.setItem('vernTheme', themeName);
             if (themeSelectorEl.value !== themeName) themeSelectorEl.value = themeName;
-             // Update toggle button positions if theme affects their initial calculation (shouldn't if CSS vars are robust)
+
+            // After applying theme, re-calculate heights and positions if necessary
+            // This is crucial if theme changes affect element sizes (padding, borders etc.)
             updateInitialTopBarHeight();
             if (!isSidebarHidden) {
-                 toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
             }
-
+             updateSelectArrowColor(); // Update select arrow color based on new theme
+        }
+        function handleThemeChange(e) { applyTheme(e.target.value); }
+        function handleSearchEngineChange(e) {
+            currentSearchEngineKey = e.target.value;
+            localStorage.setItem('vernSearchEngine', currentSearchEngineKey);
+            console.log("Search engine changed to:", searchEngines[currentSearchEngineKey].name);
         }
 
-        function loadSavedTheme() {
-            const savedTheme = localStorage.getItem('vernTheme') || 'default';
-            applyTheme(savedTheme);
-        }
-
-        function handleThemeChange(e) {
-            applyTheme(e.target.value);
-        }
-
-        // --- ADVANCED PAGE LOADING TECHNIQUES ---
-        // The primary mechanism here is the Ultraviolet proxy (uv.bundle.js, uv.config.js, register-sw.js).
-        // Optimizations would involve:
-        // 1. Service Worker Caching:
-        //    - `register-sw.js` sets up the service worker. Advanced strategies can be implemented
-        //      in the service worker itself (e.g., cache-first for certain assets, stale-while-revalidate).
-        //    - Caching proxied content is complex but can yield significant speedups for frequently visited sites.
-        // 2. Proxy Server Optimizations (if you host your own Ultraviolet backend):
-        //    - Server hardware, network bandwidth.
-        //    - Server-side caching (e.g., Redis or Varnish) for proxied requests.
-        //    - HTTP/2 or HTTP/3 support on the proxy server.
-        //    - Efficient request rewriting and stream handling in the proxy code.
-        // 3. Frontend Perceived Performance:
-        //    - The current tab system with `display: none` for inactive iframes is good as it preserves state.
-        //    - `iframe.loading = 'eager'` for the active tab.
-        //    - Optimizing your UI JavaScript (what we're writing here) to be non-blocking.
-        //    - Consider preconnecting to the proxy domain if it's different from the main site.
-        //      `<link rel="preconnect" href="YOUR_PROXY_DOMAIN_IF_DIFFERENT">`
-        // 4. Resource Hints for Proxied Content (Very Advanced & Hard with Generic Proxy):
-        //    - If the proxy could parse the HTML of the target page and inject resource hints
-        //      (preload, prefetch) for critical assets *through the proxy*, it could speed things up.
-        //      This is a significant undertaking for the proxy engine.
-        // 5. Intelligent Prefetching (Speculative):
-        //    - Based on user habits or links on the current page, you could speculatively start fetching
-        //      a URL in a hidden iframe. Resource-intensive and needs careful implementation.
-
-        console.log("Vern Pro Initialized. Advanced page loading relies on the UV proxy and Service Worker capabilities.");
-
+        console.log("Vern Pro Initialized with new sidebar styles and themes.");
     </script>
 </body>
 </html>
