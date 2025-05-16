@@ -32,9 +32,13 @@
             --sidebar-border-color: rgba(255, 255, 255, 0.15); /* Unified border color */
             --sidebar-outline-color: rgba(255, 255, 255, 0.25); /* For pill outlines */
             --button-text-color: #fff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
 
-        /* Light Theme */
+        /* Existing Themes */
         body.theme-light {
             --bg-color: #f4f4f4;
             --text-color: #333;
@@ -56,6 +60,10 @@
             --sidebar-border-color: #dee2e6;
             --sidebar-outline-color: #ced4da;
             --button-text-color: #333;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
 
         /* Blue Theme */
@@ -80,6 +88,10 @@
             --sidebar-border-color: rgba(255, 255, 255, 0.2);
             --sidebar-outline-color: rgba(255, 255, 255, 0.3);
             --button-text-color: #e0e1dd;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
 
         /* Orange Theme */
@@ -104,6 +116,10 @@
             --sidebar-border-color: rgba(255, 232, 204, 0.2);
             --sidebar-outline-color: rgba(255, 232, 204, 0.3);
             --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
 
         /* Galaxy Theme */
@@ -128,6 +144,10 @@
             --sidebar-border-color: rgba(230, 224, 255, 0.2);
             --sidebar-outline-color: rgba(230, 224, 255, 0.3);
             --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
 
         /* Mint Green Theme */
@@ -146,13 +166,18 @@
             --tab-bg: #b3e0d9;
             --tab-active-bg: #58d68d;
             --tab-border: #a3d9ce;
-            --tab-hover-bg: #a3d9ce;
+            --tab-hover-bg: #f5f5f5; /* Adjusted hover to be lighter */
             --sidebar-bg: #d9f7ef;
             --sidebar-item-hover-bg: #ccece6;
             --sidebar-border-color: #a3d9ce;
             --sidebar-outline-color: #7bc4b4;
             --button-text-color: #003322;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
+
 
         /* Crimson Red Theme */
         body.theme-crimson {
@@ -170,12 +195,16 @@
             --tab-bg: #6f1a24;
             --tab-active-bg: #dc143c;
             --tab-border: #8f2a34;
-            --tab-hover-bg: #8f2a34;
+            --tab-hover-bg: #8f2a34; /* Adjusted hover */
             --sidebar-bg: #3b1014;
             --sidebar-item-hover-bg: #4e1218;
             --sidebar-border-color: rgba(253, 232, 233, 0.2);
             --sidebar-outline-color: rgba(253, 232, 233, 0.3);
             --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
 
         /* Forest Green Theme */
@@ -194,13 +223,844 @@
             --tab-bg: #1a4325;
             --tab-active-bg: #228b22;
             --tab-border: #2a5335;
-            --tab-hover-bg: #2a5335;
+            --tab-hover-bg: #2a5335; /* Adjusted hover */
             --sidebar-bg: #0f2515;
             --sidebar-item-hover-bg: #122f1a;
             --sidebar-border-color: rgba(224, 240, 227, 0.2);
             --sidebar-outline-color: rgba(224, 240, 227, 0.3);
             --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
         }
+
+        /* Added Themes */
+        /* Purple Theme */
+        body.theme-purple {
+            --bg-color: #1a0a1a;
+            --text-color: #f0e0f0;
+            --navbar-bg: #2f122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #8a2be2; /* Blue Violet */
+            --button-hover-bg: #7b1eda; /* Darker Blue Violet */
+            --input-bg: #2f122f;
+            --input-focus-bg: #431a43;
+            --input-focus-shadow: 0 0 0 2px rgba(138, 43, 226, 0.5);
+            --iframe-bg: #1a0a1a;
+            --footer-text-color: #f0e0f0;
+            --tab-bg: #431a43;
+            --tab-active-bg: #8a2be2;
+            --tab-border: #532a53;
+            --tab-hover-bg: #532a53;
+            --sidebar-bg: #250f25;
+            --sidebar-item-hover-bg: #2f122f;
+            --sidebar-border-color: rgba(240, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(240, 224, 240, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Teal Theme */
+        body.theme-teal {
+            --bg-color: #0a1a1a;
+            --text-color: #e0f0f0;
+            --navbar-bg: #122f2f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #008080; /* Teal */
+            --button-hover-bg: #006666; /* Darker Teal */
+            --input-bg: #122f2f;
+            --input-focus-bg: #1a4343;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 128, 128, 0.5);
+            --iframe-bg: #0a1a1a;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4343;
+            --tab-active-bg: #008080;
+            --tab-border: #2a5353;
+            --tab-hover-bg: #2a5353;
+            --sidebar-bg: #0f2525;
+            --sidebar-item-hover-bg: #122f2f;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Brown Theme */
+        body.theme-brown {
+            --bg-color: #1a1510;
+            --text-color: #f0e8e0;
+            --navbar-bg: #2f251a;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #a0522d; /* Sienna */
+            --button-hover-bg: #8b4513; /* Saddle Brown */
+            --input-bg: #2f251a;
+            --input-focus-bg: #43382c;
+            --input-focus-shadow: 0 0 0 2px rgba(160, 82, 45, 0.5);
+            --iframe-bg: #1a1510;
+            --footer-text-color: #f0e8e0;
+            --tab-bg: #43382c;
+            --tab-active-bg: #a0522d;
+            --tab-border: #534a3d;
+            --tab-hover-bg: #534a3d;
+            --sidebar-bg: #251e14;
+            --sidebar-item-hover-bg: #2f251a;
+            --sidebar-border-color: rgba(240, 232, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 232, 224, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Pink Theme */
+        body.theme-pink {
+            --bg-color: #2c0b1a;
+            --text-color: #fde8f0;
+            --navbar-bg: #4e122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ff69b4; /* Hot Pink */
+            --button-hover-bg: #ff1493; /* Deep Pink */
+            --input-bg: #4e122f;
+            --input-focus-bg: #6f1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 105, 180, 0.5);
+            --iframe-bg: #2c0b1a;
+            --footer-text-color: #fde8f0;
+            --tab-bg: #6f1a43;
+            --tab-active-bg: #ff69b4;
+            --tab-border: #8f2a53;
+            --tab-hover-bg: #8f2a53;
+            --sidebar-bg: #3b1025;
+            --sidebar-item-hover-bg: #4e122f;
+            --sidebar-border-color: rgba(253, 232, 240, 0.2);
+            --sidebar-outline-color: rgba(253, 232, 240, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Yellow Theme */
+        body.theme-yellow {
+            --bg-color: #1a1a0a;
+            --text-color: #f0f0e0;
+            --navbar-bg: #2f2f12;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ffd700; /* Gold */
+            --button-hover-bg: #ffc125; /* Goldenrod */
+            --input-bg: #2f2f12;
+            --input-focus-bg: #43431a;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5);
+            --iframe-bg: #1a1a0a;
+            --footer-text-color: #f0f0e0;
+            --tab-bg: #43431a;
+            --tab-active-bg: #ffd700;
+            --tab-border: #53532a;
+            --tab-hover-bg: #53532a;
+            --sidebar-bg: #25250f;
+            --sidebar-item-hover-bg: #2f2f12;
+            --sidebar-border-color: rgba(240, 240, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 240, 224, 0.3);
+            --button-text-color: #333;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Gray Theme */
+        body.theme-gray {
+            --bg-color: #1a1a1c;
+            --text-color: #e0e0e0;
+            --navbar-bg: #2f2f32;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #808080; /* Gray */
+            --button-hover-bg: #696969; /* Dim Gray */
+            --input-bg: #2f2f32;
+            --input-focus-bg: #434348;
+            --input-focus-shadow: 0 0 0 2px rgba(128, 128, 128, 0.5);
+            --iframe-bg: #1a1a1c;
+            --footer-text-color: #e0e0e0;
+            --tab-bg: #434348;
+            --tab-active-bg: #808080;
+            --tab-border: #535358;
+            --tab-hover-bg: #535358;
+            --sidebar-bg: #252528;
+            --sidebar-item-hover-bg: #2f2f32;
+            --sidebar-border-color: rgba(224, 224, 224, 0.2);
+            --sidebar-outline-color: rgba(224, 224, 224, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Cyan Theme */
+        body.theme-cyan {
+            --bg-color: #0a1a1c;
+            --text-color: #e0f0f0;
+            --navbar-bg: #122f32;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #00ffff; /* Cyan */
+            --button-hover-bg: #00ced1; /* Dark Cyan */
+            --input-bg: #122f32;
+            --input-focus-bg: #1a4348;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 255, 255, 0.5);
+            --iframe-bg: #0a1a1c;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4348;
+            --tab-active-bg: #00ffff;
+            --tab-border: #2a5358;
+            --tab-hover-bg: #2a5358;
+            --sidebar-bg: #0f2528;
+            --sidebar-item-hover-bg: #122f32;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
+            --button-text-color: #333;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Lime Theme */
+        body.theme-lime {
+            --bg-color: #1a1c0a;
+            --text-color: #f0f0e0;
+            --navbar-bg: #2f3212;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #32cd32; /* Lime Green */
+            --button-hover-bg: #008000; /* Green */
+            --input-bg: #2f3212;
+            --input-focus-bg: #43481a;
+            --input-focus-shadow: 0 0 0 2px rgba(50, 205, 50, 0.5);
+            --iframe-bg: #1a1c0a;
+            --footer-text-color: #f0f0e0;
+            --tab-bg: #43481a;
+            --tab-active-bg: #32cd32;
+            --tab-border: #53582a;
+            --tab-hover-bg: #53582a;
+            --sidebar-bg: #25280f;
+            --sidebar-item-hover-bg: #2f3212;
+            --sidebar-border-color: rgba(240, 240, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 240, 224, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Indigo Theme */
+        body.theme-indigo {
+            --bg-color: #100a1a;
+            --text-color: #e8e0f0;
+            --navbar-bg: #1d122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #4b0082; /* Indigo */
+            --button-hover-bg: #410072; /* Darker Indigo */
+            --input-bg: #1d122f;
+            --input-focus-bg: #2c1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(75, 0, 130, 0.5);
+            --iframe-bg: #100a1a;
+            --footer-text-color: #e8e0f0;
+            --tab-bg: #2c1a43;
+            --tab-active-bg: #4b0082;
+            --tab-border: #3d2a53;
+            --tab-hover-bg: #3d2a53;
+            --sidebar-bg: #170f25;
+            --sidebar-item-hover-bg: #1d122f;
+            --sidebar-border-color: rgba(232, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(232, 224, 240, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Olive Theme */
+        body.theme-olive {
+            --bg-color: #1a1a0a;
+            --text-color: #f0f0e0;
+            --navbar-bg: #2f2f12;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #808000; /* Olive */
+            --button-hover-bg: #6b8e23; /* Olive Drab */
+            --input-bg: #2f2f12;
+            --input-focus-bg: #43431a;
+            --input-focus-shadow: 0 0 0 2px rgba(128, 128, 0, 0.5);
+            --iframe-bg: #1a1a0a;
+            --footer-text-color: #f0f0e0;
+            --tab-bg: #43431a;
+            --tab-active-bg: #808000;
+            --tab-border: #53532a;
+            --tab-hover-bg: #53532a;
+            --sidebar-bg: #25250f;
+            --sidebar-item-hover-bg: #2f2f12;
+            --sidebar-border-color: rgba(240, 240, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 240, 224, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Maroon Theme */
+        body.theme-maroon {
+            --bg-color: #1a0a0a;
+            --text-color: #f0e0e0;
+            --navbar-bg: #2f1212;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #800000; /* Maroon */
+            --button-hover-bg: #a52a2a; /* Brown */
+            --input-bg: #2f1212;
+            --input-focus-bg: #431a1a;
+            --input-focus-shadow: 0 0 0 2px rgba(128, 0, 0, 0.5);
+            --iframe-bg: #1a0a0a;
+            --footer-text-color: #f0e0e0;
+            --tab-bg: #431a1a;
+            --tab-active-bg: #800000;
+            --tab-border: #532a2a;
+            --tab-hover-bg: #532a2a;
+            --sidebar-bg: #250f0f;
+            --sidebar-item-hover-bg: #2f1212;
+            --sidebar-border-color: rgba(240, 224, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 224, 224, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Navy Theme */
+        body.theme-navy {
+            --bg-color: #0a0a1a;
+            --text-color: #e0e0f0;
+            --navbar-bg: #12122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #000080; /* Navy */
+            --button-hover-bg: #0000cd; /* Medium Blue */
+            --input-bg: #12122f;
+            --input-focus-bg: #1a1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
+            --iframe-bg: #0a0a1a;
+            --footer-text-color: #e0e0f0;
+            --tab-bg: #1a1a43;
+            --tab-active-bg: #000080;
+            --tab-border: #2a2a53;
+            --tab-hover-bg: #2a2a53;
+            --sidebar-bg: #0f0f25;
+            --sidebar-item-hover-bg: #12122f;
+            --sidebar-border-color: rgba(224, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 224, 240, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Aqua Theme */
+        body.theme-aqua {
+            --bg-color: #0a1a1a;
+            --text-color: #e0f0f0;
+            --navbar-bg: #122f2f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #00ffff; /* Aqua */
+            --button-hover-bg: #00ced1; /* Dark Cyan */
+            --input-bg: #122f2f;
+            --input-focus-bg: #1a4343;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 255, 255, 0.5);
+            --iframe-bg: #0a1a1a;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4343;
+            --tab-active-bg: #00ffff;
+            --tab-border: #2a5353;
+            --tab-hover-bg: #2a5353;
+            --sidebar-bg: #0f2525;
+            --sidebar-item-hover-bg: #122f2f;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
+            --button-text-color: #333;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Gold Theme */
+        body.theme-gold {
+            --bg-color: #1a100a;
+            --text-color: #f0e8e0;
+            --navbar-bg: #2f1d12;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ffd700; /* Gold */
+            --button-hover-bg: #ffc125; /* Goldenrod */
+            --input-bg: #2f1d12;
+            --input-focus-bg: #432c1a;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5);
+            --iframe-bg: #1a100a;
+            --footer-text-color: #f0e8e0;
+            --tab-bg: #432c1a;
+            --tab-active-bg: #ffd700;
+            --tab-border: #533d2a;
+            --tab-hover-bg: #533d2a;
+            --sidebar-bg: #25170f;
+            --sidebar-item-hover-bg: #2f1d12;
+            --sidebar-border-color: rgba(240, 232, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 232, 224, 0.3);
+            --button-text-color: #333;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Silver Theme */
+        body.theme-silver {
+            --bg-color: #1c1c1c;
+            --text-color: #e0e0e0;
+            --navbar-bg: #323232;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #c0c0c0; /* Silver */
+            --button-hover-bg: #a9a9a9; /* Dark Gray */
+            --input-bg: #323232;
+            --input-focus-bg: #484848;
+            --input-focus-shadow: 0 0 0 2px rgba(192, 192, 192, 0.5);
+            --iframe-bg: #1c1c1c;
+            --footer-text-color: #e0e0e0;
+            --tab-bg: #484848;
+            --tab-active-bg: #c0c0c0;
+            --tab-border: #585858;
+            --tab-hover-bg: #585858;
+            --sidebar-bg: #282828;
+            --sidebar-item-hover-bg: #323232;
+            --sidebar-border-color: rgba(224, 224, 224, 0.2);
+            --sidebar-outline-color: rgba(224, 224, 224, 0.3);
+            --button-text-color: #333;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Bronze Theme */
+        body.theme-bronze {
+            --bg-color: #1a1510;
+            --text-color: #f0e8e0;
+            --navbar-bg: #2f251a;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #cd7f32; /* Bronze */
+            --button-hover-bg: #b87333; /* Copper */
+            --input-bg: #2f251a;
+            --input-focus-bg: #43382c;
+            --input-focus-shadow: 0 0 0 2px rgba(205, 127, 50, 0.5);
+            --iframe-bg: #1a1510;
+            --footer-text-color: #f0e8e0;
+            --tab-bg: #43382c;
+            --tab-active-bg: #cd7f32;
+            --tab-border: #534a3d;
+            --tab-hover-bg: #534a3d;
+            --sidebar-bg: #251e14;
+            --sidebar-item-hover-bg: #2f251a;
+            --sidebar-border-color: rgba(240, 232, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 232, 224, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Rose Theme */
+        body.theme-rose {
+            --bg-color: #2c0b15;
+            --text-color: #fde8ec;
+            --navbar-bg: #4e1228;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ff007f; /* Rose */
+            --button-hover-bg: #dc143c; /* Crimson */
+            --input-bg: #4e1228;
+            --input-focus-bg: #6f1a3c;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 0, 127, 0.5);
+            --iframe-bg: #2c0b15;
+            --footer-text-color: #fde8ec;
+            --tab-bg: #6f1a3c;
+            --tab-active-bg: #ff007f;
+            --tab-border: #8f2a4c;
+            --tab-hover-bg: #8f2a4c;
+            --sidebar-bg: #3b101f;
+            --sidebar-item-hover-bg: #4e1228;
+            --sidebar-border-color: rgba(253, 232, 236, 0.2);
+            --sidebar-outline-color: rgba(253, 232, 236, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Violet Theme */
+        body.theme-violet {
+            --bg-color: #150a1a;
+            --text-color: #ece0f0;
+            --navbar-bg: #28122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #8a2be2; /* Blue Violet */
+            --button-hover-bg: #9400d3; /* Dark Violet */
+            --input-bg: #28122f;
+            --input-focus-bg: #3c1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(138, 43, 226, 0.5);
+            --iframe-bg: #150a1a;
+            --footer-text-color: #ece0f0;
+            --tab-bg: #3c1a43;
+            --tab-active-bg: #8a2be2;
+            --tab-border: #4c2a53;
+            --tab-hover-bg: #4c2a53;
+            --sidebar-bg: #1f0f25;
+            --sidebar-item-hover-bg: #28122f;
+            --sidebar-border-color: rgba(236, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(236, 224, 240, 0.3);
+            --button-text-color: #ffffff;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Turquoise Theme */
+        body.theme-turquoise {
+            --bg-color: #0a1c1c;
+            --text-color: #e0f0f0;
+            --navbar-bg: #123232;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #40e0d0; /* Turquoise */
+            --button-hover-bg: #48d1cc; /* Medium Turquoise */
+            --input-bg: #123232;
+            --input-focus-bg: #1a4848;
+            --input-focus-shadow: 0 0 0 2px rgba(64, 224, 208, 0.5);
+            --iframe-bg: #0a1c1c;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4848;
+            --tab-active-bg: #40e0d0;
+            --tab-border: #2a5858;
+            --tab-hover-bg: #2a5858;
+            --sidebar-bg: #0f2828;
+            --sidebar-item-hover-bg: #123232;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
+            --button-text-color: #333;
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Adding 10 New Themes */
+        /* Gold Rush Theme */
+        body.theme-goldrush {
+            --bg-color: #332a00;
+            --text-color: #fff8e1;
+            --navbar-bg: #4d3e00;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ffc107; /* Amber */
+            --button-hover-bg: #ffb300; /* Selective Yellow */
+            --input-bg: #4d3e00;
+            --input-focus-bg: #665200;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 193, 7, 0.5);
+            --iframe-bg: #332a00;
+            --footer-text-color: #fff8e1;
+            --tab-bg: #665200;
+            --tab-active-bg: #ffc107;
+            --tab-border: #806b00;
+            --tab-hover-bg: #806b00;
+            --sidebar-bg: #292100;
+            --sidebar-item-hover-bg: #332a00;
+            --sidebar-border-color: rgba(255, 248, 225, 0.2);
+            --sidebar-outline-color: rgba(255, 248, 225, 0.3);
+            --button-text-color: #333;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Emerald Theme */
+        body.theme-emerald {
+            --bg-color: #0a261a;
+            --text-color: #e0f2f1;
+            --navbar-bg: #114c2f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #2ecc71; /* Emerald */
+            --button-hover-bg: #27ae60; /* Medium Sea Green */
+            --input-bg: #114c2f;
+            --input-focus-bg: #1a6f4a;
+            --input-focus-shadow: 0 0 0 2px rgba(46, 204, 113, 0.5);
+            --iframe-bg: #0a261a;
+            --footer-text-color: #e0f2f1;
+            --tab-bg: #1a6f4a;
+            --tab-active-bg: #2ecc71;
+            --tab-border: #239b5b;
+            --tab-hover-bg: #239b5b;
+            --sidebar-bg: #081f14;
+            --sidebar-item-hover-bg: #0a261a;
+            --sidebar-border-color: rgba(224, 242, 241, 0.2);
+            --sidebar-outline-color: rgba(224, 242, 241, 0.3);
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Sunset Theme */
+        body.theme-sunset {
+            --bg-color: #2c1a00;
+            --text-color: #ffecb3;
+            --navbar-bg: #4e2c00;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ff9800; /* Orange */
+            --button-hover-bg: #f57c00; /* Dark Orange */
+            --input-bg: #4e2c00;
+            --input-focus-bg: #795548;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 152, 0, 0.5);
+            --iframe-bg: #2c1a00;
+            --footer-text-color: #ffecb3;
+            --tab-bg: #795548;
+            --tab-active-bg: #ff9800;
+            --tab-border: #a1887f;
+            --tab-hover-bg: #a1887f;
+            --sidebar-bg: #3b2000;
+            --sidebar-item-hover-bg: #4e2c00;
+            --sidebar-border-color: rgba(255, 236, 179, 0.2);
+            --sidebar-outline-color: rgba(255, 236, 179, 0.3);
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Ocean Theme (Slightly different from existing Blue) */
+        body.theme-ocean {
+            --bg-color: #0a1a26;
+            --text-color: #e3f2fd;
+            --navbar-bg: #1e3a5f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #2196f3; /* Blue */
+            --button-hover-bg: #1976d2; /* Darker Blue */
+            --input-bg: #1e3a5f;
+            --input-focus-bg: #42a5f5;
+            --input-focus-shadow: 0 0 0 2px rgba(33, 150, 243, 0.5);
+            --iframe-bg: #0a1a26;
+            --footer-text-color: #e3f2fd;
+            --tab-bg: #42a5f5;
+            --tab-active-bg: #2196f3;
+            --tab-border: #64b5f6;
+            --tab-hover-bg: #64b5f6;
+            --sidebar-bg: #162e4c;
+            --sidebar-item-hover-bg: #1e3a5f;
+            --sidebar-border-color: rgba(227, 242, 253, 0.2);
+            --sidebar-outline-color: rgba(227, 242, 253, 0.3);
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Ruby Theme */
+        body.theme-ruby {
+            --bg-color: #260a1a;
+            --text-color: #fce4ec;
+            --navbar-bg: #4a1230;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #e51c23; /* Red */
+            --button-hover-bg: #d01716; /* Darker Red */
+            --input-bg: #4a1230;
+            --input-focus-bg: #880e4f;
+            --input-focus-shadow: 0 0 0 2px rgba(229, 28, 35, 0.5);
+            --iframe-bg: #260a1a;
+            --footer-text-color: #fce4ec;
+            --tab-bg: #880e4f;
+            --tab-active-bg: #e51c23;
+            --tab-border: #c2185b;
+            --tab-hover-bg: #c2185b;
+            --sidebar-bg: #1e0814;
+            --sidebar-item-hover-bg: #260a1a;
+            --sidebar-border-color: rgba(252, 228, 236, 0.2);
+            --sidebar-outline-color: rgba(252, 228, 236, 0.3);
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Sandstone Theme */
+        body.theme-sandstone {
+            --bg-color: #2e2a1a;
+            --text-color: #fff9c4;
+            --navbar-bg: #5d5335;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ffeb3b; /* Yellow */
+            --button-hover-bg: #fbc02d; /* Amber */
+            --input-bg: #5d5335;
+            --input-focus-bg: #8d6e63;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 235, 59, 0.5);
+            --iframe-bg: #2e2a1a;
+            --footer-text-color: #fff9c4;
+            --tab-bg: #8d6e63;
+            --tab-active-bg: #ffeb3b;
+            --tab-border: #a1887f;
+            --tab-hover-bg: #a1887f;
+            --sidebar-bg: #262313;
+            --sidebar-item-hover-bg: #2e2a1a;
+            --sidebar-border-color: rgba(255, 249, 196, 0.2);
+            --sidebar-outline-color: rgba(255, 249, 196, 0.3);
+            --button-text-color: #333;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Amethyst Theme */
+        body.theme-amethyst {
+            --bg-color: #1f0a26;
+            --text-color: #f3e5f5;
+            --navbar-bg: #381b4d;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #9c27b0; /* Purple */
+            --button-hover-bg: #8e24aa; /* Darker Purple */
+            --input-bg: #381b4d;
+            --input-focus-bg: #ba68c8;
+            --input-focus-shadow: 0 0 0 2px rgba(156, 39, 176, 0.5);
+            --iframe-bg: #1f0a26;
+            --footer-text-color: #f3e5f5;
+            --tab-bg: #ba68c8;
+            --tab-active-bg: #9c27b0;
+            --tab-border: #e1bee7;
+            --tab-hover-bg: #e1bee7;
+            --sidebar-bg: #18081f;
+            --sidebar-item-hover-bg: #1f0a26;
+            --sidebar-border-color: rgba(243, 229, 245, 0.2);
+            --sidebar-outline-color: rgba(243, 229, 245, 0.3);
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Charcoal Theme */
+        body.theme-charcoal {
+            --bg-color: #1f1f1f;
+            --text-color: #e0e0e0;
+            --navbar-bg: #333333;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #616161; /* Gray 700 */
+            --button-hover-bg: #424242; /* Gray 800 */
+            --input-bg: #333333;
+            --input-focus-bg: #424242;
+            --input-focus-shadow: 0 0 0 2px rgba(97, 97, 97, 0.5);
+            --iframe-bg: #1f1f1f;
+            --footer-text-color: #e0e0e0;
+            --tab-bg: #424242;
+            --tab-active-bg: #616161;
+            --tab-border: #757575;
+            --tab-hover-bg: #757575;
+            --sidebar-bg: #292929;
+            --sidebar-item-hover-bg: #1f1f1f;
+            --sidebar-border-color: rgba(224, 224, 224, 0.2);
+            --sidebar-outline-color: rgba(224, 224, 224, 0.3);
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Pastel Pink Theme (special: subtle pulsing on inputs) */
+        body.theme-pastelpink {
+            --bg-color: #fff0f6;
+            --text-color: #880e4f;
+            --navbar-bg: #f8bbd0;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            --button-bg: #e91e63; /* Pink */
+            --button-hover-bg: #c2185b; /* Darker Pink */
+            --input-bg: #fce4ec;
+            --input-focus-bg: #f8bbd0;
+            --input-focus-shadow: 0 0 0 2px rgba(233, 30, 99, 0.3);
+            --iframe-bg: #fff0f6;
+            --footer-text-color: #880e4f;
+            --tab-bg: #f48fb1;
+            --tab-active-bg: #e91e63;
+            --tab-border: #f06292;
+            --tab-hover-bg: #f06292;
+            --sidebar-bg: #ffebee;
+            --sidebar-item-hover-bg: #f8bbd0;
+            --sidebar-border-color: #f06292;
+            --sidebar-outline-color: #e91e63;
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+        body.theme-pastelpink .sidebar-input:focus,
+        body.theme-pastelpink .custom-dropdown-header:focus {
+            animation: pulse-pink 1s infinite alternate;
+        }
+        @keyframes pulse-pink {
+            from { box-shadow: var(--input-focus-shadow); }
+            to { box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.5); }
+        }
+
+        /* Neon Green Theme (special: vibrant text shadow on hover) */
+        body.theme-neongreen {
+            --bg-color: #0a1a0a;
+            --text-color: #00ff00; /* Neon Green */
+            --navbar-bg: #113311;
+            --navbar-shadow: 0 2px 5px rgba(0,255,0,0.3);
+            --button-bg: #00cc00; /* Darker Neon */
+            --button-hover-bg: #00aa00;
+            --input-bg: #113311;
+            --input-focus-bg: #1a4d1a;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 255, 0, 0.5);
+            --iframe-bg: #0a1a0a;
+            --footer-text-color: #00ff00;
+            --tab-bg: #1a4d1a;
+            --tab-active-bg: #00ff00;
+            --tab-border: #00aa00;
+            --tab-hover-bg: #00aa00;
+            --sidebar-bg: #081408;
+            --sidebar-item-hover-bg: #0a1a0a;
+            --sidebar-border-color: rgba(0, 255, 0, 0.2);
+            --sidebar-outline-color: rgba(0, 255, 0, 0.3);
+            --button-text-color: #ffffff;
+             --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: var(--input-focus-bg);
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+        body.theme-neongreen li:hover .bookmark-url,
+        body.theme-neongreen li:hover .history-url {
+            text-shadow: 0 0 5px var(--text-color);
+        }
+
 
         html, body {
             margin: 0; padding: 0; border: none; box-sizing: border-box;
@@ -252,7 +1112,7 @@
             font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
         }
 
-        #sidebar .sidebar-input, #sidebar .sidebar-select {
+        #sidebar .sidebar-input {
             width: 100%; /* Full width */
             height: 40px; /* Consistent height */
             padding: 0 18px; /* Padding like search bar */
@@ -266,20 +1126,11 @@
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
             font-size: 0.9em;
         }
-        #sidebar .sidebar-input:focus, #sidebar .sidebar-select:focus {
+        #sidebar .sidebar-input:focus {
             outline: none;
             background-color: var(--input-focus-bg);
             box-shadow: var(--input-focus-shadow); /* Use theme's focus shadow */
         }
-        #sidebar .sidebar-select {
-             appearance: none; -webkit-appearance: none; -moz-appearance: none;
-             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(getComputedStyle(document.body).getPropertyValue('--text-color').substring(1))}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
-             background-repeat: no-repeat;
-             background-position: right 15px center;
-             background-size: .65em auto;
-             padding-right: 35px; /* Make space for arrow */
-        }
-
 
         #sidebar .sidebar-button {
             width: 100%; /* Full width */
@@ -302,6 +1153,92 @@
             box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
         }
 
+        /* Custom Dropdown Styles */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            font-family: var(--font-family-main);
+            color: var(--dropdown-text-color);
+        }
+
+        .custom-dropdown-header {
+            width: 100%;
+            height: 40px;
+            padding: 0 18px;
+            background-color: var(--dropdown-bg);
+            border: none;
+            border-radius: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .custom-dropdown-header:hover {
+             background-color: var(--dropdown-hover-bg);
+             box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+        }
+
+         .custom-dropdown-header:focus {
+            outline: none;
+            background-color: var(--dropdown-hover-bg);
+            box-shadow: var(--input-focus-shadow);
+        }
+
+        .custom-dropdown-header .fas {
+            margin-left: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-dropdown-header.open .fas {
+            transform: rotate(180deg);
+        }
+
+        .custom-dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--dropdown-bg);
+            border-radius: 10px; /* Slightly less rounded than pills */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            list-style: none;
+            padding: 10px 0;
+            margin: 5px 0 0 0;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+
+        .custom-dropdown-list.show {
+            display: block;
+        }
+
+        .custom-dropdown-list::-webkit-scrollbar { width: 5px; }
+        .custom-dropdown-list::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+
+
+        .custom-dropdown-list-item {
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-dropdown-list-item:hover {
+            background-color: var(--dropdown-item-hover-bg);
+        }
+
+        .custom-dropdown-list-item.selected {
+            font-weight: bold;
+            /* Add a subtle visual cue for selected item */
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
         #main-content-wrapper {
             flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
@@ -404,25 +1341,67 @@
 
         <div id="settings-section">
             <h3><i class="fas fa-cog"></i> Settings</h3>
-            <label for="theme-selector" class="sidebar-setting-label">Theme:</label>
-            <select id="theme-selector" class="sidebar-select">
-                <option value="default">Default Dark</option>
-                <option value="light">Light Mode</option>
-                <option value="blue">Ocean Blue</option>
-                <option value="orange">Sunset Orange</option>
-                <option value="galaxy">Cosmic Galaxy</option>
-                <option value="mint">Mint Green</option>
-                <option value="crimson">Crimson Red</option>
-                <option value="forest">Forest Green</option>
-            </select>
+            <label for="theme-dropdown" class="sidebar-setting-label">Theme:</label>
+            <div class="custom-dropdown" id="theme-dropdown">
+                <div class="custom-dropdown-header" tabindex="0">
+                    <span id="selected-theme-text">Default Dark</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <ul class="custom-dropdown-list" role="listbox">
+                    <li class="custom-dropdown-list-item" data-value="default" role="option" aria-selected="true">Default Dark</li>
+                    <li class="custom-dropdown-list-item" data-value="light" role="option">Light Mode</li>
+                    <li class="custom-dropdown-list-item" data-value="blue" role="option">Ocean Blue</li>
+                    <li class="custom-dropdown-list-item" data-value="orange" role="option">Sunset Orange</li>
+                    <li class="custom-dropdown-list-item" data-value="galaxy" role="option">Cosmic Galaxy</li>
+                    <li class="custom-dropdown-list-item" data-value="mint" role="option">Mint Green</li>
+                    <li class="custom-dropdown-list-item" data-value="crimson" role="option">Crimson Red</li>
+                    <li class="custom-dropdown-list-item" data-value="forest" role="option">Forest Green</li>
+                    <li class="custom-dropdown-list-item" data-value="purple" role="option">Deep Purple</li>
+                    <li class="custom-dropdown-list-item" data-value="teal" role="option">Ocean Teal</li>
+                    <li class="custom-dropdown-list-item" data-value="brown" role="option">Earthy Brown</li>
+                    <li class="custom-dropdown-list-item" data-value="pink" role="option">Hot Pink</li>
+                    <li class="custom-dropdown-list-item" data-value="yellow" role="option">Sunny Yellow</li>
+                    <li class="custom-dropdown-list-item" data-value="gray" role="option">Cool Gray</li>
+                    <li class="custom-dropdown-list-item" data-value="cyan" role="option">Vibrant Cyan</li>
+                    <li class="custom-dropdown-list-item" data-value="lime" role="option">Zesty Lime</li>
+                    <li class="custom-dropdown-list-item" data-value="indigo" role="option">Mystic Indigo</li>
+                    <li class="custom-dropdown-list-item" data-value="olive" role="option">Calm Olive</li>
+                    <li class="custom-dropdown-list-item" data-value="maroon" role="option">Rich Maroon</li>
+                    <li class="custom-dropdown-list-item" data-value="navy" role="option">Deep Navy</li>
+                    <li class="custom-dropdown-list-item" data-value="aqua" role="option">Bright Aqua</li>
+                    <li class="custom-dropdown-list-item" data-value="gold" role="option">Royal Gold</li>
+                    <li class="custom-dropdown-list-item" data-value="silver" role="option">Classic Silver</li>
+                    <li class="custom-dropdown-list-item" data-value="bronze" role="option">Rustic Bronze</li>
+                    <li class="custom-dropdown-list-item" data-value="rose" role="option">Sweet Rose</li>
+                    <li class="custom-dropdown-list-item" data-value="violet" role="option">Soft Violet</li>
+                    <li class="custom-dropdown-list-item" data-value="turquoise" role="option">Peaceful Turquoise</li>
+                     <li class="custom-dropdown-list-item" data-value="goldrush" role="option">Gold Rush</li>
+                    <li class="custom-dropdown-list-item" data-value="emerald" role="option">Emerald Green</li>
+                    <li class="custom-dropdown-list-item" data-value="sunset" role="option">Sunset Orange</li>
+                    <li class="custom-dropdown-list-item" data-value="ocean" role="option">Deep Ocean Blue</li>
+                    <li class="custom-dropdown-list-item" data-value="ruby" role="option">Ruby Red</li>
+                    <li class="custom-dropdown-list-item" data-value="sandstone" role="option">Desert Sandstone</li>
+                    <li class="custom-dropdown-list-item" data-value="amethyst" role="option">Mystic Amethyst</li>
+                    <li class="custom-dropdown-list-item" data-value="charcoal" role="option">Charcoal Gray</li>
+                    <li class="custom-dropdown-list-item" data-value="pastelpink" role="option">Pastel Pink (Special)</li>
+                    <li class="custom-dropdown-list-item" data-value="neongreen" role="option">Neon Green (Special)</li>
 
-            <label for="search-engine-selector" class="sidebar-setting-label" style="margin-top: 15px;">Search Engine:</label>
-            <select id="search-engine-selector" class="sidebar-select">
-                <option value="duckduckgo">DuckDuckGo</option>
-                <option value="google">Google</option>
-                <option value="bing">Bing</option>
-                <option value="brave">Brave Search</option>
-            </select>
+                </ul>
+            </div>
+
+            <label for="search-engine-dropdown" class="sidebar-setting-label" style="margin-top: 15px;">Search Engine:</label>
+             <div class="custom-dropdown" id="search-engine-dropdown">
+                <div class="custom-dropdown-header" tabindex="0">
+                    <span id="selected-search-engine-text">DuckDuckGo</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <ul class="custom-dropdown-list" role="listbox">
+                     <li class="custom-dropdown-list-item" data-value="duckduckgo" role="option" aria-selected="true">DuckDuckGo</li>
+                    <li class="custom-dropdown-list-item" data-value="google" role="option">Google</li>
+                    <li class="custom-dropdown-list-item" data-value="bing" role="option">Bing</li>
+                    <li class="custom-dropdown-list-item" data-value="brave" role="option">Brave Search</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -476,13 +1455,56 @@
         };
         let currentSearchEngineKey = 'duckduckgo'; // Default
 
+        const themes = {
+            'default': 'Default Dark',
+            'light': 'Light Mode',
+            'blue': 'Ocean Blue',
+            'orange': 'Sunset Orange',
+            'galaxy': 'Cosmic Galaxy',
+            'mint': 'Mint Green',
+            'crimson': 'Crimson Red',
+            'forest': 'Forest Green',
+            'purple': 'Deep Purple',
+            'teal': 'Ocean Teal',
+            'brown': 'Earthy Brown',
+            'pink': 'Hot Pink',
+            'yellow': 'Sunny Yellow',
+            'gray': 'Cool Gray',
+            'cyan': 'Vibrant Cyan',
+            'lime': 'Zesty Lime',
+            'indigo': 'Mystic Indigo',
+            'olive': 'Calm Olive',
+            'maroon': 'Rich Maroon',
+            'navy': 'Deep Navy',
+            'aqua': 'Bright Aqua',
+            'gold': 'Royal Gold',
+            'silver': 'Classic Silver',
+            'bronze': 'Rustic Bronze',
+            'rose': 'Sweet Rose',
+            'violet': 'Soft Violet',
+            'turquoise': 'Peaceful Turquoise',
+            // Added Themes
+            'goldrush': 'Gold Rush',
+            'emerald': 'Emerald Green',
+            'sunset': 'Sunset Orange',
+            'ocean': 'Deep Ocean Blue',
+            'ruby': 'Ruby Red',
+            'sandstone': 'Desert Sandstone',
+            'amethyst': 'Mystic Amethyst',
+            'charcoal': 'Charcoal Gray',
+            'pastelpink': 'Pastel Pink (Special)',
+            'neongreen': 'Neon Green (Special)'
+        };
+
+
         // --- DOM ELEMENT REFERENCES ---
         let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl;
         let topBarAssemblyEl, toggleTopBarButtonEl, toggleBarIconEl;
         let sidebarEl, toggleSidebarButtonEl, toggleSidebarIconEl, mainContentWrapperEl;
         let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
         let historyListEl;
-        let themeSelectorEl, searchEngineSelectorEl;
+        let themeDropdownEl, searchEngineDropdownEl;
+        let selectedThemeTextEl, selectedSearchEngineTextEl;
 
         let initialTopBarHeight = 0;
         let isTopBarHidden = false;
@@ -513,11 +1535,15 @@
             addCurrentBookmarkButtonEl = document.getElementById('add-current-bookmark-button');
             newBookmarkNameInputEl = document.getElementById('new-bookmark-name');
             historyListEl = document.getElementById('history-list');
-            themeSelectorEl = document.getElementById('theme-selector');
-            searchEngineSelectorEl = document.getElementById('search-engine-selector');
+
+            themeDropdownEl = document.getElementById('theme-dropdown');
+            searchEngineDropdownEl = document.getElementById('search-engine-dropdown');
+            selectedThemeTextEl = document.getElementById('selected-theme-text');
+            selectedSearchEngineTextEl = document.getElementById('selected-search-engine-text');
+
 
             await initUV();
-            setupSearchEngineSelector(); // Populate dropdown
+            setupCustomDropdowns(); // Setup the new custom dropdowns
             loadSettings(); // Load theme and search engine
 
             updateInitialTopBarHeight();
@@ -547,6 +1573,8 @@
             if (tabs.length === 0) createTab(initialUrl || 'about:blank');
             renderHistory();
             applyTheme(localStorage.getItem('vernTheme') || 'default'); // Ensure theme is applied correctly on load
+             updateSelectedDropdownText('theme-dropdown', localStorage.getItem('vernTheme') || 'default');
+             updateSelectedDropdownText('search-engine-dropdown', localStorage.getItem('vernSearchEngine') || 'duckduckgo');
         });
 
         async function initUV() {
@@ -563,19 +1591,192 @@
             }
         }
 
-        function setupSearchEngineSelector() {
-            searchEngineSelectorEl.innerHTML = ''; // Clear existing options
-            for (const key in searchEngines) {
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = searchEngines[key].name;
-                searchEngineSelectorEl.appendChild(option);
+        function setupCustomDropdowns() {
+            // Populate Theme Dropdown
+            const themeListEl = themeDropdownEl.querySelector('.custom-dropdown-list');
+            themeListEl.innerHTML = ''; // Clear existing options
+            for (const value in themes) {
+                const li = document.createElement('li');
+                li.className = 'custom-dropdown-list-item';
+                li.dataset.value = value;
+                li.textContent = themes[value];
+                li.setAttribute('role', 'option');
+                 if (value === (localStorage.getItem('vernTheme') || 'default')) {
+                    li.classList.add('selected');
+                     li.setAttribute('aria-selected', 'true');
+                 } else {
+                     li.setAttribute('aria-selected', 'false');
+                 }
+                themeListEl.appendChild(li);
+            }
+
+             // Populate Search Engine Dropdown
+            const searchEngineListEl = searchEngineDropdownEl.querySelector('.custom-dropdown-list');
+            searchEngineListEl.innerHTML = ''; // Clear existing options
+            for (const value in searchEngines) {
+                const li = document.createElement('li');
+                li.className = 'custom-dropdown-list-item';
+                li.dataset.value = value;
+                li.textContent = searchEngines[value].name;
+                 li.setAttribute('role', 'option');
+                 if (value === (localStorage.getItem('vernSearchEngine') || 'duckduckgo')) {
+                     li.classList.add('selected');
+                      li.setAttribute('aria-selected', 'true');
+                 } else {
+                     li.setAttribute('aria-selected', 'false');
+                 }
+                searchEngineListEl.appendChild(li);
+            }
+
+            // Add event listeners to custom dropdowns
+             document.querySelectorAll('.custom-dropdown-header').forEach(header => {
+                 header.addEventListener('click', toggleDropdown);
+                 header.addEventListener('keydown', handleDropdownKeyDown);
+             });
+            document.querySelectorAll('.custom-dropdown-list-item').forEach(item => {
+                item.addEventListener('click', selectDropdownItem);
+                item.addEventListener('keydown', handleDropdownItemKeyDown);
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                document.querySelectorAll('.custom-dropdown-list.show').forEach(list => {
+                    if (!list.parentNode.contains(e.target)) {
+                        list.classList.remove('show');
+                        list.parentNode.querySelector('.custom-dropdown-header').classList.remove('open');
+                    }
+                });
+            });
+             // Close dropdowns when focus leaves
+            document.addEventListener('focusin', (e) => {
+                 document.querySelectorAll('.custom-dropdown-list.show').forEach(list => {
+                     if (!list.parentNode.contains(e.target)) {
+                         list.classList.remove('show');
+                         list.parentNode.querySelector('.custom-dropdown-header').classList.remove('open');
+                     }
+                 });
+             });
+        }
+
+         function toggleDropdown() {
+            const header = this;
+            const list = header.nextElementSibling;
+            const isOpen = list.classList.toggle('show');
+            header.classList.toggle('open', isOpen);
+
+             // Close other open dropdowns
+             document.querySelectorAll('.custom-dropdown-list.show').forEach(otherList => {
+                 if (otherList !== list) {
+                     otherList.classList.remove('show');
+                     otherList.parentNode.querySelector('.custom-dropdown-header').classList.remove('open');
+                 }
+             });
+
+            if (isOpen) {
+                 // Set initial focus on the selected item or the first item
+                 const selectedItem = list.querySelector('.custom-dropdown-list-item.selected') || list.querySelector('.custom-dropdown-list-item');
+                 if (selectedItem) {
+                     selectedItem.focus();
+                 }
+             }
+        }
+
+         function handleDropdownKeyDown(e) {
+             const header = this;
+             const list = header.nextElementSibling;
+             const isOpen = list.classList.contains('show');
+
+             if (e.key === 'Enter' || e.key === ' ') {
+                 e.preventDefault();
+                 toggleDropdown.call(header);
+             } else if (e.key === 'ArrowDown' && !isOpen) {
+                  e.preventDefault();
+                 toggleDropdown.call(header);
+             } else if (e.key === 'ArrowDown' && isOpen) {
+                  e.preventDefault();
+                  const firstItem = list.querySelector('.custom-dropdown-list-item');
+                  if (firstItem) firstItem.focus();
+             } else if (e.key === 'Escape' && isOpen) {
+                  e.preventDefault();
+                  list.classList.remove('show');
+                  header.classList.remove('open');
+                  header.focus(); // Return focus to the header
+             }
+         }
+
+        function selectDropdownItem() {
+            const item = this;
+            const dropdown = item.closest('.custom-dropdown');
+            const header = dropdown.querySelector('.custom-dropdown-header');
+            const list = dropdown.querySelector('.custom-dropdown-list');
+            const value = item.dataset.value;
+            const text = item.textContent;
+
+            // Update the header text
+            dropdown.querySelector('span').textContent = text;
+
+            // Update selected state
+            list.querySelectorAll('.custom-dropdown-list-item').forEach(li => {
+                li.classList.remove('selected');
+                 li.setAttribute('aria-selected', 'false');
+            });
+            item.classList.add('selected');
+             item.setAttribute('aria-selected', 'true');
+
+
+            // Hide the dropdown
+            list.classList.remove('show');
+             header.classList.remove('open');
+             header.focus(); // Return focus to the header after selection
+
+            // Trigger the appropriate change event
+            if (dropdown.id === 'theme-dropdown') {
+                applyTheme(value);
+            } else if (dropdown.id === 'search-engine-dropdown') {
+                handleSearchEngineChange({ target: { value: value } });
             }
         }
-        function updateSelectArrowColor() {
-            const currentTextColor = getComputedStyle(document.body).getPropertyValue('--text-color').trim().substring(1);
-            const svgArrow = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(currentTextColor)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')`;
-            document.querySelectorAll('#sidebar .sidebar-select').forEach(sel => sel.style.backgroundImage = svgArrow);
+
+         function handleDropdownItemKeyDown(e) {
+             const item = this;
+             const list = item.closest('.custom-dropdown-list');
+             const items = Array.from(list.querySelectorAll('.custom-dropdown-list-item'));
+             const currentIndex = items.indexOf(item);
+
+             if (e.key === 'Enter' || e.key === ' ') {
+                 e.preventDefault();
+                 selectDropdownItem.call(item);
+             } else if (e.key === 'ArrowDown') {
+                 e.preventDefault();
+                 const nextIndex = (currentIndex + 1) % items.length;
+                 items[nextIndex].focus();
+             } else if (e.key === 'ArrowUp') {
+                 e.preventDefault();
+                 const prevIndex = (currentIndex - 1 + items.length) % items.length;
+                 items[prevIndex].focus();
+             } else if (e.key === 'Escape') {
+                 e.preventDefault();
+                 const header = list.parentNode.querySelector('.custom-dropdown-header');
+                 list.classList.remove('show');
+                  header.classList.remove('open');
+                 header.focus();
+             }
+         }
+
+        function updateSelectedDropdownText(dropdownId, selectedValue) {
+            const dropdownEl = document.getElementById(dropdownId);
+            const selectedTextEl = dropdownEl.querySelector('span');
+            const selectedItem = dropdownEl.querySelector(`.custom-dropdown-list-item[data-value="${selectedValue}"]`);
+            if (selectedItem) {
+                selectedTextEl.textContent = selectedItem.textContent;
+                 // Also update the 'selected' class and aria-selected attribute
+                 dropdownEl.querySelectorAll('.custom-dropdown-list-item').forEach(item => {
+                     item.classList.remove('selected');
+                     item.setAttribute('aria-selected', 'false');
+                 });
+                 selectedItem.classList.add('selected');
+                 selectedItem.setAttribute('aria-selected', 'true');
+            }
         }
 
 
@@ -583,13 +1784,14 @@
             // Load Theme
             const savedTheme = localStorage.getItem('vernTheme') || 'default';
             applyTheme(savedTheme);
+            updateSelectedDropdownText('theme-dropdown', savedTheme);
 
             // Load Search Engine
             const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
             if (searchEngines[savedSearchEngine]) {
                 currentSearchEngineKey = savedSearchEngine;
             }
-            searchEngineSelectorEl.value = currentSearchEngineKey;
+            updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey);
         }
 
         // --- EVENT LISTENERS SETUP ---
@@ -628,8 +1830,8 @@
             if(addCurrentBookmarkButtonEl) addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark);
             if(bookmarksListEl) bookmarksListEl.addEventListener('click', handleBookmarkClick);
             if(historyListEl) historyListEl.addEventListener('click', handleHistoryClick);
-            if(themeSelectorEl) themeSelectorEl.addEventListener('change', handleThemeChange);
-            if(searchEngineSelectorEl) searchEngineSelectorEl.addEventListener('change', handleSearchEngineChange);
+
+            // Removed event listeners for old select elements
 
             document.addEventListener('keydown', handleGlobalKeyDown);
             document.addEventListener('load', handleIframeLoad, true); // Use capture phase
@@ -1000,7 +2202,7 @@
             document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); // Remove old theme classes
             if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
             localStorage.setItem('vernTheme', themeName);
-            if (themeSelectorEl.value !== themeName) themeSelectorEl.value = themeName;
+            updateSelectedDropdownText('theme-dropdown', themeName); // Update custom dropdown text
 
             // After applying theme, re-calculate heights and positions if necessary
             // This is crucial if theme changes affect element sizes (padding, borders etc.)
@@ -1008,16 +2210,17 @@
             if (!isSidebarHidden) {
                 toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
             }
-             updateSelectArrowColor(); // Update select arrow color based on new theme
         }
-        function handleThemeChange(e) { applyTheme(e.target.value); }
+
+        // Modified to work with custom dropdown
         function handleSearchEngineChange(e) {
             currentSearchEngineKey = e.target.value;
             localStorage.setItem('vernSearchEngine', currentSearchEngineKey);
+            updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey); // Update custom dropdown text
             console.log("Search engine changed to:", searchEngines[currentSearchEngineKey].name);
         }
 
-        console.log("Vern Pro Initialized with new sidebar styles and themes.");
+        console.log("Vern Pro Initialized with new sidebar styles, themes, and custom dropdowns.");
     </script>
 </body>
 </html>
