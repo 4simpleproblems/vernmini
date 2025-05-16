@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Pro Browser - Optimized v2</title>
+    <title>Vern Pro Browser</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
@@ -18,7 +18,7 @@
             --button-hover-bg: rgba(15, 15, 15, 0.9);
             --input-bg: rgba(10, 10, 10, 0.8);
             --input-focus-bg: rgba(45, 45, 45, 0.9);
-            --input-focus-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+            --input-focus-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3); /* Changed to 2px for consistency */
             --iframe-bg: #202020;
             --footer-text-color: #fff;
             --font-family-main: 'Roboto Mono', monospace;
@@ -29,10 +29,9 @@
             --sidebar-width: 280px;
             --sidebar-bg: rgba(10, 10, 10, 0.95);
             --sidebar-item-hover-bg: rgba(30, 30, 30, 0.9);
-            --sidebar-border-color: rgba(255, 255, 255, 0.15);
-            --sidebar-outline-color: rgba(255, 255, 255, 0.25);
+            --sidebar-border-color: rgba(255, 255, 255, 0.15); /* Unified border color */
+            --sidebar-outline-color: rgba(255, 255, 255, 0.25); /* For pill outlines */
             --button-text-color: #fff;
-            --error-icon-color: var(--text-color);
         }
 
         /* Light Theme */
@@ -57,7 +56,6 @@
             --sidebar-border-color: #dee2e6;
             --sidebar-outline-color: #ced4da;
             --button-text-color: #333;
-            --error-icon-color: var(--text-color);
         }
 
         /* Blue Theme */
@@ -82,7 +80,6 @@
             --sidebar-border-color: rgba(255, 255, 255, 0.2);
             --sidebar-outline-color: rgba(255, 255, 255, 0.3);
             --button-text-color: #e0e1dd;
-            --error-icon-color: var(--text-color);
         }
 
         /* Orange Theme */
@@ -107,7 +104,6 @@
             --sidebar-border-color: rgba(255, 232, 204, 0.2);
             --sidebar-outline-color: rgba(255, 232, 204, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #e67e22;
         }
 
         /* Galaxy Theme */
@@ -132,7 +128,6 @@
             --sidebar-border-color: rgba(230, 224, 255, 0.2);
             --sidebar-outline-color: rgba(230, 224, 255, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #7b68ee;
         }
 
         /* Mint Green Theme */
@@ -151,14 +146,14 @@
             --tab-bg: #b3e0d9;
             --tab-active-bg: #58d68d;
             --tab-border: #a3d9ce;
-            --tab-hover-bg: #a3d9ce;
+            --tab-hover-bg: #f5f5f5; /* Adjusted hover to be lighter */
             --sidebar-bg: #d9f7ef;
             --sidebar-item-hover-bg: #ccece6;
             --sidebar-border-color: #a3d9ce;
             --sidebar-outline-color: #7bc4b4;
             --button-text-color: #003322;
-            --error-icon-color: #58d68d;
         }
+
 
         /* Crimson Red Theme */
         body.theme-crimson {
@@ -176,13 +171,12 @@
             --tab-bg: #6f1a24;
             --tab-active-bg: #dc143c;
             --tab-border: #8f2a34;
-            --tab-hover-bg: #8f2a34;
+            --tab-hover-bg: #8f2a34; /* Adjusted hover */
             --sidebar-bg: #3b1014;
             --sidebar-item-hover-bg: #4e1218;
             --sidebar-border-color: rgba(253, 232, 233, 0.2);
             --sidebar-outline-color: rgba(253, 232, 233, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #dc143c;
         }
 
         /* Forest Green Theme */
@@ -191,8 +185,8 @@
             --text-color: #e0f0e3;
             --navbar-bg: #122f1a;
             --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
-            --button-bg: #228b22;
-            --button-hover-bg: #1e721e;
+            --button-bg: #228b22; /* Forest Green */
+            --button-hover-bg: #1e721e; /* Darker Forest Green */
             --input-bg: #122f1a;
             --input-focus-bg: #1a4325;
             --input-focus-shadow: 0 0 0 2px rgba(34, 139, 34, 0.5);
@@ -201,254 +195,471 @@
             --tab-bg: #1a4325;
             --tab-active-bg: #228b22;
             --tab-border: #2a5335;
-            --tab-hover-bg: #2a5335;
+            --tab-hover-bg: #2a5335; /* Adjusted hover */
             --sidebar-bg: #0f2515;
             --sidebar-item-hover-bg: #122f1a;
             --sidebar-border-color: rgba(224, 240, 227, 0.2);
             --sidebar-outline-color: rgba(224, 240, 227, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #228b22;
         }
 
-        /* Solar Flare Theme */
-        body.theme-solarflare {
-            --bg-color: #200000;
-            --text-color: #fff5e6;
-            --navbar-bg: #400000;
-            --button-bg: #ff4500;
-            --button-hover-bg: #ff6347;
-            --input-bg: #501010;
-            --input-focus-bg: #602020;
-            --input-focus-shadow: 0 0 0 2px rgba(255, 69, 0, 0.6);
-            --iframe-bg: #2a0800;
-            --footer-text-color: #ffcc99;
-            --tab-bg: #8b0000;
-            --tab-active-bg: #ff4500;
-            --tab-border: #cc3700;
-            --tab-hover-bg: #dc143c;
-            --sidebar-bg: #300000;
-            --sidebar-item-hover-bg: #500000;
-            --sidebar-border-color: rgba(255, 200, 150, 0.2);
-            --sidebar-outline-color: rgba(255, 100, 50, 0.4);
+        /* Added Themes */
+        /* Purple Theme */
+        body.theme-purple {
+            --bg-color: #1a0a1a;
+            --text-color: #f0e0f0;
+            --navbar-bg: #2f122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #8a2be2; /* Blue Violet */
+            --button-hover-bg: #7b1eda; /* Darker Blue Violet */
+            --input-bg: #2f122f;
+            --input-focus-bg: #431a43;
+            --input-focus-shadow: 0 0 0 2px rgba(138, 43, 226, 0.5);
+            --iframe-bg: #1a0a1a;
+            --footer-text-color: #f0e0f0;
+            --tab-bg: #431a43;
+            --tab-active-bg: #8a2be2;
+            --tab-border: #532a53;
+            --tab-hover-bg: #532a53;
+            --sidebar-bg: #250f25;
+            --sidebar-item-hover-bg: #2f122f;
+            --sidebar-border-color: rgba(240, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(240, 224, 240, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #ff4500;
         }
 
-        /* Deep Sea Theme */
-        body.theme-deepsea {
-            --bg-color: #030c17;
-            --text-color: #c0e0ff;
-            --navbar-bg: #05162d;
-            --button-bg: #0077be;
-            --button-hover-bg: #005fa3;
-            --input-bg: #08203e;
-            --input-focus-bg: #0b2a52;
-            --input-focus-shadow: 0 0 0 2px rgba(0, 119, 190, 0.5);
-            --iframe-bg: #02080f;
-            --footer-text-color: #a0c0dd;
-            --tab-bg: #0f3057;
-            --tab-active-bg: #0077be;
-            --tab-border: #1a4a7a;
-            --tab-hover-bg: #15406a;
-            --sidebar-bg: #041020;
-            --sidebar-item-hover-bg: #071a33;
-            --sidebar-border-color: rgba(192, 224, 255, 0.2);
-            --sidebar-outline-color: rgba(100, 180, 255, 0.3);
+        /* Teal Theme */
+        body.theme-teal {
+            --bg-color: #0a1a1a;
+            --text-color: #e0f0f0;
+            --navbar-bg: #122f2f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #008080; /* Teal */
+            --button-hover-bg: #006666; /* Darker Teal */
+            --input-bg: #122f2f;
+            --input-focus-bg: #1a4343;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 128, 128, 0.5);
+            --iframe-bg: #0a1a1a;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4343;
+            --tab-active-bg: #008080;
+            --tab-border: #2a5353;
+            --tab-hover-bg: #2a5353;
+            --sidebar-bg: #0f2525;
+            --sidebar-item-hover-bg: #122f2f;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #0077be;
         }
 
-        /* Rose Gold Theme */
-        body.theme-rosegold {
-            --bg-color: #fff0f5;
-            --text-color: #5d4037;
-            --navbar-bg: #f8c8dc;
-            --button-bg: #b76e79;
-            --button-hover-bg: #a75e69;
-            --input-bg: #f8c8dc;
-            --input-focus-bg: #e8b8cc;
-            --input-focus-shadow: 0 0 0 2px rgba(183, 110, 121, 0.5);
-            --iframe-bg: #fff7fa;
-            --footer-text-color: #8c6d62;
-            --tab-bg: #efd9e2;
-            --tab-active-bg: #b76e79;
-            --tab-border: #d3a0ab;
-            --tab-hover-bg: #e0c0ca;
-            --sidebar-bg: #fceef2;
-            --sidebar-item-hover-bg: #f8c8dc;
-            --sidebar-border-color: #e0b0c0;
-            --sidebar-outline-color: #c88a98;
+        /* Brown Theme */
+        body.theme-brown {
+            --bg-color: #1a1510;
+            --text-color: #f0e8e0;
+            --navbar-bg: #2f251a;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #a0522d; /* Sienna */
+            --button-hover-bg: #8b4513; /* Saddle Brown */
+            --input-bg: #2f251a;
+            --input-focus-bg: #43382c;
+            --input-focus-shadow: 0 0 0 2px rgba(160, 82, 45, 0.5);
+            --iframe-bg: #1a1510;
+            --footer-text-color: #f0e8e0;
+            --tab-bg: #43382c;
+            --tab-active-bg: #a0522d;
+            --tab-border: #534a3d;
+            --tab-hover-bg: #534a3d;
+            --sidebar-bg: #251e14;
+            --sidebar-item-hover-bg: #2f251a;
+            --sidebar-border-color: rgba(240, 232, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 232, 224, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #b76e79;
         }
 
-        /* Emerald Isle Theme */
-        body.theme-emeraldisle {
-            --bg-color: #e8f5e9;
-            --text-color: #1b5e20;
-            --navbar-bg: #a5d6a7;
-            --button-bg: #00897b;
-            --button-hover-bg: #00695c;
-            --input-bg: #a5d6a7;
-            --input-focus-bg: #81c784;
-            --input-focus-shadow: 0 0 0 2px rgba(0, 137, 123, 0.5);
-            --iframe-bg: #f1f8e9;
-            --footer-text-color: #2e7d32;
-            --tab-bg: #c8e6c9;
-            --tab-active-bg: #00897b;
-            --tab-border: #4db6ac;
-            --tab-hover-bg: #b2dfdb;
-            --sidebar-bg: #dcedc8;
-            --sidebar-item-hover-bg: #a5d6a7;
-            --sidebar-border-color: #81c784;
-            --sidebar-outline-color: #26a69a;
+        /* Pink Theme */
+        body.theme-pink {
+            --bg-color: #2c0b1a;
+            --text-color: #fde8f0;
+            --navbar-bg: #4e122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ff69b4; /* Hot Pink */
+            --button-hover-bg: #ff1493; /* Deep Pink */
+            --input-bg: #4e122f;
+            --input-focus-bg: #6f1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 105, 180, 0.5);
+            --iframe-bg: #2c0b1a;
+            --footer-text-color: #fde8f0;
+            --tab-bg: #6f1a43;
+            --tab-active-bg: #ff69b4;
+            --tab-border: #8f2a53;
+            --tab-hover-bg: #8f2a53;
+            --sidebar-bg: #3b1025;
+            --sidebar-item-hover-bg: #4e122f;
+            --sidebar-border-color: rgba(253, 232, 240, 0.2);
+            --sidebar-outline-color: rgba(253, 232, 240, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #00897b;
         }
 
-        /* रॉयल पर्पल (Royal Purple) Theme */
-        body.theme-royalpurple {
-            --bg-color: #1c0b2c;
-            --text-color: #f3e5f5;
-            --navbar-bg: #391452;
-            --button-bg: #8e24aa;
-            --button-hover-bg: #7b1fa2;
-            --input-bg: #4a148c;
-            --input-focus-bg: #5d10a3;
-            --input-focus-shadow: 0 0 0 2px rgba(142, 36, 170, 0.6);
-            --iframe-bg: #2a0f3f;
-            --footer-text-color: #ce93d8;
-            --tab-bg: #6a1b9a;
-            --tab-active-bg: #8e24aa;
-            --tab-border: #ab47bc;
-            --tab-hover-bg: #7e279d;
-            --sidebar-bg: #300f45;
-            --sidebar-item-hover-bg: #4a148c;
-            --sidebar-border-color: rgba(225, 190, 231, 0.2);
-            --sidebar-outline-color: rgba(206, 147, 216, 0.4);
+        /* Yellow Theme */
+        body.theme-yellow {
+            --bg-color: #1a1a0a;
+            --text-color: #f0f0e0;
+            --navbar-bg: #2f2f12;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ffd700; /* Gold */
+            --button-hover-bg: #ffc125; /* Goldenrod */
+            --input-bg: #2f2f12;
+            --input-focus-bg: #43431a;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5);
+            --iframe-bg: #1a1a0a;
+            --footer-text-color: #f0f0e0;
+            --tab-bg: #43431a;
+            --tab-active-bg: #ffd700;
+            --tab-border: #53532a;
+            --tab-hover-bg: #53532a;
+            --sidebar-bg: #25250f;
+            --sidebar-item-hover-bg: #2f2f12;
+            --sidebar-border-color: rgba(240, 240, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 240, 224, 0.3);
+            --button-text-color: #333;
+        }
+
+        /* Gray Theme */
+        body.theme-gray {
+            --bg-color: #1a1a1c;
+            --text-color: #e0e0e0;
+            --navbar-bg: #2f2f32;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #808080; /* Gray */
+            --button-hover-bg: #696969; /* Dim Gray */
+            --input-bg: #2f2f32;
+            --input-focus-bg: #434348;
+            --input-focus-shadow: 0 0 0 2px rgba(128, 128, 128, 0.5);
+            --iframe-bg: #1a1a1c;
+            --footer-text-color: #e0e0e0;
+            --tab-bg: #434348;
+            --tab-active-bg: #808080;
+            --tab-border: #535358;
+            --tab-hover-bg: #535358;
+            --sidebar-bg: #252528;
+            --sidebar-item-hover-bg: #2f2f32;
+            --sidebar-border-color: rgba(224, 224, 224, 0.2);
+            --sidebar-outline-color: rgba(224, 224, 224, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #8e24aa;
         }
 
-        /* Charcoal Slate Theme */
-        body.theme-charcoalslate {
-            --bg-color: #263238;
-            --text-color: #eceff1;
-            --navbar-bg: #37474f;
-            --button-bg: #00acc1;
-            --button-hover-bg: #00838f;
-            --input-bg: #455a64;
-            --input-focus-bg: #546e7a;
-            --input-focus-shadow: 0 0 0 2px rgba(0, 172, 193, 0.5);
-            --iframe-bg: #1c252b;
-            --footer-text-color: #b0bec5;
-            --tab-bg: #546e7a;
-            --tab-active-bg: #00acc1;
-            --tab-border: #78909c;
-            --tab-hover-bg: #607d8b;
-            --sidebar-bg: #313f46;
-            --sidebar-item-hover-bg: #455a64;
-            --sidebar-border-color: rgba(207, 216, 220, 0.2);
-            --sidebar-outline-color: rgba(120, 144, 156, 0.4);
+        /* Cyan Theme */
+        body.theme-cyan {
+            --bg-color: #0a1a1c;
+            --text-color: #e0f0f0;
+            --navbar-bg: #122f32;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #00ffff; /* Cyan */
+            --button-hover-bg: #00ced1; /* Dark Cyan */
+            --input-bg: #122f32;
+            --input-focus-bg: #1a4348;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 255, 255, 0.5);
+            --iframe-bg: #0a1a1c;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4348;
+            --tab-active-bg: #00ffff;
+            --tab-border: #2a5358;
+            --tab-hover-bg: #2a5358;
+            --sidebar-bg: #0f2528;
+            --sidebar-item-hover-bg: #122f32;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
+            --button-text-color: #333;
+        }
+
+        /* Lime Theme */
+        body.theme-lime {
+            --bg-color: #1a1c0a;
+            --text-color: #f0f0e0;
+            --navbar-bg: #2f3212;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #32cd32; /* Lime Green */
+            --button-hover-bg: #008000; /* Green */
+            --input-bg: #2f3212;
+            --input-focus-bg: #43481a;
+            --input-focus-shadow: 0 0 0 2px rgba(50, 205, 50, 0.5);
+            --iframe-bg: #1a1c0a;
+            --footer-text-color: #f0f0e0;
+            --tab-bg: #43481a;
+            --tab-active-bg: #32cd32;
+            --tab-border: #53582a;
+            --tab-hover-bg: #53582a;
+            --sidebar-bg: #25280f;
+            --sidebar-item-hover-bg: #2f3212;
+            --sidebar-border-color: rgba(240, 240, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 240, 224, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #00acc1;
         }
 
-        /* Cyberpunk Neon Theme */
-        body.theme-cyberpunk {
-            --bg-color: #0d0208;
-            --text-color: #f0f0f0;
-            --navbar-bg: #1a0a1f;
-            --button-bg: #ff00ff;
-            --button-hover-bg: #cc00cc;
-            --input-bg: #2c003e;
-            --input-focus-bg: #3d0054;
-            --input-focus-shadow: 0 0 0 2px rgba(255, 0, 255, 0.6);
-            --iframe-bg: #000000;
-            --footer-text-color: #00ffff;
-            --tab-bg: #4b0082;
-            --tab-active-bg: #ff00ff;
-            --tab-border: #00ffff;
-            --tab-hover-bg: #9400d3;
-            --sidebar-bg: #100515;
-            --sidebar-item-hover-bg: #1f0f29;
-            --sidebar-border-color: rgba(0, 255, 255, 0.3);
-            --sidebar-outline-color: rgba(255, 0, 255, 0.4);
-            --button-text-color: #000000;
-            --error-icon-color: #ff00ff;
-        }
-
-        /* Mocha Delight Theme */
-        body.theme-mocha {
-            --bg-color: #f5f0e1;
-            --text-color: #4e342e;
-            --navbar-bg: #d7ccc8;
-            --button-bg: #795548;
-            --button-hover-bg: #5d4037;
-            --input-bg: #efebe9;
-            --input-focus-bg: #d7ccc8;
-            --input-focus-shadow: 0 0 0 2px rgba(121, 85, 72, 0.5);
-            --iframe-bg: #fdfbf7;
-            --footer-text-color: #6d4c41;
-            --tab-bg: #bcaaa4;
-            --tab-active-bg: #795548;
-            --tab-border: #a1887f;
-            --tab-hover-bg: #a1887f;
-            --sidebar-bg: #ede7f6;
-            --sidebar-item-hover-bg: #d7ccc8;
-            --sidebar-border-color: #bcaaa4;
-            --sidebar-outline-color: #8d6e63;
+        /* Indigo Theme */
+        body.theme-indigo {
+            --bg-color: #100a1a;
+            --text-color: #e8e0f0;
+            --navbar-bg: #1d122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #4b0082; /* Indigo */
+            --button-hover-bg: #410072; /* Darker Indigo */
+            --input-bg: #1d122f;
+            --input-focus-bg: #2c1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(75, 0, 130, 0.5);
+            --iframe-bg: #100a1a;
+            --footer-text-color: #e8e0f0;
+            --tab-bg: #2c1a43;
+            --tab-active-bg: #4b0082;
+            --tab-border: #3d2a53;
+            --tab-hover-bg: #3d2a53;
+            --sidebar-bg: #170f25;
+            --sidebar-item-hover-bg: #1d122f;
+            --sidebar-border-color: rgba(232, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(232, 224, 240, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #795548;
         }
 
-        /* Arctic Frost Theme */
-        body.theme-arctic {
-            --bg-color: #f0f8ff;
-            --text-color: #2c3e50;
-            --navbar-bg: #e0f0ff;
-            --button-bg: #5dade2;
-            --button-hover-bg: #3498db;
-            --input-bg: #d6eaff;
-            --input-focus-bg: #cce0ff;
-            --input-focus-shadow: 0 0 0 2px rgba(93, 173, 226, 0.5);
-            --iframe-bg: #f8fcff;
-            --footer-text-color: #34495e;
-            --tab-bg: #cce0ff;
-            --tab-active-bg: #5dade2;
-            --tab-border: #a9cce3;
-            --tab-hover-bg: #b9d7f0;
-            --sidebar-bg: #e8f4ff;
-            --sidebar-item-hover-bg: #d6eaff;
-            --sidebar-border-color: #b0c4de;
-            --sidebar-outline-color: #7fb3d5;
+        /* Olive Theme */
+        body.theme-olive {
+            --bg-color: #1a1a0a;
+            --text-color: #f0f0e0;
+            --navbar-bg: #2f2f12;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #808000; /* Olive */
+            --button-hover-bg: #6b8e23; /* Olive Drab */
+            --input-bg: #2f2f12;
+            --input-focus-bg: #43431a;
+            --input-focus-shadow: 0 0 0 2px rgba(128, 128, 0, 0.5);
+            --iframe-bg: #1a1a0a;
+            --footer-text-color: #f0f0e0;
+            --tab-bg: #43431a;
+            --tab-active-bg: #808000;
+            --tab-border: #53532a;
+            --tab-hover-bg: #53532a;
+            --sidebar-bg: #25250f;
+            --sidebar-item-hover-bg: #2f2f12;
+            --sidebar-border-color: rgba(240, 240, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 240, 224, 0.3);
             --button-text-color: #ffffff;
-            --error-icon-color: #5dade2;
         }
 
-        /* Sakura Sunset Theme */
-        body.theme-sakura {
-            --bg-color: #2a2a2a;
-            --text-color: #fff0f0;
-            --navbar-bg: #4a3a3a;
-            --button-bg: #ff7f50;
-            --button-hover-bg: #ff6347;
-            --input-bg: #5a4a4a;
-            --input-focus-bg: #6a5a5a;
-            --input-focus-shadow: 0 0 0 2px rgba(255, 127, 80, 0.6);
-            --iframe-bg: #3a3a3a;
-            --footer-text-color: #ffd8d8;
-            --tab-bg: #ffb6c1;
-            --tab-active-bg: #ff7f50;
-            --tab-border: #ff9a80;
-            --tab-hover-bg: #ffa07a;
-            --sidebar-bg: #3f3030;
-            --sidebar-item-hover-bg: #5a4a4a;
-            --sidebar-border-color: rgba(255, 200, 200, 0.3);
-            --sidebar-outline-color: rgba(255, 160, 122, 0.5);
-            --button-text-color: #000000;
-            --error-icon-color: #ff7f50;
+        /* Maroon Theme */
+        body.theme-maroon {
+            --bg-color: #1a0a0a;
+            --text-color: #f0e0e0;
+            --navbar-bg: #2f1212;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #800000; /* Maroon */
+            --button-hover-bg: #a52a2a; /* Brown */
+            --input-bg: #2f1212;
+            --input-focus-bg: #431a1a;
+            --input-focus-shadow: 0 0 0 2px rgba(128, 0, 0, 0.5);
+            --iframe-bg: #1a0a0a;
+            --footer-text-color: #f0e0e0;
+            --tab-bg: #431a1a;
+            --tab-active-bg: #800000;
+            --tab-border: #532a2a;
+            --tab-hover-bg: #532a2a;
+            --sidebar-bg: #250f0f;
+            --sidebar-item-hover-bg: #2f1212;
+            --sidebar-border-color: rgba(240, 224, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 224, 224, 0.3);
+            --button-text-color: #ffffff;
         }
+
+        /* Navy Theme */
+        body.theme-navy {
+            --bg-color: #0a0a1a;
+            --text-color: #e0e0f0;
+            --navbar-bg: #12122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #000080; /* Navy */
+            --button-hover-bg: #0000cd; /* Medium Blue */
+            --input-bg: #12122f;
+            --input-focus-bg: #1a1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
+            --iframe-bg: #0a0a1a;
+            --footer-text-color: #e0e0f0;
+            --tab-bg: #1a1a43;
+            --tab-active-bg: #000080;
+            --tab-border: #2a2a53;
+            --tab-hover-bg: #2a2a53;
+            --sidebar-bg: #0f0f25;
+            --sidebar-item-hover-bg: #12122f;
+            --sidebar-border-color: rgba(224, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 224, 240, 0.3);
+            --button-text-color: #ffffff;
+        }
+
+        /* Aqua Theme */
+        body.theme-aqua {
+            --bg-color: #0a1a1a;
+            --text-color: #e0f0f0;
+            --navbar-bg: #122f2f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #00ffff; /* Aqua */
+            --button-hover-bg: #00ced1; /* Dark Cyan */
+            --input-bg: #122f2f;
+            --input-focus-bg: #1a4343;
+            --input-focus-shadow: 0 0 0 2px rgba(0, 255, 255, 0.5);
+            --iframe-bg: #0a1a1a;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4343;
+            --tab-active-bg: #00ffff;
+            --tab-border: #2a5353;
+            --tab-hover-bg: #2a5353;
+            --sidebar-bg: #0f2525;
+            --sidebar-item-hover-bg: #122f2f;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
+            --button-text-color: #333;
+        }
+
+        /* Gold Theme */
+        body.theme-gold {
+            --bg-color: #1a100a;
+            --text-color: #f0e8e0;
+            --navbar-bg: #2f1d12;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ffd700; /* Gold */
+            --button-hover-bg: #ffc125; /* Goldenrod */
+            --input-bg: #2f1d12;
+            --input-focus-bg: #432c1a;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5);
+            --iframe-bg: #1a100a;
+            --footer-text-color: #f0e8e0;
+            --tab-bg: #432c1a;
+            --tab-active-bg: #ffd700;
+            --tab-border: #533d2a;
+            --tab-hover-bg: #533d2a;
+            --sidebar-bg: #25170f;
+            --sidebar-item-hover-bg: #2f1d12;
+            --sidebar-border-color: rgba(240, 232, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 232, 224, 0.3);
+            --button-text-color: #333;
+        }
+
+        /* Silver Theme */
+        body.theme-silver {
+            --bg-color: #1c1c1c;
+            --text-color: #e0e0e0;
+            --navbar-bg: #323232;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #c0c0c0; /* Silver */
+            --button-hover-bg: #a9a9a9; /* Dark Gray */
+            --input-bg: #323232;
+            --input-focus-bg: #484848;
+            --input-focus-shadow: 0 0 0 2px rgba(192, 192, 192, 0.5);
+            --iframe-bg: #1c1c1c;
+            --footer-text-color: #e0e0e0;
+            --tab-bg: #484848;
+            --tab-active-bg: #c0c0c0;
+            --tab-border: #585858;
+            --tab-hover-bg: #585858;
+            --sidebar-bg: #282828;
+            --sidebar-item-hover-bg: #323232;
+            --sidebar-border-color: rgba(224, 224, 224, 0.2);
+            --sidebar-outline-color: rgba(224, 224, 224, 0.3);
+            --button-text-color: #333;
+        }
+
+        /* Bronze Theme */
+        body.theme-bronze {
+            --bg-color: #1a1510;
+            --text-color: #f0e8e0;
+            --navbar-bg: #2f251a;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #cd7f32; /* Bronze */
+            --button-hover-bg: #b87333; /* Copper */
+            --input-bg: #2f251a;
+            --input-focus-bg: #43382c;
+            --input-focus-shadow: 0 0 0 2px rgba(205, 127, 50, 0.5);
+            --iframe-bg: #1a1510;
+            --footer-text-color: #f0e8e0;
+            --tab-bg: #43382c;
+            --tab-active-bg: #cd7f32;
+            --tab-border: #534a3d;
+            --tab-hover-bg: #534a3d;
+            --sidebar-bg: #251e14;
+            --sidebar-item-hover-bg: #2f251a;
+            --sidebar-border-color: rgba(240, 232, 224, 0.2);
+            --sidebar-outline-color: rgba(240, 232, 224, 0.3);
+            --button-text-color: #ffffff;
+        }
+
+        /* Rose Theme */
+        body.theme-rose {
+            --bg-color: #2c0b15;
+            --text-color: #fde8ec;
+            --navbar-bg: #4e1228;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #ff007f; /* Rose */
+            --button-hover-bg: #dc143c; /* Crimson */
+            --input-bg: #4e1228;
+            --input-focus-bg: #6f1a3c;
+            --input-focus-shadow: 0 0 0 2px rgba(255, 0, 127, 0.5);
+            --iframe-bg: #2c0b15;
+            --footer-text-color: #fde8ec;
+            --tab-bg: #6f1a3c;
+            --tab-active-bg: #ff007f;
+            --tab-border: #8f2a4c;
+            --tab-hover-bg: #8f2a4c;
+            --sidebar-bg: #3b101f;
+            --sidebar-item-hover-bg: #4e1228;
+            --sidebar-border-color: rgba(253, 232, 236, 0.2);
+            --sidebar-outline-color: rgba(253, 232, 236, 0.3);
+            --button-text-color: #ffffff;
+        }
+
+        /* Violet Theme */
+        body.theme-violet {
+            --bg-color: #150a1a;
+            --text-color: #ece0f0;
+            --navbar-bg: #28122f;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #8a2be2; /* Blue Violet */
+            --button-hover-bg: #9400d3; /* Dark Violet */
+            --input-bg: #28122f;
+            --input-focus-bg: #3c1a43;
+            --input-focus-shadow: 0 0 0 2px rgba(138, 43, 226, 0.5);
+            --iframe-bg: #150a1a;
+            --footer-text-color: #ece0f0;
+            --tab-bg: #3c1a43;
+            --tab-active-bg: #8a2be2;
+            --tab-border: #4c2a53;
+            --tab-hover-bg: #4c2a53;
+            --sidebar-bg: #1f0f25;
+            --sidebar-item-hover-bg: #28122f;
+            --sidebar-border-color: rgba(236, 224, 240, 0.2);
+            --sidebar-outline-color: rgba(236, 224, 240, 0.3);
+            --button-text-color: #ffffff;
+        }
+
+        /* Turquoise Theme */
+        body.theme-turquoise {
+            --bg-color: #0a1c1c;
+            --text-color: #e0f0f0;
+            --navbar-bg: #123232;
+            --navbar-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            --button-bg: #40e0d0; /* Turquoise */
+            --button-hover-bg: #48d1cc; /* Medium Turquoise */
+            --input-bg: #123232;
+            --input-focus-bg: #1a4848;
+            --input-focus-shadow: 0 0 0 2px rgba(64, 224, 208, 0.5);
+            --iframe-bg: #0a1c1c;
+            --footer-text-color: #e0f0f0;
+            --tab-bg: #1a4848;
+            --tab-active-bg: #40e0d0;
+            --tab-border: #2a5858;
+            --tab-hover-bg: #2a5858;
+            --sidebar-bg: #0f2828;
+            --sidebar-item-hover-bg: #123232;
+            --sidebar-border-color: rgba(224, 240, 240, 0.2);
+            --sidebar-outline-color: rgba(224, 240, 240, 0.3);
+            --button-text-color: #333;
+        }
+
 
         html, body {
             margin: 0; padding: 0; border: none; box-sizing: border-box;
@@ -464,79 +675,92 @@
 
         #sidebar {
             width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--sidebar-border-color);
-            padding: 20px 15px; box-sizing: border-box;
+            border-right: 1px solid var(--sidebar-border-color); /* Lightened border */
+            padding: 20px 15px; box-sizing: border-box; /* Adjusted padding */
             overflow-y: auto; transition: margin-left 0.35s ease-in-out, width 0.35s ease-in-out;
-            z-index: 1001; display: flex; flex-direction: column; gap: 25px;
-            font-family: var(--font-family-main);
+            z-index: 1001; display: flex; flex-direction: column; gap: 25px; /* Increased gap */
+            font-family: var(--font-family-main); /* Ensure font */
         }
         #sidebar.hidden { margin-left: calc(-1 * var(--sidebar-width)); }
         #sidebar h3 {
-            margin-top: 0; margin-bottom: 12px; font-size: 1em;
+            margin-top: 0; margin-bottom: 12px; font-size: 1em; /* Slightly smaller */
             border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 10px;
-            font-weight: 600; display: flex; align-items: center; gap: 8px;
+            font-weight: 600; /* Bolder like top bar items if needed */
+            display: flex; align-items: center; gap: 8px; /* For potential icons */
         }
         #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; }
         #sidebar ul::-webkit-scrollbar { width: 5px; }
         #sidebar ul::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
 
         #sidebar li {
-            padding: 10px 18px; margin-bottom: 8px; border-radius: 20px;
-            cursor: pointer; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            padding: 10px 18px; /* Adjusted padding */
+            margin-bottom: 8px; /* Spacing */
+            border-radius: 20px; /* Pill shape */
+            cursor: pointer;
+            font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
-            background-color: var(--button-bg);
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            background-color: var(--button-bg); /* Using button bg for consistency */
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
             color: var(--button-text-color);
-            position: relative;
         }
         #sidebar li:hover {
             background-color: var(--button-hover-bg);
-            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color); /* Slightly thicker outline on hover */
         }
         #sidebar li .bookmark-url, #sidebar li .history-url {
             font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
         }
-        #sidebar li .remove-item-btn {
-            position:absolute; right:12px; top:50%; transform:translateY(-50%);
-            cursor:pointer; padding: 5px; opacity: 0.7;
-            font-size: 0.9em; line-height: 1;
-        }
-        #sidebar li .remove-item-btn:hover { opacity: 1; }
-
 
         #sidebar .sidebar-input, #sidebar .sidebar-select {
-            width: 100%; height: 40px; padding: 0 18px; margin-bottom: 12px;
-            background-color: var(--input-bg); color: var(--text-color);
-            border: none; border-radius: 20px; font-family: var(--font-family-main);
-            box-sizing: border-box; box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            width: 100%; /* Full width */
+            height: 40px; /* Consistent height */
+            padding: 0 18px; /* Padding like search bar */
+            margin-bottom: 12px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: none; /* Remove default border */
+            border-radius: 20px; /* Pill shape */
+            font-family: var(--font-family-main);
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
             font-size: 0.9em;
         }
         #sidebar .sidebar-input:focus, #sidebar .sidebar-select:focus {
-            outline: none; background-color: var(--input-focus-bg);
-            box-shadow: var(--input-focus-shadow);
+            outline: none;
+            background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow); /* Use theme's focus shadow */
         }
         #sidebar .sidebar-select {
              appearance: none; -webkit-appearance: none; -moz-appearance: none;
+             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(getComputedStyle(document.body).getPropertyValue('--text-color').substring(1))}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
              background-repeat: no-repeat;
              background-position: right 15px center;
              background-size: .65em auto;
-             padding-right: 35px;
+             padding-right: 35px; /* Make space for arrow */
         }
 
+
         #sidebar .sidebar-button {
-            width: 100%; height: 40px; padding: 0 18px;
-            background-color: var(--button-bg); color: var(--button-text-color);
-            border: none; border-radius: 20px; cursor: pointer;
+            width: 100%; /* Full width */
+            height: 40px; /* Consistent height */
+            padding: 0 18px; /* Horizontal padding */
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 20px; /* Pill shape */
+            cursor: pointer;
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
             font-family: var(--font-family-main);
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.9em; font-weight: 500;
+            font-size: 0.9em;
+            font-weight: 500;
         }
         #sidebar .sidebar-button:hover {
             background-color: var(--button-hover-bg);
             box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
         }
+
 
         #main-content-wrapper {
             flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
@@ -562,26 +786,26 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
         .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
         .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
-        .new-tab-button {
+        .new-tab-button { /* Circle */
             width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
-            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Using sidebar outline for consistency */
         }
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
 
         #nav-bar {
             display: flex; align-items: center; padding: 10px;
             background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
-            border-bottom: 1px solid var(--sidebar-border-color);
+            border-bottom: 1px solid var(--sidebar-border-color); /* Using sidebar border color */
         }
-        .nav-button {
+        .nav-button { /* Circle */
             width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
             margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
-        #search-bar {
+        #search-bar { /* Pill shape */
             flex: 1; height: 40px; border-radius: 20px; border: none; background-color: var(--input-bg);
             color: var(--text-color); padding: 0 18px; font-size: 15px;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-family: var(--font-family-main);
@@ -593,15 +817,15 @@
             background-color: var(--navbar-bg); cursor: pointer; display: flex;
             justify-content: center; align-items: center; color: var(--text-color);
             transition: top 0.35s ease-in-out, left 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.35s ease-in-out;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline for toggles */
         }
         #toggle-top-bar-button:hover, #toggle-sidebar-button:hover { background-color: var(--button-hover-bg); }
         #toggle-top-bar-button .fas, #toggle-sidebar-button .fas { font-size: 14px; transition: transform 0.3s ease-in-out; }
         #toggle-top-bar-button {
-            right: 2px; border-radius: 0 0 15px 15px;
+            right: 2px; border-radius: 0 0 15px 15px; /* Rounded pill bottom */
         }
         #toggle-sidebar-button {
-            left: 0px; bottom: 2px; border-radius: 0 15px 15px 0;
+            left: 0px; bottom: 2px; border-radius: 0 15px 15px 0; /* Rounded pill right */
         }
 
         #tabs-container { flex: 1; position: relative; background-color: var(--iframe-bg); }
@@ -649,24 +873,33 @@
                 <option value="mint">Mint Green</option>
                 <option value="crimson">Crimson Red</option>
                 <option value="forest">Forest Green</option>
-                <option value="solarflare">Solar Flare</option>
-                <option value="deepsea">Deep Sea</option>
-                <option value="rosegold">Rose Gold</option>
-                <option value="emeraldisle">Emerald Isle</option>
-                <option value="royalpurple">रॉयल पर्पल</option>
-                <option value="charcoalslate">Charcoal Slate</option>
-                <option value="cyberpunk">Cyberpunk Neon</option>
-                <option value="mocha">Mocha Delight</option>
-                <option value="arctic">Arctic Frost</option>
-                <option value="sakura">Sakura Sunset</option>
+                <option value="purple">Deep Purple</option>
+                <option value="teal">Ocean Teal</option>
+                <option value="brown">Earthy Brown</option>
+                <option value="pink">Hot Pink</option>
+                <option value="yellow">Sunny Yellow</option>
+                <option value="gray">Cool Gray</option>
+                <option value="cyan">Vibrant Cyan</option>
+                <option value="lime">Zesty Lime</option>
+                <option value="indigo">Mystic Indigo</option>
+                <option value="olive">Calm Olive</option>
+                <option value="maroon">Rich Maroon</option>
+                <option value="navy">Deep Navy</option>
+                <option value="aqua">Bright Aqua</option>
+                <option value="gold">Royal Gold</option>
+                <option value="silver">Classic Silver</option>
+                <option value="bronze">Rustic Bronze</option>
+                <option value="rose">Sweet Rose</option>
+                <option value="violet">Soft Violet</option>
+                <option value="turquoise">Peaceful Turquoise</option>
             </select>
 
             <label for="search-engine-selector" class="sidebar-setting-label" style="margin-top: 15px;">Search Engine:</label>
             <select id="search-engine-selector" class="sidebar-select">
                 <option value="duckduckgo">DuckDuckGo</option>
-                <option value="yahoo">Yahoo Search</option>
+                <option value="google">Google</option>
                 <option value="bing">Bing</option>
-                <option value="qwant">Qwant</option>
+                <option value="brave">Brave Search</option>
             </select>
         </div>
     </div>
@@ -706,777 +939,563 @@
     <script src="stars.js" defer></script>
 
     <script>
-    // === Vern Pro Browser - Optimized Script v2 === //
-    (function VernProBrowser() {
-        'use strict';
+        // --- CONFIGURATION & GLOBAL STATE ---
+        let tabs = [];
+        let activeTabId = null;
+        let tabCounter = 0;
+        let sessionHistory = [];
+        const MAX_HISTORY_ITEMS = 50;
 
-        const appState = {
-            tabs: [],
-            activeTabId: null,
-            tabCounter: 0,
-            sessionHistory: [],
-            MAX_HISTORY_ITEMS: 50,
-            currentSearchEngineKey: 'duckduckgo',
-            initialTopBarHeight: 0,
-            isTopBarHidden: false,
-            isSidebarHidden: false,
-            domRefs: {},
-            urlBeforeErrorByTabId: {}
-        };
-
-        const SEARCH_ENGINES = {
+        const searchEngines = {
             'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
-            'yahoo': { name: 'Yahoo Search', url: 'https://search.yahoo.com/search?p=%s' },
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
             'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
-            'qwant': { name: 'Qwant', url: 'https://www.qwant.com/?q=%s' }
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
         };
+        let currentSearchEngineKey = 'duckduckgo'; // Default
 
-        function debounce(func, delay) {
-            let timeoutId;
-            return function(...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
+        // --- DOM ELEMENT REFERENCES ---
+        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl;
+        let topBarAssemblyEl, toggleTopBarButtonEl, toggleBarIconEl;
+        let sidebarEl, toggleSidebarButtonEl, toggleSidebarIconEl, mainContentWrapperEl;
+        let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
+        let historyListEl;
+        let themeSelectorEl, searchEngineSelectorEl;
 
-        function getById(id) {
-            if (!appState.domRefs[id]) {
-                appState.domRefs[id] = document.getElementById(id);
-            }
-            return appState.domRefs[id];
-        }
+        let initialTopBarHeight = 0;
+        let isTopBarHidden = false;
+        let isSidebarHidden = false;
 
-        function cacheDomElements() {
-            const ids = [
-                'tab-bar', 'tabs-container', 'search-bar', 'new-tab-button',
-                'home-button', 'back-button', 'forward-button', 'refresh-button',
-                'top-bar-assembly', 'toggle-top-bar-button', 'toggle-bar-icon',
-                'sidebar', 'toggle-sidebar-button', 'toggle-sidebar-icon',
-                'main-content-wrapper', 'bookmarks-list', 'add-current-bookmark-button',
-                'new-bookmark-name', 'history-list', 'theme-selector', 'search-engine-selector'
-            ];
-            ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) console.warn(`DOM element not found during cache: ${id}`);
-                appState.domRefs[id] = el;
-            });
-        }
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize DOM elements
+            tabBarEl = document.getElementById('tab-bar');
+            tabsContainerEl = document.getElementById('tabs-container');
+            searchBarEl = document.getElementById('search-bar');
+            newTabButtonEl = document.getElementById('new-tab-button');
+            homeButtonEl = document.getElementById('home-button');
+            backButtonEl = document.getElementById('back-button');
+            forwardButtonEl = document.getElementById('forward-button');
+            refreshButtonEl = document.getElementById('refresh-button');
 
-        async function initialize() {
-            cacheDomElements();
+            topBarAssemblyEl = document.getElementById('top-bar-assembly');
+            toggleTopBarButtonEl = document.getElementById('toggle-top-bar-button');
+            toggleBarIconEl = document.getElementById('toggle-bar-icon');
 
-            try {
-                await initUV();
-            } catch (initializationError) {
-                console.error("Vern Pro Critical Initialization Failed:", initializationError.message);
-                let startupTab = getActiveTab(); // Try to get an existing tab
-                if (!startupTab && appState.tabs.length === 0) {
-                    // If no tabs exist, we must create one to show the error.
-                    // Call createTab with a non-error URL first to ensure it sets up correctly.
-                    startupTab = createTab('about:blank');
-                }
-                // Now startupTab should exist. Render the critical error.
-                if (startupTab) {
-                    renderErrorPage(
-                        startupTab,
-                        "Browser Initialization Error",
-                        initializationError.message,
-                        "Key browser components (like the proxy service) failed to load. External websites may not be accessible. Please check the browser console (F12) for more details and ensure all files (uv.bundle.js, registerSW.js, etc.) are correctly placed and accessible."
-                    );
-                } else {
-                    // Absolute fallback if tab creation itself fails.
-                    alert(`Critical Initialization Error: ${initializationError.message}. The browser may not function.`);
-                }
-                // Do not proceed with further UI setup if UV fails critically, as basic functionality is impaired.
-                // However, event listeners for theme changes etc. might still be useful.
-            }
+            sidebarEl = document.getElementById('sidebar');
+            toggleSidebarButtonEl = document.getElementById('toggle-sidebar-button');
+            toggleSidebarIconEl = document.getElementById('toggle-sidebar-icon');
+            mainContentWrapperEl = document.getElementById('main-content-wrapper');
 
+            bookmarksListEl = document.getElementById('bookmarks-list');
+            addCurrentBookmarkButtonEl = document.getElementById('add-current-bookmark-button');
+            newBookmarkNameInputEl = document.getElementById('new-bookmark-name');
+            historyListEl = document.getElementById('history-list');
+            themeSelectorEl = document.getElementById('theme-selector');
+            searchEngineSelectorEl = document.getElementById('search-engine-selector');
 
-            setupSearchEngineSelector();
-            loadSettings();
+            await initUV();
+            setupSearchEngineSelector(); // Populate dropdown
+            loadSettings(); // Load theme and search engine
+
             updateInitialTopBarHeight();
-
-            if (!appState.isTopBarHidden) {
-                getById('top-bar-assembly').style.maxHeight = appState.initialTopBarHeight + 'px';
-            } else {
-                getById('top-bar-assembly').style.maxHeight = '0px';
-                getById('top-bar-assembly').classList.add('hidden');
+            if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+            else {
+                topBarAssemblyEl.style.maxHeight = '0px';
+                topBarAssemblyEl.classList.add('hidden');
                 handleTopBarToggle(true);
             }
 
-            const sidebarWidth = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-            if (localStorage.getItem('vernSidebarHidden') === 'true') { // Load sidebar state
-                appState.isSidebarHidden = true; // Set state before calling toggle
-                handleSidebarToggle(true); // Pass true to force hidden state
+            if (isSidebarHidden) {
+                sidebarEl.classList.add('hidden');
+                toggleSidebarIconEl.className = 'fas fa-chevron-right';
+                toggleSidebarButtonEl.style.left = '0px';
+                toggleSidebarButtonEl.title = "Show Sidebar";
             } else {
-                 appState.isSidebarHidden = false;
-                 handleSidebarToggle(false); // Pass false to force shown state
+                toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                toggleSidebarIconEl.className = 'fas fa-chevron-left';
+                toggleSidebarButtonEl.title = "Hide Sidebar";
             }
-
 
             setupEventListeners();
             loadBookmarks();
 
             const urlParams = new URLSearchParams(window.location.search);
             const initialUrl = urlParams.get('url');
-
-            // If initialize had an error, a tab might already exist showing the error.
-            // Only create a new tab if no tabs exist OR if the existing tab isn't an error page.
-            const existingActiveTab = getActiveTab();
-            if (!existingActiveTab || (existingActiveTab.url !== 'about:errorpage' && appState.tabs.length === 0) ) {
-                 if (appState.tabs.length === 0) createTab(initialUrl || 'about:blank');
-            } else if (existingActiveTab && appState.tabs.length === 0) {
-                // This case should ideally not happen if getActiveTab() implies tabs.length > 0
-                // but as a safeguard:
-                 createTab(initialUrl || 'about:blank');
-            }
-
-
+            if (tabs.length === 0) createTab(initialUrl || 'about:blank');
             renderHistory();
-            applyTheme(localStorage.getItem('vernTheme') || 'default', true); // isInitialLoad = true
-            console.log("Vern Pro Optimized v2 Initialized.");
-        }
+            applyTheme(localStorage.getItem('vernTheme') || 'default'); // Ensure theme is applied correctly on load
+        });
 
         async function initUV() {
-            if (typeof window.registerSW !== 'function') {
-                const msg = "Proxy service worker (registerSW) is missing.";
-                console.error("initUV Error:", msg);
-                throw new Error(msg);
-            }
             try {
-                await window.registerSW();
+                if (typeof registerSW !== 'function') {
+                    console.warn("registerSW() function not found. UV Service Worker might not be registered.");
+                    return;
+                }
+                await registerSW();
                 console.log("Service worker registered successfully for Vern Pro.");
             } catch (err) {
                 console.error("Failed to register UV service worker:", err);
-                throw new Error(`Failed to register UV service worker: ${err.message || 'Unknown error'}`);
+                alert("Error: Could not initialize proxy service. Some websites may not load correctly.");
             }
         }
 
         function setupSearchEngineSelector() {
-            const selector = getById('search-engine-selector');
-            if (!selector) return;
-            selector.innerHTML = '';
-            Object.keys(SEARCH_ENGINES).forEach(key => {
+            searchEngineSelectorEl.innerHTML = ''; // Clear existing options
+            for (const key in searchEngines) {
                 const option = document.createElement('option');
                 option.value = key;
-                option.textContent = SEARCH_ENGINES[key].name;
-                selector.appendChild(option);
-            });
+                option.textContent = searchEngines[key].name;
+                searchEngineSelectorEl.appendChild(option);
+            }
         }
-
         function updateSelectArrowColor() {
-            requestAnimationFrame(() => {
-                try {
-                    const computedStyle = getComputedStyle(document.body);
-                    const textColor = computedStyle.getPropertyValue('--text-color').trim();
-                    if (!textColor) { // Guard against empty color string
-                        console.warn("Text color for select arrow is empty.");
-                        return;
-                    }
-                    const currentTextColorHex = textColor.startsWith('#') ? textColor.substring(1) : "000000"; // Default if not hex
-
-                    const svgArrow = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(currentTextColorHex)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')`;
-                    const themeSel = getById('theme-selector');
-                    const searchSel = getById('search-engine-selector');
-                    if (themeSel) themeSel.style.backgroundImage = svgArrow;
-                    if (searchSel) searchSel.style.backgroundImage = svgArrow;
-                } catch (e) {
-                    console.warn("Could not update select arrow color:", e);
-                }
-            });
+            const currentTextColor = getComputedStyle(document.body).getPropertyValue('--text-color').trim().substring(1);
+            const svgArrow = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${encodeURIComponent(currentTextColor)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')`;
+            document.querySelectorAll('#sidebar .sidebar-select').forEach(sel => sel.style.backgroundImage = svgArrow);
         }
+
 
         function loadSettings() {
+            // Load Theme
             const savedTheme = localStorage.getItem('vernTheme') || 'default';
-            applyTheme(savedTheme, true);
+            applyTheme(savedTheme);
 
+            // Load Search Engine
             const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
-            if (SEARCH_ENGINES[savedSearchEngine]) {
-                appState.currentSearchEngineKey = savedSearchEngine;
+            if (searchEngines[savedSearchEngine]) {
+                currentSearchEngineKey = savedSearchEngine;
             }
-            const searchEngineSelector = getById('search-engine-selector');
-            if (searchEngineSelector) searchEngineSelector.value = appState.currentSearchEngineKey;
-
-            // Load sidebar visibility state
-            appState.isSidebarHidden = localStorage.getItem('vernSidebarHidden') === 'true';
+            searchEngineSelectorEl.value = currentSearchEngineKey;
         }
 
+        // --- EVENT LISTENERS SETUP ---
         function setupEventListeners() {
-            const dom = appState.domRefs;
+            if(toggleTopBarButtonEl) toggleTopBarButtonEl.addEventListener('click', () => handleTopBarToggle());
+            if(toggleSidebarButtonEl) toggleSidebarButtonEl.addEventListener('click', handleSidebarToggle);
 
-            dom['toggle-top-bar-button']?.addEventListener('click', () => handleTopBarToggle());
-            dom['toggle-sidebar-button']?.addEventListener('click', () => handleSidebarToggle());
-            window.addEventListener('resize', debounce(() => {
-                if (!appState.isTopBarHidden) updateInitialTopBarHeight();
-                if (!appState.isSidebarHidden) {
-                    dom['toggle-sidebar-button'].style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+            window.addEventListener('resize', () => {
+                if (!isTopBarHidden) updateInitialTopBarHeight();
+                if (!isSidebarHidden) {
+                     toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
                 }
-            }, 200));
-            dom['new-tab-button']?.addEventListener('click', () => createTab('about:blank'));
-            dom['search-bar']?.addEventListener('keydown', handleSearchEnter);
-            dom['home-button']?.addEventListener('click', () => PublicAPIMethods.navigateToURL('about:blank'));
-            dom['back-button']?.addEventListener('click', PublicAPIMethods.navigateBack);
-            dom['forward-button']?.addEventListener('click', PublicAPIMethods.navigateForward);
-            dom['refresh-button']?.addEventListener('click', PublicAPIMethods.refreshCurrentTab);
-            dom['add-current-bookmark-button']?.addEventListener('click', handleAddCurrentBookmark);
-            dom['bookmarks-list']?.addEventListener('click', handleBookmarkListClick);
-            dom['history-list']?.addEventListener('click', handleHistoryListClick);
-            dom['theme-selector']?.addEventListener('change', (e) => applyTheme(e.target.value));
-            dom['search-engine-selector']?.addEventListener('change', handleSearchEngineChange);
+            });
+
+            if(newTabButtonEl) newTabButtonEl.addEventListener('click', () => createTab('about:blank'));
+            if(tabBarEl) tabBarEl.addEventListener('click', handleTabBarClick);
+            if(searchBarEl) searchBarEl.addEventListener('keydown', handleSearchEnter);
+
+            if(homeButtonEl) homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
+            if(backButtonEl) backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back());
+            if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward());
+            if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => {
+                const activeTab = getActiveTab();
+                if (activeTab?.iframe.contentWindow) {
+                    try {
+                        // Forcing reload for proxied pages, direct reload for others
+                        if (activeTab.iframe.src.includes(__uv$config.prefix)) {
+                             activeTab.iframe.contentWindow.location.reload(true); // Force reload for proxied content
+                        } else {
+                            activeTab.iframe.contentWindow.location.reload();
+                        }
+                    } catch (e) { activeTab.iframe.src = activeTab.iframe.src; } // Fallback to re-assigning src
+                }
+            });
+
+            if(addCurrentBookmarkButtonEl) addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark);
+            if(bookmarksListEl) bookmarksListEl.addEventListener('click', handleBookmarkClick);
+            if(historyListEl) historyListEl.addEventListener('click', handleHistoryClick);
+            if(themeSelectorEl) themeSelectorEl.addEventListener('change', handleThemeChange);
+            if(searchEngineSelectorEl) searchEngineSelectorEl.addEventListener('change', handleSearchEngineChange);
+
             document.addEventListener('keydown', handleGlobalKeyDown);
-            dom['tab-bar']?.addEventListener('click', handleTabBarClick);
-            document.addEventListener('load', handleIframeLoad, true);
+            document.addEventListener('load', handleIframeLoad, true); // Use capture phase
             window.addEventListener('message', handleWindowMessage);
         }
 
-        function createTab(url = 'about:blank') {
-            const tabId = `tab-${appState.tabCounter++}`;
-            const iframe = document.createElement('iframe');
-            iframe.id = `content-${tabId}`;
-            iframe.className = 'tab-content';
-            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
-            iframe.loading = 'eager';
-
-            const tabElementHTML = `
-                <div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div>
-                <div class="tab-title">New Tab</div>
-                <div class="tab-close" data-action="close-tab"><i class="fas fa-times"></i></div>`;
+        // --- TAB MANAGEMENT ---
+        function createTab(url = null) {
+            const tabId = `tab-${tabCounter++}`;
+            const contentId = `content-${tabId}`;
             const tabElement = document.createElement('div');
             tabElement.className = 'tab';
             tabElement.dataset.tabId = tabId;
-            tabElement.innerHTML = tabElementHTML;
+            tabElement.innerHTML = `<div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div><div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>`;
+            tabBarEl.insertBefore(tabElement, newTabButtonEl);
 
-            getById('tab-bar')?.insertBefore(tabElement, getById('new-tab-button'));
-            getById('tabs-container')?.appendChild(iframe);
+            const iframe = document.createElement('iframe');
+            iframe.id = contentId;
+            iframe.className = 'tab-content';
+            // Sandbox attributes: allow-scripts (for website functionality), allow-same-origin (for UV proxy interaction),
+            // allow-forms, allow-popups, allow-presentation, allow-downloads.
+            // allow-top-navigation-by-user-activation (might be useful but can be risky with proxies)
+            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
+            iframe.loading = 'eager'; // Load iframes eagerly for active tabs
+            tabsContainerEl.appendChild(iframe);
 
-            const newTab = {
-                id: tabId, element: tabElement, iframe: iframe, url: url, title: 'New Tab',
-                titleElement: tabElement.querySelector('.tab-title'),
-                faviconElement: tabElement.querySelector('.tab-favicon'),
-                isLoading: false, errorTitle: null
-            };
-            appState.tabs.push(newTab);
+            const tab = { id: tabId, contentId, element: tabElement, iframe, url: url || 'about:blank', title: 'New Tab', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false };
+            tabs.push(tab);
             activateTab(tabId);
-             // Navigate only if not creating a tab for an error page initially set by renderErrorPage
-            if (url !== 'about:errorpage') {
-                navigateTo(url, newTab);
-            }
-            return newTab;
+            navigateTo(tab.url, tab);
+            return tab;
         }
 
         function activateTab(tabId) {
-            if (!tabId && appState.tabs.length > 0) tabId = appState.tabs[0].id;
+            if (!tabId && tabs.length > 0) tabId = tabs[0].id;
             if (!tabId) return;
-            appState.tabs.forEach(t => {
-                t.element.classList.remove('active');
-                t.iframe.classList.remove('active');
-            });
-            const tab = appState.tabs.find(t => t.id === tabId);
+            tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
+            const tab = tabs.find(t => t.id === tabId);
             if (tab) {
                 tab.element.classList.add('active');
                 tab.iframe.classList.add('active');
-                appState.activeTabId = tabId;
-                getById('search-bar').value = (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') ? tab.url : '';
-                requestAnimationFrame(() => {
-                    tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-                });
+                activeTabId = tabId;
+                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : '';
+                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
                 updateDocumentTitle(tab);
             }
         }
 
         function closeTab(tabId) {
-            const tabIndex = appState.tabs.findIndex(t => t.id === tabId);
+            const tabIndex = tabs.findIndex(t => t.id === tabId);
             if (tabIndex === -1) return;
-            const tabToClose = appState.tabs[tabIndex];
-            if (tabToClose.titleObserver) tabToClose.titleObserver.disconnect();
-            if (tabToClose.locationCheckIntervalId) clearInterval(tabToClose.locationCheckIntervalId);
-            delete appState.urlBeforeErrorByTabId[tabId];
-            requestAnimationFrame(() => {
-                tabToClose.element.remove();
-                tabToClose.iframe.remove();
-            });
-            appState.tabs.splice(tabIndex, 1);
-            if (appState.activeTabId === tabId) {
-                if (appState.tabs.length > 0) {
-                    activateTab(appState.tabs[Math.max(0, tabIndex - 1)]?.id || appState.tabs[0]?.id);
-                } else {
-                    createTab('about:blank');
-                }
+            const tab = tabs[tabIndex];
+            if (tab.titleObserver) tab.titleObserver.disconnect();
+            if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+            tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1);
+            if (activeTabId === tabId) {
+                if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id);
+                else createTab('about:blank'); // Create a new blank tab if all are closed
             }
         }
-
-        function getActiveTab() {
-            return appState.tabs.find(t => t.id === appState.activeTabId);
-        }
+        function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
 
         function updateTabInfo(tab, title, faviconUrl) {
             if (!tab) return;
-            const displayTitle = title ||
-                (tab.url === 'about:blank' ? 'New Tab' :
-                (tab.url === 'about:errorpage' ? (tab.errorTitle || 'Error') :
-                (tab.url || 'Loading...')));
+            const displayTitle = title || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
             tab.title = displayTitle;
-            tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0, 18) + '...' : displayTitle;
-            tab.titleElement.title = displayTitle;
+            tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0,18) + '...' : displayTitle;
+            tab.titleElement.title = displayTitle; // Full title on hover
+
             if (faviconUrl) {
                 tab.faviconElement.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
-            } else if (tab.url === 'about:errorpage') {
-                 tab.faviconElement.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 14px; color: var(--error-icon-color);"></i>`;
             } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
                 try {
                     const siteUrl = new URL(tab.url);
                     tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" style="width:16px;height:16px;object-fit:contain;" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\' style=\\'font-size: 14px;\\'></i>';">`;
                 } catch (e) { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
-            } else {
-                tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;
-            }
-            if (tab.id === appState.activeTabId) {
-                updateDocumentTitle(tab);
-            }
+            } else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
+            if (tab.id === activeTabId) updateDocumentTitle(tab);
         }
-
         function updateDocumentTitle(tab) {
-            document.title = `${tab ? (tab.title || 'New Tab') : 'New Tab'} - Vern Pro Optimized v2`;
+            if (!tab) tab = getActiveTab();
+            document.title = `${tab ? (tab.title || 'New Tab') : 'New Tab'} - Vern Browser Pro`;
         }
 
+        // --- NAVIGATION ---
         function formatUrlInput(input) {
-            const trimmedInput = input.trim();
-            if (/^(?:[a-z]+:)?\/\//i.test(trimmedInput)) {
-                return trimmedInput.startsWith("//") ? "https:" + trimmedInput : trimmedInput;
+            if (/^(?:[a-z]+:)?\/\//i.test(input)) {
+                if(input.startsWith("//")) return "https:" + input;
+                return input;
             }
-            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}(\/.*)*$/.test(trimmedInput) ||
-                trimmedInput.startsWith("localhost:") ||
-                /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(trimmedInput)) {
-                return 'https://' + trimmedInput;
+            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) ||
+                input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) { // Added localhost and IP support
+                return 'https://' + input;
             }
             return null;
         }
 
         function navigateTo(urlInput, tab = null) {
             let currentTab = tab || getActiveTab();
-            if (!currentTab) { currentTab = createTab(urlInput); return; }
-
+            if (!currentTab) {
+                currentTab = createTab(urlInput); return;
+            }
             currentTab.isLoading = true;
-            currentTab.iframe.srcdoc = ''; // Clear srcdoc for new navigation
             updateTabInfo(currentTab, "Loading...", null);
 
-            const SanitizeURLInput = (input) => (!input || typeof input !== 'string' || input.trim() === '') ? 'about:blank' : input.trim();
-            urlInput = SanitizeURLInput(urlInput);
-
-            if (urlInput === 'about:errorpage') {
-                // This is an internal state. renderErrorPage is responsible for content.
-                // Avoid further processing or trying to navigate to "about:errorpage" as a URL.
-                console.warn("navigateTo called with 'about:errorpage'. Tab state should be managed by renderErrorPage.");
-                 if (!currentTab.iframe.srcdoc || !currentTab.iframe.srcdoc.includes("error-icon")) {
-                    renderErrorPage(currentTab, "Error State", "This tab is in an error state.", `Intended URL: ${appState.urlBeforeErrorByTabId[currentTab.id] || 'Unknown'}`);
-                }
-                currentTab.isLoading = false; // Error page itself is "loaded"
-                return;
-            }
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
 
             if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
                 currentTab.iframe.src = urlInput;
                 currentTab.url = urlInput;
-                appState.urlBeforeErrorByTabId[currentTab.id] = urlInput;
-                if (currentTab.id === appState.activeTabId) getById('search-bar').value = (urlInput === 'about:blank' ? '' : urlInput);
+                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput;
                 updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput);
-                if (urlInput === 'about:blank') addToHistory('New Tab', urlInput);
+                if (!urlInput.startsWith('about:error')) addToHistory(urlInput === 'about:blank' ? 'New Tab' : urlInput, urlInput);
                 currentTab.isLoading = false;
                 return;
             }
 
-            let targetUrl = formatUrlInput(urlInput);
-            if (!targetUrl) {
-                const searchEngine = SEARCH_ENGINES[appState.currentSearchEngineKey] || SEARCH_ENGINES['duckduckgo'];
-                targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput));
-            }
-            appState.urlBeforeErrorByTabId[currentTab.id] = targetUrl;
+            let targetUrl = formatUrlInput(urlInput.trim());
 
-            if (typeof window.__uv$config === 'undefined' || !window.__uv$config.prefix || typeof window.__uv$config.encodeUrl !== 'function') {
-                renderErrorPage(currentTab, "Configuration Error", "Proxy configuration (UV) is missing or invalid.", `Attempted URL: ${targetUrl}`);
+            if (targetUrl) {
+                // URL already formatted
+            } else { // It's a search query
+                const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
+                targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+            }
+
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                console.error("UV configuration is not available.");
+                const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`;
+                currentTab.iframe.src = errorUrl;
+                currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Error: UV Config Missing");
+                currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = '';
                 return;
             }
+
             try {
-                const proxiedUrl = self.location.origin + window.__uv$config.prefix + window.__uv$config.encodeUrl(targetUrl);
+                const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl);
                 currentTab.iframe.src = proxiedUrl;
                 currentTab.url = targetUrl;
-                if (currentTab.id === appState.activeTabId) getById('search-bar').value = targetUrl;
+                if (currentTab.id === activeTabId) searchBarEl.value = targetUrl;
             } catch (err) {
-                renderErrorPage(currentTab, "Navigation Error", `Could not process the URL: ${err.message}`, `URL: ${targetUrl}`);
+                console.error("Navigation error:", err);
+                const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                currentTab.iframe.src = errorUrl;
+                currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Navigation Error");
+                currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = '';
             }
         }
 
-        function renderErrorPage(tab, errorTitle, message, details = '') {
-            if (!tab) {
-                tab = createTab('about:errorpage'); // Will set url to about:errorpage
-                if (!tab) { console.error("Failed to create tab for error page."); return; }
-            } else {
-                 // If tab exists, ensure its URL reflects it's an error page internally
-                tab.url = 'about:errorpage';
-            }
-            tab.isLoading = true;
-            tab.errorTitle = errorTitle;
-
-            requestAnimationFrame(() => {
-                const computedStyle = getComputedStyle(document.body);
-                const errorPageVars = {
-                    textColor: computedStyle.getPropertyValue('--text-color').trim(),
-                    iframeBgColor: computedStyle.getPropertyValue('--iframe-bg').trim(),
-                    buttonBgColor: computedStyle.getPropertyValue('--button-bg').trim(),
-                    buttonHoverBgColor: computedStyle.getPropertyValue('--button-hover-bg').trim(),
-                    buttonTextColor: computedStyle.getPropertyValue('--button-text-color').trim(),
-                    sidebarOutlineColor: computedStyle.getPropertyValue('--sidebar-outline-color').trim(),
-                    fontFamily: computedStyle.getPropertyValue('--font-family-main').trim(),
-                    errorIconColor: computedStyle.getPropertyValue('--error-icon-color').trim() || 'inherit'
-                };
-                const errorHTML = `
-                <html style="height: 100%;">
-                <head><title>${errorTitle}</title>
-                    <style>
-                        body { font-family: ${errorPageVars.fontFamily}; color: ${errorPageVars.textColor}; background-color: ${errorPageVars.iframeBgColor}; margin: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden; }
-                        h2 { color: ${errorPageVars.textColor}; margin-bottom: 20px; font-size: 1.8em; font-weight: 600;}
-                        p { margin-bottom: 12px; font-size: 1.1em; }
-                        .error-details { font-size: 0.9em; opacity: 0.7; word-break: break-all; max-width: 80%; margin-top:15px; }
-                        .error-icon { font-size: 3.5em; margin-bottom: 20px; color: ${errorPageVars.errorIconColor}; }
-                        .error-actions button { background-color: ${errorPageVars.buttonBgColor}; color: ${errorPageVars.buttonTextColor}; border: none; border-radius: 20px; padding: 10px 22px; cursor: pointer; font-family: ${errorPageVars.fontFamily}; margin: 8px; font-size: 0.95em; box-shadow: 0 0 0 1px ${errorPageVars.sidebarOutlineColor}; transition: background-color 0.2s ease, box-shadow 0.2s ease; }
-                        .error-actions button:hover { background-color: ${errorPageVars.buttonHoverBgColor}; box-shadow: 0 0 0 1.5px ${errorPageVars.sidebarOutlineColor}; }
-                    </style>
-                </head>
-                <body>
-                    <div class="error-icon">⚠️</div><h2>${errorTitle}</h2><p>${message}</p>
-                    ${details ? `<p class="error-details">${details}</p>` : ''}
-                    <div class="error-actions">
-                        <button data-action="error-back">Go Back</button>
-                        <button data-action="error-retry">Try Again</button>
-                        <button data-action="error-home">Go Home</button>
-                    </div>
-                    <script>
-                        document.body.addEventListener('click', function(event) {
-                            const action = event.target.dataset.action;
-                            if (action === 'error-back') window.parent.VernProBrowser.navigateBack();
-                            else if (action === 'error-retry') window.parent.VernProBrowser.retryFailedNavigation();
-                            else if (action === 'error-home') window.parent.VernProBrowser.navigateToURL('about:blank');
-                        });
-                    <\/script>
-                </body></html>`;
-                tab.iframe.srcdoc = errorHTML;
-                updateTabInfo(tab, errorTitle);
-                if (tab.id === appState.activeTabId) getById('search-bar').value = '';
-                tab.isLoading = false;
-            });
-        }
-
+        // --- UI TOGGLES & RESIZE ---
         function handleTopBarToggle(forceState) {
-            if (forceState !== undefined) appState.isTopBarHidden = forceState;
-            else appState.isTopBarHidden = !appState.isTopBarHidden;
-
-            const topBar = getById('top-bar-assembly');
-            const toggleButton = getById('toggle-top-bar-button');
-            const toggleIcon = getById('toggle-bar-icon');
-
-            if (appState.isTopBarHidden) {
-                topBar.classList.add('hidden'); topBar.style.maxHeight = '0px';
-                toggleButton.style.top = '-1px'; toggleIcon.className = 'fas fa-chevron-down';
-                toggleButton.title = "Show Toolbar";
+            if (forceState !== undefined) isTopBarHidden = forceState; else isTopBarHidden = !isTopBarHidden;
+            if (isTopBarHidden) {
+                topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = '0px'; toggleTopBarButtonEl.style.top = '-1px';
+                toggleBarIconEl.className = 'fas fa-chevron-down'; toggleTopBarButtonEl.title = "Show Toolbar";
             } else {
-                topBar.classList.remove('hidden'); topBar.style.maxHeight = appState.initialTopBarHeight + 'px';
-                toggleButton.style.top = (appState.initialTopBarHeight > 0 ? appState.initialTopBarHeight - 1 : 0) + 'px';
-                toggleIcon.className = 'fas fa-chevron-up'; toggleButton.title = "Hide Toolbar";
+                topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
+                toggleBarIconEl.className = 'fas fa-chevron-up'; toggleTopBarButtonEl.title = "Hide Toolbar";
             }
         }
-
-        function handleSidebarToggle(forceState) {
-            const sidebar = getById('sidebar');
-            const toggleButton = getById('toggle-sidebar-button');
-            const toggleIcon = getById('toggle-sidebar-icon');
+        function handleSidebarToggle() {
+            isSidebarHidden = !isSidebarHidden;
             const sidebarWidth = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-
-            let shouldBeHidden;
-            if (forceState !== undefined) {
-                shouldBeHidden = forceState;
+            if (isSidebarHidden) {
+                sidebarEl.classList.add('hidden'); toggleSidebarIconEl.className = 'fas fa-chevron-right';
+                toggleSidebarButtonEl.style.left = '0px'; toggleSidebarButtonEl.title = "Show Sidebar";
             } else {
-                shouldBeHidden = !appState.isSidebarHidden;
+                sidebarEl.classList.remove('hidden'); toggleSidebarIconEl.className = 'fas fa-chevron-left';
+                toggleSidebarButtonEl.style.left = sidebarWidth; toggleSidebarButtonEl.title = "Hide Sidebar";
             }
-
-            if (shouldBeHidden) {
-                sidebar.classList.add('hidden');
-                toggleIcon.className = 'fas fa-chevron-right';
-                toggleButton.style.left = '0px';
-                toggleButton.title = "Show Sidebar";
-            } else {
-                sidebar.classList.remove('hidden');
-                toggleIcon.className = 'fas fa-chevron-left';
-                toggleButton.style.left = sidebarWidth;
-                toggleButton.title = "Hide Sidebar";
-            }
-            appState.isSidebarHidden = shouldBeHidden;
-            localStorage.setItem('vernSidebarHidden', appState.isSidebarHidden); // Save state
         }
-
-
         function updateInitialTopBarHeight() {
-            const topBar = getById('top-bar-assembly');
-            if(!topBar) return;
-            const wasHidden = topBar.classList.contains('hidden');
-            if (wasHidden) { topBar.classList.remove('hidden'); topBar.style.maxHeight = 'none'; }
-            appState.initialTopBarHeight = topBar.offsetHeight;
-            if (wasHidden) { topBar.classList.add('hidden'); topBar.style.maxHeight = '0px';}
-            else { topBar.style.maxHeight = appState.initialTopBarHeight + 'px'; }
-            const toggleButton = getById('toggle-top-bar-button');
-            if (toggleButton && !appState.isTopBarHidden && appState.initialTopBarHeight > 0) {
-                toggleButton.style.top = (appState.initialTopBarHeight - 1) + 'px';
-            } else if (toggleButton && !appState.isTopBarHidden && appState.initialTopBarHeight === 0) {
-                 toggleButton.style.top = '0px';
+            const wasHidden = topBarAssemblyEl.classList.contains('hidden');
+            if (wasHidden) { topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = 'none'; } // Temporarily show to measure
+            initialTopBarHeight = topBarAssemblyEl.offsetHeight;
+            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = '0px';} // Re-hide if it was
+            else { topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; } // Apply measured height
+            if (!isTopBarHidden && initialTopBarHeight > 0) {
+                toggleTopBarButtonEl.style.top = (initialTopBarHeight -1) + 'px'; // Adjust button position
+            } else if (!isTopBarHidden && initialTopBarHeight === 0) { // Case where it might be 0 if display none initially
+                 toggleTopBarButtonEl.style.top = '0px';
             }
         }
 
+        // --- EVENT HANDLERS ---
         function handleTabBarClick(e) {
-            const target = e.target;
-            const tabElement = target.closest('.tab');
-            const closeButton = target.closest('.tab-close[data-action="close-tab"]');
-            if (closeButton && tabElement) {
-                e.stopPropagation(); closeTab(tabElement.dataset.tabId);
-            } else if (tabElement) {
-                activateTab(tabElement.dataset.tabId);
-            }
+            const tabElement = e.target.closest('.tab'); const closeButton = e.target.closest('.tab-close');
+            if (closeButton && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); }
+            else if (tabElement) activateTab(tabElement.dataset.tabId);
         }
-
-        function handleSearchEnter(e) {
-            if (e.key === 'Enter' && e.target.value.trim() !== '') navigateTo(e.target.value);
-        }
+        function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
 
         function handleIframeLoad(event) {
+            // Only act on iframes that are part of our tabs
             if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
                 const iframe = event.target;
-                const tab = appState.tabs.find(t => t.iframe === iframe);
+                const tab = tabs.find(t => t.iframe === iframe);
                 if (tab) {
                     tab.isLoading = false;
-                    if (tab.url === 'about:errorpage') return;
                     let title = 'Untitled';
+                    let actualUrl = tab.url; // Default to stored URL
+
                     try {
-                        if (iframe.contentWindow && iframe.contentDocument && iframe.contentDocument.title) {
-                            title = iframe.contentDocument.title.trim() || new URL(tab.url).hostname || 'Untitled';
-                        } else if (tab.url && tab.url !== 'about:blank') {
-                             try {title = new URL(tab.url).hostname } catch {title = 'Untitled'}
-                        } else { title = 'New Tab'; }
+                        if (iframe.contentWindow && iframe.contentDocument) {
+                            title = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
+                            // Attempt to get the "real" URL from inside the iframe (UV might change it)
+                            // This might be blocked by cross-origin policies if not careful with UV setup
+                            // For now, we rely on the tab.url which is the one we sent to UV
+                        }
                     } catch (e) {
+                        // If accessing contentDocument fails (cross-origin), fallback to hostname
                         try { title = new URL(tab.url).hostname || 'New Tab'; } catch {}
+                        console.warn("Could not access iframe contentDocument for title:", e.message);
                     }
+
+                    // Special handling for about:error pages
+                    if(tab.url && tab.url.startsWith('about:error')) {
+                        title = "Error Page";
+                        // Potentially parse details from #hash if you added them
+                    }
+
                     updateTabInfo(tab, title);
-                    if (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:errorpage') {
+                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) {
                          addToHistory(title, tab.url);
                     }
-                    setupTitleObserver(tab);
+                    setupTitleObserver(tab); // Re-setup observer if needed
                 }
             }
         }
-        function handleWindowMessage(event) { /* Placeholder */ }
-        function handleGlobalKeyDown(e) {
-            const targetTagName = e.target.tagName.toLowerCase();
-            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return;
-            if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (appState.activeTabId) closeTab(appState.activeTabId); }
-            if (e.ctrlKey && e.key === 'Tab') {
-                e.preventDefault();
-                if (appState.tabs.length > 1) {
-                    const currentIndex = appState.tabs.findIndex(t => t.id === appState.activeTabId);
-                    const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + appState.tabs.length) % appState.tabs.length;
-                    activateTab(appState.tabs[nextIndex].id);
+        function handleWindowMessage(event) {
+            // Example: if UV posts a message about URL change within the iframe
+            if (event.data && event.data.type === 'uv_url_changed') {
+                const activeTab = getActiveTab();
+                if (activeTab && event.source === activeTab.iframe.contentWindow) {
+                    const newUrl = event.data.url; // This would be the "real" URL from inside UV
+                    // You might need to decode this if UV encodes it
+                    // activeTab.url = newUrl; // Update the tab's stored URL
+                    // searchBarEl.value = newUrl;
+                    // updateTabInfo(activeTab, event.data.title || "Loading...");
+                    // addToHistory(event.data.title || newUrl, newUrl);
+                    console.log("UV URL Changed (message):", newUrl);
                 }
             }
-            if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); PublicAPIMethods.navigateBack(); }
-            if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); PublicAPIMethods.navigateForward(); }
-            if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); PublicAPIMethods.refreshCurrentTab(); }
-            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); }
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) {
-                e.preventDefault(); getById('search-bar')?.focus(); getById('search-bar')?.select();
+        }
+        function handleGlobalKeyDown(e) {
+            // Ignore if typing in an input field (search bar, sidebar inputs)
+            const targetTagName = e.target.tagName.toLowerCase();
+            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return;
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); }
+            if (e.ctrlKey && e.key === 'Tab') { // Cycle tabs
+                e.preventDefault();
+                if (tabs.length > 1) {
+                    const currentIndex = tabs.findIndex(t => t.id === activeTabId);
+                    const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + tabs.length) % tabs.length;
+                    activateTab(tabs[nextIndex].id);
+                }
             }
+            if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); }
+            if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); }
+            if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); }
+            if (e.key === 'F11') { e.preventDefault(); handleTopBarToggle(); /* Or document.documentElement.requestFullscreen(); */ }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }
         }
 
         function setupTitleObserver(tab) {
-            if (!tab || !tab.iframe || !tab.iframe.contentWindow || tab.url === 'about:errorpage') return;
-            if (tab.titleObserver) tab.titleObserver.disconnect();
+            if (!tab || !tab.iframe.contentWindow) return;
+            if (tab.titleObserver) tab.titleObserver.disconnect(); // Disconnect previous if any
+
             try {
-                if (!tab.iframe.contentDocument) return;
                 const targetNode = tab.iframe.contentDocument.querySelector('title');
                 if (!targetNode) return;
+
                 const observer = new MutationObserver(() => {
-                    if (tab.iframe.contentDocument && tab.iframe.contentDocument.title !== tab.title) {
-                        updateTabInfo(tab, tab.iframe.contentDocument.title.trim());
+                    if (tab.iframe.contentDocument) {
+                        updateTabInfo(tab, tab.iframe.contentDocument.title);
                     }
                 });
                 observer.observe(targetNode, { subtree: true, characterData: true, childList: true });
                 tab.titleObserver = observer;
             } catch (e) {
+                console.warn("Could not set up title observer for tab:", tab.id, e.message);
+                // Fallback: periodically check title if observer fails (e.g., cross-origin)
                 if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
                 tab.locationCheckIntervalId = setInterval(() => {
                     try {
-                        if (tab.iframe.contentDocument && tab.iframe.contentDocument.title.trim() !== tab.title) {
-                             updateTabInfo(tab, tab.iframe.contentDocument.title.trim());
+                        if (tab.iframe.contentDocument && tab.title !== tab.iframe.contentDocument.title) {
+                             updateTabInfo(tab, tab.iframe.contentDocument.title);
                         }
                     } catch (err) {/* ignore */}
-                }, 2500);
+                }, 2000);
             }
         }
 
-        const PublicAPIMethods = {
-            navigateToURL: (url, tab) => navigateTo(url, tab || getActiveTab()),
-            navigateBack: () => {
-                const activeTab = getActiveTab();
-                if (activeTab?.iframe.contentWindow) {
-                    if (activeTab.url === 'about:errorpage') {
-                        const previousUrl = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
-                        navigateTo(previousUrl, activeTab);
-                    } else { activeTab.iframe.contentWindow.history.back(); }
-                }
-            },
-            navigateForward: () => getActiveTab()?.iframe.contentWindow.history.forward(),
-            refreshCurrentTab: () => {
-                const activeTab = getActiveTab();
-                if (activeTab?.iframe.contentWindow) {
-                    if (activeTab.url === 'about:errorpage' || !activeTab.url || activeTab.url === 'about:blank' ) {
-                        const urlToRetry = appState.urlBeforeErrorByTabId[activeTab.id] || 'about:blank';
-                        navigateTo(urlToRetry, activeTab);
-                    } else if ( (activeTab.iframe.src && typeof window.__uv$config !== 'undefined' && activeTab.iframe.src.includes(window.__uv$config.prefix)) || activeTab.iframe.srcdoc) {
-                        navigateTo(activeTab.url, activeTab);
-                    } else { activeTab.iframe.contentWindow.location.reload(); }
-                }
-            },
-            retryFailedNavigation: () => {
-                const tab = getActiveTab();
-                if (tab) {
-                    const originalUrl = appState.urlBeforeErrorByTabId[tab.id] || 'about:blank';
-                    navigateTo(originalUrl, tab);
-                }
-            }
-        };
-        window.VernProBrowser = PublicAPIMethods;
 
-        function createBookmarkElement(bookmark) {
-            const li = document.createElement('li'); li.dataset.url = bookmark.url;
-            li.title = `${bookmark.name}\n${bookmark.url}`;
-            const nameSpan = document.createElement('span');
-            nameSpan.textContent = bookmark.name.length > 20 ? bookmark.name.substring(0, 18) + '...' : bookmark.name;
-            const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url';
-            urlSpan.textContent = bookmark.url.length > 25 ? bookmark.url.substring(0, 22) + '...' : bookmark.url;
-            const removeBtn = document.createElement('i');
-            removeBtn.className = 'fas fa-times remove-item-btn'; removeBtn.dataset.action = 'remove-bookmark';
-            removeBtn.dataset.url = bookmark.url; removeBtn.title = 'Remove Bookmark';
+        // --- BOOKMARKS ---
+        function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm));}
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+        function renderBookmarkItem(bm) {
+            const li = document.createElement('li'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`;
+            const nameSpan = document.createElement('span'); nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name;
+            const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url'; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; // Adjusted length for pill
+            const removeBtn = document.createElement('i'); removeBtn.className = 'fas fa-times';
+            removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7;';
+            removeBtn.onmouseover = () => removeBtn.style.opacity = '1';
+            removeBtn.onmouseout = () => removeBtn.style.opacity = '0.7';
+            removeBtn.title = 'Remove Bookmark';
+            removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); };
             li.appendChild(nameSpan); li.appendChild(urlSpan); li.appendChild(removeBtn);
-            return li;
+            li.style.position = 'relative'; // For absolute positioning of remove button
+            bookmarksListEl.appendChild(li);
         }
-        function loadBookmarks() {
-            const bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            const listEl = getById('bookmarks-list'); if(!listEl) return; listEl.innerHTML = '';
-            if (bookmarks.length > 0) {
-                const fragment = document.createDocumentFragment();
-                bookmarks.forEach(bm => fragment.appendChild(createBookmarkElement(bm)));
-                listEl.appendChild(fragment);
-            }
-        }
-        function saveBookmarks(bookmarks) { localStorage.setItem('vernBookmarks', JSON.stringify(bookmarks)); }
         function handleAddCurrentBookmark() {
             const activeTab = getActiveTab();
-            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url === 'about:errorpage') {
+            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) {
                 alert("Cannot bookmark this page."); return;
             }
-            const nameInput = getById('new-bookmark-name');
-            const name = nameInput.value.trim() || activeTab.title || new URL(activeTab.url).hostname;
+            const name = newBookmarkNameInputEl.value.trim() || activeTab.title || new URL(activeTab.url).hostname;
             const url = activeTab.url;
-            let bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            if (bookmarks.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
-            const newBookmark = { name, url }; bookmarks.push(newBookmark); saveBookmarks(bookmarks);
-            getById('bookmarks-list').appendChild(createBookmarkElement(newBookmark));
-            nameInput.value = '';
+            let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
+            bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputEl.value = '';
         }
-        function removeBookmark(urlToRemove) {
-            let bookmarks = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            bookmarks = bookmarks.filter(b => b.url !== urlToRemove);
-            saveBookmarks(bookmarks); loadBookmarks();
-        }
-        function handleBookmarkListClick(e) {
-            const target = e.target;
-            if (target.dataset.action === 'remove-bookmark') {
-                e.stopPropagation(); removeBookmark(target.dataset.url);
-            } else {
-                const listItem = target.closest('li[data-url]');
-                if (listItem) {
-                    createTab(listItem.dataset.url);
-                    if (!appState.isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
-                }
+        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
+        function handleBookmarkClick(e) {
+            const li = e.target.closest('li[data-url]');
+            if (li && !e.target.classList.contains('fa-times')) { // Make sure not clicking the remove button
+                createTab(li.dataset.url);
+                if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle(); // Auto-hide sidebar on mobile after click
             }
         }
 
+        // --- SESSION HISTORY ---
         function addToHistory(title, url) {
-            if (!url || url === 'about:blank' || url === 'about:errorpage') return;
-            if (appState.sessionHistory.length > 0 && appState.sessionHistory[appState.sessionHistory.length - 1].url === url) return;
-            appState.sessionHistory.push({ title, url, timestamp: new Date() });
-            if (appState.sessionHistory.length > appState.MAX_HISTORY_ITEMS) appState.sessionHistory.shift();
+            if (!url || url === 'about:blank' || url.startsWith('about:')) return;
+            // Prevent duplicate consecutive entries
+            if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url) return;
+            sessionHistory.push({ title, url, timestamp: new Date() });
+            if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
             renderHistory();
         }
-        function createHistoryElement(item) {
-            const li = document.createElement('li'); li.dataset.url = item.url;
-            li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
-            const titleSpan = document.createElement('span');
-            titleSpan.textContent = item.title.length > 22 ? item.title.substring(0, 19) + '...' : item.title;
-            const urlSpan = document.createElement('span'); urlSpan.className = 'history-url';
-            urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
-            li.appendChild(titleSpan); li.appendChild(urlSpan); return li;
-        }
         function renderHistory() {
-            const listEl = getById('history-list'); if(!listEl) return; listEl.innerHTML = '';
-            if (appState.sessionHistory.length > 0) {
-                const fragment = document.createDocumentFragment();
-                [...appState.sessionHistory].reverse().forEach(item => fragment.appendChild(createHistoryElement(item)));
-                listEl.appendChild(fragment);
-            }
-        }
-        function handleHistoryListClick(e) {
-            const listItem = e.target.closest('li[data-url]');
-            if (listItem) {
-                navigateTo(listItem.dataset.url);
-                if (!appState.isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
-            }
-        }
-
-        function applyTheme(themeName, isInitialLoad = false) {
-            document.body.className = document.body.className.replace(/\btheme-\S+/g, '');
-            if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
-            localStorage.setItem('vernTheme', themeName);
-            const themeSelector = getById('theme-selector');
-            if (themeSelector && themeSelector.value !== themeName) themeSelector.value = themeName;
-            requestAnimationFrame(() => {
-                updateInitialTopBarHeight();
-                if (!appState.isSidebarHidden) {
-                    getById('toggle-sidebar-button').style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-                }
-                updateSelectArrowColor();
-                if (!isInitialLoad) {
-                    const activeTab = getActiveTab();
-                    if (activeTab && activeTab.url === 'about:errorpage' && activeTab.iframe.contentDocument) {
-                        const errorDoc = activeTab.iframe.contentDocument;
-                        const errorTitleEl = errorDoc.querySelector('h2');
-                        if(errorTitleEl && errorDoc.querySelector('.error-icon')) {
-                            const title = errorTitleEl.textContent || "Error";
-                            const message = errorDoc.querySelector('p:not(.error-details)')?.textContent || "An error occurred.";
-                            const details = errorDoc.querySelector('p.error-details')?.textContent || "";
-                            renderErrorPage(activeTab, title, message, details);
-                        }
-                    }
-                }
+            historyListEl.innerHTML = '';
+            [...sessionHistory].reverse().forEach(item => {
+                const li = document.createElement('li'); li.dataset.url = item.url;
+                li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
+                const titleSpan = document.createElement('span'); titleSpan.textContent = item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title; // Adjusted length
+                const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; // Adjusted length
+                li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li);
             });
         }
-        function handleSearchEngineChange(e) {
-            appState.currentSearchEngineKey = e.target.value;
-            localStorage.setItem('vernSearchEngine', appState.currentSearchEngineKey);
+        function handleHistoryClick(e) {
+            const li = e.target.closest('li[data-url]');
+            if (li) {
+                navigateTo(li.dataset.url); // Use navigateTo for consistency
+                if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle();
+            }
         }
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initialize);
-        } else {
-            initialize();
+        // --- THEMES & SETTINGS ---
+        function applyTheme(themeName) {
+            document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); // Remove old theme classes
+            if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
+            localStorage.setItem('vernTheme', themeName);
+            if (themeSelectorEl.value !== themeName) themeSelectorEl.value = themeName;
+
+            // After applying theme, re-calculate heights and positions if necessary
+            // This is crucial if theme changes affect element sizes (padding, borders etc.)
+            updateInitialTopBarHeight();
+            if (!isSidebarHidden) {
+                toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+            }
+             updateSelectArrowColor(); // Update select arrow color based on new theme
         }
-    })();
+        function handleThemeChange(e) { applyTheme(e.target.value); }
+        function handleSearchEngineChange(e) {
+            currentSearchEngineKey = e.target.value;
+            localStorage.setItem('vernSearchEngine', currentSearchEngineKey);
+            console.log("Search engine changed to:", searchEngines[currentSearchEngineKey].name);
+        }
+
+        console.log("Vern Pro Initialized with new sidebar styles and themes.");
     </script>
 </body>
 </html>
