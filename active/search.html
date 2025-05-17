@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Pro Browser</title>
+    <title>Vern Max Browser</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
@@ -1091,12 +1091,12 @@
         }
         #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; }
         #sidebar ul::-webkit-scrollbar { width: 5px; }
-        #sidebar ul::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+        #sidebar ul::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 8px; }
 
         #sidebar li {
             padding: 10px 18px; /* Adjusted padding */
             margin-bottom: 8px; /* Spacing */
-            border-radius: 20px; /* Pill shape */
+            border-radius: 8px; /* Pill shape */
             cursor: pointer;
             font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -1120,7 +1120,7 @@
             background-color: var(--input-bg);
             color: var(--text-color);
             border: none; /* Remove default border */
-            border-radius: 20px; /* Pill shape */
+            border-radius: 8px; /* Pill shape */
             font-family: var(--font-family-main);
             box-sizing: border-box;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
@@ -1139,7 +1139,7 @@
             background-color: var(--button-bg);
             color: var(--button-text-color);
             border: none;
-            border-radius: 20px; /* Pill shape */
+            border-radius: 8px; /* Pill shape */
             cursor: pointer;
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
             font-family: var(--font-family-main);
@@ -1169,7 +1169,7 @@
             padding: 0 18px;
             background-color: var(--dropdown-bg);
             border: none;
-            border-radius: 20px;
+            border-radius: 8px;
             box-sizing: border-box;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color);
             cursor: pointer;
@@ -1205,7 +1205,7 @@
             left: 0;
             right: 0;
             background-color: var(--dropdown-bg);
-            border-radius: 10px; /* Slightly less rounded than pills */
+            border-radius: 8px; /* Slightly less rounded than pills */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             list-style: none;
             padding: 10px 0;
@@ -1221,7 +1221,7 @@
         }
 
         .custom-dropdown-list::-webkit-scrollbar { width: 5px; }
-        .custom-dropdown-list::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+        .custom-dropdown-list::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 8px; }
 
 
         .custom-dropdown-list-item {
@@ -1252,10 +1252,10 @@
             position: relative; align-items: center; gap: 8px;
         }
         #tab-bar::-webkit-scrollbar { height: 3px; }
-        #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+        #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 8px; }
         .tab {
             display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
-            padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
+            padding: 0 12px; background-color: var(--tab-bg); border-radius: 8px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
         }
         .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
@@ -1265,7 +1265,7 @@
         .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
         .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
         .new-tab-button { /* Circle */
-            width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
+            width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 25%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
             cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Using sidebar outline for consistency */
         }
@@ -1274,17 +1274,17 @@
         #nav-bar {
             display: flex; align-items: center; padding: 10px;
             background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
-            border-bottom: 1px solid var(--sidebar-border-color); /* Using sidebar border color */
+            border-bottom: 2px solid var(--sidebar-border-color); /* Using sidebar border color */
         }
         .nav-button { /* Circle */
             width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-            margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
+            margin-right: 10px; border-radius: 25%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); /* Light outline */
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
         #search-bar { /* Pill shape */
-            flex: 1; height: 40px; border-radius: 20px; border: none; background-color: var(--input-bg);
+            flex: 1; height: 40px; border-radius: 8px; border: none; background-color: var(--input-bg);
             color: var(--text-color); padding: 0 18px; font-size: 15px;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-family: var(--font-family-main);
         }
@@ -1300,10 +1300,10 @@
         #toggle-top-bar-button:hover, #toggle-sidebar-button:hover { background-color: var(--button-hover-bg); }
         #toggle-top-bar-button .fas, #toggle-sidebar-button .fas { font-size: 14px; transition: transform 0.3s ease-in-out; }
         #toggle-top-bar-button {
-            right: 2px; border-radius: 0 0 15px 15px; /* Rounded pill bottom */
+            right: 2px; border-radius: 0 0 12px 12px; /* Rounded pill bottom */
         }
         #toggle-sidebar-button {
-            left: 0px; bottom: 2px; border-radius: 0 15px 15px 0; /* Rounded pill right */
+            left: 0px; bottom: 2px; border-radius: 0 12px 12px 0; /* Rounded pill right */
         }
 
         #tabs-container { flex: 1; position: relative; background-color: var(--iframe-bg); }
@@ -1432,7 +1432,7 @@
         <div id="tabs-container"></div>
     </div>
 
-    <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Pro by 4SP</a>
+    <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Max by 4SP</a>
 
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
@@ -2220,7 +2220,7 @@
             console.log("Search engine changed to:", searchEngines[currentSearchEngineKey].name);
         }
 
-        console.log("Vern Pro Initialized with new sidebar styles, themes, and custom dropdowns.");
+        console.log("Vern Max Initialized with new sidebar styles, themes, and custom dropdowns.");
     </script>
 </body>
 </html>
