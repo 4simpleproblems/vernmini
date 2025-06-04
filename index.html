@@ -3,10 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Redirecting - Vern</title>
+    <title>VERN MAX - REDIRECTING</title>
     <link rel="icon" type="image/x-icon" href="logo.png" />
     <link rel="shortcut icon" type="image/jpg" href="logo.png" />
-    <!-- Font Awesome for icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -14,53 +13,94 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <!-- Google Font: Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet"/>
-    <!-- Main stylesheet -->
     <link rel="stylesheet" href="index.css" />
     <style>
+      @font-face {
+        font-family: 'PrimaryFont';
+        src: url('fonts/primary.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: 'SecondaryFont';
+        src: url('fonts/secondary.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
       html, body {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         width: 100%;
         height: 100%;
+        overflow-x: hidden; /* Prevent horizontal scroll if image is too wide */
       }
+
       body {
         display: flex;
-        justify-content: flex-end; /* Align to right */
-        align-items: flex-end; /* Align to bottom */
+        justify-content: flex-end; /* Align text content to right */
+        align-items: flex-end; /* Align text content to bottom */
         background: #000;
-        font-family: 'Outfit', monospace;
+        font-family: 'SecondaryFont', monospace; /* Default to secondary font */
         color: #fff;
+        position: relative; /* Needed for absolute positioning of child elements like the image */
       }
+
+      #page-title-image {
+        position: absolute;
+        top: 20px; /* Adjust as needed */
+        right: 20px; /* Adjust as needed */
+        width: auto; /* Adjust as needed, e.g., 150px */
+        max-height: 100px; /* Adjust as needed */
+        z-index: 10; /* Ensure it's above other content if necessary */
+      }
+
       #content {
         text-align: right; /* Right-align text */
         padding: 2rem; /* Add some padding */
-        font-weight: none; /* Make all text bold */
+        font-weight: normal; /* Reset font-weight, will be specified per element */
+        z-index: 1; /* Ensure text content is above canvas but potentially below image */
       }
+
       h1 {
+        font-family: 'PrimaryFont', monospace; /* Use primary font for h1 */
         font-size: 2rem;
         margin-bottom: 1rem;
         font-weight: bold; /* Ensure heading is bold */
       }
+
       p {
         font-size: 1rem;
         font-weight: bold; /* Ensure paragraph is bold */
+        font-family: 'SecondaryFont', monospace; /* Explicitly set secondary font if needed, otherwise inherits from body */
       }
+
       a {
         color: #699fb8;
         text-decoration: none;
-        font-weight: bold; /* Ensure link is bold */ 
-        text-decoration: underline; 
-
+        font-weight: bold; /* Ensure link is bold */
+        text-decoration: underline;
+        font-family: 'SecondaryFont', monospace; /* Explicitly set secondary font if needed */
       }
+
       a:hover {
         text-decoration: underline;
       }
+
+      #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0; /* Ensure canvas is in the background */
+      }
     </style>
-  </head> 
+  </head>
   <body>
+    <img src="images/title.png" alt="Site Title Image" id="page-title-image" />
     <canvas id="canvas"></canvas>
     <div id="content">
       <h1>Redirecting to VERN MAX</h1>
@@ -69,11 +109,16 @@
         <a href="active/">CLICK HERE</a>.
       </p>
     </div>
-    <!-- Stars background script -->
     <script src="stars.js"></script>
-    <!-- Redirect script -->
     <script>
       window.onload = function() {
+        // Ensure the redirect happens after a brief moment if desired,
+        // or immediately as it was.
+        // For example, to delay by 500ms:
+        // setTimeout(function() {
+        //   window.location.href = "active/";
+        // }, 500);
+        // Original immediate redirect:
         window.location.href = "active/";
       };
     </script>
