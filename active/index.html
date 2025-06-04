@@ -4,11 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VERN MAX - HOME</title>
+  <link rel="stylesheet" href="../css/style.css" /> 
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" type="image/png" href="../images/title-mini.png" /> <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" /> <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <style>
+    /* Embedded styles will complement or override ../css/style.css */
     html {
-      background-color: #131314; /* Fallback very dark page background */
+      background-color: #131314; 
       height: 100%;
       box-sizing: border-box;
     }
@@ -18,8 +21,8 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: 'PrimaryFont', sans-serif; /* Ensure PrimaryFont is defined */
-      background: linear-gradient(to bottom, #6720bd, #5a1ca0); /* Deep Purple gradient */
+      font-family: 'PrimaryFont', sans-serif; /* Assumes PrimaryFont is defined in style.css or linked */
+      background: linear-gradient(to bottom, #6720bd, #5a1ca0); 
       background-attachment: fixed;
       display: flex;
       justify-content: center;
@@ -38,66 +41,66 @@
       z-index: -1;
     }
 
-    .search-interface-frame { /* Main centered frame, styled like a dashboard card */
-      background-color: #ffffff; /* White background from .dashboard-card */
-      color: #333333; /* Dark default text from palette */
-      border-radius: 20px; /* From .dashboard-card */
-      padding: 25px;
-      max-width: 800px; /* Increased width a bit */
-      width: 95%; /* More responsive width */
+    .search-interface-frame {
+      background-color: #ffffff; 
+      color: #333333; 
+      border-radius: 30px; /* Slightly adjusted */
+      padding: 20px; /* Increased padding */
+      max-width: 1000px; 
+      width: 95%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15); /* Adjusted shadow */
-      border: 1px solid rgba(103, 32, 189, 0.15); /* Subtle purple border from .dashboard-card */
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08); /* Refined shadow */
+      border: 1px solid rgba(103, 32, 189, 0.1); /* Softer purple border */
       position: relative;
       z-index: 1;
-      margin-top: 60px; /* Space for the absolute positioned logo */
+      margin-top: 70px; 
       overflow-y: auto;
-      max-height: calc(100vh - 100px); /* Max height accounting for margins/padding */
+      max-height: calc(100vh - 110px); 
     }
 
-    #header-logo-container { /* Container for the VERN MAX logo, positioned above the frame */
+    #header-logo-container {
       text-align: center;
       position: absolute;
-      top: -80px; /* Adjust to position logo nicely above the frame */
+      top: -85px; 
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
       width: 100%;
     }
 
-    #bigTitle { /* VERN MAX Logo image */
-      max-width: 160px; /* Adjusted logo size */
+    #bigTitle {
+      max-width: 170px; 
       height: auto;
-      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2)); /* Subtle shadow for logo */
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); /* Enhanced logo shadow */
     }
 
-    .interface-title-header { /* Styled like .dashboard-header */
+    .interface-title-header {
       width: 100%;
       display: flex;
-      justify-content: center; /* Center title */
+      justify-content: center;
       align-items: center;
-      margin-bottom: 25px;
-      background: #ffffff; /* White background */
-      padding: 15px 25px;
-      border-radius: 15px; /* From .dashboard-header */
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06); /* Softer shadow */
-      border: 1px solid rgba(103, 32, 189, 0.1); /* Subtle purple border */
+      margin-bottom: 30px; /* Increased margin */
+      background: #ffffff; 
+      padding: 18px 25px; /* Increased padding */
+      border-radius: 18px; 
+      box-shadow: 0 5px 18px rgba(0,0,0,0.07); 
+      border: 1px solid rgba(103, 32, 189, 0.12); 
+      font-family: 'PrimaryFont', sans-serif;
     }
-    .interface-title { /* Styled like .dashboard-title */
+    .interface-title {
       margin: 0;
-      font-size: 2em; /* Adjusted title size */
+      font-size: 2.1em; 
       font-weight: bold;
-      background: linear-gradient(135deg, #6720bd 0%, #8a2be2 100%); /* Purple gradient text */
+      background: linear-gradient(135deg, #6720bd 0%, #8a2be2 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      /* For browsers that don't support background-clip for text */
-      color: #6720bd;
+      color: #6720bd; /* Fallback */
     }
 
-    #searchElementsContainer { /* Inner container for search elements */
+    #searchElementsContainer {
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -105,126 +108,124 @@
     }
 
     #clock {
-      color: #666666; /* Dark Gray from palette */
-      font-family: 'SecondaryFont', sans-serif;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
+      color: #555555; /* Slightly darker clock text */
+      font-family: 'SecondaryFont', sans-serif; /* Assumes SecondaryFont is defined */
+      font-size: 0.95rem; /* Slightly larger clock */
+      margin-bottom: 25px; /* Increased margin */
     }
 
     #uv-form {
       width: 100%;
-      max-width: 580px;
+      max-width: 1000px; 
       display: flex;
       justify-content: center;
-      margin-bottom: 25px;
+      margin-bottom: 30px; /* Increased margin */
+      position: relative; /* For potential icon inside */
     }
-    #uv-address { /* Styled like a light-themed input */
+    #uv-address {
       width: 100%;
-      padding: 15px 25px;
-      border-radius: 50px;
-      font-size: 1rem;
+      padding: 16px 25px; /* Increased padding for better feel */
+      padding-left: 30px; /* Space for a potential icon if added later */
+      border-radius: 18px;
+      font-size: 1.05rem; /* Slightly larger font */
       font-family: 'PrimaryFont', sans-serif;
-      background-color: #f8f9fa; /* Off-white from palette */
-      color: #333333; /* Dark Gray text */
-      border: 1px solid #dddddd; /* Light Gray border */
+      background-color: #f8f9fa; 
+      color: #333333; 
+      border: 1px solid #ced4da; /* Standard light border */
       box-sizing: border-box;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     #uv-address::placeholder {
-      color: #777777; /* Medium Gray placeholder */
+      color: #6c757d; /* Darker placeholder */
     }
     #uv-address:focus {
-        border-color: #8a2be2; /* Purple border on focus */
-        box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15); /* Purple glow on focus */
+        border-color: #8a2be2; 
+        box-shadow: 0 0 0 0.2rem rgba(103, 32, 189, 0.25); /* Bootstrap-like focus */
         outline: none;
     }
-
 
     #popularSites {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px; /* Increased gap */
+      margin-bottom: 25px;
       width: 100%;
-      max-width: 650px;
+      max-width: 1000px;
     }
-    #popularSites .btn { /* Styled like .quick-actions-list button from dashboard */
+    #popularSites .btn {
       font-family: 'PrimaryFont', sans-serif;
-      background-color: #f8f9fa; /* Off-white from palette */
-      color: #495057; /* Dark Gray text from palette */
-      padding: 9px 18px;
+      background-color: #f8f9fa; 
+      color: #495057; 
+      padding: 10px 20px; /* Increased padding */
       text-decoration: none;
-      border-radius: 12px; /* From quick-actions */
-      border: 1px solid #e9ecef; /* Off-white border */
+      border-radius: 10px; /* Slightly less rounded */
+      border: 1px solid #dee2e6; /* Standard light border */
       cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
-      text-transform: uppercase; /* From quick-actions */
-      font-weight: 500; /* From quick-actions */
+      font-size: 0.8rem;
+      transition: all 0.2s ease-in-out;
+      text-transform: uppercase;
+      font-weight: 600; /* Bolder text */
+      display: inline-flex; /* For icon alignment */
+      align-items: center;
+      line-height: 1.5;
     }
     #popularSites .btn:hover {
-      background-color: #e9ecef; /* Lighter gray from palette */
-      border-color: #dee2e6; /* Medium Gray border */
-      transform: translateY(-1px);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      background-color: #e9ecef; 
+      border-color: #adb5bd; /* Darker border on hover */
+      transform: translateY(-2px); /* Lift effect */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
     }
-    /* Optional: Add an icon span inside buttons if you want to include them */
-    /* #popularSites .btn .icon { margin-right: 8px; color: #6720bd; } */
+    #popularSites .btn .icon { /* Style for icons in buttons */
+        margin-right: 8px;
+        color: #6720bd; /* Purple icon color */
+        font-size: 1.1em; /* Adjust icon size */
+    }
 
 
-    .desc { /* Error message container */
+    .desc {
       width: 100%;
-      max-width: 580px;
+      max-width: 600px;
       text-align: center;
-      margin-top: 10px;
+      margin-top: 15px;
     }
     #uv-error {
-      color: #dc3545; /* Red from palette */
+      color: #dc3545; 
       font-size: 0.9em;
-    }
-    #uv-error-code {
-      color: #dc3545;
-      font-family: 'Courier New', Courier, monospace;
-      white-space: pre-wrap;
-      word-break: break-all;
-      background-color: rgba(220, 53, 69, 0.05); /* Very faint red background */
-      padding: 8px;
-      border-radius: 6px;
-      font-size: 0.8em;
-      margin-top: 5px;
-      display: inline-block;
-      border: 1px solid rgba(220, 53, 69, 0.2);
+      font-weight: 500;
     }
 
     .footer-label {
       position: fixed;
-      bottom: 10px;
-      left: 10px;
+      bottom: 12px; /* Adjusted position */
+      left: 12px;
       font-family: 'SecondaryFont', sans-serif;
-      font-size: 0.8rem;
-      color: #cccccc; /* Lighter gray for better visibility on purple */
+      font-size: 0.75rem; /* Slightly smaller */
+      color: #e0e0e0; /* Lighter for better visibility */
       z-index: 3;
-      background-color: rgba(0, 0, 0, 0.3); /* Darker semi-transparent BG */
-      padding: 3px 7px;
-      border-radius: 4px;
+      background-color: rgba(20, 20, 20, 0.75); /* Darker, more opaque BG */
+      padding: 4px 8px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
 
     @media (max-width: 767px) {
       body { padding: 10px; }
       .search-interface-frame {
         padding: 20px;
-        padding-top: 30px;
-        margin-top: 50px;
-        max-height: calc(100vh - 80px);
+        padding-top: 25px;
+        margin-top: 60px; /* Adjust margin for smaller logo */
+        max-height: calc(100vh - 90px);
       }
-      #header-logo-container { top: -65px; }
-      #bigTitle { max-width: 120px; }
-      .interface-title-header { padding: 12px 20px; margin-bottom: 20px; }
-      .interface-title { font-size: 1.5em; }
-      #clock { font-size: 0.8rem; margin-bottom: 15px;}
-      #uv-address { padding: 12px 20px; font-size: 0.9rem;}
-      #popularSites .btn { font-size: 0.75rem; padding: 8px 15px;}
+      #header-logo-container { top: -70px; }
+      #bigTitle { max-width: 130px; }
+      .interface-title-header { padding: 15px 20px; margin-bottom: 20px; }
+      .interface-title { font-size: 1.6em; }
+      #clock { font-size: 0.95rem; margin-bottom: 20px; font-family: 'PrimaryFont', sans-serif;}
+      #uv-address { padding: 14px 20px; font-size: 0.95rem; font-family: 'PrimaryFont', sans-serif;}
+      #popularSites .btn { font-size: 0.7rem; padding: 8px 15px;}
+      #popularSites .btn .icon { font-size: 1em; }
     }
   </style>
 </head>
@@ -233,7 +234,8 @@
 
   <div class="search-interface-frame">
     <div id="header-logo-container">
-      <img src="../images/title.png" alt="VERN MAX Logo" id="bigTitle" /> </div>
+      <img src="../images/title.png" alt="VERN MAX Logo" id="bigTitle" />
+    </div>
 
     <div class="interface-title-header">
       <h2 class="interface-title">VERN MAX</h2>
@@ -243,20 +245,16 @@
       <div id="clock"></div>
       <form id="uv-form">
         <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden" />
-        <input id="uv-address" type="text" placeholder="Ask, search, or type a URL..." class="form__input" />
+        <input id="uv-address" type="text" placeholder="Search, or type a URL" class="form__input" />
       </form>
       <div id="popularSites">
-        <a class="btn" onclick="autofill('http://xbox.com/play')">XBOX</a>
-        <a class="btn" onclick="autofill('http://youtube.com')">YOUTUBE</a>
-        <a class="btn" onclick="autofill('https://tiktok.com')">TIKTOK</a>
-        <a class="btn" onclick="autofill('https://chatgpt.com')">CHATGPT</a>
-        <a class="btn" onclick="autofill('http://apple.com')">APPLE</a>
-        <a class="btn" onclick="autofill('http://gemini.google.com')">GEMINI</a>
-        <a class="btn" onclick="autofill('http://totaljerkface.com')">HAPPY WHEELS</a>
-      </div>
-      <div class="desc">
-        <p id="uv-error"></p>
-        <pre id="uv-error-code"></pre>
+        <a class="btn" onclick="autofill('http://xbox.com/play')"><span class="icon"><i class="fa-brands fa-xbox"></i></span>XBOX</a>
+        <a class="btn" onclick="autofill('http://youtube.com')"><span class="icon"><i class="fa-brands fa-youtube"></i></span>YOUTUBE</a>
+        <a class="btn" onclick="autofill('https://tiktok.com')"><span class="icon"><i class="fa-brands fa-tiktok"></i></span>TIKTOK</a>
+        <a class="btn" onclick="autofill('https://chatgpt.com')"><span class="icon"><i class="fa-solid fa-brain"></i></span>CHATGPT</a>
+        <a class="btn" onclick="autofill('http://apple.com')"><span class="icon"><i class="fa-brands fa-apple"></i></span>APPLE</a>
+        <a class="btn" onclick="autofill('http://gemini.google.com')"><span class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>GEMINI</a>
+        <a class="btn" onclick="autofill('http://totaljerkface.com')"><span class="icon"><i class="fa-solid fa-person-biking"></i></span>HAPPY WHEELS</a>
       </div>
     </div>
   </div>
