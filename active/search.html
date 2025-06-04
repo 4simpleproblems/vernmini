@@ -194,7 +194,6 @@
         #top-bar-assembly { overflow: hidden; transition: max-height 0.25s ease-in-out; }
         #top-bar-assembly.hidden { max-height: 0 !important; border-bottom-width: 0; }
 
-        /* Styles for when app UI is hidden during iframe fullscreen */
         body.app-ui-hidden #sidebar,
         body.app-ui-hidden #top-bar-assembly {
             display: none !important;
@@ -220,7 +219,7 @@
         }
         .tab.active .tab-title { color: var(--button-text-color); }
         .tab.active .tab-favicon i { color: var(--button-text-color); }
-        .tab.active .tab-favicon img { filter: brightness(0) invert(1); /* Make favicons white on active tab if they are dark */ }
+        .tab.active .tab-favicon img { filter: brightness(0) invert(1); }
 
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 14px; height: 14px; margin-right: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
@@ -469,8 +468,8 @@
             loadSettings();
 
             updateInitialTopBarHeight();
-            handleTopBarToggle(isTopBarHidden, true);
-            handleSidebarToggle(isSidebarHidden, true);
+            handleTopBarToggle(isTopBarHidden, true); // initialSet = true
+            handleSidebarToggle(isSidebarHidden, true); // initialSet = true
 
             setupEventListeners();
             loadBookmarks();
@@ -560,7 +559,7 @@
                 else { item.classList.remove('selected'); item.setAttribute('aria-selected', 'false'); }
             });
             if (selectedTextEl && newText) selectedTextEl.textContent = newText;
-            else if (selectedTextEl && dropdownId === 'tab-cloak-dropdown' && selectedValue === 'none') selectedTextEl.textContent = "None (Show Actual)"; // Default text for "none"
+            else if (selectedTextEl && dropdownId === 'tab-cloak-dropdown' && selectedValue === 'none') selectedTextEl.textContent = "None (Show Actual)";
         }
 
         function loadSettings() {
@@ -621,10 +620,10 @@
         function showTopBar() { clearTimeout(topBarAutoHideTimeoutId); if (isTopBarHidden) handleTopBarToggle(false); }
         function attemptTopBarAutoHide() {
             clearTimeout(topBarAutoHideTimeoutId);
-            if (isSearchBarFocused || isMouseOverTopBar || (isMouseAtLeftEdge && !isSidebarHidden)) return;
+            if (isSearchBarFocused || isMouseOverTopBar || isMouseAtLeftEdge) return; // If mouse is at left edge, top bar should also stay
             const delay = currentAutoCloseDelay;
             if (delay === 0) { if (!isTopBarHidden) handleTopBarToggle(true); }
-            else { topBarAutoHideTimeoutId = setTimeout(() => { if (!isSearchBarFocused && !isMouseOverTopBar && !(isMouseAtLeftEdge && !isSidebarHidden) && !isTopBarHidden) handleTopBarToggle(true); }, delay); }
+            else { topBarAutoHideTimeoutId = setTimeout(() => { if (!isSearchBarFocused && !isMouseOverTopBar && !isMouseAtLeftEdge && !isTopBarHidden) handleTopBarToggle(true); }, delay); }
         }
         function showSidebar() { clearTimeout(sidebarAutoHideTimeoutId); if (isSidebarHidden) handleSidebarToggle(false); }
         function attemptSidebarAutoHide() {
@@ -647,7 +646,7 @@
             if (!tabId && tabs.length > 0) tabId = tabs[0].id; if (!tabId) return;
             tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
             const tab = tabs.find(t => t.id === tabId);
-            if (tab) { tab.element.classList.add('active'); tab.iframe.classList.add('active'); activeTabId = tabId; searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); updateTabInfo(tab, tab.actualTitle, tab.actualFavicon); /* Update cloak on activation */ document.title = "VERN MAX - SEARCH"; }
+            if (tab) { tab.element.classList.add('active'); tab.iframe.classList.add('active'); activeTabId = tabId; searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); updateTabInfo(tab, tab.actualTitle, tab.actualFavicon); document.title = "VERN MAX - SEARCH"; }
         }
         function closeTab(tabId) {
             const tabIndex = tabs.findIndex(t => t.id === tabId); if (tabIndex === -1) return; const tab = tabs[tabIndex];
@@ -707,7 +706,7 @@
             const wasHidden = topBarAssemblyEl.classList.contains('hidden'); const currentMaxHeight = topBarAssemblyEl.style.maxHeight;
             if (wasHidden) { topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = 'none'; }
             initialTopBarHeight = topBarAssemblyEl.offsetHeight;
-            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = currentMaxHeight || '0px'; } // Restore to 0 if it was truly hidden
+            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = currentMaxHeight || '0px'; }
             else if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
         }
 
@@ -722,9 +721,7 @@
                         if (iframe.contentWindow && iframe.contentDocument) {
                             titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
                             const linkTags = iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]');
-                            if (linkTags.length > 0) {
-                                try {faviconFromIframe = new URL(linkTags[0].href, iframe.contentWindow.location.href).href; } catch(e){/*ignore invalid favicons*/}
-                            }
+                            if (linkTags.length > 0) { try {faviconFromIframe = new URL(linkTags[0].href, iframe.contentWindow.location.href).href; } catch(e){/*ignore invalid favicons*/} }
                         }
                     } catch (e) { try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} }
                     if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page";
@@ -740,7 +737,7 @@
             try {
                 const targetNode = tab.iframe.contentDocument.querySelector('title'); if (!targetNode) return;
                 const observer = new MutationObserver(() => { if (tab.iframe.contentDocument) {
-                    let titleFromIframe = tab.iframe.contentDocument.title; let faviconFromIframe = tab.actualFavicon; // Keep old if not found
+                    let titleFromIframe = tab.iframe.contentDocument.title; let faviconFromIframe = tab.actualFavicon;
                     const linkTags = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]');
                     if (linkTags.length > 0) { try {faviconFromIframe = new URL(linkTags[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){} }
                     updateTabInfo(tab, titleFromIframe, faviconFromIframe);
@@ -760,7 +757,7 @@
         }
         function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
         function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.classList.contains('fa-times')) { createTab(li.dataset.url); if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle(true); }}
-        function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
+        function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
         function renderHistory() { historyListEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = document.createElement('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; const titleSpan = document.createElement('span'); titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li); });}
         function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle(true);}}
         function applyTheme(themeName) { document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); if (themeName !== 'obsidian-dark' && themes[themeName]) document.body.classList.add(`theme-${themeName}`); localStorage.setItem('vernTheme', themeName); updateSelectedDropdownText('theme-dropdown', themeName); updateInitialTopBarHeight(); if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; }
