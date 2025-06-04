@@ -4,8 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VERN MAX - SEARCH</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUA6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="icon" type="image/x-icon" href="logo.png" />
+    <link rel="stylesheet" href="../css/style.css" /> <link rel="icon" type="image/x-icon" href="logo.png" />
     <style id="custom-styles">
         /* Core Theme Variables & Component Mappings */
         :root {
@@ -105,8 +104,8 @@
             width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
             border-right: 1px solid var(--sidebar-border-color);
             padding: 20px 15px; box-sizing: border-box;
-            overflow-y: auto; transition: margin-left 0.30s ease-in-out; /* Faster transition */
-            z-index: 1001; display: flex; flex-direction: column; gap: 20px; /* Slightly reduced gap */
+            overflow-y: auto; transition: margin-left 0.30s ease-in-out;
+            z-index: 1001; display: flex; flex-direction: column; gap: 20px;
             font-family: var(--font-family-main);
         }
         #sidebar.hidden { margin-left: calc(-1 * var(--sidebar-width)); }
@@ -115,7 +114,7 @@
             border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 8px;
             font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
-        #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; } /* Reduced max-height */
+        #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; }
         #sidebar ul::-webkit-scrollbar { width: 5px; }
         #sidebar ul::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
 
@@ -145,7 +144,7 @@
             outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow);
         }
 
-        #sidebar .sidebar-button { /* General styling for buttons in sidebar */
+        #sidebar .sidebar-button {
             width: 100%; height: 38px; padding: 0 15px;
             background-color: var(--button-bg); color: var(--button-text-color);
             border: none; border-radius: 7px; cursor: pointer;
@@ -158,16 +157,6 @@
             background-color: var(--button-hover-bg);
             box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
         }
-        /* Specific style for active pin button */
-        #pin-button.active {
-            background-color: var(--current-theme-text);
-            color: var(--current-theme-bg);
-            box-shadow: 0 0 0 1.5px var(--current-theme-accent);
-        }
-        #pin-button.active #pin-icon, #pin-button.active #pin-text {
-             color: var(--current-theme-bg);
-        }
-
 
         .custom-dropdown {
             position: relative; width: 100%; margin-bottom: 10px; font-size: 0.9em;
@@ -189,7 +178,7 @@
             position: absolute; top: 100%; left: 0; right: 0; background-color: var(--dropdown-bg);
             border-radius: 7px; box-shadow: 0 4px 8px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
             list-style: none; padding: 8px 0; margin: 4px 0 0 0; max-height: 180px; overflow-y: auto;
-            z-index: 1005; display: none; /* Higher z-index */
+            z-index: 1005; display: none;
         }
         .custom-dropdown-list.show { display: block; }
         .custom-dropdown-list::-webkit-scrollbar { width: 5px; }
@@ -202,18 +191,25 @@
         }
 
         #main-content-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        #top-bar-assembly { overflow: hidden; transition: max-height 0.25s ease-in-out; } /* Faster transition */
+        #top-bar-assembly { overflow: hidden; transition: max-height 0.25s ease-in-out; }
         #top-bar-assembly.hidden { max-height: 0 !important; border-bottom-width: 0; }
 
+        /* Styles for when app UI is hidden during iframe fullscreen */
+        body.app-ui-hidden #sidebar,
+        body.app-ui-hidden #top-bar-assembly {
+            display: none !important;
+        }
+
+
         #tab-bar {
-            display: flex; background-color: var(--navbar-bg); padding: 8px 10px; /* Slightly smaller */
+            display: flex; background-color: var(--navbar-bg); padding: 8px 10px;
             overflow-x: auto; white-space: nowrap; scrollbar-width: thin;
             position: relative; align-items: center; gap: 7px;
         }
         #tab-bar::-webkit-scrollbar { height: 3px; }
         #tab-bar::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
         .tab {
-            display: flex; align-items: center; min-width: 150px; max-width: 180px; height: 30px; /* Smaller tabs */
+            display: flex; align-items: center; min-width: 150px; max-width: 180px; height: 30px;
             padding: 0 10px; background-color: var(--tab-bg); border-radius: 6px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative;
             box-shadow: 0 0 0 1px var(--tab-border);
@@ -222,10 +218,14 @@
             background-color: var(--tab-active-bg); color: var(--button-text-color);
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--current-theme-accent) 70%, var(--current-theme-text));
         }
-        .tab.active .tab-title, .tab.active .tab-favicon i { color: var(--button-text-color); }
+        .tab.active .tab-title { color: var(--button-text-color); }
+        .tab.active .tab-favicon i { color: var(--button-text-color); }
+        .tab.active .tab-favicon img { filter: brightness(0) invert(1); /* Make favicons white on active tab if they are dark */ }
+
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 14px; height: 14px; margin-right: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); } /* Smaller font */
+        .tab-favicon img { width: 100%; height: 100%; object-fit: contain; }
+        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
         .tab-close { width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
         .tab-close:hover { opacity: 1; background-color: rgba(var(--current-theme-shadow-rgb),0.2); }
         .new-tab-button {
@@ -237,11 +237,11 @@
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
 
         #nav-bar {
-            display: flex; align-items: center; padding: 8px 10px; /* Slightly smaller */
+            display: flex; align-items: center; padding: 8px 10px;
             background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
             border-bottom: 1px solid var(--sidebar-border-color);
         }
-        .nav-button { /* Applies to home, back, forward, refresh */
+        .nav-button {
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
             margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
@@ -251,7 +251,7 @@
 
         #search-bar {
             flex: 1; height: 36px; border-radius: 6px; border: none; background-color: var(--input-bg);
-            color: var(--text-color); padding: 0 15px; font-size: 14px; /* Slightly smaller */
+            color: var(--text-color); padding: 0 15px; font-size: 14px;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-family: var(--font-family-main);
         }
         #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
@@ -274,10 +274,8 @@
             <h2 style="text-align: center; margin-bottom: 0; font-size: 1.4em; font-weight: bold;">Vern Max</h2>
         </div>
 
-         <div id="settings-section"> <h3><i class="fas fa-cog"></i> Settings</h3>
-            <button id="pin-button" class="sidebar-button" title="Pin Toolbar & Sidebar" style="margin-bottom: 15px;">
-                <i id="pin-icon" class="fas fa-thumbtack" style="margin-right: 8px;"></i><span id="pin-text">Pin Open</span>
-            </button>
+         <div id="settings-section">
+            <h3><i class="fas fa-cog"></i> Settings</h3>
 
             <label for="theme-dropdown" class="sidebar-setting-label">Theme:</label>
             <div class="custom-dropdown" id="theme-dropdown">
@@ -322,6 +320,21 @@
                     <li class="custom-dropdown-list-item" data-value="10000" role="option">10 Seconds</li>
                 </ul>
             </div>
+
+            <label for="tab-cloak-dropdown" class="sidebar-setting-label" style="margin-top: 12px;">Tab Cloaking:</label>
+            <div class="custom-dropdown" id="tab-cloak-dropdown">
+                <div class="custom-dropdown-header" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                    <span id="selected-tab-cloak-text">None</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <ul class="custom-dropdown-list" role="listbox">
+                    <li class="custom-dropdown-list-item" data-value="none" role="option">None</li>
+                    <li class="custom-dropdown-list-item" data-value="google_docs" role="option">Google Docs</li>
+                    <li class="custom-dropdown-list-item" data-value="google_drive" role="option">Google Drive</li>
+                    <li class="custom-dropdown-list-item" data-value="wikipedia" role="option">Wikipedia</li>
+                    <li class="custom-dropdown-list-item" data-value="new_tab" role="option">New Tab (Local)</li>
+                </ul>
+            </div>
         </div>
 
 
@@ -353,6 +366,7 @@
                 <div class="nav-button" id="forward-button" title="Forward"> <i class="fas fa-arrow-right"></i> </div>
                 <div class="nav-button" id="refresh-button" title="Refresh"> <i class="fas fa-redo"></i> </div>
                 <input type="text" id="search-bar" placeholder="Search or type a URL">
+                <div class="nav-button" id="fullscreen-button" title="Toggle Fullscreen"><i class="fas fa-expand"></i></div>
             </div>
         </div>
         <div id="tabs-container"></div>
@@ -367,8 +381,8 @@
 
     <script>
         // --- CONFIGURATION & GLOBAL STATE ---
-        const EDGE_SENSITIVITY_X = 10; // Pixels from left edge to trigger sidebar/topbar
-        const TOP_EDGE_SENSITIVITY_Y = 5; // Pixels from top edge to trigger topbar
+        const EDGE_SENSITIVITY_X = 10;
+        const TOP_EDGE_SENSITIVITY_Y = 5;
 
         let tabs = [];
         let activeTabId = null;
@@ -385,29 +399,35 @@
         let currentSearchEngineKey = 'duckduckgo';
 
         const themes = {
-            'obsidian-dark': 'Obsidian Dark',
-            'arctic-light': 'Arctic Light',
-            'emerald-depths': 'Emerald Depths',
-            'golden-sands': 'Golden Sands',
+            'obsidian-dark': 'Obsidian Dark', 'arctic-light': 'Arctic Light',
+            'emerald-depths': 'Emerald Depths', 'golden-sands': 'Golden Sands',
             'royal-purple': 'Royal Purple'
         };
 
         const autoCloseDelayMap = {0: 'Instant', 1000: '1 Second', 3000: '3 Seconds', 5000: '5 Seconds', 10000: '10 Seconds'};
         let currentAutoCloseDelay = 1000;
 
+        const cloakPresets = {
+            'none': { title: null, faviconUrl: null },
+            'google_docs': { title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
+            'google_drive': { title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+            'wikipedia': { title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'new_tab': { title: 'New Tab', faviconUrl: 'logo.png' }
+        };
+        let currentCloakPresetKey = 'none';
+
         // --- DOM ELEMENT REFERENCES ---
-        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, pinButtonEl, pinIconEl, pinTextEl;
+        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl;
         let topBarAssemblyEl;
         let sidebarEl, mainContentWrapperEl;
         let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
         let historyListEl;
-        let themeDropdownEl, searchEngineDropdownEl, autoCloseDelayDropdownEl;
+        let themeDropdownEl, searchEngineDropdownEl, autoCloseDelayDropdownEl, tabCloakDropdownEl;
 
         let initialTopBarHeight = 0;
         let isTopBarHidden = true;
         let isSidebarHidden = true;
 
-        let isGloballyPinned = false;
         let topBarAutoHideTimeoutId = null;
         let sidebarAutoHideTimeoutId = null;
 
@@ -428,9 +448,7 @@
             backButtonEl = document.getElementById('back-button');
             forwardButtonEl = document.getElementById('forward-button');
             refreshButtonEl = document.getElementById('refresh-button');
-            pinButtonEl = document.getElementById('pin-button');
-            pinIconEl = document.getElementById('pin-icon');
-            pinTextEl = document.getElementById('pin-text');
+            fullscreenButtonEl = document.getElementById('fullscreen-button');
 
             topBarAssemblyEl = document.getElementById('top-bar-assembly');
             sidebarEl = document.getElementById('sidebar');
@@ -444,21 +462,15 @@
             themeDropdownEl = document.getElementById('theme-dropdown');
             searchEngineDropdownEl = document.getElementById('search-engine-dropdown');
             autoCloseDelayDropdownEl = document.getElementById('autoclose-delay-dropdown');
+            tabCloakDropdownEl = document.getElementById('tab-cloak-dropdown');
 
             await initUV();
             setupCustomDropdowns();
             loadSettings();
 
             updateInitialTopBarHeight();
-
-            if (isGloballyPinned) {
-                isTopBarHidden = false;
-                isSidebarHidden = false;
-            }
             handleTopBarToggle(isTopBarHidden, true);
             handleSidebarToggle(isSidebarHidden, true);
-            updatePinButtonVisual();
-
 
             setupEventListeners();
             loadBookmarks();
@@ -467,90 +479,47 @@
             const initialUrl = urlParams.get('url');
             if (tabs.length === 0) createTab(initialUrl || 'about:blank');
             renderHistory();
+            const activeTabForCloak = getActiveTab();
+            if (activeTabForCloak) updateTabInfo(activeTabForCloak, activeTabForCloak.actualTitle, activeTabForCloak.actualFavicon);
         });
 
         async function initUV() {
             try {
-                if (typeof registerSW !== 'function') {
-                    console.warn("registerSW() function not found. UV Service Worker might not be registered.");
-                    return;
-                }
+                if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; }
                 await registerSW();
-            } catch (err) {
-                console.error("Failed to register UV service worker:", err);
-                // alert("Error: Could not initialize proxy service. Some websites may not load correctly.");
-            }
+            } catch (err) { console.error("Failed to register UV service worker:", err); }
         }
         function setupCustomDropdowns() {
             const themeListEl = themeDropdownEl.querySelector('.custom-dropdown-list');
             themeListEl.innerHTML = '';
-            for (const value in themes) {
-                const li = document.createElement('li');
-                li.className = 'custom-dropdown-list-item';
-                li.dataset.value = value; li.textContent = themes[value];
-                li.setAttribute('role', 'option'); themeListEl.appendChild(li);
-            }
+            for (const value in themes) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = themes[value]; li.setAttribute('role', 'option'); themeListEl.appendChild(li); }
+
             const searchEngineListEl = searchEngineDropdownEl.querySelector('.custom-dropdown-list');
             searchEngineListEl.innerHTML = '';
-            for (const value in searchEngines) {
-                const li = document.createElement('li');
-                li.className = 'custom-dropdown-list-item';
-                li.dataset.value = value; li.textContent = searchEngines[value].name;
-                li.setAttribute('role', 'option'); searchEngineListEl.appendChild(li);
-            }
+            for (const value in searchEngines) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = searchEngines[value].name; li.setAttribute('role', 'option'); searchEngineListEl.appendChild(li); }
+
             const autoCloseListEl = autoCloseDelayDropdownEl.querySelector('.custom-dropdown-list');
             autoCloseListEl.innerHTML = '';
-            for (const value in autoCloseDelayMap) {
-                const li = document.createElement('li');
-                li.className = 'custom-dropdown-list-item';
-                li.dataset.value = value; li.textContent = autoCloseDelayMap[value];
-                li.setAttribute('role', 'option'); autoCloseListEl.appendChild(li);
-            }
+            for (const value in autoCloseDelayMap) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = autoCloseDelayMap[value]; li.setAttribute('role', 'option'); autoCloseListEl.appendChild(li); }
 
-            document.querySelectorAll('.custom-dropdown-header').forEach(header => {
-                header.addEventListener('click', toggleDropdown);
-                header.addEventListener('keydown', handleDropdownKeyDown);
-            });
-            document.querySelectorAll('.custom-dropdown-list-item').forEach(item => {
-                item.addEventListener('click', selectDropdownItem);
-                item.addEventListener('keydown', handleDropdownItemKeyDown);
-            });
-            document.addEventListener('click', (e) => {
-                document.querySelectorAll('.custom-dropdown-list.show').forEach(list => {
-                    if (!list.parentNode.contains(e.target)) {
-                        list.classList.remove('show');
-                        const header = list.parentNode.querySelector('.custom-dropdown-header');
-                        header.classList.remove('open');
-                        header.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            });
-            document.addEventListener('focusin', (e) => {
-                document.querySelectorAll('.custom-dropdown-list.show').forEach(list => {
-                    if (!list.parentNode.contains(e.target) && !list.parentNode.querySelector('.custom-dropdown-header').contains(e.target)) {
-                        list.classList.remove('show');
-                        const header = list.parentNode.querySelector('.custom-dropdown-header');
-                        header.classList.remove('open');
-                        header.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            });
+            const tabCloakListEl = tabCloakDropdownEl.querySelector('.custom-dropdown-list');
+            tabCloakListEl.innerHTML = '';
+            for (const value in cloakPresets) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = cloakPresets[value].title || "None (Show Actual)"; li.setAttribute('role', 'option'); tabCloakListEl.appendChild(li); }
+
+
+            document.querySelectorAll('.custom-dropdown-header').forEach(header => { header.addEventListener('click', toggleDropdown); header.addEventListener('keydown', handleDropdownKeyDown); });
+            document.querySelectorAll('.custom-dropdown-list-item').forEach(item => { item.addEventListener('click', selectDropdownItem); item.addEventListener('keydown', handleDropdownItemKeyDown); });
+            document.addEventListener('click', (e) => { document.querySelectorAll('.custom-dropdown-list.show').forEach(list => { if (!list.parentNode.contains(e.target)) { list.classList.remove('show'); const header = list.parentNode.querySelector('.custom-dropdown-header'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); } }); });
+            document.addEventListener('focusin', (e) => { document.querySelectorAll('.custom-dropdown-list.show').forEach(list => { if (!list.parentNode.contains(e.target) && !list.parentNode.querySelector('.custom-dropdown-header').contains(e.target)) { list.classList.remove('show'); const header = list.parentNode.querySelector('.custom-dropdown-header'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); } }); });
         }
 
         function toggleDropdown() {
             const header = this; const list = header.nextElementSibling;
             const isOpen = list.classList.toggle('show');
             header.classList.toggle('open', isOpen); header.setAttribute('aria-expanded', isOpen.toString());
-            document.querySelectorAll('.custom-dropdown-list.show').forEach(otherList => {
-                if (otherList !== list) {
-                    otherList.classList.remove('show');
-                    const otherHeader = otherList.parentNode.querySelector('.custom-dropdown-header');
-                    otherHeader.classList.remove('open'); otherHeader.setAttribute('aria-expanded', 'false');
-                }
-            });
+            document.querySelectorAll('.custom-dropdown-list.show').forEach(otherList => { if (otherList !== list) { otherList.classList.remove('show'); const otherHeader = otherList.parentNode.querySelector('.custom-dropdown-header'); otherHeader.classList.remove('open'); otherHeader.setAttribute('aria-expanded', 'false'); }});
             if (isOpen) (list.querySelector('.custom-dropdown-list-item.selected') || list.querySelector('.custom-dropdown-list-item'))?.focus();
         }
-
         function handleDropdownKeyDown(e) {
             const header = this; const list = header.nextElementSibling; const isOpen = list.classList.contains('show');
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown.call(header); }
@@ -565,11 +534,16 @@
             const value = item.dataset.value;
             updateSelectedDropdownText(dropdown.id, value);
             list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus();
+
             if (dropdown.id === 'theme-dropdown') applyTheme(value);
             else if (dropdown.id === 'search-engine-dropdown') { currentSearchEngineKey = value; localStorage.setItem('vernSearchEngine', currentSearchEngineKey); }
             else if (dropdown.id === 'autoclose-delay-dropdown') { currentAutoCloseDelay = parseInt(value, 10); localStorage.setItem('vernAutoCloseDelay', currentAutoCloseDelay); }
+            else if (dropdown.id === 'tab-cloak-dropdown') {
+                currentCloakPresetKey = value; localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
+                const activeTab = getActiveTab();
+                if (activeTab) updateTabInfo(activeTab, activeTab.actualTitle, activeTab.actualFavicon);
+            }
         }
-
         function handleDropdownItemKeyDown(e) {
             const item = this; const list = item.closest('.custom-dropdown-list'); const items = Array.from(list.querySelectorAll('.custom-dropdown-list-item')); const currentIndex = items.indexOf(item);
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDropdownItem.call(item); }
@@ -577,7 +551,6 @@
             else if (e.key === 'ArrowUp') { e.preventDefault(); items[(currentIndex - 1 + items.length) % items.length]?.focus(); }
             else if (e.key === 'Escape') { e.preventDefault(); const header = list.parentNode.querySelector('.custom-dropdown-header'); list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus(); }
         }
-
         function updateSelectedDropdownText(dropdownId, selectedValue) {
             const dropdownEl = document.getElementById(dropdownId); if (!dropdownEl) return;
             const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span');
@@ -587,27 +560,23 @@
                 else { item.classList.remove('selected'); item.setAttribute('aria-selected', 'false'); }
             });
             if (selectedTextEl && newText) selectedTextEl.textContent = newText;
+            else if (selectedTextEl && dropdownId === 'tab-cloak-dropdown' && selectedValue === 'none') selectedTextEl.textContent = "None (Show Actual)"; // Default text for "none"
         }
 
         function loadSettings() {
-            const savedTheme = localStorage.getItem('vernTheme') || 'obsidian-dark';
-            applyTheme(savedTheme);
-            const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
-            currentSearchEngineKey = savedSearchEngine; updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey);
-            const savedDelay = localStorage.getItem('vernAutoCloseDelay');
-            currentAutoCloseDelay = savedDelay !== null ? parseInt(savedDelay, 10) : 1000;
-            updateSelectedDropdownText('autoclose-delay-dropdown', currentAutoCloseDelay.toString());
-            isGloballyPinned = localStorage.getItem('vernIsGloballyPinned') === 'true';
+            const savedTheme = localStorage.getItem('vernTheme') || 'obsidian-dark'; applyTheme(savedTheme);
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey);
+            currentAutoCloseDelay = parseInt(localStorage.getItem('vernAutoCloseDelay') || '1000', 10); updateSelectedDropdownText('autoclose-delay-dropdown', currentAutoCloseDelay.toString());
+            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; updateSelectedDropdownText('tab-cloak-dropdown', currentCloakPresetKey);
             isTopBarHidden = localStorage.getItem('vernIsTopBarHidden') !== 'false';
             isSidebarHidden = localStorage.getItem('vernIsSidebarHidden') !== 'false';
         }
 
         function setupEventListeners() {
-            pinButtonEl.addEventListener('click', toggleGlobalPin);
-            window.addEventListener('resize', () => {
-                updateInitialTopBarHeight();
-                if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-            });
+            fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen);
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+            window.addEventListener('resize', () => { updateInitialTopBarHeight(); if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; });
             newTabButtonEl.addEventListener('click', () => createTab('about:blank'));
             tabBarEl.addEventListener('click', handleTabBarClick);
             searchBarEl.addEventListener('keydown', handleSearchEnter);
@@ -625,56 +594,45 @@
             topBarAssemblyEl.addEventListener('mouseleave', () => { isMouseOverTopBar = false; attemptTopBarAutoHide(); });
             sidebarEl.addEventListener('mouseenter', () => { isMouseOverSidebar = true; clearTimeout(sidebarAutoHideTimeoutId); });
             sidebarEl.addEventListener('mouseleave', () => { isMouseOverSidebar = false; attemptSidebarAutoHide(); });
-            searchBarEl.addEventListener('focus', () => { isSearchBarFocused = true; clearTimeout(topBarAutoHideTimeoutId); if (isTopBarHidden && !isGloballyPinned) showTopBar(); });
+            searchBarEl.addEventListener('focus', () => { isSearchBarFocused = true; clearTimeout(topBarAutoHideTimeoutId); if (isTopBarHidden) showTopBar(); });
             searchBarEl.addEventListener('blur', () => { isSearchBarFocused = false; attemptTopBarAutoHide(); });
-            sidebarEl.addEventListener('focusin', (event) => { if(event.target.closest('.sidebar-input, .sidebar-button, .custom-dropdown-header')) { isSidebarInputFocused = true; clearTimeout(sidebarAutoHideTimeoutId); if (isSidebarHidden && !isGloballyPinned) showSidebar();} });
+            sidebarEl.addEventListener('focusin', (event) => { if(event.target.closest('.sidebar-input, .sidebar-button, .custom-dropdown-header')) { isSidebarInputFocused = true; clearTimeout(sidebarAutoHideTimeoutId); if (isSidebarHidden) showSidebar();}});
             sidebarEl.addEventListener('focusout', (event) => { if(event.target.closest('.sidebar-input, .sidebar-button, .custom-dropdown-header')) { isSidebarInputFocused = false; attemptSidebarAutoHide(); }});
         }
 
-        function toggleGlobalPin() {
-            isGloballyPinned = !isGloballyPinned; localStorage.setItem('vernIsGloballyPinned', isGloballyPinned.toString()); updatePinButtonVisual();
-            if (isGloballyPinned) { clearTimeout(topBarAutoHideTimeoutId); clearTimeout(sidebarAutoHideTimeoutId); showTopBar(true); showSidebar(true); }
-            else { attemptTopBarAutoHide(); attemptSidebarAutoHide(); }
+        function toggleIframeFullscreen() {
+            if (!document.fullscreenElement) {
+                const activeTab = getActiveTab();
+                if (activeTab && activeTab.iframe) activeTab.iframe.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err));
+            } else { if (document.exitFullscreen) document.exitFullscreen(); }
         }
-
-        function updatePinButtonVisual() {
-            if (isGloballyPinned) { pinButtonEl.classList.add('active'); pinTextEl.textContent = "Unpinned"; pinButtonEl.title = "Unpin Toolbar & Sidebar"; }
-            else { pinButtonEl.classList.remove('active'); pinTextEl.textContent = "Pin Open"; pinButtonEl.title = "Pin Toolbar & Sidebar"; }
+        function handleFullscreenChange() {
+            const fsIcon = fullscreenButtonEl.querySelector('i');
+            if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); fsIcon.classList.replace('fa-expand', 'fa-compress'); }
+            else { document.body.classList.remove('app-ui-hidden'); fsIcon.classList.replace('fa-compress', 'fa-expand'); attemptTopBarAutoHide(); attemptSidebarAutoHide(); }
         }
 
         function handleDocumentMouseMove(event) {
-            if (event.clientY <= TOP_EDGE_SENSITIVITY_Y && isTopBarHidden && !isGloballyPinned) showTopBar();
-            if (event.clientX <= EDGE_SENSITIVITY_X) {
-                if (!isMouseAtLeftEdge) { isMouseAtLeftEdge = true; if (!isGloballyPinned) { clearTimeout(sidebarAutoHideTimeoutId); clearTimeout(topBarAutoHideTimeoutId); if(isSidebarHidden)showSidebar(); if(isTopBarHidden)showTopBar();}}
-            } else { if (isMouseAtLeftEdge) { isMouseAtLeftEdge = false; if (!isGloballyPinned) { attemptSidebarAutoHide(); attemptTopBarAutoHide(); }}}
+            if (event.clientY <= TOP_EDGE_SENSITIVITY_Y && isTopBarHidden) showTopBar();
+            if (event.clientX <= EDGE_SENSITIVITY_X) { if (!isMouseAtLeftEdge) { isMouseAtLeftEdge = true; clearTimeout(sidebarAutoHideTimeoutId); clearTimeout(topBarAutoHideTimeoutId); if(isSidebarHidden)showSidebar(); if(isTopBarHidden)showTopBar(); }}
+            else { if (isMouseAtLeftEdge) { isMouseAtLeftEdge = false; attemptSidebarAutoHide(); attemptTopBarAutoHide(); }}
         }
 
-        function showTopBar(forcedByPin = false) {
-            if (isGloballyPinned && !forcedByPin && !isTopBarHidden) return; // If pinned and already shown, no need to re-trigger unless forced
-            clearTimeout(topBarAutoHideTimeoutId);
-            if (isTopBarHidden || forcedByPin) handleTopBarToggle(false); // Pass false to show
-        }
-
+        function showTopBar() { clearTimeout(topBarAutoHideTimeoutId); if (isTopBarHidden) handleTopBarToggle(false); }
         function attemptTopBarAutoHide() {
             clearTimeout(topBarAutoHideTimeoutId);
-            if (isGloballyPinned || isSearchBarFocused || isMouseOverTopBar || (isMouseAtLeftEdge && !isSidebarHidden) /* Keep top if sidebar also shown by edge */) return;
+            if (isSearchBarFocused || isMouseOverTopBar || (isMouseAtLeftEdge && !isSidebarHidden)) return;
             const delay = currentAutoCloseDelay;
             if (delay === 0) { if (!isTopBarHidden) handleTopBarToggle(true); }
-            else { topBarAutoHideTimeoutId = setTimeout(() => { if (!isGloballyPinned && !isSearchBarFocused && !isMouseOverTopBar && !(isMouseAtLeftEdge && !isSidebarHidden) && !isTopBarHidden) handleTopBarToggle(true); }, delay); }
+            else { topBarAutoHideTimeoutId = setTimeout(() => { if (!isSearchBarFocused && !isMouseOverTopBar && !(isMouseAtLeftEdge && !isSidebarHidden) && !isTopBarHidden) handleTopBarToggle(true); }, delay); }
         }
-
-        function showSidebar(forcedByPin = false) {
-            if (isGloballyPinned && !forcedByPin && !isSidebarHidden) return;
-            clearTimeout(sidebarAutoHideTimeoutId);
-            if (isSidebarHidden || forcedByPin) handleSidebarToggle(false); // Pass false to show
-        }
-
+        function showSidebar() { clearTimeout(sidebarAutoHideTimeoutId); if (isSidebarHidden) handleSidebarToggle(false); }
         function attemptSidebarAutoHide() {
             clearTimeout(sidebarAutoHideTimeoutId);
-            if (isGloballyPinned || isSidebarInputFocused || isMouseOverSidebar || isMouseAtLeftEdge) return;
+            if (isSidebarInputFocused || isMouseOverSidebar || isMouseAtLeftEdge) return;
             const delay = currentAutoCloseDelay;
             if (delay === 0) { if (!isSidebarHidden) handleSidebarToggle(true); }
-            else { sidebarAutoHideTimeoutId = setTimeout(() => { if (!isGloballyPinned && !isSidebarInputFocused && !isMouseOverSidebar && !isMouseAtLeftEdge && !isSidebarHidden) handleSidebarToggle(true); }, delay); }
+            else { sidebarAutoHideTimeoutId = setTimeout(() => { if (!isSidebarInputFocused && !isMouseOverSidebar && !isMouseAtLeftEdge && !isSidebarHidden) handleSidebarToggle(true); }, delay); }
         }
 
         function createTab(url = null) {
@@ -682,14 +640,14 @@
             tabElement.innerHTML = `<div class="tab-favicon"><i class="fas fa-globe"></i></div><div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>`;
             tabBarEl.insertBefore(tabElement, newTabButtonEl); const iframe = document.createElement('iframe'); iframe.id = `content-${tabId}`; iframe.className = 'tab-content';
             iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox'; iframe.loading = 'eager'; tabsContainerEl.appendChild(iframe);
-            const tab = { id: tabId, element: tabElement, iframe, url: url || 'about:blank', title: 'New Tab', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false };
+            const tab = { id: tabId, element: tabElement, iframe, url: url || 'about:blank', actualTitle: 'New Tab', actualFavicon: null, titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false };
             tabs.push(tab); activateTab(tabId); navigateTo(tab.url, tab); return tab;
         }
         function activateTab(tabId) {
             if (!tabId && tabs.length > 0) tabId = tabs[0].id; if (!tabId) return;
             tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
             const tab = tabs.find(t => t.id === tabId);
-            if (tab) { tab.element.classList.add('active'); tab.iframe.classList.add('active'); activeTabId = tabId; searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); updateDocumentTitle(tab); }
+            if (tab) { tab.element.classList.add('active'); tab.iframe.classList.add('active'); activeTabId = tabId; searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); updateTabInfo(tab, tab.actualTitle, tab.actualFavicon); /* Update cloak on activation */ document.title = "VERN MAX - SEARCH"; }
         }
         function closeTab(tabId) {
             const tabIndex = tabs.findIndex(t => t.id === tabId); if (tabIndex === -1) return; const tab = tabs[tabIndex];
@@ -698,15 +656,23 @@
             if (activeTabId === tabId) { if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id); else createTab('about:blank'); }
         }
         function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
-        function updateTabInfo(tab, title, faviconUrl) {
-            if (!tab) return; const displayTitle = title || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
-            tab.title = displayTitle; tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0,18) + '...' : displayTitle; tab.titleElement.title = displayTitle;
-            if (faviconUrl) { tab.faviconElement.innerHTML = `<img src="${faviconUrl}" alt="" style="width:14px;height:14px;object-fit:contain;">`; }
-            else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) { try { const siteUrl = new URL(tab.url); tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" style="width:14px;height:14px;object-fit:contain;" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\'></i>';">`; } catch (e) { tab.faviconElement.innerHTML = `<i class="fas fa-globe"></i>`; } }
+
+        function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) {
+            if (!tab) return;
+            tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
+            tab.actualFavicon = actualPageFaviconUrl || tab.actualFavicon;
+            const cloak = cloakPresets[currentCloakPresetKey] || cloakPresets['none'];
+            let displayTitleOnTab, displayFaviconUrlOnTab;
+            if (currentCloakPresetKey !== 'none' && cloak.title) { displayTitleOnTab = cloak.title; displayFaviconUrlOnTab = cloak.faviconUrl; }
+            else { displayTitleOnTab = tab.actualTitle; displayFaviconUrlOnTab = tab.actualFavicon; }
+            tab.titleElement.textContent = displayTitleOnTab.length > 20 ? displayTitleOnTab.substring(0, 18) + '...' : displayTitleOnTab;
+            tab.titleElement.title = displayTitleOnTab;
+            if (displayFaviconUrlOnTab) tab.faviconElement.innerHTML = `<img src="${displayFaviconUrlOnTab}" alt="" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\'></i>';">`;
+            else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http') && (!cloakPresets[currentCloakPresetKey] || !cloakPresets[currentCloakPresetKey].faviconUrl)) { try { const siteUrl = new URL(tab.url); tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\'></i>';">`; } catch (e) { tab.faviconElement.innerHTML = `<i class="fas fa-globe"></i>`; } }
             else { tab.faviconElement.innerHTML = `<i class="fas fa-globe"></i>`; }
-            if (tab.id === activeTabId) updateDocumentTitle(tab);
+            document.title = "VERN MAX - SEARCH";
         }
-        function updateDocumentTitle(tab) { document.title = "VERN MAX - SEARCH"; }
+
         function formatUrlInput(input) {
             if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; }
             if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input;
@@ -716,11 +682,11 @@
             let currentTab = tab || getActiveTab(); if (!currentTab) { currentTab = createTab(urlInput); return; }
             currentTab.isLoading = true; updateTabInfo(currentTab, "Loading...", null);
             if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
-            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { currentTab.iframe.src = urlInput; currentTab.url = urlInput; if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput; updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput); if (!urlInput.startsWith('about:error')) addToHistory(urlInput === 'about:blank' ? 'New Tab' : urlInput, urlInput); currentTab.isLoading = false; return; }
+            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { currentTab.iframe.src = urlInput; currentTab.url = urlInput; if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput; updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, null); if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url); currentTab.isLoading = false; return; }
             let targetUrl = formatUrlInput(urlInput.trim()); if (!targetUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); }
-            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Error: UV Config Missing"); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return; }
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Error: UV Config Missing", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return; }
             try { const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl); currentTab.iframe.src = proxiedUrl; currentTab.url = targetUrl; if (currentTab.id === activeTabId) searchBarEl.value = targetUrl; }
-            catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Navigation Error"); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; }
+            catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Navigation Error", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; }
         }
 
         function handleTopBarToggle(forceHide, initialSet = false) {
@@ -741,24 +707,62 @@
             const wasHidden = topBarAssemblyEl.classList.contains('hidden'); const currentMaxHeight = topBarAssemblyEl.style.maxHeight;
             if (wasHidden) { topBarAssemblyEl.classList.remove('hidden'); topBarAssemblyEl.style.maxHeight = 'none'; }
             initialTopBarHeight = topBarAssemblyEl.offsetHeight;
-            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = currentMaxHeight; }
+            if (wasHidden) { topBarAssemblyEl.classList.add('hidden'); topBarAssemblyEl.style.maxHeight = currentMaxHeight || '0px'; } // Restore to 0 if it was truly hidden
             else if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
         }
 
         function handleTabBarClick(e) { const tabElement = e.target.closest('.tab'); const closeButton = e.target.closest('.tab-close'); if (closeButton && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); } else if (tabElement) activateTab(tabElement.dataset.tabId); }
         function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
-        function handleIframeLoad(event) { if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) { const iframe = event.target; const tab = tabs.find(t => t.iframe === iframe); if (tab) { tab.isLoading = false; let title = 'Untitled'; try { if (iframe.contentWindow && iframe.contentDocument) title = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled'; } catch (e) { try { title = new URL(tab.url).hostname || 'New Tab'; } catch {} } if(tab.url && tab.url.startsWith('about:error')) title = "Error Page"; updateTabInfo(tab, title); if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(title, tab.url); setupTitleObserver(tab); }}}
+        function handleIframeLoad(event) {
+            if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
+                const iframe = event.target; const tab = tabs.find(t => t.iframe === iframe);
+                if (tab) {
+                    tab.isLoading = false; let titleFromIframe = 'Untitled'; let faviconFromIframe = null;
+                    try {
+                        if (iframe.contentWindow && iframe.contentDocument) {
+                            titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
+                            const linkTags = iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]');
+                            if (linkTags.length > 0) {
+                                try {faviconFromIframe = new URL(linkTags[0].href, iframe.contentWindow.location.href).href; } catch(e){/*ignore invalid favicons*/}
+                            }
+                        }
+                    } catch (e) { try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} }
+                    if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page";
+                    updateTabInfo(tab, titleFromIframe, faviconFromIframe);
+                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(tab.actualTitle, tab.url);
+                    setupTitleObserver(tab);
+                }
+            }
+        }
         function handleGlobalKeyDown(e) { const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); } if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); } if (e.ctrlKey && e.key === 'Tab') { e.preventDefault(); if (tabs.length > 1) { const currentIndex = tabs.findIndex(t => t.id === activeTabId); const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + tabs.length) % tabs.length; activateTab(tabs[nextIndex].id); }} if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
-        function setupTitleObserver(tab) { if (!tab || !tab.iframe.contentWindow) return; if (tab.titleObserver) tab.titleObserver.disconnect(); try { const targetNode = tab.iframe.contentDocument.querySelector('title'); if (!targetNode) return; const observer = new MutationObserver(() => { if (tab.iframe.contentDocument) updateTabInfo(tab, tab.iframe.contentDocument.title); }); observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); tab.titleObserver = observer; } catch (e) { if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.locationCheckIntervalId = setInterval(() => { try { if (tab.iframe.contentDocument && tab.title !== tab.iframe.contentDocument.title) updateTabInfo(tab, tab.iframe.contentDocument.title); } catch (err) {} }, 2000); }}
+        function setupTitleObserver(tab) {
+             if (!tab || !tab.iframe.contentWindow) return; if (tab.titleObserver) tab.titleObserver.disconnect();
+            try {
+                const targetNode = tab.iframe.contentDocument.querySelector('title'); if (!targetNode) return;
+                const observer = new MutationObserver(() => { if (tab.iframe.contentDocument) {
+                    let titleFromIframe = tab.iframe.contentDocument.title; let faviconFromIframe = tab.actualFavicon; // Keep old if not found
+                    const linkTags = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]');
+                    if (linkTags.length > 0) { try {faviconFromIframe = new URL(linkTags[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){} }
+                    updateTabInfo(tab, titleFromIframe, faviconFromIframe);
+                }});
+                observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); tab.titleObserver = observer;
+            } catch (e) { if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.locationCheckIntervalId = setInterval(() => { try { if (tab.iframe.contentDocument && tab.actualTitle !== tab.iframe.contentDocument.title) {let title = tab.iframe.contentDocument.title; let fav = tab.actualFavicon; const links = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); if(links.length>0){try{fav=new URL(links[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){}} updateTabInfo(tab, title, fav);}} catch (err) {} }, 2000); }
+        }
         function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm));}
         function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
         function renderBookmarkItem(bm) { const li = document.createElement('li'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; const nameSpan = document.createElement('span'); nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url'; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; const removeBtn = document.createElement('i'); removeBtn.className = 'fas fa-times'; removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7; font-size: 0.8em;'; removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; li.appendChild(nameSpan); li.appendChild(urlSpan); li.appendChild(removeBtn); li.style.position = 'relative'; bookmarksListEl.appendChild(li); }
-        function handleAddCurrentBookmark() { const activeTab = getActiveTab(); if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputEl.value.trim() || activeTab.title || new URL(activeTab.url).hostname; const url = activeTab.url; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputEl.value = ''; }
+        function handleAddCurrentBookmark() {
+            const activeTab = getActiveTab(); if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) { alert("Cannot bookmark this page."); return; }
+            const name = newBookmarkNameInputEl.value.trim() || activeTab.actualTitle || new URL(activeTab.url).hostname;
+            const url = activeTab.url; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
+            bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputEl.value = '';
+        }
         function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
-        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.classList.contains('fa-times')) { createTab(li.dataset.url); if (!isSidebarHidden && window.innerWidth < 768 && !isGloballyPinned) handleSidebarToggle(true); }}
-        function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url) return; sessionHistory.push({ title, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
-        function renderHistory() { historyListEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = document.createElement('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; const titleSpan = document.createElement('span'); titleSpan.textContent = item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title; const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li); });}
-        function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); if (!isSidebarHidden && window.innerWidth < 768 && !isGloballyPinned) handleSidebarToggle(true);}}
+        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.classList.contains('fa-times')) { createTab(li.dataset.url); if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle(true); }}
+        function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
+        function renderHistory() { historyListEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = document.createElement('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; const titleSpan = document.createElement('span'); titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li); });}
+        function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); if (!isSidebarHidden && window.innerWidth < 768) handleSidebarToggle(true);}}
         function applyTheme(themeName) { document.body.className = document.body.className.replace(/\btheme-\S+/g, ''); if (themeName !== 'obsidian-dark' && themes[themeName]) document.body.classList.add(`theme-${themeName}`); localStorage.setItem('vernTheme', themeName); updateSelectedDropdownText('theme-dropdown', themeName); updateInitialTopBarHeight(); if (!isTopBarHidden) topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; }
     </script>
 </body>
