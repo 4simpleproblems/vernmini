@@ -100,6 +100,16 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
 
+        #left-edge-sensor {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 50px; /* Sensitivity for left edge */
+            height: 100vh;
+            z-index: 999; /* Below sidebar/topbar but can capture mouse events */
+            /* For debugging: background-color: rgba(0, 255, 0, 0.1); */
+        }
+
         #sidebar {
             width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
             border-right: 1px solid var(--sidebar-border-color);
@@ -267,6 +277,7 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div id="left-edge-sensor"></div>
 
     <div id="sidebar">
         <div id="sidebar-header" style="padding-bottom: 10px; border-bottom: 1px solid var(--sidebar-border-color);">
@@ -380,8 +391,7 @@
 
     <script>
         // --- CONFIGURATION & GLOBAL STATE ---
-        const EDGE_SENSITIVITY_X = 10;
-        const TOP_EDGE_SENSITIVITY_Y = 5;
+        const TOP_EDGE_SENSITIVITY_Y = 5; // Pixels from top edge to trigger topbar
 
         let tabs = [];
         let activeTabId = null;
@@ -418,7 +428,7 @@
         // --- DOM ELEMENT REFERENCES ---
         let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl;
         let topBarAssemblyEl;
-        let sidebarEl, mainContentWrapperEl;
+        let sidebarEl, mainContentWrapperEl, leftEdgeSensorEl; // Added leftEdgeSensorEl
         let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
         let historyListEl;
         let themeDropdownEl, searchEngineDropdownEl, autoCloseDelayDropdownEl, tabCloakDropdownEl;
@@ -432,7 +442,7 @@
 
         let isMouseOverTopBar = false;
         let isMouseOverSidebar = false;
-        let isMouseAtLeftEdge = false;
+        // isMouseAtLeftEdge is removed, using direct sensor events
         let isSearchBarFocused = false;
         let isSidebarInputFocused = false;
 
@@ -452,6 +462,7 @@
             topBarAssemblyEl = document.getElementById('top-bar-assembly');
             sidebarEl = document.getElementById('sidebar');
             mainContentWrapperEl = document.getElementById('main-content-wrapper');
+            leftEdgeSensorEl = document.getElementById('left-edge-sensor');
 
             bookmarksListEl = document.getElementById('bookmarks-list');
             addCurrentBookmarkButtonEl = document.getElementById('add-current-bookmark-button');
@@ -468,8 +479,8 @@
             loadSettings();
 
             updateInitialTopBarHeight();
-            handleTopBarToggle(isTopBarHidden, true); // initialSet = true
-            handleSidebarToggle(isSidebarHidden, true); // initialSet = true
+            handleTopBarToggle(isTopBarHidden, true);
+            handleSidebarToggle(isSidebarHidden, true);
 
             setupEventListeners();
             loadBookmarks();
@@ -588,7 +599,20 @@
             historyListEl.addEventListener('click', handleHistoryClick);
             document.addEventListener('keydown', handleGlobalKeyDown);
             document.addEventListener('load', handleIframeLoad, true);
-            document.addEventListener('mousemove', handleDocumentMouseMove);
+
+            // Bar auto-show/hide listeners
+            document.addEventListener('mousemove', handleDocumentMouseMove); // For top edge only now
+            leftEdgeSensorEl.addEventListener('mouseenter', () => {
+                clearTimeout(sidebarAutoHideTimeoutId);
+                clearTimeout(topBarAutoHideTimeoutId);
+                if (isSidebarHidden) showSidebar();
+                if (isTopBarHidden) showTopBar();
+            });
+            leftEdgeSensorEl.addEventListener('mouseleave', () => {
+                attemptSidebarAutoHide();
+                attemptTopBarAutoHide();
+            });
+
             topBarAssemblyEl.addEventListener('mouseenter', () => { isMouseOverTopBar = true; clearTimeout(topBarAutoHideTimeoutId); });
             topBarAssemblyEl.addEventListener('mouseleave', () => { isMouseOverTopBar = false; attemptTopBarAutoHide(); });
             sidebarEl.addEventListener('mouseenter', () => { isMouseOverSidebar = true; clearTimeout(sidebarAutoHideTimeoutId); });
@@ -612,26 +636,29 @@
         }
 
         function handleDocumentMouseMove(event) {
-            if (event.clientY <= TOP_EDGE_SENSITIVITY_Y && isTopBarHidden) showTopBar();
-            if (event.clientX <= EDGE_SENSITIVITY_X) { if (!isMouseAtLeftEdge) { isMouseAtLeftEdge = true; clearTimeout(sidebarAutoHideTimeoutId); clearTimeout(topBarAutoHideTimeoutId); if(isSidebarHidden)showSidebar(); if(isTopBarHidden)showTopBar(); }}
-            else { if (isMouseAtLeftEdge) { isMouseAtLeftEdge = false; attemptSidebarAutoHide(); attemptTopBarAutoHide(); }}
+            // Top bar show on top edge only (left edge handled by sensor div)
+            if (event.clientY <= TOP_EDGE_SENSITIVITY_Y && isTopBarHidden) {
+                showTopBar();
+            }
         }
 
         function showTopBar() { clearTimeout(topBarAutoHideTimeoutId); if (isTopBarHidden) handleTopBarToggle(false); }
         function attemptTopBarAutoHide() {
             clearTimeout(topBarAutoHideTimeoutId);
-            if (isSearchBarFocused || isMouseOverTopBar || isMouseAtLeftEdge) return; // If mouse is at left edge, top bar should also stay
+            // No longer check isMouseAtLeftEdge here; mouseleave from sensor is the trigger from left
+            if (isSearchBarFocused || isMouseOverTopBar) return;
             const delay = currentAutoCloseDelay;
             if (delay === 0) { if (!isTopBarHidden) handleTopBarToggle(true); }
-            else { topBarAutoHideTimeoutId = setTimeout(() => { if (!isSearchBarFocused && !isMouseOverTopBar && !isMouseAtLeftEdge && !isTopBarHidden) handleTopBarToggle(true); }, delay); }
+            else { topBarAutoHideTimeoutId = setTimeout(() => { if (!isSearchBarFocused && !isMouseOverTopBar && !isTopBarHidden) handleTopBarToggle(true); }, delay); }
         }
         function showSidebar() { clearTimeout(sidebarAutoHideTimeoutId); if (isSidebarHidden) handleSidebarToggle(false); }
         function attemptSidebarAutoHide() {
             clearTimeout(sidebarAutoHideTimeoutId);
-            if (isSidebarInputFocused || isMouseOverSidebar || isMouseAtLeftEdge) return;
+            // No longer check isMouseAtLeftEdge here
+            if (isSidebarInputFocused || isMouseOverSidebar) return;
             const delay = currentAutoCloseDelay;
             if (delay === 0) { if (!isSidebarHidden) handleSidebarToggle(true); }
-            else { sidebarAutoHideTimeoutId = setTimeout(() => { if (!isSidebarInputFocused && !isMouseOverSidebar && !isMouseAtLeftEdge && !isSidebarHidden) handleSidebarToggle(true); }, delay); }
+            else { sidebarAutoHideTimeoutId = setTimeout(() => { if (!isSidebarInputFocused && !isMouseOverSidebar && !isSidebarHidden) handleSidebarToggle(true); }, delay); }
         }
 
         function createTab(url = null) {
