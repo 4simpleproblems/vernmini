@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="../css/style.css" /> 
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="icon" type="image/png" href="../images/title-mini.png" /> <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" /> <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <link rel="icon" type="image/png" href="../images/title-mini.png" /> 
+  <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" /> 
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <style>
     /* Embedded styles will complement or override ../css/style.css */
     html {
@@ -22,7 +24,8 @@
       margin: 0;
       min-height: 100vh;
       font-family: 'PrimaryFont', sans-serif; /* Assumes PrimaryFont is defined in style.css or linked */
-      background: linear-gradient(to bottom, #6720bd, #5a1ca0); 
+      /* Updated gradient to a darker purple at the bottom */
+      background: linear-gradient(to bottom, #6720bd, #5e1cad); 
       background-attachment: fixed;
       display: flex;
       justify-content: center;
@@ -44,15 +47,15 @@
     .search-interface-frame {
       background-color: #ffffff; 
       color: #333333; 
-      border-radius: 30px; /* Slightly adjusted */
-      padding: 20px; /* Increased padding */
+      border-radius: 30px; 
+      padding: 20px; 
       max-width: 1000px; 
       width: 95%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08); /* Refined shadow */
-      border: 1px solid rgba(103, 32, 189, 0.1); /* Softer purple border */
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08); 
+      border: 1px solid rgba(103, 32, 189, 0.1); 
       position: relative;
       z-index: 1;
       margin-top: 70px; 
@@ -73,7 +76,7 @@
     #bigTitle {
       max-width: 170px; 
       height: auto;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); /* Enhanced logo shadow */
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); 
     }
 
     .interface-title-header {
@@ -81,9 +84,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 30px; /* Increased margin */
+      margin-bottom: 30px; 
       background: #ffffff; 
-      padding: 18px 25px; /* Increased padding */
+      padding: 18px 25px; 
       border-radius: 18px; 
       box-shadow: 0 5px 18px rgba(0,0,0,0.07); 
       border: 1px solid rgba(103, 32, 189, 0.12); 
@@ -108,10 +111,10 @@
     }
 
     #clock {
-      color: #555555; /* Slightly darker clock text */
+      color: #555555; 
       font-family: 'SecondaryFont', sans-serif; /* Assumes SecondaryFont is defined */
-      font-size: 0.95rem; /* Slightly larger clock */
-      margin-bottom: 25px; /* Increased margin */
+      font-size: 1.25rem; 
+      margin-bottom: 25px; 
     }
 
     #uv-form {
@@ -119,29 +122,30 @@
       max-width: 1000px; 
       display: flex;
       justify-content: center;
-      margin-bottom: 30px; /* Increased margin */
-      position: relative; /* For potential icon inside */
+      margin-bottom: 30px; 
+      position: relative; 
     }
     #uv-address {
       width: 100%;
-      padding: 16px 25px; /* Increased padding for better feel */
-      padding-left: 30px; /* Space for a potential icon if added later */
+      padding: 16px 25px; 
+      padding-left: 30px; 
       border-radius: 18px;
-      font-size: 1.05rem; /* Slightly larger font */
+      font-size: 1.05rem; 
       font-family: 'PrimaryFont', sans-serif;
       background-color: #f8f9fa; 
       color: #333333; 
-      border: 1px solid #ced4da; /* Standard light border */
+      border: 1px solid #ced4da; 
       box-sizing: border-box;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     #uv-address::placeholder {
-      color: #6c757d; /* Darker placeholder */
+      color: #6c757d; 
+      text-transform: uppercase; /* Make placeholder text uppercase */
     }
     #uv-address:focus {
         border-color: #8a2be2; 
-        box-shadow: 0 0 0 0.2rem rgba(103, 32, 189, 0.25); /* Bootstrap-like focus */
+        box-shadow: 0 0 0 0.2rem rgba(103, 32, 189, 0.25); 
         outline: none;
     }
 
@@ -149,7 +153,7 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 12px; /* Increased gap */
+      gap: 12px; 
       margin-bottom: 25px;
       width: 100%;
       max-width: 1000px;
@@ -158,29 +162,29 @@
       font-family: 'PrimaryFont', sans-serif;
       background-color: #f8f9fa; 
       color: #495057; 
-      padding: 10px 20px; /* Increased padding */
+      padding: 10px 20px; 
       text-decoration: none;
-      border-radius: 10px; /* Slightly less rounded */
-      border: 1px solid #dee2e6; /* Standard light border */
+      border-radius: 10px; 
+      border: 1px solid #dee2e6; 
       cursor: pointer;
       font-size: 0.8rem;
       transition: all 0.2s ease-in-out;
       text-transform: uppercase;
-      font-weight: 600; /* Bolder text */
-      display: inline-flex; /* For icon alignment */
+      font-weight: 600; 
+      display: inline-flex; 
       align-items: center;
       line-height: 1.5;
     }
     #popularSites .btn:hover {
       background-color: #e9ecef; 
-      border-color: #adb5bd; /* Darker border on hover */
-      transform: translateY(-2px); /* Lift effect */
+      border-color: #adb5bd; 
+      transform: translateY(-2px); 
       box-shadow: 0 4px 8px rgba(0,0,0,0.08);
     }
-    #popularSites .btn .icon { /* Style for icons in buttons */
+    #popularSites .btn .icon { 
         margin-right: 8px;
-        color: #6720bd; /* Purple icon color */
-        font-size: 1.1em; /* Adjust icon size */
+        color: #6720bd; 
+        font-size: 1.1em; 
     }
 
 
@@ -195,18 +199,20 @@
       font-size: 0.9em;
       font-weight: 500;
     }
+    /* Removed #uv-error-code from user's provided HTML, so I'm removing its style too. 
+       If it's re-added, the styles from previous versions can be used. */
 
     .footer-label {
       position: fixed;
-      bottom: 12px; /* Adjusted position */
+      bottom: 12px; 
       left: 12px;
       font-family: 'SecondaryFont', sans-serif;
-      font-size: 0.75rem; /* Slightly smaller */
-      color: #e0e0e0; /* Lighter for better visibility */
+      font-size: 0.75rem; 
+      color: #e0e0e0; 
       z-index: 3;
-      background-color: rgba(20, 20, 20, 0.75); /* Darker, more opaque BG */
+      background-color: rgba(20, 20, 20, 0.75); 
       padding: 4px 8px;
-      border-radius: 8px;
+      border-radius: 8px; /* Rounded to match other elements more */
       box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
 
@@ -215,15 +221,16 @@
       .search-interface-frame {
         padding: 20px;
         padding-top: 25px;
-        margin-top: 60px; /* Adjust margin for smaller logo */
+        margin-top: 60px; 
         max-height: calc(100vh - 90px);
       }
       #header-logo-container { top: -70px; }
       #bigTitle { max-width: 130px; }
       .interface-title-header { padding: 15px 20px; margin-bottom: 20px; }
       .interface-title { font-size: 1.6em; }
-      #clock { font-size: 0.95rem; margin-bottom: 20px; font-family: 'PrimaryFont', sans-serif;}
-      #uv-address { padding: 14px 20px; font-size: 0.95rem; font-family: 'PrimaryFont', sans-serif;}
+      /* Clock and input font already PrimaryFont in their own rules, SecondaryFont was for clock */
+      #clock { font-size: 0.95rem; margin-bottom: 20px; } 
+      #uv-address { padding: 14px 20px; font-size: 0.95rem; }
       #popularSites .btn { font-size: 0.7rem; padding: 8px 15px;}
       #popularSites .btn .icon { font-size: 1em; }
     }
@@ -256,6 +263,9 @@
         <a class="btn" onclick="autofill('http://gemini.google.com')"><span class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>GEMINI</a>
         <a class="btn" onclick="autofill('http://totaljerkface.com')"><span class="icon"><i class="fa-solid fa-person-biking"></i></span>HAPPY WHEELS</a>
       </div>
+      <div class="desc"> 
+          <p id="uv-error"></p>
+      </div>
     </div>
   </div>
 
@@ -272,7 +282,13 @@
       const clockElement = document.getElementById('clock');
       if (clockElement) {
         const now = new Date();
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        // Consistently use 12-hour format with AM/PM
+        const timeString = now.toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit', 
+            hour12: true 
+        });
         clockElement.textContent = timeString;
       }
     }
