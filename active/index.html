@@ -3,293 +3,361 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vern Max</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="icon" type="image/png" href="../images/title-mini.png" />
-  <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" />
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <title>VERN MAX - HOME</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" type="image/png" href="../images/title-mini.png" /> <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" /> <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      margin: 0;
-      font-family: 'SecondaryFont', sans-serif;
-      background: #f8f9fa;
-      color: #333;
-      align-items: center;
-      justify-content: center;
+    html {
+      background-color: #131314; /* Fallback very dark page background */
+      height: 100%;
+      box-sizing: border-box;
     }
-    #canvas {
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'PrimaryFont', sans-serif; /* Ensure PrimaryFont is defined */
+      background: linear-gradient(to bottom, #6720bd, #5a1ca0); /* Deep Purple gradient */
+      background-attachment: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    #starsCanvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-      pointer-events: none;
-      background: linear-gradient(to bottom, #0e0e3a, #2c2c4a);
-    }
-    #header {
-      margin: 0 auto 2rem;
-      text-align: center;
       width: 100%;
-      max-width: 1000px;
-      padding: 0 20px;
+      height: 100%;
+      z-index: -1;
     }
-    #bigTitle {
-      height: 100px;
-      width: auto;
-      max-width: 100%;
-      object-fit: contain;
-    }
-    #clock {
-      color: #fff;
-      font-family: 'SecondaryFont', sans-serif;
-      font-weight: bold;
-      font-size: 1.5em;
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
-    }
-    #content {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 26px;
-      padding: 8px;
-      box-shadow: 0 6px 30px rgba(0,0,0,0.1);
-      border: 2px solid rgba(103, 32, 189, 0.1);
-      width: 1200px;
-      max-width: 100vw;
-      margin: 0 auto;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    .search-interface-frame { /* Main centered frame, styled like a dashboard card */
+      background-color: #ffffff; /* White background from .dashboard-card */
+      color: #333333; /* Dark default text from palette */
+      border-radius: 20px; /* From .dashboard-card */
+      padding: 25px;
+      max-width: 800px; /* Increased width a bit */
+      width: 95%; /* More responsive width */
       display: flex;
       flex-direction: column;
       align-items: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15); /* Adjusted shadow */
+      border: 1px solid rgba(103, 32, 189, 0.15); /* Subtle purple border from .dashboard-card */
+      position: relative;
+      z-index: 1;
+      margin-top: 60px; /* Space for the absolute positioned logo */
+      overflow-y: auto;
+      max-height: calc(100vh - 100px); /* Max height accounting for margins/padding */
     }
-    #content:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 40px rgba(103, 32, 189, 0.2);
+
+    #header-logo-container { /* Container for the VERN MAX logo, positioned above the frame */
+      text-align: center;
+      position: absolute;
+      top: -80px; /* Adjust to position logo nicely above the frame */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      width: 100%;
     }
+
+    #bigTitle { /* VERN MAX Logo image */
+      max-width: 160px; /* Adjusted logo size */
+      height: auto;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2)); /* Subtle shadow for logo */
+    }
+
+    .interface-title-header { /* Styled like .dashboard-header */
+      width: 100%;
+      display: flex;
+      justify-content: center; /* Center title */
+      align-items: center;
+      margin-bottom: 25px;
+      background: #ffffff; /* White background */
+      padding: 15px 25px;
+      border-radius: 15px; /* From .dashboard-header */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06); /* Softer shadow */
+      border: 1px solid rgba(103, 32, 189, 0.1); /* Subtle purple border */
+    }
+    .interface-title { /* Styled like .dashboard-title */
+      margin: 0;
+      font-size: 2em; /* Adjusted title size */
+      font-weight: bold;
+      background: linear-gradient(135deg, #6720bd 0%, #8a2be2 100%); /* Purple gradient text */
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* For browsers that don't support background-clip for text */
+      color: #6720bd;
+    }
+
+    #searchElementsContainer { /* Inner container for search elements */
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #clock {
+      color: #666666; /* Dark Gray from palette */
+      font-family: 'SecondaryFont', sans-serif;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
     #uv-form {
       width: 100%;
+      max-width: 580px;
       display: flex;
       justify-content: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 25px;
     }
-    #uv-address {
+    #uv-address { /* Styled like a light-themed input */
       width: 100%;
-      padding: 14px;
-      border-radius: 18px;
+      padding: 15px 25px;
+      border-radius: 50px;
       font-size: 1rem;
-      border: 1px solid rgba(103, 32, 189, 0.2);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      background: #fff;
-      outline: none;
-      box-sizing: border-box;
       font-family: 'PrimaryFont', sans-serif;
+      background-color: #f8f9fa; /* Off-white from palette */
+      color: #333333; /* Dark Gray text */
+      border: 1px solid #dddddd; /* Light Gray border */
+      box-sizing: border-box;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+    #uv-address::placeholder {
+      color: #777777; /* Medium Gray placeholder */
     }
     #uv-address:focus {
-      border-color: #6720bd;
-      box-shadow: 0 0 0 3px rgba(103, 32, 189, 0.2);
+        border-color: #8a2be2; /* Purple border on focus */
+        box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15); /* Purple glow on focus */
+        outline: none;
     }
+
+
     #popularSites {
-      width: 100%;
       display: flex;
-      flex-direction: row;
       justify-content: center;
-      align-items: stretch;
-      gap: 1rem;
-      margin: 1rem 0;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 650px;
     }
-    #popularSites .btn.secondary {
-      background: #fff;
-      border: 1px solid #e9ecef;
-      border-radius: 16px;
-      color: #495057;
+    #popularSites .btn { /* Styled like .quick-actions-list button from dashboard */
       font-family: 'PrimaryFont', sans-serif;
-      font-size: 1.15em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      background-color: #f8f9fa; /* Off-white from palette */
+      color: #495057; /* Dark Gray text from palette */
+      padding: 9px 18px;
       text-decoration: none;
-      font-weight: 600;
+      border-radius: 12px; /* From quick-actions */
+      border: 1px solid #e9ecef; /* Off-white border */
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      text-transform: uppercase; /* From quick-actions */
+      font-weight: 500; /* From quick-actions */
+    }
+    #popularSites .btn:hover {
+      background-color: #e9ecef; /* Lighter gray from palette */
+      border-color: #dee2e6; /* Medium Gray border */
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    /* Optional: Add an icon span inside buttons if you want to include them */
+    /* #popularSites .btn .icon { margin-right: 8px; color: #6720bd; } */
+
+
+    .desc { /* Error message container */
+      width: 100%;
+      max-width: 580px;
       text-align: center;
-      letter-spacing: 0.04em;
-      box-sizing: border-box;
-      padding: 18px 32px;
-      width: auto;
-      min-width: 0;
-      display: inline-block;
-      white-space: nowrap;
+      margin-top: 10px;
     }
-    #popularSites .btn.secondary:hover {
-      background: #e9ecef;
-      border-color: #dee2e6;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    #uv-error {
+      color: #dc3545; /* Red from palette */
+      font-size: 0.9em;
     }
-    #uv-error, #uv-error-code {
+    #uv-error-code {
       color: #dc3545;
-      font-family: 'SecondaryFont', sans-serif;
+      font-family: 'Courier New', Courier, monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      background-color: rgba(220, 53, 69, 0.05); /* Very faint red background */
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 0.8em;
+      margin-top: 5px;
+      display: inline-block;
+      border: 1px solid rgba(220, 53, 69, 0.2);
     }
+
     .footer-label {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      margin: 1rem;
+      bottom: 10px;
+      left: 10px;
       font-family: 'SecondaryFont', sans-serif;
-      font-weight: bold;
-      font-size: 0.9rem;
-      color: #fff;
+      font-size: 0.8rem;
+      color: #cccccc; /* Lighter gray for better visibility on purple */
+      z-index: 3;
+      background-color: rgba(0, 0, 0, 0.3); /* Darker semi-transparent BG */
+      padding: 3px 7px;
+      border-radius: 4px;
     }
-    @media (max-width: 1050px) {
-      #content {
-        width: 98vw;
-        padding: 12px;
+
+    @media (max-width: 767px) {
+      body { padding: 10px; }
+      .search-interface-frame {
+        padding: 20px;
+        padding-top: 30px;
+        margin-top: 50px;
+        max-height: calc(100vh - 80px);
       }
-      #header {
-        max-width: 98vw;
-      }
-    }
-    @media (max-width: 1200px) {
-      #popularSites {
-        flex-wrap: wrap;
-        justify-content: flex-start;
-      }
-    }
-    @media (max-width: 800px) {
-      #content {
-        flex-direction: column;
-        width: 100vw;
-        min-width: 0;
-        padding: 5px;
-      }
-      #popularSites {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: stretch;
-      }
-      #popularSites .btn.secondary {
-        width: 100%;
-        min-width: unset;
-        padding: 14px 0;
-      }
+      #header-logo-container { top: -65px; }
+      #bigTitle { max-width: 120px; }
+      .interface-title-header { padding: 12px 20px; margin-bottom: 20px; }
+      .interface-title { font-size: 1.5em; }
+      #clock { font-size: 0.8rem; margin-bottom: 15px;}
+      #uv-address { padding: 12px 20px; font-size: 0.9rem;}
+      #popularSites .btn { font-size: 0.75rem; padding: 8px 15px;}
     }
   </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <div id="header">
-    <img src="../images/title.png" alt="Logo" id="bigTitle">
-    <div id="clock"></div>
-  </div>
-  <div id="content">
-    <form id="uv-form">
-      <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden">
-      <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL" class="form__input">
-    </form>
-    <div id="popularSites">
-      <a class="btn secondary" onclick="autofill('http://xbox.com/play')">XBOX</a>
-      <a class="btn secondary" onclick="autofill('http://youtube.com')">YOUTUBE</a>
-      <a class="btn secondary" onclick="autofill('https://tiktok.com')">TIKTOK</a>
-      <a class="btn secondary" onclick="autofill('https://chatgpt.com')">CHATGPT</a>
-      <a class="btn secondary" onclick="autofill('http://apple.com')">APPLE</a>
-      <a class="btn secondary" onclick="autofill('http://gemini.google.com')">GEMINI</a>
-      <a class="btn secondary" onclick="autofill('http://totaljerkface.com')">HAPPY WHEELS</a>
+  <canvas id="starsCanvas"></canvas>
+
+  <div class="search-interface-frame">
+    <div id="header-logo-container">
+      <img src="../images/title.png" alt="VERN MAX Logo" id="bigTitle" /> </div>
+
+    <div class="interface-title-header">
+      <h2 class="interface-title">VERN MAX</h2>
     </div>
-    <div class="desc left-margin">
-      <p id="uv-error"></p>
-      <pre id="uv-error-code"></pre>
+
+    <div id="searchElementsContainer">
+      <div id="clock"></div>
+      <form id="uv-form">
+        <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden" />
+        <input id="uv-address" type="text" placeholder="Ask, search, or type a URL..." class="form__input" />
+      </form>
+      <div id="popularSites">
+        <a class="btn" onclick="autofill('http://xbox.com/play')">XBOX</a>
+        <a class="btn" onclick="autofill('http://youtube.com')">YOUTUBE</a>
+        <a class="btn" onclick="autofill('https://tiktok.com')">TIKTOK</a>
+        <a class="btn" onclick="autofill('https://chatgpt.com')">CHATGPT</a>
+        <a class="btn" onclick="autofill('http://apple.com')">APPLE</a>
+        <a class="btn" onclick="autofill('http://gemini.google.com')">GEMINI</a>
+        <a class="btn" onclick="autofill('http://totaljerkface.com')">HAPPY WHEELS</a>
+      </div>
+      <div class="desc">
+        <p id="uv-error"></p>
+        <pre id="uv-error-code"></pre>
+      </div>
     </div>
   </div>
+
   <span class="footer-label">Official 4SP Proxy</span>
+
+  <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
+  <script src="uv/uv.config.js" charset="UTF-8" defer></script>
+  <script src="register-sw.js" charset="UTF-8" defer></script>
+  <script src="search.js" charset="UTF-8" defer></script>
+  <script src="index.js" charset="UTF-8" defer></script>
+
   <script>
     function updateClock() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      document.getElementById('clock').textContent = timeString;
+      const clockElement = document.getElementById('clock');
+      if (clockElement) {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        clockElement.textContent = timeString;
+      }
     }
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Shooting Star Effect (up to 50 stars, fluent, spread out)
-    const canvas = document.getElementById('canvas');
+    function autofill(url) {
+      const searchInput = document.getElementById('uv-address');
+      if (searchInput) { searchInput.value = url; }
+      console.log("Autofill called with: " + url);
+    }
+
+    const canvas = document.getElementById('starsCanvas');
     const ctx = canvas.getContext('2d');
-    function resizeCanvas() {
+    const STAR_COLOR = 'rgba(221, 221, 221, 0.6)';
+    const STAR_COUNT = 75;
+    const STAR_SPEED_MIN = 0.5;
+    const STAR_SPEED_MAX = 2.5;
+    const STAR_LENGTH_MIN = 20;
+    const STAR_LENGTH_MAX = 70;
+    const STAR_WIDTH = 1.5;
+    const NEW_STAR_INTERVAL = 80;
+    let stars = [];
+
+    function setCanvasSize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
 
     class Star {
-      constructor() {
-        this.reset();
-        this.speed = Math.random() * 3 + 1; // Random speed
-        this.size = Math.random() * 2 + 1;
-        this.alpha = 1;
-        this.trail = [];
-        this.maxTrail = Math.floor(Math.random() * 5) + 5; // Variable trail length
-      }
+      constructor() { this.reset(); }
       reset() {
-        // Start at a random position along the top or left edge
-        if (Math.random() > 0.5) {
-          this.x = Math.random() * canvas.width;
-          this.y = -10 - Math.random() * canvas.height * 0.2;
-        } else {
-          this.x = -10 - Math.random() * canvas.width * 0.2;
-          this.y = Math.random() * canvas.height;
-        }
-        this.trail = [];
+        this.speed = Math.random() * (STAR_SPEED_MAX - STAR_SPEED_MIN) + STAR_SPEED_MIN;
+        const componentSpeed = this.speed * Math.SQRT1_2;
+        this.vx = componentSpeed; this.vy = componentSpeed;
+        this.length = Math.random() * (STAR_LENGTH_MAX - STAR_LENGTH_MIN) + STAR_LENGTH_MIN;
+        this.opacity = 0.4 + Math.random() * 0.6;
+        let startX, startY;
+        const spawnEdgePoint = Math.random() * (canvas.width + canvas.height);
+        if (spawnEdgePoint < canvas.width) { startX = spawnEdgePoint; startY = 0; }
+        else { startX = 0; startY = spawnEdgePoint - canvas.width; }
+        const backwardDistance = Math.random() * (Math.max(canvas.width, canvas.height) * 0.6) + this.length;
+        this.x = startX - backwardDistance * Math.SQRT1_2;
+        this.y = startY - backwardDistance * Math.SQRT1_2;
+      }
+      draw() {
+        const magnitude = this.speed; if (magnitude === 0) return;
+        const tailDx = (this.vx / magnitude) * this.length; const tailDy = (this.vy / magnitude) * this.length;
+        const tailX = this.x - tailDx; const tailY = this.y - tailDy;
+        ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(tailX, tailY);
+        ctx.strokeStyle = STAR_COLOR.replace(/,\s*\d?\.?\d*\)$/, `, ${this.opacity})`);
+        ctx.lineWidth = STAR_WIDTH; ctx.lineCap = 'round'; ctx.stroke();
       }
       update() {
-        this.x += this.speed;
-        this.y += this.speed;
-        this.trail.push({x: this.x, y: this.y});
-        if (this.trail.length > this.maxTrail) this.trail.shift();
-        // Smoothly reset when star is well off-screen
-        if (this.x > canvas.width + 100 || this.y > canvas.height + 100) {
+        this.x += this.vx; this.y += this.vy; this.opacity -= 0.0015;
+        if (this.x - this.length > canvas.width || this.y - this.length > canvas.height || this.opacity <= 0) {
           this.reset();
         }
       }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
-        ctx.fill();
-        ctx.beginPath();
-        for (let i = 0; i < this.trail.length - 1; i++) {
-          ctx.moveTo(this.trail[i].x, this.trail[i].y);
-          ctx.lineTo(this.trail[i+1].x, this.trail[i+1].y);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha * (i+1)/this.trail.length})`;
-          ctx.lineWidth = this.size * (i+1)/this.trail.length;
-          ctx.stroke();
-        }
+    }
+    function initStars() {
+      stars = []; setCanvasSize();
+      for (let i = 0; i < STAR_COUNT; i++) {
+        setTimeout(() => stars.push(new Star()), i * (NEW_STAR_INTERVAL / 2.5));
       }
     }
-
-    const stars = [];
-    const maxStars = 50;
-    for (let i = 0; i < maxStars; i++) {
-      stars.push(new Star());
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const star of stars) {
-        star.update();
-        star.draw();
+    function animateStars() {
+      if (canvas.width > 0 && canvas.height > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(star => { star.update(); star.draw(); });
       }
-      requestAnimationFrame(animate);
+      requestAnimationFrame(animateStars);
     }
-    animate();
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => setCanvasSize(), 200);
+    });
+    if (document.fonts) {
+      document.fonts.ready.then(() => { initStars(); animateStars(); });
+    } else {
+      initStars(); animateStars();
+    }
   </script>
-  <script src="../uv/uv.bundle.js" charset="UTF-8" defer></script>
-  <script src="../uv/uv.config.js" charset="UTF-8" defer></script>
-  <script src="../register-sw.js" charset="UTF-8" defer></script>
-  <script src="../search.js" charset="UTF-8" defer></script>
-  <script src="../index.js" charset="UTF-8" defer></script>
 </body>
 </html>
