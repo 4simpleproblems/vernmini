@@ -63,8 +63,6 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
 
-        /* #left-edge-sensor CSS removed */
-
         #sidebar {
             width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
             border-right: 1px solid var(--sidebar-border-color);
@@ -160,8 +158,8 @@
         #main-content-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         #top-bar-assembly {
             overflow: hidden;
-            max-height: none; /* Default to content height as it's always visible */
-            transition: max-height 0.25s ease-in-out; /* Kept for fullscreen hide/show */
+            max-height: none; 
+            transition: max-height 0.25s ease-in-out; 
         }
 
         body.app-ui-hidden #sidebar,
@@ -188,8 +186,8 @@
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--current-theme-accent) 70%, var(--current-theme-text));
         }
         .tab.active .tab-title { color: var(--button-text-color); }
-        .tab.active .tab-favicon .unicode-icon { color: var(--button-text-color); }
-        .tab.active .tab-favicon img { filter: brightness(0) invert(1); }
+        .tab.active .tab-favicon .unicode-icon { color: var(--button-text-color); } /* For unicode if still used */
+        .tab.active .tab-favicon img { filter: brightness(0) invert(1); } /* Inverts white PNGs to black on active tab */
 
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 16px; height: 16px; margin-right: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
@@ -197,30 +195,18 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
 
         .tab-close {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-left: 4px;
-            flex-shrink: 0;
-            opacity: 0.7;
-            transition: opacity 0.2s, background-color 0.2s;
-            cursor: pointer;
+            width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7;
+            transition: opacity 0.2s, background-color 0.2s; cursor: pointer;
         }
         .tab-close:hover { opacity: 1; background-color: rgba(var(--current-theme-shadow-rgb),0.2); }
-        .tab-close-icon { /* For the image */
-            width: 10px;
-            height: 10px;
-            display: block;
-        }
+        .tab-close-icon { width: 10px; height: 10px; display: block; }
 
         .new-tab-button {
             width: 30px; height: 30px; min-width: 30px; margin-left: 5px; border-radius: 25%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
             color: var(--button-text-color); cursor: pointer; transition: background-color 0.2s;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px; /* Base font size for icon container */
         }
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
 
@@ -233,7 +219,7 @@
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
             margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px; /* Base font size for icon container */
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
 
@@ -252,12 +238,44 @@
             font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
         }
         .sidebar-setting-label { display:block; margin-bottom:7px; font-size: 0.9em; font-weight: 500; }
+        
+        /* Styles for Unicode icons if still used */
         .unicode-icon {
-             font-size: inherit;
-             display: inline-flex;
-             align-items: center;
-             justify-content: center;
+            font-size: inherit; display: inline-flex; align-items: center; justify-content: center;
         }
+
+        /* General style for image icons */
+        .icon-img {
+            display: inline-block;
+            vertical-align: middle;
+            object-fit: contain;
+        }
+
+        /* Icons in nav buttons (Home, Back, Fwd, Refresh, Fullscreen) */
+        #nav-bar .nav-button .icon-img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Icon in the new tab button on the tab bar */
+        #tab-bar .new-tab-button .icon-img {
+            width: 18px; 
+            height: 18px;
+        }
+
+        /* Icon in sidebar buttons like "Add Bookmark" */
+        #sidebar .sidebar-button .icon-img {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px; 
+        }
+        
+        /* For image-based tab favicons (e.g., default) */
+        .tab-favicon .icon-img { /* Covers default-favicon-img styling */
+             width: 100%; /* Inherits 16px from .tab-favicon */
+             height: 100%; /* Inherits 16px from .tab-favicon */
+        }
+
     </style>
 </head>
 <body>
@@ -276,10 +294,7 @@
                     <span class="dropdown-chevron unicode-icon">▼</span>
                 </div>
                 <ul class="custom-dropdown-list" role="listbox">
-                    <li class="custom-dropdown-list-item" data-value="duckduckgo" role="option">DuckDuckGo</li>
-                    <li class="custom-dropdown-list-item" data-value="google" role="option">Google</li>
-                    <li class="custom-dropdown-list-item" data-value="bing" role="option">Bing</li>
-                    <li class="custom-dropdown-list-item" data-value="brave" role="option">Brave Search</li>
+                    {/* Items populated by JS */}
                 </ul>
             </div>
 
@@ -290,11 +305,7 @@
                     <span class="dropdown-chevron unicode-icon">▼</span>
                 </div>
                 <ul class="custom-dropdown-list" role="listbox">
-                    <li class="custom-dropdown-list-item" data-value="none" role="option">None</li>
-                    <li class="custom-dropdown-list-item" data-value="google_docs" role="option">Google Docs</li>
-                    <li class="custom-dropdown-list-item" data-value="google_drive" role="option">Google Drive</li>
-                    <li class="custom-dropdown-list-item" data-value="wikipedia" role="option">Wikipedia</li>
-                    <li class="custom-dropdown-list-item" data-value="new_tab" role="option">New Tab (Local)</li>
+                     {/* Items populated by JS */}
                 </ul>
             </div>
         </div>
@@ -304,7 +315,7 @@
             <h3><span class="unicode-icon">★</span> Bookmarks</h3>
             <input type="text" id="new-bookmark-name" class="sidebar-input" placeholder="Bookmark Name (optional)">
             <button id="add-current-bookmark-button" class="sidebar-button" style="margin-bottom:10px;">
-                <span class="unicode-icon" style="margin-right: 8px;">➕</span>Bookmark Current
+                <img src="../images/plus-symbol-white.png" alt="Add" class="icon-img">Bookmark Current
             </button>
             <ul id="bookmarks-list"></ul>
         </div>
@@ -319,16 +330,16 @@
         <div id="top-bar-assembly">
             <div id="tab-bar">
                 <div class="new-tab-button" id="new-tab-button" title="New Tab">
-                    <span class="unicode-icon">➕</span>
+                    <img src="../images/plus-symbol-white.png" alt="New Tab" class="icon-img">
                 </div>
             </div>
             <div id="nav-bar">
-                <div class="nav-button" id="home-button" title="Home"><span class="unicode-icon">⌂</span></div>
-                <div class="nav-button" id="back-button" title="Back"><span class="unicode-icon">◀</span></div>
-                <div class="nav-button" id="forward-button" title="Forward"><span class="unicode-icon">▶</span></div>
-                <div class="nav-button" id="refresh-button" title="Refresh"><span class="unicode-icon">↻</span></div>
+                <div class="nav-button" id="home-button" title="Home"><img src="../images/home-white.png" alt="Home" class="icon-img"></div>
+                <div class="nav-button" id="back-button" title="Back"><img src="../images/arrow-left-white.png" alt="Back" class="icon-img"></div>
+                <div class="nav-button" id="forward-button" title="Forward"><img src="../images/arrow-right-white.png" alt="Forward" class="icon-img"></div>
+                <div class="nav-button" id="refresh-button" title="Refresh"><img src="../images/refresh-white.png" alt="Refresh" class="icon-img"></div>
                 <input type="text" id="search-bar" placeholder="Search or type a URL">
-                <div class="nav-button" id="fullscreen-button" title="Toggle Fullscreen"><span class="unicode-icon">⤢</span></div>
+                <div class="nav-button" id="fullscreen-button" title="Toggle Fullscreen"><img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img"></div>
             </div>
         </div>
         <div id="tabs-container"></div>
@@ -343,8 +354,6 @@
 
     <script>
         // --- CONFIGURATION & GLOBAL STATE ---
-        // Edge sensitivities and related auto-hide variables removed
-
         let tabs = [];
         let activeTabId = null;
         let tabCounter = 0;
@@ -364,7 +373,7 @@
             'google_docs': { title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_drive': { title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
             'wikipedia': { title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
-            'new_tab': { title: 'New Tab', faviconUrl: 'logo.png' }
+            'new_tab': { title: 'New Tab', faviconUrl: '../images/title-mini.png' } // Updated favicon
         };
         let currentCloakPresetKey = 'none';
 
@@ -373,10 +382,9 @@
         let sidebarEl, mainContentWrapperEl;
         let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
         let historyListEl;
-        let searchEngineDropdownEl, tabCloakDropdownEl; // autoCloseDelayDropdownEl removed
+        let searchEngineDropdownEl, tabCloakDropdownEl; 
 
         let initialTopBarHeight = 0;
-        // isTopBarHidden and isSidebarHidden state variables removed, assumed visible by default
 
         document.addEventListener('DOMContentLoaded', async () => {
             tabBarEl = document.getElementById('tab-bar');
@@ -421,7 +429,6 @@
             const searchEngineListEl = searchEngineDropdownEl.querySelector('.custom-dropdown-list');
             searchEngineListEl.innerHTML = '';
             for (const value in searchEngines) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = searchEngines[value].name; li.setAttribute('role', 'option'); searchEngineListEl.appendChild(li); }
-            // autoCloseDelayDropdown population removed
             const tabCloakListEl = tabCloakDropdownEl.querySelector('.custom-dropdown-list');
             tabCloakListEl.innerHTML = '';
             for (const value in cloakPresets) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = cloakPresets[value].title || "None (Show Actual)"; li.setAttribute('role', 'option'); tabCloakListEl.appendChild(li); }
@@ -443,24 +450,118 @@
         function handleDropdownItemKeyDown(e) { const item = this; const list = item.closest('.custom-dropdown-list'); const items = Array.from(list.querySelectorAll('.custom-dropdown-list-item')); const currentIndex = items.indexOf(item); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDropdownItem.call(item); } else if (e.key === 'ArrowDown') { e.preventDefault(); items[(currentIndex + 1) % items.length]?.focus(); } else if (e.key === 'ArrowUp') { e.preventDefault(); items[(currentIndex - 1 + items.length) % items.length]?.focus(); } else if (e.key === 'Escape') { e.preventDefault(); const header = list.parentNode.querySelector('.custom-dropdown-header'); list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus(); } }
         function updateSelectedDropdownText(dropdownId, selectedValue) { const dropdownEl = document.getElementById(dropdownId); if (!dropdownEl) return; const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span'); const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item'); let newText = ''; listItems.forEach(item => { if (item.dataset.value === selectedValue) { item.classList.add('selected'); item.setAttribute('aria-selected', 'true'); newText = item.textContent; } else { item.classList.remove('selected'); item.setAttribute('aria-selected', 'false'); } }); if (selectedTextEl && newText) selectedTextEl.textContent = newText; else if (selectedTextEl && dropdownId === 'tab-cloak-dropdown' && selectedValue === 'none') selectedTextEl.textContent = "None (Show Actual)"; }
         function loadSettings() { currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey); currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; updateSelectedDropdownText('tab-cloak-dropdown', currentCloakPresetKey); }
+        
         function setupEventListeners() {
-            fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
+            fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); 
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
             window.addEventListener('resize', () => { updateInitialTopBarHeight(); topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; });
-            newTabButtonEl.addEventListener('click', () => createTab('about:blank')); tabBarEl.addEventListener('click', handleTabBarClick); searchBarEl.addEventListener('keydown', handleSearchEnter);
-            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward()); refreshButtonEl.addEventListener('click', () => { const activeTab=getActiveTab(); if(activeTab?.iframe.contentWindow){try{if(activeTab.iframe.src.includes(__uv$config.prefix))activeTab.iframe.contentWindow.location.reload(true);else activeTab.iframe.contentWindow.location.reload();}catch(e){activeTab.iframe.src=activeTab.iframe.src;}} });
-            addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark); bookmarksListEl.addEventListener('click', handleBookmarkClick); historyListEl.addEventListener('click', handleHistoryClick);
-            document.addEventListener('keydown', handleGlobalKeyDown); document.addEventListener('load', handleIframeLoad, true);
+            newTabButtonEl.addEventListener('click', () => createTab('about:blank')); 
+            tabBarEl.addEventListener('click', handleTabBarClick); 
+            searchBarEl.addEventListener('keydown', handleSearchEnter);
+            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); 
+            backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back()); 
+            forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward()); 
+            refreshButtonEl.addEventListener('click', () => { const activeTab=getActiveTab(); if(activeTab?.iframe.contentWindow){try{if(activeTab.iframe.src.includes(__uv$config.prefix))activeTab.iframe.contentWindow.location.reload(true);else activeTab.iframe.contentWindow.location.reload();}catch(e){activeTab.iframe.src=activeTab.iframe.src;}} });
+            addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark); 
+            bookmarksListEl.addEventListener('click', handleBookmarkClick); 
+            historyListEl.addEventListener('click', handleHistoryClick);
+            document.addEventListener('keydown', handleGlobalKeyDown); 
+            document.addEventListener('load', handleIframeLoad, true);
         }
-        function toggleIframeFullscreen() { if (!document.fullscreenElement) { const activeTab = getActiveTab(); if (activeTab && activeTab.iframe) activeTab.iframe.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
-        function handleFullscreenChange() { const fsIconEl = fullscreenButtonEl.querySelector('.unicode-icon'); if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); if(fsIconEl) fsIconEl.textContent = '⤡'; } else { document.body.classList.remove('app-ui-hidden'); if(fsIconEl) fsIconEl.textContent = '⤢'; } }
 
-        function createTab(url = null) { const tabId = `tab-${tabCounter++}`; const tabElement = document.createElement('div'); tabElement.className = 'tab'; tabElement.dataset.tabId = tabId; tabElement.innerHTML = `<div class="tab-favicon"><span class="unicode-icon">🌐</span></div><div class="tab-title">New Tab</div><div class="tab-close" title="Close Tab"><img src="../images/cross-white.png" alt="Close" class="tab-close-icon"></div>`; tabBarEl.insertBefore(tabElement, newTabButtonEl); const iframe = document.createElement('iframe'); iframe.id = `content-${tabId}`; iframe.className = 'tab-content'; iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox'; iframe.loading = 'eager'; tabsContainerEl.appendChild(iframe); const tab = { id: tabId, element: tabElement, iframe, url: url || 'about:blank', actualTitle: 'New Tab', actualFavicon: null, titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false }; tabs.push(tab); activateTab(tabId); navigateTo(tab.url, tab); return tab; }
+        function toggleIframeFullscreen() { 
+            if (!document.fullscreenElement) { 
+                const activeTab = getActiveTab(); 
+                if (activeTab && activeTab.iframe) activeTab.iframe.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); 
+            } else { 
+                if (document.exitFullscreen) document.exitFullscreen(); 
+            } 
+        }
+
+        function handleFullscreenChange() {
+            const fsButton = fullscreenButtonEl;
+            const fsIconImg = document.getElementById('fullscreen-icon-img'); // Get the <img> element
+
+            if (document.fullscreenElement) {
+                document.body.classList.add('app-ui-hidden');
+                if (fsIconImg) {
+                    // fsIconImg.src = '../images/zoom-out-white.png'; // If you have an exit fullscreen icon
+                    fsIconImg.alt = "Exit Fullscreen"; 
+                }
+                fsButton.title = "Exit Fullscreen";
+            } else {
+                document.body.classList.remove('app-ui-hidden');
+                if (fsIconImg) {
+                    fsIconImg.src = '../images/zoom-in-white.png'; // Reset to zoom-in icon
+                    fsIconImg.alt = "Toggle Fullscreen"; 
+                }
+                fsButton.title = "Toggle Fullscreen";
+            }
+        }
+
+        function createTab(url = null) { 
+            const tabId = `tab-${tabCounter++}`; 
+            const tabElement = document.createElement('div'); 
+            tabElement.className = 'tab'; 
+            tabElement.dataset.tabId = tabId; 
+            // Using title-mini.png as initial/loading icon, consistent with fallback
+            tabElement.innerHTML = `<div class="tab-favicon"><img src="../images/title-mini.png" alt="Tab" class="icon-img"></div><div class="tab-title">New Tab</div><div class="tab-close" title="Close Tab"><img src="../images/cross-white.png" alt="Close" class="tab-close-icon"></div>`; 
+            tabBarEl.insertBefore(tabElement, newTabButtonEl); 
+            const iframe = document.createElement('iframe'); 
+            iframe.id = `content-${tabId}`; 
+            iframe.className = 'tab-content'; 
+            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox'; 
+            iframe.loading = 'eager'; 
+            tabsContainerEl.appendChild(iframe); 
+            const tab = { id: tabId, element: tabElement, iframe, url: url || 'about:blank', actualTitle: 'New Tab', actualFavicon: '../images/title-mini.png', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false }; 
+            tabs.push(tab); 
+            activateTab(tabId); 
+            navigateTo(tab.url, tab); 
+            return tab; 
+        }
         function activateTab(tabId) { if (!tabId && tabs.length > 0) tabId = tabs[0].id; if (!tabId) return; tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); }); const tab = tabs.find(t => t.id === tabId); if (tab) { tab.element.classList.add('active'); tab.iframe.classList.add('active'); activeTabId = tabId; searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); updateTabInfo(tab, tab.actualTitle, tab.actualFavicon); document.title = "VERN MAX - SEARCH"; } }
         function closeTab(tabId) { const tabIndex = tabs.findIndex(t => t.id === tabId); if (tabIndex === -1) return; const tab = tabs[tabIndex]; if (tab.titleObserver) tab.titleObserver.disconnect(); if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1); if (activeTabId === tabId) { if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id); else createTab('about:blank'); } }
         function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
-        function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) { if (!tab) return; tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...')); tab.actualFavicon = actualPageFaviconUrl || tab.actualFavicon; const cloak = cloakPresets[currentCloakPresetKey] || cloakPresets['none']; let displayTitleOnTab, displayFaviconUrlOnTab; if (currentCloakPresetKey !== 'none' && cloak.title) { displayTitleOnTab = cloak.title; displayFaviconUrlOnTab = cloak.faviconUrl; } else { displayTitleOnTab = tab.actualTitle; displayFaviconUrlOnTab = tab.actualFavicon; } tab.titleElement.textContent = displayTitleOnTab.length > 20 ? displayTitleOnTab.substring(0, 18) + '...' : displayTitleOnTab; tab.titleElement.title = displayTitleOnTab; const faviconContainer = tab.faviconElement; if (displayFaviconUrlOnTab) faviconContainer.innerHTML = `<img src="${displayFaviconUrlOnTab}" alt="" onerror="this.parentNode.innerHTML = '<span class=\\'unicode-icon\\'>🌐</span>';">`; else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http') && (!cloakPresets[currentCloakPresetKey] || !cloakPresets[currentCloakPresetKey].faviconUrl)) { try { const siteUrl = new URL(tab.url); faviconContainer.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" onerror="this.parentNode.innerHTML = '<span class=\\'unicode-icon\\'>🌐</span>';">`; } catch (e) { faviconContainer.innerHTML = `<span class="unicode-icon">🌐</span>`; } } else { faviconContainer.innerHTML = `<span class="unicode-icon">🌐</span>`; } document.title = "VERN MAX - SEARCH"; }
+        
+        function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) {
+            if (!tab) return;
+            tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
+            tab.actualFavicon = actualPageFaviconUrl || tab.actualFavicon;
+
+            const cloak = cloakPresets[currentCloakPresetKey] || cloakPresets['none'];
+            let displayTitleOnTab, displayFaviconUrlOnTab;
+
+            if (currentCloakPresetKey !== 'none' && cloak.title) {
+                displayTitleOnTab = cloak.title;
+                displayFaviconUrlOnTab = cloak.faviconUrl;
+            } else {
+                displayTitleOnTab = tab.actualTitle;
+                displayFaviconUrlOnTab = tab.actualFavicon;
+            }
+
+            tab.titleElement.textContent = displayTitleOnTab.length > 20 ? displayTitleOnTab.substring(0, 18) + '...' : displayTitleOnTab;
+            tab.titleElement.title = displayTitleOnTab;
+
+            const faviconContainer = tab.faviconElement;
+            let defaultFaviconHTML = `<img src="../images/title-mini.png" alt="Tab" class="icon-img default-favicon-img">`;
+
+            if (displayFaviconUrlOnTab) {
+                faviconContainer.innerHTML = `<img src="${displayFaviconUrlOnTab}" alt="" class="icon-img" onerror="this.outerHTML = '${defaultFaviconHTML}';">`;
+            } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http') && (!cloakPresets[currentCloakPresetKey] || !cloakPresets[currentCloakPresetKey].faviconUrl)) {
+                try {
+                    const siteUrl = new URL(tab.url);
+                    faviconContainer.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" class="icon-img" onerror="this.outerHTML = '${defaultFaviconHTML}';">`;
+                } catch (e) {
+                    faviconContainer.innerHTML = defaultFaviconHTML;
+                }
+            } else {
+                faviconContainer.innerHTML = defaultFaviconHTML;
+            }
+            document.title = "VERN MAX - SEARCH";
+        }
+
         function formatUrlInput(input) { if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
-        function navigateTo(urlInput, tab = null) { let currentTab = tab || getActiveTab(); if (!currentTab) { currentTab = createTab(urlInput); return; } currentTab.isLoading = true; updateTabInfo(currentTab, "Loading...", null); if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank'; if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { currentTab.iframe.src = urlInput; currentTab.url = urlInput; if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput; updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, null); if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url); currentTab.isLoading = false; return; } let targetUrl = formatUrlInput(urlInput.trim()); if (!targetUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); } if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Error: UV Config Missing", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return; } try { const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl); currentTab.iframe.src = proxiedUrl; currentTab.url = targetUrl; if (currentTab.id === activeTabId) searchBarEl.value = targetUrl; } catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Navigation Error", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; } }
+        function navigateTo(urlInput, tab = null) { let currentTab = tab || getActiveTab(); if (!currentTab) { currentTab = createTab(urlInput); return; } currentTab.isLoading = true; updateTabInfo(currentTab, "Loading...", '../images/title-mini.png'); if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank'; if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { currentTab.iframe.src = urlInput; currentTab.url = urlInput; if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput; updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, '../images/title-mini.png'); if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url); currentTab.isLoading = false; return; } let targetUrl = formatUrlInput(urlInput.trim()); if (!targetUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); } if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Error: UV Config Missing", '../images/title-mini.png'); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return; } try { const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl); currentTab.iframe.src = proxiedUrl; currentTab.url = targetUrl; if (currentTab.id === activeTabId) searchBarEl.value = targetUrl; } catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Navigation Error", '../images/title-mini.png'); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; } }
         function updateInitialTopBarHeight() { const currentDisplay = topBarAssemblyEl.style.display; topBarAssemblyEl.style.display = ''; topBarAssemblyEl.style.maxHeight = 'none'; initialTopBarHeight = topBarAssemblyEl.offsetHeight; topBarAssemblyEl.style.display = currentDisplay; if (!document.body.classList.contains('app-ui-hidden')) { topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; } }
         function handleTabBarClick(e) { const tabElement = e.target.closest('.tab'); if (e.target.closest('.tab-close') && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); } else if (tabElement) activateTab(tabElement.dataset.tabId); }
         function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
@@ -476,7 +577,6 @@
         function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
         function renderHistory() { historyListEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = document.createElement('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; const titleSpan = document.createElement('span'); titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li); });}
         function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); }}
-        // applyTheme function removed
     </script>
 </body>
 </html>
