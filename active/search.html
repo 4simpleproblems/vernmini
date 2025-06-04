@@ -14,7 +14,1292 @@
             --current-theme-accent: #0095ff; /* Bright Blue */
             --current-theme-neutral: #2a2e34; /* Slightly Lighter Dark Gray */
             --current-theme-button-text: #ffffff;
+            --current-theme-shadow-rgb: 0, 0, 0; /* Black for shadows */<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VERN MAX - SEARCH</title>
+    <link rel="stylesheet" href="../css/style.css" /> <link rel="icon" type="image/x-icon" href="logo.png" />
+    <style id="custom-styles">
+        /* Core Theme Variables & Component Mappings */
+        :root {
+            /* Default Theme: Obsidian Dark */
+            --current-theme-bg: #1c1e22;
+            --current-theme-text: #e1e1e1;
+            --current-theme-accent: #0095ff; /* Bright Blue */
+            --current-theme-neutral: #2a2e34; /* Slightly Lighter Dark Gray */
+            --current-theme-button-text: #ffffff;
             --current-theme-shadow-rgb: 0, 0, 0; /* Black for shadows */
+            --current-theme-shadow-opacity-strong: 0.4;
+            --current-theme-shadow-opacity-medium: 0.2;
+            --current-theme-shadow-opacity-light: 0.1;
+            --current-theme-focus-ring-color: var(--current-theme-accent);
+
+            /* Universal Mappings to Component Variables */
+            --bg-color: var(--current-theme-bg);
+            --text-color: var(--current-theme-text);
+            --iframe-bg: var(--current-theme-bg);
+            --footer-text-color: var(--current-theme-text);
+            --font-family-main: 'PrimaryFont', sans-serif;
+            --sidebar-width: 280px;
+
+            /* Navbar & Top Bar */
+            --navbar-bg: var(--current-theme-neutral);
+            --navbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
+            --tab-bg: color-mix(in srgb, var(--current-theme-neutral) 85%, var(--current-theme-bg));
+            --tab-active-bg: var(--current-theme-accent);
+            --tab-border: color-mix(in srgb, var(--current-theme-neutral) 60%, var(--current-theme-text));
+            --tab-hover-bg: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-accent));
+
+            /* Buttons */
+            --button-bg: var(--current-theme-accent);
+            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, var(--current-theme-text));
+            --button-text-color: var(--current-theme-button-text);
+
+            /* Inputs */
+            --input-bg: color-mix(in srgb, var(--current-theme-neutral) 90%, var(--current-theme-bg));
+            --input-focus-bg: var(--current-theme-bg);
+            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 50%, transparent);
+
+            /* Sidebar */
+            --sidebar-bg: color-mix(in srgb, var(--current-theme-neutral) 95%, var(--current-theme-bg));
+            --sidebar-item-hover-bg: var(--current-theme-accent);
+            --sidebar-border-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
+            --sidebar-outline-color: color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
+
+            /* Dropdowns */
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: color-mix(in srgb, var(--input-bg) 80%, var(--current-theme-text));
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        /* Arctic Light Theme */
+        body.theme-arctic-light {
+            --current-theme-bg: #f5f7fa;
+            --current-theme-text: #2d3748;
+            --current-theme-accent: #3182ce;
+            --current-theme-neutral: #e2e8f0;
+            --current-theme-button-text: #ffffff;
+            --current-theme-shadow-rgb: 45, 55, 72; /* Dark slate gray for softer shadows */
+            --current-theme-shadow-opacity-strong: 0.15;
+            --current-theme-shadow-opacity-medium: 0.08;
+            --current-theme-shadow-opacity-light: 0.05;
+        }
+
+        /* Emerald Depths Theme */
+        body.theme-emerald-depths {
+            --current-theme-bg: #0f2923;
+            --current-theme-text: #cce8e3;
+            --current-theme-accent: #38a169;
+            --current-theme-neutral: #1a3f36;
+            --current-theme-button-text: #ffffff;
+        }
+
+        /* Golden Sands Theme */
+        body.theme-golden-sands {
+            --current-theme-bg: #3e2723;
+            --current-theme-text: #fff3e0;
+            --current-theme-accent: #ff9800;
+            --current-theme-neutral: #5d4037;
+            --current-theme-button-text: #212121;
+        }
+
+        /* Royal Purple Theme */
+        body.theme-royal-purple {
+            --current-theme-bg: #23192d;
+            --current-theme-text: #e6e0f0;
+            --current-theme-accent: #8a2be2;
+            --current-theme-neutral: #3b2c4a;
+            --current-theme-button-text: #ffffff;
+        }
+
+
+        html, body {
+            margin: 0; padding: 0; border: none; box-sizing: border-box;
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: var(--font-family-main);
+            background-color: var(--bg-color); color: var(--text-color);
+            display: flex;
+        }
+
+        canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+        }
+
+        #sidebar {
+            width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border-color);
+            padding: 20px 15px; box-sizing: border-box;
+            overflow-y: auto; transition: margin-left 0.35s ease-in-out, width 0.35s ease-in-out;
+            z-index: 1001; display: flex; flex-direction: column; gap: 25px;
+            font-family: var(--font-family-main);
+        }
+        #sidebar.hidden { margin-left: calc(-1 * var(--sidebar-width)); }
+        #sidebar h3 {
+            margin-top: 0; margin-bottom: 12px; font-size: 1em;
+            border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 10px;
+            font-weight: 600;
+            display: flex; align-items: center; gap: 8px;
+        }
+        #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; }
+        #sidebar ul::-webkit-scrollbar { width: 5px; }
+        #sidebar ul::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
+
+        #sidebar li {
+            padding: 10px 18px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+            background-color: var(--button-bg);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            color: var(--button-text-color);
+        }
+        #sidebar li:hover {
+            background-color: var(--button-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+        }
+        #sidebar li .bookmark-url, #sidebar li .history-url {
+            font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
+        }
+
+        #sidebar .sidebar-input {
+            width: 100%;
+            height: 40px;
+            padding: 0 18px;
+            margin-bottom: 12px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family-main);
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            font-size: 0.9em;
+        }
+        #sidebar .sidebar-input:focus {
+            outline: none;
+            background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow);
+        }
+
+        #sidebar .sidebar-button {
+            width: 100%;
+            height: 40px;
+            padding: 0 18px;
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+            font-family: var(--font-family-main);
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        #sidebar .sidebar-button:hover {
+            background-color: var(--button-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+        }
+
+        /* Custom Dropdown Styles */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            font-family: var(--font-family-main);
+            color: var(--dropdown-text-color);
+        }
+
+        .custom-dropdown-header {
+            width: 100%;
+            height: 40px;
+            padding: 0 18px;
+            background-color: var(--dropdown-bg);
+            border: none;
+            border-radius: 8px;
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .custom-dropdown-header:hover {
+            background-color: var(--dropdown-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
+        }
+
+        .custom-dropdown-header:focus {
+            outline: none;
+            background-color: var(--dropdown-hover-bg);
+            box-shadow: var(--input-focus-shadow);
+        }
+
+        .custom-dropdown-header .fas {
+            margin-left: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-dropdown-header.open .fas {
+            transform: rotate(180deg);
+        }
+
+        .custom-dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--dropdown-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
+            list-style: none;
+            padding: 10px 0;
+            margin: 5px 0 0 0;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+
+        .custom-dropdown-list.show {
+            display: block;
+        }
+
+        .custom-dropdown-list::-webkit-scrollbar { width: 5px; }
+        .custom-dropdown-list::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
+
+
+        .custom-dropdown-list-item {
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-dropdown-list-item:hover {
+            background-color: var(--dropdown-item-hover-bg);
+            color: var(--button-text-color); /* Ensure text on hover is readable */
+        }
+
+        .custom-dropdown-list-item.selected {
+            font-weight: bold;
+            background-color: color-mix(in srgb, var(--current-theme-accent) 30%, transparent);
+            color: var(--button-text-color); /* Ensure text on selected is readable */
+        }
+
+
+        #main-content-wrapper {
+            flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+        }
+        #top-bar-assembly {
+            overflow: hidden;
+            transition: max-height 0.30s ease-in-out; /* Slightly faster transition */
+        }
+        #top-bar-assembly.hidden {
+            max-height: 0 !important;
+            border-bottom-width: 0; /* Hide border when hidden */
+        }
+
+        #tab-bar {
+            display: flex; background-color: var(--navbar-bg); padding: 10px 12px;
+            overflow-x: auto; white-space: nowrap; scrollbar-width: thin;
+            position: relative; align-items: center; gap: 8px;
+        }
+        #tab-bar::-webkit-scrollbar { height: 3px; }
+        #tab-bar::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
+        .tab {
+            display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
+            padding: 0 12px; background-color: var(--tab-bg); border-radius: 8px; cursor: pointer;
+            transition: all 0.2s ease; overflow: hidden; position: relative;
+            box-shadow: 0 0 0 1px var(--tab-border);
+        }
+        .tab.active {
+            background-color: var(--tab-active-bg);
+            color: var(--button-text-color);
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--current-theme-accent) 70%, var(--current-theme-text));
+        }
+        .tab.active .tab-title { color: var(--button-text-color); } /* Ensure title color matches */
+        .tab.active .tab-favicon i { color: var(--button-text-color); }
+
+        .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
+        .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--text-color); }
+        .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
+        .tab-close:hover { opacity: 1; background-color: rgba(var(--current-theme-shadow-rgb),0.2); }
+        .new-tab-button {
+            width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 25%;
+            display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
+            color: var(--button-text-color);
+            cursor: pointer; transition: background-color 0.2s;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+        }
+        .new-tab-button:hover { background-color: var(--button-hover-bg); }
+
+        #nav-bar {
+            display: flex; align-items: center; padding: 10px;
+            background-color: var(--navbar-bg); box-shadow: var(--navbar-shadow);
+            border-bottom: 1px solid var(--sidebar-border-color); /* Thinner border */
+        }
+        .nav-button {
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+            margin-right: 10px; border-radius: 25%; background-color: var(--button-bg);
+            cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+        }
+        .nav-button:hover { background-color: var(--button-hover-bg); }
+        .nav-button#pin-button.active { /* Style for active pin */
+            background-color: var(--text-color); /* Example: Invert colors */
+            color: var(--bg-color);
+            box-shadow: 0 0 0 1.5px var(--current-theme-accent);
+        }
+
+        #search-bar {
+            flex: 1; height: 40px; border-radius: 8px; border: none; background-color: var(--input-bg);
+            color: var(--text-color); padding: 0 18px; font-size: 15px;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-family: var(--font-family-main);
+        }
+        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+
+        #toggle-top-bar-button, #toggle-sidebar-button {
+            position: fixed; z-index: 1002; width: 40px; height: 32px;
+            background-color: var(--navbar-bg); cursor: pointer; display: flex;
+            justify-content: center; align-items: center; color: var(--text-color);
+            transition: top 0.35s ease-in-out, left 0.35s ease-in-out, background-color 0.2s ease-in-out, transform 0.35s ease-in-out;
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color);
+        }
+        #toggle-top-bar-button:hover, #toggle-sidebar-button:hover { background-color: var(--button-hover-bg); color: var(--button-text-color);}
+        #toggle-top-bar-button .fas, #toggle-sidebar-button .fas { font-size: 14px; transition: transform 0.3s ease-in-out; }
+        #toggle-top-bar-button {
+            right: 2px; border-radius: 0 0 12px 12px;
+        }
+        #toggle-sidebar-button {
+            left: 0px; bottom: 2px; border-radius: 0 12px 12px 0;
+        }
+
+        #tabs-container { flex: 1; position: relative; background-color: var(--iframe-bg); }
+        .tab-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; border: none; }
+        .tab-content.active { display: block; }
+        .footer-label {
+            position: fixed; bottom: 0; right: 0; margin: 1rem; font-family: var(--font-family-main);
+            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+        }
+        .sidebar-setting-label { display:block; margin-bottom:8px; font-size: 0.9em; font-weight: 500; }
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div id="sidebar">
+        <div id="sidebar-header" style="padding-bottom: 10px; border-bottom: 1px solid var(--sidebar-border-color);">
+            <h2 style="text-align: center; margin-bottom: 0; font-size: 1.4em; font-weight: bold;">Vern Max</h2>
+        </div>
+
+        <div id="bookmarks-section">
+            <h3><i class="fas fa-bookmark"></i> Bookmarks</h3>
+            <input type="text" id="new-bookmark-name" class="sidebar-input" placeholder="Bookmark Name (optional)">
+            <button id="add-current-bookmark-button" class="sidebar-button" style="margin-bottom:10px;">
+                <i class="fas fa-plus" style="margin-right: 8px;"></i>Bookmark Current
+            </button>
+            <ul id="bookmarks-list"></ul>
+        </div>
+
+        <div id="history-section">
+            <h3><i class="fas fa-history"></i> Session History</h3>
+            <ul id="history-list"></ul>
+        </div>
+
+        <div id="settings-section">
+            <h3><i class="fas fa-cog"></i> Settings</h3>
+            <label for="theme-dropdown" class="sidebar-setting-label">Theme:</label>
+            <div class="custom-dropdown" id="theme-dropdown">
+                <div class="custom-dropdown-header" tabindex="0">
+                    <span id="selected-theme-text">Obsidian Dark</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <ul class="custom-dropdown-list" role="listbox">
+                    <li class="custom-dropdown-list-item" data-value="obsidian-dark" role="option" aria-selected="true">Obsidian Dark</li>
+                    <li class="custom-dropdown-list-item" data-value="arctic-light" role="option">Arctic Light</li>
+                    <li class="custom-dropdown-list-item" data-value="emerald-depths" role="option">Emerald Depths</li>
+                    <li class="custom-dropdown-list-item" data-value="golden-sands" role="option">Golden Sands</li>
+                    <li class="custom-dropdown-list-item" data-value="royal-purple" role="option">Royal Purple</li>
+                </ul>
+            </div>
+
+            <label for="search-engine-dropdown" class="sidebar-setting-label" style="margin-top: 15px;">Search Engine:</label>
+            <div class="custom-dropdown" id="search-engine-dropdown">
+                <div class="custom-dropdown-header" tabindex="0">
+                    <span id="selected-search-engine-text">DuckDuckGo</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <ul class="custom-dropdown-list" role="listbox">
+                    <li class="custom-dropdown-list-item" data-value="duckduckgo" role="option" aria-selected="true">DuckDuckGo</li>
+                    <li class="custom-dropdown-list-item" data-value="google" role="option">Google</li>
+                    <li class="custom-dropdown-list-item" data-value="bing" role="option">Bing</li>
+                    <li class="custom-dropdown-list-item" data-value="brave" role="option">Brave Search</li>
+                </ul>
+            </div>
+
+            <label for="autoclose-delay-dropdown" class="sidebar-setting-label" style="margin-top: 15px;">Autoclose Delay (Top Bar):</label>
+            <div class="custom-dropdown" id="autoclose-delay-dropdown">
+                <div class="custom-dropdown-header" tabindex="0">
+                    <span id="selected-autoclose-delay-text">1 Second</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <ul class="custom-dropdown-list" role="listbox">
+                    <li class="custom-dropdown-list-item" data-value="0" role="option">Instant</li>
+                    <li class="custom-dropdown-list-item" data-value="1000" role="option" aria-selected="true">1 Second</li>
+                    <li class="custom-dropdown-list-item" data-value="3000" role="option">3 Seconds</li>
+                    <li class="custom-dropdown-list-item" data-value="5000" role="option">5 Seconds</li>
+                    <li class="custom-dropdown-list-item" data-value="10000" role="option">10 Seconds</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="toggle-sidebar-button" title="Toggle Sidebar">
+        <i id="toggle-sidebar-icon" class="fas fa-chevron-left"></i>
+    </div>
+
+    <div id="main-content-wrapper">
+        <div id="top-bar-assembly">
+            <div id="tab-bar">
+                <div class="new-tab-button" id="new-tab-button" title="New Tab">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </div>
+            <div id="nav-bar">
+                <div class="nav-button" id="home-button" title="Home"> <i class="fas fa-home"></i> </div>
+                <div class="nav-button" id="back-button" title="Back"> <i class="fas fa-arrow-left"></i> </div>
+                <div class="nav-button" id="forward-button" title="Forward"> <i class="fas fa-arrow-right"></i> </div>
+                <div class="nav-button" id="refresh-button" title="Refresh"> <i class="fas fa-redo"></i> </div>
+                <input type="text" id="search-bar" placeholder="Search or type a URL">
+                <div class="nav-button" id="pin-button" title="Pin Toolbar & Sidebar"> <i id="pin-icon" class="fas fa-thumbtack"></i> </div>
+            </div>
+        </div>
+
+        <div id="toggle-top-bar-button" title="Hide Toolbar">
+            <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
+        </div>
+
+        <div id="tabs-container"></div>
+    </div>
+
+    <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Max by 4SP</a>
+
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script>
+    <script src="stars.js" defer></script>
+
+    <script>
+        // --- CONFIGURATION & GLOBAL STATE ---
+        let tabs = [];
+        let activeTabId = null;
+        let tabCounter = 0;
+        let sessionHistory = [];
+        const MAX_HISTORY_ITEMS = 50;
+
+        const searchEngines = {
+            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
+            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+        };
+        let currentSearchEngineKey = 'duckduckgo';
+
+        const themes = {
+            'obsidian-dark': 'Obsidian Dark',
+            'arctic-light': 'Arctic Light',
+            'emerald-depths': 'Emerald Depths',
+            'golden-sands': 'Golden Sands',
+            'royal-purple': 'Royal Purple'
+        };
+
+        const autoCloseDelayMap = {
+            0: 'Instant',
+            1000: '1 Second',
+            3000: '3 Seconds',
+            5000: '5 Seconds',
+            10000: '10 Seconds'
+        };
+        let currentAutoCloseDelay = 1000; // Default: 1 second
+
+        // --- DOM ELEMENT REFERENCES ---
+        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, pinButtonEl, pinIconEl;
+        let topBarAssemblyEl, toggleTopBarButtonEl, toggleBarIconEl;
+        let sidebarEl, toggleSidebarButtonEl, toggleSidebarIconEl, mainContentWrapperEl;
+        let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
+        let historyListEl;
+        let themeDropdownEl, searchEngineDropdownEl, autoCloseDelayDropdownEl;
+        let selectedThemeTextEl, selectedSearchEngineTextEl, selectedAutoCloseDelayTextEl;
+
+        let initialTopBarHeight = 0;
+        let isTopBarHidden = false;
+        let isSidebarHidden = false;
+
+        let isGloballyPinned = false;
+        let topBarAutoHideTimeoutId = null;
+        let isMouseOverTopBar = false;
+        let isSearchBarFocused = false;
+
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            tabBarEl = document.getElementById('tab-bar');
+            tabsContainerEl = document.getElementById('tabs-container');
+            searchBarEl = document.getElementById('search-bar');
+            newTabButtonEl = document.getElementById('new-tab-button');
+            homeButtonEl = document.getElementById('home-button');
+            backButtonEl = document.getElementById('back-button');
+            forwardButtonEl = document.getElementById('forward-button');
+            refreshButtonEl = document.getElementById('refresh-button');
+            pinButtonEl = document.getElementById('pin-button');
+            pinIconEl = document.getElementById('pin-icon');
+
+            topBarAssemblyEl = document.getElementById('top-bar-assembly');
+            toggleTopBarButtonEl = document.getElementById('toggle-top-bar-button');
+            toggleBarIconEl = document.getElementById('toggle-bar-icon');
+
+            sidebarEl = document.getElementById('sidebar');
+            toggleSidebarButtonEl = document.getElementById('toggle-sidebar-button');
+            toggleSidebarIconEl = document.getElementById('toggle-sidebar-icon');
+            mainContentWrapperEl = document.getElementById('main-content-wrapper');
+
+            bookmarksListEl = document.getElementById('bookmarks-list');
+            addCurrentBookmarkButtonEl = document.getElementById('add-current-bookmark-button');
+            newBookmarkNameInputEl = document.getElementById('new-bookmark-name');
+            historyListEl = document.getElementById('history-list');
+
+            themeDropdownEl = document.getElementById('theme-dropdown');
+            searchEngineDropdownEl = document.getElementById('search-engine-dropdown');
+            autoCloseDelayDropdownEl = document.getElementById('autoclose-delay-dropdown');
+
+            selectedThemeTextEl = document.getElementById('selected-theme-text');
+            selectedSearchEngineTextEl = document.getElementById('selected-search-engine-text');
+            selectedAutoCloseDelayTextEl = document.getElementById('selected-autoclose-delay-text');
+
+            await initUV();
+            setupCustomDropdowns();
+            loadSettings(); // Loads theme, search engine, pin state, and autoclose delay
+
+            updateInitialTopBarHeight();
+            // Initial state based on loaded settings (isGloballyPinned might affect this)
+            if (isGloballyPinned) {
+                handleTopBarToggle(false); // Show
+                handleSidebarToggle(false); // Show
+            } else {
+                if (isTopBarHidden) { // If not pinned, respect loaded isTopBarHidden
+                    topBarAssemblyEl.style.maxHeight = '0px';
+                    topBarAssemblyEl.classList.add('hidden');
+                    // handleTopBarToggle(true) will be called effectively by this
+                } else {
+                     topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                }
+            }
+
+
+            if (isSidebarHidden && !isGloballyPinned) { // Only hide sidebar if not pinned
+                sidebarEl.classList.add('hidden');
+                toggleSidebarIconEl.className = 'fas fa-chevron-right';
+                toggleSidebarButtonEl.style.left = '0px';
+                toggleSidebarButtonEl.title = "Show Sidebar";
+            } else { // Show sidebar if pinned or not hidden
+                sidebarEl.classList.remove('hidden');
+                toggleSidebarIconEl.className = 'fas fa-chevron-left';
+                toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                toggleSidebarButtonEl.title = "Hide Sidebar";
+            }
+            updatePinButtonVisual();
+
+            setupEventListeners();
+            loadBookmarks();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialUrl = urlParams.get('url');
+            if (tabs.length === 0) createTab(initialUrl || 'about:blank');
+            renderHistory();
+            // applyTheme is called within loadSettings
+        });
+
+        async function initUV() {
+            try {
+                if (typeof registerSW !== 'function') {
+                    console.warn("registerSW() function not found. UV Service Worker might not be registered.");
+                    return;
+                }
+                await registerSW();
+            } catch (err) {
+                console.error("Failed to register UV service worker:", err);
+                alert("Error: Could not initialize proxy service. Some websites may not load correctly.");
+            }
+        }
+
+        function setupCustomDropdowns() {
+            // Populate Theme Dropdown
+            const themeListEl = themeDropdownEl.querySelector('.custom-dropdown-list');
+            themeListEl.innerHTML = '';
+            for (const value in themes) {
+                const li = document.createElement('li');
+                li.className = 'custom-dropdown-list-item';
+                li.dataset.value = value;
+                li.textContent = themes[value];
+                li.setAttribute('role', 'option');
+                themeListEl.appendChild(li);
+            }
+
+            // Populate Search Engine Dropdown
+            const searchEngineListEl = searchEngineDropdownEl.querySelector('.custom-dropdown-list');
+            searchEngineListEl.innerHTML = '';
+            for (const value in searchEngines) {
+                const li = document.createElement('li');
+                li.className = 'custom-dropdown-list-item';
+                li.dataset.value = value;
+                li.textContent = searchEngines[value].name;
+                li.setAttribute('role', 'option');
+                searchEngineListEl.appendChild(li);
+            }
+
+            // Populate Autoclose Delay Dropdown
+            const autoCloseListEl = autoCloseDelayDropdownEl.querySelector('.custom-dropdown-list');
+            autoCloseListEl.innerHTML = '';
+            for (const value in autoCloseDelayMap) {
+                const li = document.createElement('li');
+                li.className = 'custom-dropdown-list-item';
+                li.dataset.value = value;
+                li.textContent = autoCloseDelayMap[value];
+                li.setAttribute('role', 'option');
+                autoCloseListEl.appendChild(li);
+            }
+
+            document.querySelectorAll('.custom-dropdown-header').forEach(header => {
+                header.addEventListener('click', toggleDropdown);
+                header.addEventListener('keydown', handleDropdownKeyDown);
+            });
+            document.querySelectorAll('.custom-dropdown-list-item').forEach(item => {
+                item.addEventListener('click', selectDropdownItem);
+                item.addEventListener('keydown', handleDropdownItemKeyDown);
+            });
+
+            document.addEventListener('click', (e) => {
+                document.querySelectorAll('.custom-dropdown-list.show').forEach(list => {
+                    if (!list.parentNode.contains(e.target)) {
+                        list.classList.remove('show');
+                        list.parentNode.querySelector('.custom-dropdown-header').classList.remove('open');
+                    }
+                });
+            });
+             document.addEventListener('focusin', (e) => { // Also close on focusout
+                document.querySelectorAll('.custom-dropdown-list.show').forEach(list => {
+                    if (!list.parentNode.contains(e.target) && !list.parentNode.querySelector('.custom-dropdown-header').contains(e.target)) {
+                        list.classList.remove('show');
+                        list.parentNode.querySelector('.custom-dropdown-header').classList.remove('open');
+                    }
+                });
+            });
+        }
+
+        function toggleDropdown() {
+            const header = this;
+            const list = header.nextElementSibling;
+            const isOpen = list.classList.toggle('show');
+            header.classList.toggle('open', isOpen);
+            header.setAttribute('aria-expanded', isOpen.toString());
+
+            document.querySelectorAll('.custom-dropdown-list.show').forEach(otherList => {
+                if (otherList !== list) {
+                    otherList.classList.remove('show');
+                    const otherHeader = otherList.parentNode.querySelector('.custom-dropdown-header');
+                    otherHeader.classList.remove('open');
+                    otherHeader.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            if (isOpen) {
+                const selectedItem = list.querySelector('.custom-dropdown-list-item.selected') || list.querySelector('.custom-dropdown-list-item');
+                if (selectedItem) selectedItem.focus();
+            }
+        }
+
+        function handleDropdownKeyDown(e) {
+            const header = this;
+            const list = header.nextElementSibling;
+            const isOpen = list.classList.contains('show');
+
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown.call(header); }
+            else if (e.key === 'ArrowDown' && !isOpen) { e.preventDefault(); toggleDropdown.call(header); }
+            else if (e.key === 'ArrowDown' && isOpen) { e.preventDefault(); list.querySelector('.custom-dropdown-list-item')?.focus(); }
+            else if (e.key === 'Escape' && isOpen) { e.preventDefault(); list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus(); }
+        }
+
+        function selectDropdownItem() {
+            const item = this;
+            const dropdown = item.closest('.custom-dropdown');
+            const header = dropdown.querySelector('.custom-dropdown-header');
+            const list = dropdown.querySelector('.custom-dropdown-list');
+            const value = item.dataset.value;
+
+            updateSelectedDropdownText(dropdown.id, value); // This will update text and classes
+
+            list.classList.remove('show');
+            header.classList.remove('open');
+            header.setAttribute('aria-expanded', 'false');
+            header.focus();
+
+            if (dropdown.id === 'theme-dropdown') {
+                applyTheme(value);
+            } else if (dropdown.id === 'search-engine-dropdown') {
+                currentSearchEngineKey = value;
+                localStorage.setItem('vernSearchEngine', currentSearchEngineKey);
+            } else if (dropdown.id === 'autoclose-delay-dropdown') {
+                currentAutoCloseDelay = parseInt(value, 10);
+                localStorage.setItem('vernAutoCloseDelay', currentAutoCloseDelay);
+            }
+        }
+
+        function handleDropdownItemKeyDown(e) {
+            const item = this;
+            const list = item.closest('.custom-dropdown-list');
+            const items = Array.from(list.querySelectorAll('.custom-dropdown-list-item'));
+            const currentIndex = items.indexOf(item);
+
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDropdownItem.call(item); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); items[(currentIndex + 1) % items.length]?.focus(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); items[(currentIndex - 1 + items.length) % items.length]?.focus(); }
+            else if (e.key === 'Escape') {
+                e.preventDefault();
+                const header = list.parentNode.querySelector('.custom-dropdown-header');
+                list.classList.remove('show');
+                header.classList.remove('open');
+                header.setAttribute('aria-expanded', 'false');
+                header.focus();
+            }
+        }
+
+        function updateSelectedDropdownText(dropdownId, selectedValue) {
+            const dropdownEl = document.getElementById(dropdownId);
+            if (!dropdownEl) return;
+            const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span');
+            const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item');
+            let newText = '';
+
+            listItems.forEach(item => {
+                if (item.dataset.value === selectedValue) {
+                    item.classList.add('selected');
+                    item.setAttribute('aria-selected', 'true');
+                    newText = item.textContent;
+                } else {
+                    item.classList.remove('selected');
+                    item.setAttribute('aria-selected', 'false');
+                }
+            });
+            if (selectedTextEl && newText) selectedTextEl.textContent = newText;
+        }
+
+        function loadSettings() {
+            const savedTheme = localStorage.getItem('vernTheme') || 'obsidian-dark';
+            applyTheme(savedTheme); // Applies and updates dropdown
+
+            const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
+            currentSearchEngineKey = savedSearchEngine;
+            updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey);
+
+            const savedDelay = localStorage.getItem('vernAutoCloseDelay');
+            currentAutoCloseDelay = savedDelay !== null ? parseInt(savedDelay, 10) : 1000;
+            updateSelectedDropdownText('autoclose-delay-dropdown', currentAutoCloseDelay.toString());
+
+            isGloballyPinned = localStorage.getItem('vernIsGloballyPinned') === 'true';
+            // isTopBarHidden is managed by its own logic on load based on pin state
+            isTopBarHidden = localStorage.getItem('vernIsTopBarHidden') === 'true'; // Load this state
+             if (isGloballyPinned) {
+                isTopBarHidden = false; // If pinned, top bar should not start hidden by default
+            }
+
+
+            isSidebarHidden = localStorage.getItem('vernIsSidebarHidden') === 'true';
+            if (isGloballyPinned) {
+                 isSidebarHidden = false; // If pinned, sidebar should not start hidden
+            }
+        }
+
+        function setupEventListeners() {
+            toggleTopBarButtonEl.addEventListener('click', () => {
+                handleTopBarToggle(); // Toggle current state
+                if (!isTopBarHidden && !isGloballyPinned) { // If shown manually and not pinned
+                    startTopBarAutoHideTimer();
+                } else if (isTopBarHidden) {
+                    clearTimeout(topBarAutoHideTimeoutId);
+                }
+            });
+            toggleSidebarButtonEl.addEventListener('click', handleSidebarToggle);
+            pinButtonEl.addEventListener('click', toggleGlobalPin);
+
+            window.addEventListener('resize', () => {
+                if (!isTopBarHidden) updateInitialTopBarHeight();
+                if (!isSidebarHidden) {
+                    toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                }
+            });
+
+            newTabButtonEl.addEventListener('click', () => createTab('about:blank'));
+            tabBarEl.addEventListener('click', handleTabBarClick);
+            searchBarEl.addEventListener('keydown', handleSearchEnter);
+
+            homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
+            backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back());
+            forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward());
+            refreshButtonEl.addEventListener('click', () => {
+                const activeTab = getActiveTab();
+                if (activeTab?.iframe.contentWindow) {
+                    try {
+                        if (activeTab.iframe.src.includes(__uv$config.prefix)) activeTab.iframe.contentWindow.location.reload(true);
+                        else activeTab.iframe.contentWindow.location.reload();
+                    } catch (e) { activeTab.iframe.src = activeTab.iframe.src; }
+                }
+            });
+
+            addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark);
+            bookmarksListEl.addEventListener('click', handleBookmarkClick);
+            historyListEl.addEventListener('click', handleHistoryClick);
+
+            document.addEventListener('keydown', handleGlobalKeyDown);
+            document.addEventListener('load', handleIframeLoad, true);
+
+            // Autohide/show top bar listeners
+            document.addEventListener('mousemove', handleDocumentMouseMove);
+            topBarAssemblyEl.addEventListener('mouseenter', () => {
+                isMouseOverTopBar = true;
+                if (!isGloballyPinned) showTopBar(); // Show and cancel timer
+            });
+            topBarAssemblyEl.addEventListener('mouseleave', () => {
+                isMouseOverTopBar = false;
+                if (!isGloballyPinned) startTopBarAutoHideTimer();
+            });
+            searchBarEl.addEventListener('focus', () => {
+                isSearchBarFocused = true;
+                if (!isGloballyPinned) showTopBar(); // Show and cancel timer
+            });
+            searchBarEl.addEventListener('blur', () => {
+                isSearchBarFocused = false;
+                if (!isGloballyPinned) startTopBarAutoHideTimer();
+            });
+        }
+
+        // --- PINNING ---
+        function toggleGlobalPin() {
+            isGloballyPinned = !isGloballyPinned;
+            localStorage.setItem('vernIsGloballyPinned', isGloballyPinned.toString());
+            updatePinButtonVisual();
+
+            if (isGloballyPinned) {
+                showTopBar(); // Shows top bar, clears its auto-hide timers
+                handleSidebarToggle(false); // Shows sidebar
+            } else {
+                // Allow auto-hide to resume if conditions met
+                startTopBarAutoHideTimer();
+                // Sidebar remains manually controlled
+            }
+        }
+
+        function updatePinButtonVisual() {
+            if (isGloballyPinned) {
+                pinButtonEl.classList.add('active');
+                pinButtonEl.title = "Unpin Toolbar & Sidebar";
+            } else {
+                pinButtonEl.classList.remove('active');
+                pinButtonEl.title = "Pin Toolbar & Sidebar";
+            }
+        }
+
+        // --- TOP BAR AUTO SHOW/HIDE ---
+        function handleDocumentMouseMove(event) {
+            if (event.clientY <= 3 && isTopBarHidden && !isGloballyPinned) {
+                showTopBar();
+            }
+        }
+
+        function showTopBar() {
+            clearTimeout(topBarAutoHideTimeoutId);
+            if (isTopBarHidden) { // Only toggle if actually hidden
+                handleTopBarToggle(false); // Sets isTopBarHidden = false
+            }
+        }
+
+        function startTopBarAutoHideTimer() {
+            clearTimeout(topBarAutoHideTimeoutId);
+            if (isGloballyPinned || isSearchBarFocused || isMouseOverTopBar || isTopBarHidden) {
+                return; // Conditions not met for auto-hiding
+            }
+            if (currentAutoCloseDelay === 0) { // Instant
+                 if (!isTopBarHidden) handleTopBarToggle(true); // Hide immediately
+            } else {
+                topBarAutoHideTimeoutId = setTimeout(() => {
+                    if (!isGloballyPinned && !isSearchBarFocused && !isMouseOverTopBar && !isTopBarHidden) {
+                         handleTopBarToggle(true); // Hide after delay
+                    }
+                }, currentAutoCloseDelay);
+            }
+        }
+
+
+        // --- TAB MANAGEMENT & NAVIGATION (Largely Unchanged) ---
+        function createTab(url = null) {
+            const tabId = `tab-${tabCounter++}`;
+            const tabElement = document.createElement('div');
+            tabElement.className = 'tab';
+            tabElement.dataset.tabId = tabId;
+            tabElement.innerHTML = `<div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div><div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>`;
+            tabBarEl.insertBefore(tabElement, newTabButtonEl);
+
+            const iframe = document.createElement('iframe');
+            iframe.id = `content-${tabId}`;
+            iframe.className = 'tab-content';
+            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
+            iframe.loading = 'eager';
+            tabsContainerEl.appendChild(iframe);
+
+            const tab = { id: tabId, element: tabElement, iframe, url: url || 'about:blank', title: 'New Tab', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false };
+            tabs.push(tab);
+            activateTab(tabId);
+            navigateTo(tab.url, tab);
+            return tab;
+        }
+
+        function activateTab(tabId) {
+            if (!tabId && tabs.length > 0) tabId = tabs[0].id;
+            if (!tabId) return;
+            tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab) {
+                tab.element.classList.add('active');
+                tab.iframe.classList.add('active');
+                activeTabId = tabId;
+                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : '';
+                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                updateDocumentTitle(tab);
+            }
+        }
+
+        function closeTab(tabId) {
+            const tabIndex = tabs.findIndex(t => t.id === tabId);
+            if (tabIndex === -1) return;
+            const tab = tabs[tabIndex];
+            if (tab.titleObserver) tab.titleObserver.disconnect();
+            if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+            tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1);
+            if (activeTabId === tabId) {
+                if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id);
+                else createTab('about:blank');
+            }
+        }
+        function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
+
+        function updateTabInfo(tab, title, faviconUrl) {
+            if (!tab) return;
+            const displayTitle = title || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
+            tab.title = displayTitle;
+            tab.titleElement.textContent = displayTitle.length > 20 ? displayTitle.substring(0,18) + '...' : displayTitle;
+            tab.titleElement.title = displayTitle;
+
+            if (faviconUrl) {
+                tab.faviconElement.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
+            } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
+                try {
+                    const siteUrl = new URL(tab.url);
+                    tab.faviconElement.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" style="width:16px;height:16px;object-fit:contain;" onerror="this.parentNode.innerHTML = '<i class=\\'fas fa-globe\\' style=\\'font-size: 14px;\\'></i>';">`;
+                } catch (e) { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
+            } else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`; }
+            if (tab.id === activeTabId) updateDocumentTitle(tab);
+        }
+        function updateDocumentTitle(tab) { document.title = "VERN MAX - SEARCH"; }
+
+        function formatUrlInput(input) {
+            if (/^(?:[a-z]+:)?\/\//i.test(input)) {
+                if(input.startsWith("//")) return "https:" + input;
+                return input;
+            }
+            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) ||
+                input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) {
+                return 'https://' + input;
+            }
+            return null;
+        }
+
+        function navigateTo(urlInput, tab = null) {
+            let currentTab = tab || getActiveTab();
+            if (!currentTab) { currentTab = createTab(urlInput); return; }
+            currentTab.isLoading = true;
+            updateTabInfo(currentTab, "Loading...", null);
+
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
+
+            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
+                currentTab.iframe.src = urlInput;
+                currentTab.url = urlInput;
+                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput;
+                updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput);
+                if (!urlInput.startsWith('about:error')) addToHistory(urlInput === 'about:blank' ? 'New Tab' : urlInput, urlInput);
+                currentTab.isLoading = false;
+                return;
+            }
+
+            let targetUrl = formatUrlInput(urlInput.trim());
+            if (!targetUrl) {
+                const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
+                targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+            }
+
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`;
+                currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Error: UV Config Missing"); currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = ''; return;
+            }
+            try {
+                const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl);
+                currentTab.iframe.src = proxiedUrl; currentTab.url = targetUrl;
+                if (currentTab.id === activeTabId) searchBarEl.value = targetUrl;
+            } catch (err) {
+                const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Navigation Error"); currentTab.isLoading = false;
+                if (currentTab.id === activeTabId) searchBarEl.value = '';
+            }
+        }
+
+        // --- UI TOGGLES & RESIZE ---
+        function handleTopBarToggle(forceState) { // forceState: true to hide, false to show
+            const shouldHide = forceState !== undefined ? forceState : !isTopBarHidden;
+            if (shouldHide) {
+                if (!isTopBarHidden) { // Only act if not already hidden
+                    isTopBarHidden = true;
+                    topBarAssemblyEl.classList.add('hidden');
+                    topBarAssemblyEl.style.maxHeight = '0px';
+                    toggleTopBarButtonEl.style.top = '-1px';
+                    toggleBarIconEl.className = 'fas fa-chevron-down';
+                    toggleTopBarButtonEl.title = "Show Toolbar";
+                    localStorage.setItem('vernIsTopBarHidden', 'true');
+                }
+            } else {
+                 if (isTopBarHidden) { // Only act if not already shown
+                    isTopBarHidden = false;
+                    updateInitialTopBarHeight(); // Ensure height is current
+                    topBarAssemblyEl.classList.remove('hidden');
+                    topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                    toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight - 1 : 0) + 'px';
+                    toggleBarIconEl.className = 'fas fa-chevron-up';
+                    toggleTopBarButtonEl.title = "Hide Toolbar";
+                    localStorage.setItem('vernIsTopBarHidden', 'false');
+                 } else if (!topBarAssemblyEl.classList.contains('hidden') && parseFloat(topBarAssemblyEl.style.maxHeight) === 0) {
+                    // Case where it's not marked hidden but maxHeight is 0 (e.g. initial load issue)
+                    updateInitialTopBarHeight();
+                    topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                    toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight - 1 : 0) + 'px';
+                 }
+            }
+        }
+
+        function handleSidebarToggle(forceState) { // forceState: true to hide, false to show
+            const shouldHide = forceState !== undefined ? forceState : !isSidebarHidden;
+            const sidebarWidth = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+            if (shouldHide) {
+                 if (!isSidebarHidden) {
+                    isSidebarHidden = true;
+                    sidebarEl.classList.add('hidden');
+                    toggleSidebarIconEl.className = 'fas fa-chevron-right';
+                    toggleSidebarButtonEl.style.left = '0px';
+                    toggleSidebarButtonEl.title = "Show Sidebar";
+                    localStorage.setItem('vernIsSidebarHidden', 'true');
+                 }
+            } else {
+                if (isSidebarHidden) {
+                    isSidebarHidden = false;
+                    sidebarEl.classList.remove('hidden');
+                    toggleSidebarIconEl.className = 'fas fa-chevron-left';
+                    toggleSidebarButtonEl.style.left = sidebarWidth;
+                    toggleSidebarButtonEl.title = "Hide Sidebar";
+                    localStorage.setItem('vernIsSidebarHidden', 'false');
+                }
+            }
+        }
+
+        function updateInitialTopBarHeight() {
+            const wasHidden = topBarAssemblyEl.classList.contains('hidden');
+            const currentMaxHeight = topBarAssemblyEl.style.maxHeight;
+
+            if (wasHidden) {
+                topBarAssemblyEl.classList.remove('hidden');
+                topBarAssemblyEl.style.maxHeight = 'none'; // Allow it to expand to measure
+            }
+            initialTopBarHeight = topBarAssemblyEl.offsetHeight;
+
+            if (wasHidden) {
+                topBarAssemblyEl.classList.add('hidden');
+                topBarAssemblyEl.style.maxHeight = currentMaxHeight; // Restore original if it was hidden
+            } else if (!isTopBarHidden) { // Only set maxHeight if it's supposed to be visible
+                 topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+            }
+
+
+            if (!isTopBarHidden && initialTopBarHeight > 0) {
+                toggleTopBarButtonEl.style.top = (initialTopBarHeight -1) + 'px';
+            } else if (isTopBarHidden) {
+                 toggleTopBarButtonEl.style.top = '-1px';
+            }
+        }
+
+
+        // --- EVENT HANDLERS ---
+        function handleTabBarClick(e) {
+            const tabElement = e.target.closest('.tab'); const closeButton = e.target.closest('.tab-close');
+            if (closeButton && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); }
+            else if (tabElement) activateTab(tabElement.dataset.tabId);
+        }
+        function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
+
+        function handleIframeLoad(event) {
+            if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
+                const iframe = event.target;
+                const tab = tabs.find(t => t.iframe === iframe);
+                if (tab) {
+                    tab.isLoading = false; let title = 'Untitled';
+                    try {
+                        if (iframe.contentWindow && iframe.contentDocument) title = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
+                    } catch (e) { try { title = new URL(tab.url).hostname || 'New Tab'; } catch {} }
+                    if(tab.url && tab.url.startsWith('about:error')) title = "Error Page";
+                    updateTabInfo(tab, title);
+                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(title, tab.url);
+                    setupTitleObserver(tab);
+                }
+            }
+        }
+
+        function handleGlobalKeyDown(e) {
+            const targetTagName = e.target.tagName.toLowerCase();
+            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return;
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); }
+            if (e.ctrlKey && e.key === 'Tab') {
+                e.preventDefault();
+                if (tabs.length > 1) {
+                    const currentIndex = tabs.findIndex(t => t.id === activeTabId);
+                    const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + tabs.length) % tabs.length;
+                    activateTab(tabs[nextIndex].id);
+                }
+            }
+            if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); }
+            if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); }
+            if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); }
+            if (e.key === 'F11') { // Allow default F11 for browser fullscreen
+                // e.preventDefault(); // Removed to allow browser fullscreen
+                // toggleGlobalPin(); // Or can make F11 also toggle pin
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }
+        }
+
+        function setupTitleObserver(tab) {
+            if (!tab || !tab.iframe.contentWindow) return;
+            if (tab.titleObserver) tab.titleObserver.disconnect();
+            try {
+                const targetNode = tab.iframe.contentDocument.querySelector('title');
+                if (!targetNode) return;
+                const observer = new MutationObserver(() => { if (tab.iframe.contentDocument) updateTabInfo(tab, tab.iframe.contentDocument.title); });
+                observer.observe(targetNode, { subtree: true, characterData: true, childList: true });
+                tab.titleObserver = observer;
+            } catch (e) {
+                if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+                tab.locationCheckIntervalId = setInterval(() => { try { if (tab.iframe.contentDocument && tab.title !== tab.iframe.contentDocument.title) updateTabInfo(tab, tab.iframe.contentDocument.title); } catch (err) {} }, 2000);
+            }
+        }
+
+        // --- BOOKMARKS ---
+        function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm));}
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+        function renderBookmarkItem(bm) {
+            const li = document.createElement('li'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`;
+            const nameSpan = document.createElement('span'); nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name;
+            const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url'; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url;
+            const removeBtn = document.createElement('i'); removeBtn.className = 'fas fa-times';
+            removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7; font-size: 0.8em;';
+            removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); };
+            li.appendChild(nameSpan); li.appendChild(urlSpan); li.appendChild(removeBtn); li.style.position = 'relative';
+            bookmarksListEl.appendChild(li);
+        }
+        function handleAddCurrentBookmark() {
+            const activeTab = getActiveTab();
+            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) { alert("Cannot bookmark this page."); return; }
+            const name = newBookmarkNameInputEl.value.trim() || activeTab.title || new URL(activeTab.url).hostname;
+            const url = activeTab.url;
+            let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
+            bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputEl.value = '';
+        }
+        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
+        function handleBookmarkClick(e) {
+            const li = e.target.closest('li[data-url]');
+            if (li && !e.target.classList.contains('fa-times')) {
+                createTab(li.dataset.url);
+                if (!isSidebarHidden && window.innerWidth < 768 && !isGloballyPinned) handleSidebarToggle(true); // Auto-hide if not pinned
+            }
+        }
+
+        // --- SESSION HISTORY ---
+        function addToHistory(title, url) {
+            if (!url || url === 'about:blank' || url.startsWith('about:')) return;
+            if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url) return;
+            sessionHistory.push({ title, url, timestamp: new Date() });
+            if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
+            renderHistory();
+        }
+        function renderHistory() {
+            historyListEl.innerHTML = '';
+            [...sessionHistory].reverse().forEach(item => {
+                const li = document.createElement('li'); li.dataset.url = item.url;
+                li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
+                const titleSpan = document.createElement('span'); titleSpan.textContent = item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title;
+                const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
+                li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li);
+            });
+        }
+        function handleHistoryClick(e) {
+            const li = e.target.closest('li[data-url]');
+            if (li) {
+                navigateTo(li.dataset.url);
+                if (!isSidebarHidden && window.innerWidth < 768 && !isGloballyPinned) handleSidebarToggle(true); // Auto-hide if not pinned
+            }
+        }
+
+        // --- THEMES ---
+        function applyTheme(themeName) {
+            document.body.className = document.body.className.replace(/\btheme-\S+/g, '');
+            if (themeName !== 'obsidian-dark' && themes[themeName]) { // Check if theme exists
+                 document.body.classList.add(`theme-${themeName}`);
+            }
+            localStorage.setItem('vernTheme', themeName);
+            updateSelectedDropdownText('theme-dropdown', themeName);
+
+            // Recalculate heights as theme might change them
+            updateInitialTopBarHeight();
+             if (!isTopBarHidden) { // If top bar is meant to be visible, ensure its height is correct
+                topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight - 1 : 0) + 'px';
+            }
+
+            if (!isSidebarHidden) {
+                toggleSidebarButtonEl.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+            }
+        }
+    </script>
+</body>
+</html>
             --current-theme-shadow-opacity-strong: 0.4;
             --current-theme-shadow-opacity-medium: 0.2;
             --current-theme-shadow-opacity-light: 0.1;
