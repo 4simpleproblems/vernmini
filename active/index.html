@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VERN MAX - HOME</title>
+    <title>Vern Max</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="icon" type="image/png" href="../images/title-mini.png" />
@@ -19,8 +19,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        font-family: 'SecondaryFont', sans-serif; /* Updated font */
-        /* font-weight: bold; removed, will be inherited or set by css/style.css */
+        font-family: 'SecondaryFont', sans-serif;
       }
       #header,
       #content {
@@ -29,10 +28,17 @@
         text-align: center;
         margin-bottom: 2rem;
       }
+      /* Added style for the title image */
+      #bigTitle {
+        height: 100px; /* Adjust this value to your preferred fixed height */
+        width: auto;   /* Width will adjust to maintain aspect ratio */
+        max-width: 100%; /* Ensures it doesn't exceed the width of its #header container */
+        object-fit: contain; /* Scales the image to fit within the given height while maintaining aspect ratio */
+      }
       #clock {
-        color: #fff; /* Assuming this specific color is desired over body color from style.css */
-        font-family: 'SecondaryFont', sans-serif; /* Updated font */
-        font-weight: bold; /* Kept bold styling */
+        color: #fff;
+        font-family: 'SecondaryFont', sans-serif;
+        font-weight: bold;
         font-size: 1.2rem;
         margin-top: 0.5rem;
         margin-bottom: 0.9rem;
@@ -47,7 +53,6 @@
         padding: 14px;
         border-radius: 100px;
         font-size: 1rem;
-        /* Assuming input styling (border, background) comes from style.css or browser default */
       }
       #popularSites {
         display: flex;
@@ -57,26 +62,26 @@
         margin: 1rem 0;
       }
       #popularSites .btn {
-        /* Button styling expected from ../css/style.css via .btn and .secondary classes */
+        /* Button styling expected from ../css/style.css */
       }
       #footer {
-        display: none; /* Hides any leftover footer styling or content */
+        display: none;
       }
-      /* Official label in bottom-left */
       .footer-label {
         position: fixed;
         bottom: 0;
         left: 0;
         margin: 1rem;
-        font-family: 'SecondaryFont', sans-serif; /* Updated font */
-        font-weight: bold; /* Kept bold styling */
+        font-family: 'SecondaryFont', sans-serif;
+        font-weight: bold;
         font-size: 0.9rem;
-        color: #fff; /* Assuming this specific color is desired */
+        color: #fff;
       }
     </style>
-    </head>
+  </head>
   <body>
-    <canvas id="canvas"></canvas> <div id="header">
+    <canvas id="canvas"></canvas>
+    <div id="header">
       <img src="../images/title.png" alt="Logo" id="bigTitle" />
       <div id="clock"></div>
     </div>
@@ -99,23 +104,21 @@
         <pre id="uv-error-code"></pre>
       </div>
     </div>
-    <script src="stars.js"></script>
-    <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
-    <script src="uv/uv.config.js" charset="UTF-8" defer></script>
-    <script src="register-sw.js" charset="UTF-8" defer></script>
-    <script src="search.js" charset="UTF-8" defer></script>
-    <script src="index.js" charset="UTF-8" defer></script>
+    <script src="../stars.js"></script>
+    <script src="../uv/uv.bundle.js" charset="UTF-8" defer></script>
+    <script src="../uv/uv.config.js" charset="UTF-8" defer></script>
+    <script src="../register-sw.js" charset="UTF-8" defer></script>
+    <script src="../search.js" charset="UTF-8" defer></script>
+    <script src="../index.js" charset="UTF-8" defer></script>
     <script>
       function updateClock() {
         const now = new Date();
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }); // Added formatting options
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         document.getElementById('clock').textContent = timeString;
       }
-      
-      // Update clock immediately and then every second
       updateClock();
       setInterval(updateClock, 1000);
     </script>
-    <span class="footer-label">Official 4SP Proxy</span>
+  <span class="footer-label">Official 4SP Proxy</span>
   </body>
 </html>
