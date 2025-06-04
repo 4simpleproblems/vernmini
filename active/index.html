@@ -1,124 +1,295 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Max</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="icon" type="image/png" href="../images/title-mini.png" />
-    <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" />
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        border: none;
-        box-sizing: border-box;
-      }
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-family: 'SecondaryFont', sans-serif;
-      }
-      #header,
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vern Max</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/png" href="../images/title-mini.png" />
+  <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" />
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'SecondaryFont', sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      align-items: center;
+      justify-content: center;
+    }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, #0e0e3a, #2c2c4a);
+    }
+    #header {
+      margin: 0 auto 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 1000px;
+      padding: 0 20px;
+    }
+    #bigTitle {
+      height: 100px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+    #clock {
+      color: #fff;
+      font-family: 'SecondaryFont', sans-serif;
+      font-weight: bold;
+      font-size: 1.5em;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
+    }
+    #content {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 26px;
+      padding: 8px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.1);
+      border: 2px solid rgba(103, 32, 189, 0.1);
+      width: 1200px;
+      max-width: 100vw;
+      margin: 0 auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(103, 32, 189, 0.2);
+    }
+    #uv-form {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    #uv-address {
+      width: 100%;
+      padding: 14px;
+      border-radius: 18px;
+      font-size: 1rem;
+      border: 1px solid rgba(103, 32, 189, 0.2);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background: #fff;
+      outline: none;
+      box-sizing: border-box;
+      font-family: 'PrimaryFont' sans-serif;
+    }
+    #uv-address:focus {
+      border-color: #6720bd;
+      box-shadow: 0 0 0 3px rgba(103, 32, 189, 0.2);
+    }
+    #popularSites {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: nowrap;
+    }
+    #popularSites .btn.secondary {
+      background: #fff;
+      border: 1px solid #e9ecef;
+      border-radius: 16px;
+      color: #495057;
+      font-family: 'SecondaryFont', sans-serif;
+      font-size: 1.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 0.04em;
+      box-sizing: border-box;
+      padding: 18px 32px;
+      width: auto;
+      min-width: 0;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    #popularSites .btn.secondary:hover {
+      background: #e9ecef;
+      border-color: #dee2e6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    #uv-error, #uv-error-code {
+      color: #dc3545;
+      font-family: 'SecondaryFont', sans-serif;
+    }
+    .footer-label {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      margin: 1rem;
+      font-family: 'SecondaryFont', sans-serif;
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: #fff;
+    }
+    @media (max-width: 1050px) {
       #content {
-        width: 100%;
-        max-width: 700px;
-        text-align: center;
-        margin-bottom: 2rem;
+        width: 98vw;
+        padding: 12px;
       }
-      /* Added style for the title image */
-      #bigTitle {
-        height: 100px; /* Adjust this value to your preferred fixed height */
-        width: auto;   /* Width will adjust to maintain aspect ratio */
-        max-width: 100%; /* Ensures it doesn't exceed the width of its #header container */
-        object-fit: contain; /* Scales the image to fit within the given height while maintaining aspect ratio */
+      #header {
+        max-width: 98vw;
       }
-      #clock {
-        color: #fff;
-        font-family: 'SecondaryFont', sans-serif;
-        font-weight: bold;
-        font-size: 1.2rem;
-        margin-top: 0.5rem;
-        margin-bottom: 0.9rem;
+    }
+    @media (max-width: 1200px) {
+      #popularSites {
+        flex-wrap: wrap;
+        justify-content: flex-start;
       }
-      #uv-form {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-      #uv-address {
-        width: 90%;
-        padding: 14px;
-        border-radius: 100px;
-        font-size: 1rem;
+    }
+    @media (max-width: 800px) {
+      #content {
+        flex-direction: column;
+        width: 100vw;
+        min-width: 0;
+        padding: 5px;
       }
       #popularSites {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
+        flex-direction: column;
         gap: 0.5rem;
-        margin: 1rem 0;
+        align-items: stretch;
       }
-      #popularSites .btn {
-        /* Button styling expected from ../css/style.css */
+      #popularSites .btn.secondary {
+        width: 100%;
+        min-width: unset;
+        padding: 14px 0;
       }
-      #footer {
-        display: none;
-      }
-      .footer-label {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        margin: 1rem;
-        font-family: 'SecondaryFont', sans-serif;
-        font-weight: bold;
-        font-size: 0.9rem;
-        color: #fff;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="canvas"></canvas>
-    <div id="header">
-      <img src="../images/title.png" alt="Logo" id="bigTitle" />
-      <div id="clock"></div>
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="header">
+    <img src="../images/title.png" alt="Logo" id="bigTitle">
+    <div id="clock"></div>
+  </div>
+  <div id="content">
+    <form id="uv-form">
+      <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden">
+      <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL" class="form__input">
+    </form>
+    <div id="popularSites">
+      <a class="btn secondary" onclick="autofill('http://xbox.com/play')">XBOX</a>
+      <a class="btn secondary" onclick="autofill('http://youtube.com')">YOUTUBE</a>
+      <a class="btn secondary" onclick="autofill('https://tiktok.com')">TIKTOK</a>
+      <a class="btn secondary" onclick="autofill('https://chatgpt.com')">CHATGPT</a>
+      <a class="btn secondary" onclick="autofill('http://apple.com')">APPLE</a>
+      <a class="btn secondary" onclick="autofill('http://gemini.google.com')">GEMINI</a>
+      <a class="btn secondary" onclick="autofill('http://totaljerkface.com')">HAPPY WHEELS</a>
     </div>
-    <div id="content">
-      <form id="uv-form">
-        <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden" />
-        <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL" class="form__input" />
-      </form>
-      <div id="popularSites">
-        <a class="btn secondary" onclick="autofill('http://xbox.com/play')">XBOX</a>
-        <a class="btn secondary" onclick="autofill('http://youtube.com')">YOUTUBE</a>
-        <a class="btn secondary" onclick="autofill('https://tiktok.com')">TIKTOK</a>
-        <a class="btn secondary" onclick="autofill('https://chatgpt.com')">CHATGPT</a>
-        <a class="btn secondary" onclick="autofill('http://apple.com')">APPLE</a>
-        <a class="btn secondary" onclick="autofill('http://gemini.google.com')">GEMINI</a>
-        <a class="btn secondary" onclick="autofill('http://totaljerkface.com')">HAPPY WHEELS</a>
-      </div>
-      <div class="desc left-margin">
-        <p id="uv-error"></p>
-        <pre id="uv-error-code"></pre>
-      </div>
+    <div class="desc left-margin">
+      <p id="uv-error"></p>
+      <pre id="uv-error-code"></pre>
     </div>
-    <script src="../stars.js"></script>
-    <script src="../uv/uv.bundle.js" charset="UTF-8" defer></script>
-    <script src="../uv/uv.config.js" charset="UTF-8" defer></script>
-    <script src="../register-sw.js" charset="UTF-8" defer></script>
-    <script src="../search.js" charset="UTF-8" defer></script>
-    <script src="../index.js" charset="UTF-8" defer></script>
-    <script>
-      function updateClock() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        document.getElementById('clock').textContent = timeString;
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
-    </script>
+  </div>
   <span class="footer-label">Official 4SP Proxy</span>
-  </body>
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('clock').textContent = timeString;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Shooting Star Effect (up to 50 stars, fluent, spread out)
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Star {
+      constructor() {
+        this.reset();
+        this.speed = Math.random() * 3 + 1; // Random speed
+        this.size = Math.random() * 2 + 1;
+        this.alpha = 1;
+        this.trail = [];
+        this.maxTrail = Math.floor(Math.random() * 5) + 5; // Variable trail length
+      }
+      reset() {
+        // Start at a random position along the top or left edge
+        if (Math.random() > 0.5) {
+          this.x = Math.random() * canvas.width;
+          this.y = -10 - Math.random() * canvas.height * 0.2;
+        } else {
+          this.x = -10 - Math.random() * canvas.width * 0.2;
+          this.y = Math.random() * canvas.height;
+        }
+        this.trail = [];
+      }
+      update() {
+        this.x += this.speed;
+        this.y += this.speed;
+        this.trail.push({x: this.x, y: this.y});
+        if (this.trail.length > this.maxTrail) this.trail.shift();
+        // Smoothly reset when star is well off-screen
+        if (this.x > canvas.width + 100 || this.y > canvas.height + 100) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.fill();
+        ctx.beginPath();
+        for (let i = 0; i < this.trail.length - 1; i++) {
+          ctx.moveTo(this.trail[i].x, this.trail[i].y);
+          ctx.lineTo(this.trail[i+1].x, this.trail[i+1].y);
+          ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha * (i+1)/this.trail.length})`;
+          ctx.lineWidth = this.size * (i+1)/this.trail.length;
+          ctx.stroke();
+        }
+      }
+    }
+
+    const stars = [];
+    const maxStars = 50;
+    for (let i = 0; i < maxStars; i++) {
+      stars.push(new Star());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const star of stars) {
+        star.update();
+        star.draw();
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+  <script src="../uv/uv.bundle.js" charset="UTF-8" defer></script>
+  <script src="../uv/uv.config.js" charset="UTF-8" defer></script>
+  <script src="../register-sw.js" charset="UTF-8" defer></script>
+  <script src="../search.js" charset="UTF-8" defer></script>
+  <script src="../index.js" charset="UTF-8" defer></script>
+</body>
 </html>
