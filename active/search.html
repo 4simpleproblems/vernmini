@@ -351,26 +351,18 @@
             'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
             'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
             'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }, 
-            'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: '​‌‍⁠﻿​‌‍⁠﻿​‌‍⁠﻿​‌‍⁠﻿​‌‍⁠﻿​‌‍⁠﻿
-', faviconUrl: '../images/no-favicon-chrome.png'}
+            'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'}
         };
         let currentCloakPresetKey = 'none'; 
         let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl, topBarAssemblyEl, sidebarEl, mainContentWrapperEl, bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl, historyListEl, searchEngineDropdownEl, tabCloakDropdownEl;
         let initialTopBarHeight = 0;
 
-        /**
-         * Handles errors when loading an image (e.g., a favicon).
-         * Replaces the broken image with a default globe icon by manipulating the DOM.
-         * @param {HTMLImageElement} imgElement - The image element that failed to load.
-         */
         function handleFaviconError(imgElement) {
             const parent = imgElement.parentNode;
             if (parent) {
-                // Remove all children of parent (i.e., the broken img)
                 while (parent.firstChild) {
                     parent.removeChild(parent.firstChild);
                 }
-                // Add the new span with the globe icon
                 const span = document.createElement('span');
                 span.className = 'unicode-icon';
                 span.style.fontSize = '14px';
@@ -381,8 +373,8 @@
 
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
-            const defaultAppTitle = "VERN MAX - SEARCH"; // Default title if 'none' preset is flawed
-            const defaultAppFavicon = "../images/title-mini.png"; // Default favicon if 'none' preset is flawed
+            const defaultAppTitle = "VERN MAX - SEARCH"; 
+            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; 
 
             let selectedCloak = cloakPresets[currentCloakPresetKey];
 
@@ -392,8 +384,7 @@
                     appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; 
                 }
             } else {
-                // "None" selected or invalid cloak key, apply specific default for "None"
-                const nonePreset = cloakPresets['none'] || {}; // Ensure 'none' preset exists
+                const nonePreset = cloakPresets['none'] || {};
                 document.title = nonePreset.title || defaultAppTitle;
                 if (appFaviconEl) {
                     appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon;
@@ -443,60 +434,46 @@
         }
         
         /**
-         * Helper function to find and process favicon URL from a document.
-         * @param {Document} doc - The document (e.g., iframe.contentDocument).
-         * @param {string} basePageUrl - The base URL of the page in the iframe.
-         * @returns {string|null} Processed favicon URL (possibly proxied) or null.
+         * Gets and processes the favicon URL, always attempting /favicon.ico for the given base URL.
+         * @param {string} basePageUrl - The base URL of the page in the iframe (e.g., tab.url).
+         * @returns {string|null} Processed (proxied) favicon URL or null.
          */
-        function getAndProcessFaviconUrl(doc, basePageUrl) {
+        function getAndProcessFaviconUrl(basePageUrl) {
             let rawFaviconUrl = null;
-            try {
-                if (doc && doc.head) {
-                    const linkTags = Array.from(doc.head.querySelectorAll('link[rel*="icon"]'));
-                    // Prioritize specific 'rel' values
-                    const relPriority = ['shortcut icon', 'icon'];
-                    for (const rel of relPriority) {
-                        const foundLink = linkTags.find(link => link.getAttribute('rel')?.toLowerCase() === rel);
-                        if (foundLink) {
-                            rawFaviconUrl = new URL(foundLink.href, basePageUrl || doc.baseURI).href;
-                            break;
-                        }
-                    }
-                    // If not found by specific rel, take the first one with 'icon' in rel
-                    if (!rawFaviconUrl && linkTags.length > 0) {
-                         rawFaviconUrl = new URL(linkTags[0].href, basePageUrl || doc.baseURI).href;
-                    }
-                }
-            } catch (e) { console.warn("Error parsing favicon URL from link tag:", e); }
 
-            if (!rawFaviconUrl && basePageUrl && (basePageUrl.startsWith('http:') || basePageUrl.startsWith('https:'))) {
+            if (basePageUrl && (basePageUrl.startsWith('http:') || basePageUrl.startsWith('https:'))) {
                 try {
-                    // Only attempt /favicon.ico if basePageUrl is a full URL
-                    const siteUrl = new URL(basePageUrl);
-                    rawFaviconUrl = new URL('/favicon.ico', siteUrl.origin).href;
-                } catch (e) { console.warn("Error constructing /favicon.ico URL:", e); }
+                    const siteOrigin = new URL(basePageUrl).origin;
+                    rawFaviconUrl = new URL('/favicon.ico', siteOrigin).href;
+                } catch (e) {
+                    console.warn("Error constructing /favicon.ico URL from basePageUrl:", basePageUrl, e);
+                    return null; 
+                }
+            } else {
+                return null; // Cannot form URL if basePageUrl is not http/s
             }
 
             let processedFaviconUrl = null;
-            if (rawFaviconUrl) {
-                if (rawFaviconUrl.startsWith('data:')) {
-                    processedFaviconUrl = rawFaviconUrl;
-                } else if (rawFaviconUrl.startsWith('http') && typeof __uv$config !== 'undefined' && __uv$config.prefix && __uv$config.encodeUrl) {
+            if (rawFaviconUrl) { 
+                // All favicons from external sites (even /favicon.ico) should be proxied
+                if (typeof __uv$config !== 'undefined' && __uv$config.prefix && __uv$config.encodeUrl) {
                     try {
+                        // Check if it's already a local URL (e.g. data URI, or already proxied - less likely for /favicon.ico)
+                        // The primary case is that rawFaviconUrl is an external http/s URL.
                         if (!rawFaviconUrl.startsWith(self.location.origin) && !rawFaviconUrl.includes(__uv$config.prefix)) {
                              processedFaviconUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(rawFaviconUrl);
                         } else {
-                            processedFaviconUrl = rawFaviconUrl; 
+                            processedFaviconUrl = rawFaviconUrl; // Already local or looks proxied
                         }
                     } catch (e) {
                         console.warn("Error proxying favicon URL:", rawFaviconUrl, e);
                         processedFaviconUrl = rawFaviconUrl; 
                     }
                 } else {
-                    processedFaviconUrl = rawFaviconUrl; 
+                    processedFaviconUrl = rawFaviconUrl; // Use raw if UV config missing
                 }
             }
-            // console.log("Raw Favicon:", rawFaviconUrl, "Processed Favicon:", processedFaviconUrl);
+            // console.log("Favicon attempt for:", basePageUrl, "-> Raw:", rawFaviconUrl, "-> Processed:", processedFaviconUrl);
             return processedFaviconUrl;
         }
 
@@ -754,7 +731,7 @@
                     try { 
                         if (iframe.contentWindow && iframe.contentDocument) { 
                             titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled'; 
-                            faviconFromIframe = getAndProcessFaviconUrl(iframe.contentDocument, tab.url);
+                            faviconFromIframe = getAndProcessFaviconUrl(tab.url); // Use tab.url for consistent /favicon.ico path
                         } 
                     } catch (e) { 
                         try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} 
@@ -776,9 +753,12 @@
                 const targetNode = tab.iframe.contentDocument.querySelector('title'); 
                 if (!targetNode) return; 
                 const observer = new MutationObserver(() => { 
-                    if (tab.iframe.contentDocument && tab.iframe.contentWindow) { // Check contentWindow for location
+                    if (tab.iframe.contentDocument && tab.iframe.contentWindow) { 
                         let titleFromIframe = tab.iframe.contentDocument.title; 
-                        let faviconFromIframe = getAndProcessFaviconUrl(tab.iframe.contentDocument, tab.iframe.contentWindow.location.href);
+                        // For title changes, we might not need to re-fetch /favicon.ico unless the domain changed, 
+                        // but tab.url (original target) is used for /favicon.ico consistency.
+                        // If a page changes its <link rel="icon"> dynamically, this simplified approach won't pick it up.
+                        let faviconFromIframe = getAndProcessFaviconUrl(tab.url); 
                         updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
                     }
                 }); 
@@ -791,7 +771,7 @@
                     try { 
                         if (tab.iframe.contentDocument && tab.iframe.contentWindow && tab.actualTitle !== tab.iframe.contentDocument.title) {
                             let title = tab.iframe.contentDocument.title; 
-                            let fav = getAndProcessFaviconUrl(tab.iframe.contentDocument, tab.iframe.contentWindow.location.href);
+                            let fav = getAndProcessFaviconUrl(tab.url); 
                             updateTabInfo(tab, title, fav);
                         }
                     } catch (err) { /* console.warn("Interval check error:", err) */ } 
