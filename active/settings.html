@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - VERN MAX</title>
+    <style>
+        /* Core Theme Variables & Component Mappings - Copied for standalone consistency */
+        :root {
+            --current-theme-bg: #23272A;
+            --current-theme-text: #E0E1DD;
+            --current-theme-accent: #7F5AF0;
+            --current-theme-neutral: #2C2F33;
+            --current-theme-button-text: #FFFFFF;
+            --current-theme-shadow-rgb: 0, 0, 0;
+            --current-theme-shadow-opacity-strong: 0.4;
+            --current-theme-shadow-opacity-medium: 0.25;
+            --current-theme-shadow-opacity-light: 0.15;
+            --current-theme-focus-ring-color: var(--current-theme-accent);
+
+            /* These will be dynamically updated by JS based on theme selection */
+            --bg-color: var(--current-theme-bg);
+            --text-color: var(--current-theme-text);
+            --footer-text-color: var(--current-theme-text);
+            --font-family-main: 'PrimaryFont', sans-serif; /* Ensure 'PrimaryFont' is defined or fallbacks are good */
+
+            --toolbar-bg: var(--current-theme-neutral); /* Renamed from navbar for clarity */
+            --toolbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
+            --toolbar-border-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
+
+            --button-bg: var(--current-theme-accent);
+            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, var(--current-theme-text));
+            --button-text-color: var(--current-theme-button-text);
+            --button-outline-color: color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
+
+            --input-bg: color-mix(in srgb, var(--current-theme-neutral) 90%, var(--current-theme-bg));
+            --input-focus-bg: var(--current-theme-bg);
+            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 50%, transparent);
+
+            --card-bg: var(--current-theme-neutral);
+            --card-border-color: var(--button-outline-color);
+            --card-shadow: 0 3px 8px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-light));
+
+            --dropdown-bg: var(--input-bg);
+            --dropdown-hover-bg: color-mix(in srgb, var(--input-bg) 80%, var(--current-theme-text));
+            --dropdown-item-hover-bg: var(--button-hover-bg);
+            --dropdown-text-color: var(--text-color);
+        }
+
+        html, body {
+            margin: 0; padding: 0; border: none; box-sizing: border-box;
+            width: 100%; min-height: 100vh; overflow-x: hidden;
+            font-family: var(--font-family-main), Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px 30px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--card-border-color);
+        }
+
+        .settings-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--toolbar-border-color);
+        }
+        .settings-header h1 {
+            font-size: 2em;
+            color: var(--current-theme-accent);
+            margin: 0;
+        }
+        .settings-header p {
+            font-size: 0.95em;
+            opacity: 0.8;
+        }
+
+        .settings-section {
+            margin-bottom: 35px;
+            padding: 20px;
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 80%, var(--bg-color));
+            border-radius: 8px;
+            border: 1px solid color-mix(in srgb, var(--card-border-color) 50%, transparent);
+        }
+        .settings-section h2 {
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--current-theme-accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+         .settings-section h2 .icon-img {
+            width: 24px;
+            height: 24px;
+            filter: invert(70%) sepia(50%) saturate(500%) hue-rotate(200deg) brightness(100%) contrast(90%); /* To match accent roughly */
+         }
+         /* Specific filter for gear icon to match accent if source is white */
+        .settings-section h2 img[alt="Appearance"],
+        .settings-section h2 img[alt="Cloaking"],
+        .settings-section h2 img[alt="Search"] {
+             filter: brightness(0) saturate(100%) invert(41%) sepia(70%) saturate(1477%) hue-rotate(228deg) brightness(96%) contrast(93%);
+        }
+
+
+        .setting-item {
+            margin-bottom: 15px;
+        }
+        .setting-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        /* Custom Dropdown Styling (similar to proxy page's sidebar) */
+        .custom-dropdown {
+            position: relative; width: 100%;
+            font-family: var(--font-family-main); color: var(--dropdown-text-color);
+        }
+        .custom-dropdown-header {
+            width: 100%; height: 42px; padding: 0 15px; background-color: var(--dropdown-bg);
+            border: none; border-radius: 8px; box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--button-outline-color); cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            font-size: 0.9em;
+        }
+        .custom-dropdown-header:hover { background-color: var(--dropdown-hover-bg); box-shadow: 0 0 0 1.5px var(--button-outline-color); }
+        .custom-dropdown-header:focus, .custom-dropdown-header.open {
+            outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow);
+        }
+        .custom-dropdown-header .dropdown-chevron { margin-left: 10px; transition: transform 0.2s ease; font-size: 0.8em; }
+        .custom-dropdown-header.open .dropdown-chevron { transform: rotate(180deg); }
+
+        .custom-dropdown-list {
+            position: absolute; top: calc(100% + 4px); left: 0; right: 0; background-color: var(--dropdown-bg);
+            border-radius: 8px; box-shadow: var(--menu-shadow);
+            list-style: none; padding: 8px 0; margin: 0; max-height: 200px; overflow-y: auto;
+            z-index: 10; display: none; font-size: 0.9em;
+        }
+        .custom-dropdown-list.show { display: block; }
+        .custom-dropdown-list::-webkit-scrollbar { width: 6px; }
+        .custom-dropdown-list::-webkit-scrollbar-thumb { background-color: var(--button-outline-color); border-radius: 6px; }
+        .custom-dropdown-list-item { padding: 10px 15px; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; }
+        .custom-dropdown-list-item:hover { background-color: var(--dropdown-item-hover-bg); color: var(--button-text-color); }
+        .custom-dropdown-list-item.selected {
+            font-weight: bold; background-color: color-mix(in srgb, var(--current-theme-accent) 30%, transparent);
+            color: var(--button-text-color);
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .action-buttons .button {
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 0 0 1px var(--button-outline-color);
+            text-decoration: none;
+        }
+        .action-buttons .button:hover {
+            background-color: var(--button-hover-bg);
+            box-shadow: 0 0 0 1.5px var(--button-outline-color);
+        }
+        .icon-img { display: inline-block; vertical-align: middle; object-fit: contain; }
+
+    </style>
+</head>
+<body>
+
+    <div class="settings-container">
+        <div class="settings-header">
+            <h1>Settings</h1>
+            <p>Customize your VERN MAX experience.</p>
+        </div>
+
+        <div class="settings-section" id="appearance-section">
+            <h2><img src="../../images/palette-white.png" alt="Appearance" class="icon-img"> Appearance</h2>
+            <div class="setting-item">
+                <label for="theme-dropdown">Theme</label>
+                <div class="custom-dropdown" id="theme-dropdown">
+                    <div class="custom-dropdown-header" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                        <span id="selected-theme-text">Select a theme...</span>
+                        <span class="dropdown-chevron unicode-icon">▼</span>
+                    </div>
+                    <ul class="custom-dropdown-list" role="listbox">
+                        </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section" id="cloaking-section">
+            <h2><img src="../../images/mask-white.png" alt="Cloaking" class="icon-img"> Tab Cloaking</h2>
+            <div class="setting-item">
+                <label for="tab-cloak-dropdown">Tab Cloak Preset</label>
+                <div class="custom-dropdown" id="tab-cloak-dropdown">
+                    <div class="custom-dropdown-header" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                        <span id="selected-tab-cloak-text">Select a preset...</span>
+                        <span class="dropdown-chevron unicode-icon">▼</span>
+                    </div>
+                    <ul class="custom-dropdown-list" role="listbox">
+                        </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section" id="search-section">
+            <h2><img src="../../images/search-white.png" alt="Search" class="icon-img"> Search</h2>
+            <div class="setting-item">
+                <label for="search-engine-dropdown">Default Search Engine</label>
+                <div class="custom-dropdown" id="search-engine-dropdown">
+                    <div class="custom-dropdown-header" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                        <span id="selected-search-engine-text">Select search engine...</span>
+                        <span class="dropdown-chevron unicode-icon">▼</span>
+                    </div>
+                    <ul class="custom-dropdown-list" role="listbox">
+                        </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="../index.html" class="button" id="back-to-browser-button">Back to Browser</a>
+            </div>
+    </div>
+
+    <script>
+        // --- Data Objects (Should match those in your main browser JS) ---
+        const themes = {
+            'default_dark_purple': {
+                name: 'Dark Purple (Default)',
+                variables: {
+                    '--current-theme-bg': '#23272A',
+                    '--current-theme-text': '#E0E1DD',
+                    '--current-theme-accent': '#7F5AF0',
+                    '--current-theme-neutral': '#2C2F33',
+                    '--current-theme-button-text': '#FFFFFF',
+                }
+            },
+            'light_aqua': {
+                name: 'Light Aqua',
+                variables: {
+                    '--current-theme-bg': '#EFF7F6',
+                    '--current-theme-text': '#0A100D',
+                    '--current-theme-accent': '#40798C',
+                    '--current-theme-neutral': '#FFFFFF',
+                    '--current-theme-button-text': '#FFFFFF',
+                }
+            },
+            'ocean_blue': {
+                name: 'Ocean Blue',
+                variables: {
+                    '--current-theme-bg': '#0B132B',
+                    '--current-theme-text': '#C5D8E0',
+                    '--current-theme-accent': '#3A506B',
+                    '--current-theme-neutral': '#1C2541',
+                    '--current-theme-button-text': '#FFFFFF',
+                }
+            },
+             'classic_light': {
+                name: 'Classic Light',
+                variables: {
+                    '--current-theme-bg': '#FFFFFF',
+                    '--current-theme-text': '#212529',
+                    '--current-theme-accent': '#007bff',
+                    '--current-theme-neutral': '#f8f9fa',
+                    '--current-theme-button-text': '#FFFFFF',
+                }
+            }
+        };
+
+        const cloakPresets = { // Ensure this matches the main app's cloakPresets
+            'none': { displayName: "None (App Default)", title: "VERN MAX - BROWSER", faviconUrl: "../../images/title-mini.png" }, // Adjusted path
+            'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
+            'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../../images/new-tab-chrome.png' }, // Adjusted path
+            'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../../images/no-favicon-chrome.png'} // Adjusted path
+        };
+
+        const searchEngines = { // Ensure this matches the main app's searchEngines
+            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
+            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+        };
+
+        // --- DOM Elements ---
+        let themeDropdownEl, tabCloakDropdownEl, searchEngineDropdownEl;
+        let selectedThemeTextEl, selectedTabCloakTextEl, selectedSearchEngineTextEl;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            themeDropdownEl = document.getElementById('theme-dropdown');
+            tabCloakDropdownEl = document.getElementById('tab-cloak-dropdown');
+            searchEngineDropdownEl = document.getElementById('search-engine-dropdown');
+
+            selectedThemeTextEl = themeDropdownEl.querySelector('#selected-theme-text');
+            selectedTabCloakTextEl = tabCloakDropdownEl.querySelector('#selected-tab-cloak-text');
+            selectedSearchEngineTextEl = searchEngineDropdownEl.querySelector('#selected-search-engine-text');
+
+            populateDropdown('theme-dropdown', themes, (item) => item.name);
+            populateDropdown('tab-cloak-dropdown', cloakPresets, (item) => item.displayName);
+            populateDropdown('search-engine-dropdown', searchEngines, (item) => item.name);
+
+            loadAndApplySettings();
+            setupDropdownEventListeners();
+        });
+
+        function populateDropdown(dropdownId, dataObject, displayPropertyGetter) {
+            const dropdownEl = document.getElementById(dropdownId);
+            const listEl = dropdownEl.querySelector('.custom-dropdown-list');
+            listEl.innerHTML = ''; // Clear existing options
+
+            for (const key in dataObject) {
+                const item = dataObject[key];
+                const listItemEl = document.createElement('li');
+                listItemEl.className = 'custom-dropdown-list-item';
+                listItemEl.dataset.value = key;
+                listItemEl.textContent = displayPropertyGetter(item);
+                listItemEl.setAttribute('role', 'option');
+                listEl.appendChild(listItemEl);
+            }
+        }
+
+        function applyTheme(themeKey) {
+            const theme = themes[themeKey];
+            if (theme && theme.variables) {
+                for (const variableName in theme.variables) {
+                    document.documentElement.style.setProperty(variableName, theme.variables[variableName]);
+                }
+                // Also update specific derived variables for consistency if not directly in theme.variables
+                document.documentElement.style.setProperty('--bg-color', theme.variables['--current-theme-bg']);
+                document.documentElement.style.setProperty('--text-color', theme.variables['--current-theme-text']);
+                // ... add others if needed
+            }
+        }
+
+        function loadAndApplySettings() {
+            const savedTheme = localStorage.getItem('vernTheme') || 'default_dark_purple';
+            applyTheme(savedTheme);
+            updateSelectedDropdownText('theme-dropdown', savedTheme, themes, item => item.name, selectedThemeTextEl);
+
+            const savedCloak = localStorage.getItem('vernCloakPreset') || 'none';
+            updateSelectedDropdownText('tab-cloak-dropdown', savedCloak, cloakPresets, item => item.displayName, selectedTabCloakTextEl);
+
+            const savedSearchEngine = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
+            updateSelectedDropdownText('search-engine-dropdown', savedSearchEngine, searchEngines, item => item.name, selectedSearchEngineTextEl);
+        }
+
+        function setupDropdownEventListeners() {
+            document.querySelectorAll('.custom-dropdown-header').forEach(header => {
+                header.addEventListener('click', toggleDropdown);
+                header.addEventListener('keydown', handleDropdownKeyDown);
+            });
+            // Event delegation for list items as they are dynamically populated
+            document.querySelectorAll('.custom-dropdown-list').forEach(list => {
+                list.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('custom-dropdown-list-item')) {
+                        selectDropdownItem.call(event.target);
+                    }
+                });
+                 list.addEventListener('keydown', function(event){
+                     if (event.target.classList.contains('custom-dropdown-list-item')) {
+                        handleDropdownItemKeyDown.call(event.target, event);
+                    }
+                 });
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                document.querySelectorAll('.custom-dropdown-list.show').forEach(list => {
+                    if (!list.parentNode.contains(e.target)) {
+                        closeDropdown(list.parentNode.querySelector('.custom-dropdown-header'));
+                    }
+                });
+            });
+        }
+
+        function closeDropdown(headerEl) {
+            const listEl = headerEl.nextElementSibling;
+            listEl.classList.remove('show');
+            headerEl.classList.remove('open');
+            headerEl.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleDropdown() {
+            const header = this;
+            const list = header.nextElementSibling;
+            const isOpen = list.classList.contains('show');
+
+            // Close all other open dropdowns first
+            document.querySelectorAll('.custom-dropdown-list.show').forEach(otherList => {
+                if (otherList !== list) {
+                    closeDropdown(otherList.parentNode.querySelector('.custom-dropdown-header'));
+                }
+            });
+
+            if (isOpen) {
+                closeDropdown(header);
+            } else {
+                list.classList.add('show');
+                header.classList.add('open');
+                header.setAttribute('aria-expanded', 'true');
+                (list.querySelector('.custom-dropdown-list-item.selected') || list.querySelector('.custom-dropdown-list-item'))?.focus();
+            }
+        }
+
+        function handleDropdownKeyDown(e) { /* ... (from previous, adapted for settings page) ... */ const header = this; const list = header.nextElementSibling; const isOpen = list.classList.contains('show'); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown.call(header); } else if (e.key === 'ArrowDown' && !isOpen) { e.preventDefault(); toggleDropdown.call(header); } else if (e.key === 'ArrowDown' && isOpen) { e.preventDefault(); list.querySelector('.custom-dropdown-list-item')?.focus(); } else if (e.key === 'Escape' && isOpen) { e.preventDefault(); closeDropdown(header); header.focus(); }}
+
+        function selectDropdownItem() {
+            const item = this;
+            const dropdown = item.closest('.custom-dropdown');
+            const header = dropdown.querySelector('.custom-dropdown-header');
+            const list = dropdown.querySelector('.custom-dropdown-list');
+            const value = item.dataset.value;
+            let selectedTextElToUpdate;
+            let dataObjectForText;
+            let displayPropGetter;
+
+            if (dropdown.id === 'theme-dropdown') {
+                localStorage.setItem('vernTheme', value);
+                applyTheme(value); // Apply theme immediately
+                selectedTextElToUpdate = selectedThemeTextEl;
+                dataObjectForText = themes;
+                displayPropGetter = objItem => objItem.name;
+            } else if (dropdown.id === 'tab-cloak-dropdown') {
+                localStorage.setItem('vernCloakPreset', value);
+                selectedTextElToUpdate = selectedTabCloakTextEl;
+                dataObjectForText = cloakPresets;
+                displayPropGetter = objItem => objItem.displayName;
+            } else if (dropdown.id === 'search-engine-dropdown') {
+                localStorage.setItem('vernSearchEngine', value);
+                selectedTextElToUpdate = selectedSearchEngineTextEl;
+                dataObjectForText = searchEngines;
+                displayPropGetter = objItem => objItem.name;
+            }
+
+            updateSelectedDropdownText(dropdown.id, value, dataObjectForText, displayPropGetter, selectedTextElToUpdate);
+            closeDropdown(header);
+            header.focus();
+        }
+
+        function handleDropdownItemKeyDown(e) { /* ... (from previous, adapted for settings page) ... */ const item = this; const list = item.closest('.custom-dropdown-list'); const items = Array.from(list.querySelectorAll('.custom-dropdown-list-item')); const currentIndex = items.indexOf(item); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDropdownItem.call(item); } else if (e.key === 'ArrowDown') { e.preventDefault(); items[(currentIndex + 1) % items.length]?.focus(); } else if (e.key === 'ArrowUp') { e.preventDefault(); items[(currentIndex - 1 + items.length) % items.length]?.focus(); } else if (e.key === 'Escape') { e.preventDefault(); const header = list.parentNode.querySelector('.custom-dropdown-header'); closeDropdown(header); header.focus(); } }
+
+        function updateSelectedDropdownText(dropdownId, selectedValue, dataObject, displayPropertyGetter, selectedTextElement) {
+            const dropdownEl = document.getElementById(dropdownId);
+            if (!dropdownEl || !selectedTextElement || !dataObject) return;
+
+            if (dataObject[selectedValue]) {
+                selectedTextElement.textContent = displayPropertyGetter(dataObject[selectedValue]);
+            }
+
+            const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item');
+            listItems.forEach(item => {
+                item.classList.toggle('selected', item.dataset.value === selectedValue);
+                item.setAttribute('aria-selected', item.dataset.value === selectedValue ? 'true' : 'false');
+            });
+        }
+
+    </script>
+</body>
+</html>
