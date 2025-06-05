@@ -75,36 +75,41 @@
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
             box-shadow: 0 0 0 1px var(--button-outline-color); font-size: 20px;
             position: relative;
-            flex-shrink: 0; /* Prevent buttons from shrinking */
+            flex-shrink: 0;
         }
         .nav-button:hover, .toolbar-button:hover { background-color: var(--button-hover-bg); }
 
-        .nav-button .icon-img, .toolbar-button .icon-img { width: 20px; height: 20px; }
+        .nav-button .icon-img, .toolbar-button .icon-img {
+            width: 20px;
+            height: 20px;
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* IE10+/Edge */
+            user-select: none;         /* Standard */
+            pointer-events: none;      /* Prevents image itself from capturing clicks meant for button */
+        }
 
 
         #search-bar {
             flex: 1; height: 36px; border-radius: 8px; border: none; background-color: var(--input-bg);
             color: var(--text-color); padding: 0 15px; font-size: 14px;
             box-shadow: 0 0 0 1px var(--button-outline-color); font-family: var(--font-family-main);
-            margin-right: 8px; /* Added margin for spacing before next button */
+            margin-right: 8px;
         }
         #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
 
-        /* Ensure all toolbar items (except search bar if it's first after nav) have margin-right */
         #bookmark-button, #history-button, #fullscreen-button {
              margin-right: 8px;
         }
         #settings-button {
-            margin-left: auto; /* Pushes settings button to the very right */
-            margin-right: 0; /* No margin-right needed if it's the last item */
+            margin-left: auto;
+            margin-right: 0;
         }
 
 
-        /* Mini Menus (for Bookmarks & History) */
         .mini-menu {
-            /* display: none; /* Controlled by 'show' class now */
             position: absolute;
-            top: calc(100% + 5px);
+            top: calc(100% + 5px); /* Position below the toolbar */
             background-color: var(--menu-bg);
             border: 1px solid var(--menu-border-color);
             border-radius: 8px;
@@ -112,7 +117,7 @@
             z-index: 1005;
             min-width: 280px;
             max-width: 350px;
-            max-height: 300px; /* Set a max-height for scrolling long lists */
+            max-height: 300px;
             overflow-y: auto;
             padding: 10px;
             color: var(--menu-text-color);
@@ -129,8 +134,9 @@
             transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0s;
         }
 
-        #bookmark-menu { right: 10px; /* Adjusted for better positioning, assuming settings is last */ }
-        #history-menu { right: 10px; /* Can be the same if they don't show simultaneously, or adjust based on trigger button */ }
+        /* Dynamic positioning via JS will override these if needed, but good for initial layout */
+        /* #bookmark-menu { right: 10px; }
+        #history-menu { right: 10px; } */
 
 
         .mini-menu h3 {
@@ -187,11 +193,11 @@
         }
         .mini-menu .menu-button:hover { background-color: var(--button-hover-bg); }
         .mini-menu .menu-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
-        .mini-menu .menu-button.clear-button { /* Specific style for clear button */
-            background-color: color-mix(in srgb, var(--current-theme-accent) 60%, #c0392b); /* Darker red accent */
+        .mini-menu .menu-button.clear-button {
+            background-color: color-mix(in srgb, var(--current-theme-accent) 60%, #c0392b);
         }
         .mini-menu .menu-button.clear-button:hover {
-            background-color: #c0392b; /* Solid red on hover */
+            background-color: #c0392b;
         }
 
 
@@ -443,37 +449,39 @@
         function addToHistory(title, url) { /* ... (same as original) ... */ if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
         function renderHistory() { /* ... (same as original, targets historyListPopupEl) ... */ historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const itemFragment = historyItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const titleSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; historyListPopupEl.appendChild(li); }); }
         function handleHistoryClick(e) { /* ... (same as original, closes historyMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
+
         function handleClearHistory() {
             if (confirm("Are you sure you want to clear the session history?")) {
                 sessionHistory = [];
-                renderHistory();
-                historyMenuEl.classList.remove('show'); // Optionally close menu
+                renderHistory(); // Re-render the now empty list
+                // historyMenuEl.classList.remove('show'); // Optionally close menu
             }
         }
 
+        function positionMenuUnderButton(menuEl, buttonEl) {
+            const btnRect = buttonEl.getBoundingClientRect();
+            const toolbarRect = toolbarEl.getBoundingClientRect(); // Assuming toolbarEl is globally accessible
+
+            menuEl.style.top = (toolbarRect.height + 5) + 'px'; // Position below toolbar
+
+            // Align menu's right edge with button's right edge
+            // This calculation positions the menu so its right edge aligns with the button's right edge relative to the viewport
+            menuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px';
+            menuEl.style.left = 'auto'; // Ensure left is not conflicting
+        }
 
         function toggleBookmarkMenu() {
-            historyMenuEl.classList.remove('show');
+            historyMenuEl.classList.remove('show'); // Close other menu
             bookmarkMenuEl.classList.toggle('show');
             if (bookmarkMenuEl.classList.contains('show')) {
-                // Adjust position if needed, e.g., based on bookmarkButtonEl's position
-                const btnRect = bookmarkButtonEl.getBoundingClientRect();
-                const toolbarRect = toolbarEl.getBoundingClientRect();
-                bookmarkMenuEl.style.top = (toolbarRect.height + 5) + 'px'; // Ensure it's below toolbar
-                // bookmarkMenuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px'; // Align to button's right edge
-                // Or simpler:
-                bookmarkMenuEl.style.right = (document.documentElement.clientWidth - settingsButtonEl.getBoundingClientRect().right - (settingsButtonEl.offsetWidth / 2) + (bookmarkMenuEl.offsetWidth / 2) - 28) + 'px';
+                positionMenuUnderButton(bookmarkMenuEl, bookmarkButtonEl);
             }
         }
         function toggleHistoryMenu() {
-            bookmarkMenuEl.classList.remove('show');
+            bookmarkMenuEl.classList.remove('show'); // Close other menu
             historyMenuEl.classList.toggle('show');
-             if (historyMenuEl.classList.contains('show')) {
-                const btnRect = historyButtonEl.getBoundingClientRect();
-                const toolbarRect = toolbarEl.getBoundingClientRect();
-                historyMenuEl.style.top = (toolbarRect.height + 5) + 'px';
-                // historyMenuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px';
-                historyMenuEl.style.right = (document.documentElement.clientWidth - settingsButtonEl.getBoundingClientRect().right - (settingsButtonEl.offsetWidth / 2) + (historyMenuEl.offsetWidth / 2) + 10) + 'px';
+            if (historyMenuEl.classList.contains('show')) {
+                positionMenuUnderButton(historyMenuEl, historyButtonEl);
             }
         }
 
