@@ -8,10 +8,10 @@
     <style id="custom-styles">
         /* Core Theme Variables & Component Mappings - Purple & Dark Grey Theme */
         :root {
-            --current-theme-bg: #23272A; /* Dark Blackish Grey */
-            --current-theme-text: #E0E1DD; /* Light Grey/Off-white */
-            --current-theme-accent: #7F5AF0; /* Vibrant Purple */
-            --current-theme-neutral: #2C2F33; /* Slightly lighter Dark Grey for UI elements */
+            --current-theme-bg: #23272A; 
+            --current-theme-text: #E0E1DD; 
+            --current-theme-accent: #7F5AF0; 
+            --current-theme-neutral: #2C2F33; 
             --current-theme-button-text: #FFFFFF;
             --current-theme-shadow-rgb: 0, 0, 0;
             --current-theme-shadow-opacity-strong: 0.4;
@@ -177,7 +177,8 @@
         #tab-bar::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
         .tab {
             display: flex; align-items: center; min-width: 150px; max-width: 180px; height: 30px;
-            padding: 0 3px; background-color: var(--tab-bg); border-radius: 6px; cursor: pointer;
+            padding: 3px 5px; /* MODIFIED: Tab padding */
+            background-color: var(--tab-bg); border-radius: 6px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative;
             box-shadow: 0 0 0 1px var(--tab-border);
         }
@@ -196,12 +197,19 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
 
         .tab-close {
-            width: 25px; height: 25px; display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; flex-shrink: 0; opacity: 1;
+            width: 25px; /* MODIFIED: Size */
+            height: 25px; /* MODIFIED: Size */
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; /* MODIFIED: Border radius */
+            margin-left: 4px; flex-shrink: 0; opacity: 0.7;
             transition: opacity 0.2s, background-color 0.2s; cursor: pointer;
         }
         .tab-close:hover { opacity: 1; background-color: rgba(var(--current-theme-shadow-rgb),0.2); }
-        .tab-close-icon { width: 10px; height: 10px; display: block; }
+        .tab-close-icon { 
+            width: 20px; /* MODIFIED: Icon size */
+            height: 20px; /* MODIFIED: Icon size */
+            display: block; 
+        }
 
         .new-tab-button {
             width: 30px; height: 30px; min-width: 30px; margin-left: 5px; border-radius: 25%;
@@ -332,23 +340,32 @@
         };
         let currentSearchEngineKey = 'duckduckgo';
         const cloakPresets = {
-            'none': { title: "VERN MAX - SEARCH", faviconUrl: "../images/title-mini.png" }, // Specific default for "None"
+            'none': { title: "VERN MAX - SEARCH", faviconUrl: "../images/title-mini.png" }, 
             'google_docs': { title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_drive': { title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
             'wikipedia': { title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
             'new_tab': { title: 'New Tab', faviconUrl: '../images/title-mini.png' }
         };
-        let currentCloakPresetKey = 'none'; // Default to "None"
+        let currentCloakPresetKey = 'none'; 
         let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl, topBarAssemblyEl, sidebarEl, mainContentWrapperEl, bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl, historyListEl, searchEngineDropdownEl, tabCloakDropdownEl;
         let initialTopBarHeight = 0;
 
         /**
-         * Applies the current cloak settings ONLY to the browser tab's title and favicon.
+         * Handles errors when loading an image (e.g., a favicon).
+         * Replaces the broken image's parent container's content with a default globe icon.
+         * @param {HTMLImageElement} imgElement - The image element that failed to load.
          */
+        function handleFaviconError(imgElement) {
+            const defaultFaviconHTML = `<span class="unicode-icon" style="font-size: 14px;">🌐</span>`;
+            if (imgElement.parentNode) {
+                imgElement.parentNode.innerHTML = defaultFaviconHTML;
+            }
+        }
+
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
             const defaultAppTitle = "VERN MAX - SEARCH";
-            const defaultAppFavicon = "../images/title-mini.png"; // Fallback/default for "None"
+            const defaultAppFavicon = "../images/title-mini.png"; 
 
             let selectedCloak = cloakPresets[currentCloakPresetKey];
 
@@ -358,7 +375,6 @@
                     appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; 
                 }
             } else {
-                // "None" selected or invalid cloak key, apply specific default
                 document.title = defaultAppTitle;
                 if (appFaviconEl) {
                     appFaviconEl.href = defaultAppFavicon;
@@ -366,10 +382,6 @@
             }
         }
 
-        /**
-         * Updates the visual display (title and favicon) of a single VERN MAX internal tab.
-         * This ALWAYS shows the tab's actual content, ignoring cloak settings.
-         */
         function updateInternalTabDisplay(tab) {
             if (!tab) return;
             const defaultFaviconHTML = `<span class="unicode-icon" style="font-size: 14px;">🌐</span>`;
@@ -377,8 +389,10 @@
             let displayTitleToShow = tab.actualTitle || "New Tab";
             let faviconHTMLToShow = defaultFaviconHTML; 
 
+            // Internal tabs ALWAYS try to show actual favicon, or globe if not available/error.
+            // They are NOT affected by the cloakPresets.
             if (tab.actualFavicon && (tab.actualFavicon.startsWith('http') || tab.actualFavicon.startsWith('data:'))) {
-                faviconHTMLToShow = `<img src="${tab.actualFavicon}" alt="" class="icon-img" onerror="this.outerHTML = '${defaultFaviconHTML}';">`;
+                faviconHTMLToShow = `<img src="${tab.actualFavicon}" alt="" class="icon-img" onerror="handleFaviconError(this);">`;
             }
             
             tab.titleElement.textContent = displayTitleToShow.length > 20 ? displayTitleToShow.substring(0, 18) + '...' : displayTitleToShow;
@@ -386,15 +400,13 @@
             tab.faviconElement.innerHTML = faviconHTMLToShow;
         }
         
-        /**
-         * Updates a tab's actualTitle and actualFavicon based on loaded content,
-         * then updates its internal display. Browser cloak is NOT handled here.
-         */
         function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) {
             if (!tab) return;
             tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
             tab.actualFavicon = actualPageFaviconUrl || null; 
             updateInternalTabDisplay(tab);
+            // Browser cloak is independent of active internal tab's content for "None" state now.
+            // It's updated when cloak setting changes or on page load.
         }
         
         function updateInitialTopBarHeight() {
@@ -457,8 +469,7 @@
             }, 50); 
 
             renderHistory();
-            applyBrowserCloak(); // Apply initial browser cloak based on loaded settings
-            // Ensure all existing internal tabs (if any rehydrated - though current setup doesn't rehydrate) are displayed correctly
+            applyBrowserCloak(); 
             tabs.forEach(t => updateInternalTabDisplay(t)); 
         });
 
@@ -471,7 +482,6 @@
             
             const tabCloakListEl = tabCloakDropdownEl.querySelector('.custom-dropdown-list');
             tabCloakListEl.innerHTML = '';
-            // For "None", explicitly state what it does for the browser tab if needed, or keep generic
             const nonePresetText = "None (Show App Default)"; 
             for (const value in cloakPresets) { 
                 const li = document.createElement('li'); 
@@ -494,7 +504,7 @@
         function selectDropdownItem() {
             const item = this; const dropdown = item.closest('.custom-dropdown');
             const header = dropdown.querySelector('.custom-dropdown-header'); const list = dropdown.querySelector('.custom-dropdown-list');
-            const value = item.dataset.value; updateSelectedDropdownText(dropdown.id, value); // Updates the displayed text in dropdown
+            const value = item.dataset.value; updateSelectedDropdownText(dropdown.id, value); 
             list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus();
             
             if (dropdown.id === 'search-engine-dropdown') { 
@@ -503,7 +513,8 @@
             } else if (dropdown.id === 'tab-cloak-dropdown') { 
                 currentCloakPresetKey = value; 
                 localStorage.setItem('vernCloakPreset', currentCloakPresetKey); 
-                applyBrowserCloak(); // Only apply to browser tab. Internal tabs are not affected by this change.
+                applyBrowserCloak(); // Only apply to browser tab. 
+                                     // Internal tabs are not re-rendered based on cloak changes.
             }
         }
 
@@ -527,7 +538,6 @@
             if (selectedTextEl && newText) {
                  selectedTextEl.textContent = newText; 
             } else if (selectedTextEl && dropdownId === 'tab-cloak-dropdown' && selectedValue === 'none') {
-                // Ensure the "None" text is consistent if it was special cased in setup
                 selectedTextEl.textContent = "None (Show App Default)";
             }
         }
@@ -631,12 +641,8 @@
                 activeTabId = tabId; 
                 searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; 
                 tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); 
-                // When a tab is activated, the browser cloak might change IF the cloak setting is "None" AND
-                // the previous implementation relied on active tab's content for "None".
-                // With the new "None" behavior (static app title/icon), this direct call to applyBrowserCloak
-                // simply re-asserts the current cloak state.
-                applyBrowserCloak(); 
-                updateInternalTabDisplay(tab); // Ensure internal tab is correctly displayed
+                applyBrowserCloak(); // Update browser tab appearance based on current cloak setting
+                updateInternalTabDisplay(tab); // Ensure internal tab is correctly displayed (always actual content)
             } 
         }
         function closeTab(tabId) { const tabIndex = tabs.findIndex(t => t.id === tabId); if (tabIndex === -1) return; const tab = tabs[tabIndex]; if (tab.titleObserver) tab.titleObserver.disconnect(); if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1); if (activeTabId === tabId) { if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id); else createTab('about:blank'); } }
