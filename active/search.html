@@ -416,13 +416,13 @@
             if (tab.actualFavicon && (tab.actualFavicon.startsWith('http') || tab.actualFavicon.startsWith('data:'))) {
                 if (imgElement) {
                     imgElement.src = tab.actualFavicon;
-                    imgElement.style.display = 'block'; // Or 'inline-block'
+                    imgElement.style.display = 'block'; 
                 }
                 if (globeElement) globeElement.style.display = 'none';
             } else {
                 if (imgElement) {
                     imgElement.style.display = 'none';
-                    imgElement.src = ''; // Clear src to prevent errors
+                    imgElement.src = ''; 
                 }
                 if (globeElement) globeElement.style.display = 'inline-flex';
             }
@@ -456,41 +456,83 @@
             }
         }
         
-        function getAndProcessFaviconUrl(basePageUrl) {
-            let rawFaviconUrl = null;
-            if (basePageUrl && (basePageUrl.startsWith('http:') || basePageUrl.startsWith('https:'))) {
-                try {
-                    const siteOrigin = new URL(basePageUrl).origin;
-                    rawFaviconUrl = new URL('/favicon.ico', siteOrigin).href;
-                } catch (e) {
-                    console.warn("VERN MAX Debug: Error constructing /favicon.ico URL from basePageUrl:", basePageUrl, e);
-                    return null; 
+        // --- NEW/MODIFIED FAVICON FUNCTIONS ---
+        function proxyUrl(urlToProxy) {
+            if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
+            if (urlToProxy.startsWith('data:')) {
+                return urlToProxy; // Data URIs don't need proxying
+            }
+
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy);
+                return urlToProxy; // Cannot proxy, return original
+            }
+
+            try {
+                const currentOrigin = self.location.origin;
+                // Avoid re-proxying if it already seems proxied or is on the same origin as the app
+                if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || 
+                    (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) {
+                    return urlToProxy;
                 }
-            } else {
+                
+                const proxied = currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy);
+                // console.log("VERN MAX Debug: Proxying URL:", urlToProxy, "-> Proxied:", proxied);
+                return proxied;
+            } catch (e) {
+                console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e);
+                return urlToProxy; // Return original on encoding error
+            }
+        }
+
+        function getDefaultFaviconForUrl(basePageUrl) {
+            if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) {
                 return null; 
             }
 
-            let processedFaviconUrl = null;
-            if (rawFaviconUrl) { 
-                if (typeof __uv$config !== 'undefined' && __uv$config.prefix && __uv$config.encodeUrl) {
-                    try {
-                        if (!rawFaviconUrl.startsWith(self.location.origin) && !rawFaviconUrl.includes(__uv$config.prefix)) {
-                             processedFaviconUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(rawFaviconUrl);
-                        } else {
-                            processedFaviconUrl = rawFaviconUrl; 
-                        }
-                    } catch (e) {
-                        console.warn("VERN MAX Debug: Error proxying favicon URL:", rawFaviconUrl, e);
-                        processedFaviconUrl = rawFaviconUrl; 
-                    }
-                } else {
-                    processedFaviconUrl = rawFaviconUrl; 
-                }
+            try {
+                const siteOrigin = new URL(basePageUrl).origin;
+                const rawFaviconIcoUrl = new URL('/favicon.ico', siteOrigin).href;
+                // console.log("VERN MAX Debug: Default /favicon.ico attempt for:", basePageUrl, "-> Raw .ico URL:", rawFaviconIcoUrl);
+                return proxyUrl(rawFaviconIcoUrl);
+            } catch (e) {
+                console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e);
+                return null;
             }
-            console.log("VERN MAX Debug: Favicon attempt for:", basePageUrl, "-> Raw:", rawFaviconUrl, "-> Processed:", processedFaviconUrl);
-            return processedFaviconUrl;
         }
 
+        function getFaviconForTab(tab) {
+            if (tab && tab.iframe && tab.iframe.contentDocument && tab.url) {
+                try {
+                    const doc = tab.iframe.contentDocument;
+                    const selectors = [
+                        'link[rel="icon"][type="image/svg+xml"]', // Prefer SVG
+                        'link[rel="icon"]',
+                        'link[rel="apple-touch-icon"]', 
+                        'link[rel="shortcut icon"]'
+                    ];
+                    let bestLinkHref = null;
+
+                    for (const selector of selectors) {
+                        const link = doc.querySelector(selector);
+                        if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') {
+                            bestLinkHref = link.href; // The browser resolves this to an absolute URL
+                            break; 
+                        }
+                    }
+                    
+                    if (bestLinkHref) {
+                        // console.log("VERN MAX Debug: Favicon from <link> tag:", bestLinkHref, " (for original URL:", tab.url, ")");
+                        return proxyUrl(bestLinkHref); // proxyUrl will handle if it's data:, already proxied, or needs proxying
+                    }
+                } catch (e) {
+                    console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", tab.url, e);
+                }
+            }
+            // Fallback to /favicon.ico
+            return getDefaultFaviconForUrl(tab ? tab.url : null);
+        }
+        // --- END NEW/MODIFIED FAVICON FUNCTIONS ---
 
         document.addEventListener('DOMContentLoaded', async () => {
             tabBarEl = document.getElementById('tab-bar'); 
@@ -590,7 +632,7 @@
             if (dropdownId === 'tab-cloak-dropdown' && cloakPresets[selectedValue]) {
                 selectedTextEl.textContent = cloakPresets[selectedValue].displayName;
             } else if (dropdownId === 'search-engine-dropdown' && searchEngines[selectedValue]) {
-                 selectedTextEl.textContent = searchEngines[selectedValue].name;
+                selectedTextEl.textContent = searchEngines[selectedValue].name;
             } else if (selectedTextEl) { 
                 const selectedListItem = dropdownEl.querySelector(`.custom-dropdown-list-item[data-value="${selectedValue}"]`);
                 if (selectedListItem) selectedTextEl.textContent = selectedListItem.textContent;
@@ -751,11 +793,12 @@
                     try { 
                         if (iframe.contentWindow && iframe.contentDocument) { 
                             titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled'; 
-                            faviconFromIframe = getAndProcessFaviconUrl(tab.url); 
+                            faviconFromIframe = getFaviconForTab(tab); // MODIFIED LINE
                         } 
                     } catch (e) { 
                         try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} 
-                         console.warn("VERN MAX Debug: Error accessing iframe content on load for tab:", tab.id, e);
+                        faviconFromIframe = getDefaultFaviconForUrl(tab.url); // Fallback if contentDocument access fails
+                        console.warn("VERN MAX Debug: Error accessing iframe content on load for tab:", tab.id, e);
                     } 
                     if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; 
                     updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
@@ -771,25 +814,50 @@
             if (tab.titleObserver) tab.titleObserver.disconnect(); 
             try { 
                 const targetNode = tab.iframe.contentDocument.querySelector('title'); 
-                if (!targetNode) return; 
+                if (!targetNode) { // If no title tag, still try to get favicon based on document changes
+                     const headNode = tab.iframe.contentDocument.querySelector('head');
+                     if (!headNode) return; // No head, can't observe much for favicons via link tags
+
+                     const observer = new MutationObserver(() => {
+                        if (tab.iframe.contentDocument && tab.iframe.contentWindow) {
+                            let titleFromIframe = tab.iframe.contentDocument.title || tab.actualTitle; // Keep old title if new one not found
+                            let faviconFromIframe = getFaviconForTab(tab); // MODIFIED LINE
+                            updateTabInfo(tab, titleFromIframe, faviconFromIframe);
+                        }
+                     });
+                     observer.observe(headNode, { subtree: true, childList: true, attributes: true, attributeFilter: ['href'] }); // Observe head for link changes
+                     tab.titleObserver = observer;
+                     return;
+                }
                 const observer = new MutationObserver(() => { 
                     if (tab.iframe.contentDocument && tab.iframe.contentWindow) { 
                         let titleFromIframe = tab.iframe.contentDocument.title; 
-                        let faviconFromIframe = getAndProcessFaviconUrl(tab.url); 
+                        let faviconFromIframe = getFaviconForTab(tab); // MODIFIED LINE
                         updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
                     }
                 }); 
                 observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); 
+                // Also observe head for new <link rel="icon"> tags
+                const headNode = tab.iframe.contentDocument.querySelector('head');
+                if (headNode) {
+                    observer.observe(headNode, { childList: true, subtree: true, attributes: true, attributeFilter: ['href', 'rel'] });
+                }
                 tab.titleObserver = observer; 
             } catch (e) { 
-                 console.warn("VERN MAX Debug: Error setting up title observer for tab:", tab.id, e);
+                console.warn("VERN MAX Debug: Error setting up title/head observer for tab:", tab.id, e);
                 if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); 
                 tab.locationCheckIntervalId = setInterval(() => { 
                     try { 
                         if (tab.iframe.contentDocument && tab.iframe.contentWindow && tab.actualTitle !== tab.iframe.contentDocument.title) {
                             let title = tab.iframe.contentDocument.title; 
-                            let fav = getAndProcessFaviconUrl(tab.url); 
+                            let fav = getFaviconForTab(tab); // MODIFIED LINE
                             updateTabInfo(tab, title, fav);
+                        } else if (tab.iframe.contentDocument && tab.iframe.contentWindow) { // Check favicon even if title hasn't changed
+                            let currentFavicon = tab.actualFavicon;
+                            let newFavicon = getFaviconForTab(tab);
+                            if (currentFavicon !== newFavicon) {
+                                updateTabInfo(tab, tab.actualTitle, newFavicon);
+                            }
                         }
                     } catch (err) { /* console.warn("Interval check error:", err) */ } 
                 }, 2000); 
