@@ -177,7 +177,7 @@
         #tab-bar::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
         .tab {
             display: flex; align-items: center; min-width: 150px; max-width: 180px; height: 30px;
-            padding: 0px 3px; /* MODIFIED: Tab padding */
+            padding: 0px 3px; /* UPDATED from user's HTML */
             background-color: var(--tab-bg); border-radius: 6px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative;
             box-shadow: 0 0 0 1px var(--tab-border);
@@ -197,17 +197,23 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
 
         .tab-close {
-            width: 25px; /* MODIFIED: Size */
-            height: 25px; /* MODIFIED: Size */
+            width: 25px; /* UPDATED from user's HTML */
+            height: 25px; /* UPDATED from user's HTML */
             display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; /* MODIFIED: Border radius */
-            margin-left: 4px; flex-shrink: 0; opacity: 1;
-            transition: opacity 0.2s, background-color 0.2s; cursor: pointer;
+            border-radius: 6px; /* UPDATED from user's HTML */
+            margin-left: 4px; flex-shrink: 0; opacity: 1; /* UPDATED opacity from user's HTML */
+            transition: opacity 0.2s, background-color 0.2s, width 0.2s, height 0.2s; /* Added width/height transition */
+            cursor: pointer;
         }
-        .tab-close:hover { opacity: 1; background-color: rgba(var(--current-theme-shadow-rgb),0.2); width: 27.5px; height: 27.5px; }
+        .tab-close:hover { 
+            opacity: 1; 
+            background-color: rgba(var(--current-theme-shadow-rgb),0.2); 
+            width: 27.5px; /* UPDATED from user's HTML */
+            height: 27.5px; /* UPDATED from user's HTML */
+        }
         .tab-close-icon { 
-            width: 20px; /* MODIFIED: Icon size */
-            height: 20px; /* MODIFIED: Icon size */
+            width: 20px; /* UPDATED from user's HTML */
+            height: 20px; /* UPDATED from user's HTML */
             display: block; 
         }
 
@@ -340,11 +346,12 @@
         };
         let currentSearchEngineKey = 'duckduckgo';
         const cloakPresets = {
-            'none': { title: "VERN MAX - SEARCH", faviconUrl: "../images/title-mini.png" }, 
-            'google_docs': { title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
-            'google_drive': { title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
-            'wikipedia': { title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
-            'new_tab': { title: 'New Tab', faviconUrl: '../images/title-mini.png' }
+            'none': { displayName: "None (Show App Default)", title: "VERN MAX - SEARCH", faviconUrl: "../images/title-mini.png" },
+            'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
+            'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }, 
+            'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'}
         };
         let currentCloakPresetKey = 'none'; 
         let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl, topBarAssemblyEl, sidebarEl, mainContentWrapperEl, bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl, historyListEl, searchEngineDropdownEl, tabCloakDropdownEl;
@@ -352,32 +359,44 @@
 
         /**
          * Handles errors when loading an image (e.g., a favicon).
-         * Replaces the broken image's parent container's content with a default globe icon.
+         * Replaces the broken image with a default globe icon by manipulating the DOM.
          * @param {HTMLImageElement} imgElement - The image element that failed to load.
          */
         function handleFaviconError(imgElement) {
-            const defaultFaviconHTML = `<span class="unicode-icon" style="font-size: 14px;">🌐</span>`;
-            if (imgElement.parentNode) {
-                imgElement.parentNode.innerHTML = defaultFaviconHTML;
+            const parent = imgElement.parentNode;
+            if (parent) {
+                // Remove all children of parent (i.e., the broken img and potentially other interfering nodes)
+                while (parent.firstChild) {
+                    parent.removeChild(parent.firstChild);
+                }
+                // Add the new span with the globe icon
+                const span = document.createElement('span');
+                span.className = 'unicode-icon';
+                span.style.fontSize = '14px'; // Consistent with other icon styling
+                // span.style.lineHeight = '1'; // Already handled by .tab-favicon .unicode-icon
+                span.textContent = '🌐';
+                parent.appendChild(span);
             }
         }
 
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
             const defaultAppTitle = "VERN MAX - SEARCH";
-            const defaultAppFavicon = "../images/title-mini.png"; 
+            // Use the 'none' preset's favicon as the ultimate default if other specific images are missing
+            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; 
 
             let selectedCloak = cloakPresets[currentCloakPresetKey];
 
-            if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title) {
+            if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) { // Check title existence
                 document.title = selectedCloak.title;
                 if (appFaviconEl) {
                     appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; 
                 }
             } else {
-                document.title = defaultAppTitle;
+                // "None" selected or invalid cloak key, apply specific default for "None"
+                document.title = cloakPresets['none'].title || defaultAppTitle;
                 if (appFaviconEl) {
-                    appFaviconEl.href = defaultAppFavicon;
+                    appFaviconEl.href = cloakPresets['none'].faviconUrl || defaultAppFavicon;
                 }
             }
         }
@@ -389,8 +408,6 @@
             let displayTitleToShow = tab.actualTitle || "New Tab";
             let faviconHTMLToShow = defaultFaviconHTML; 
 
-            // Internal tabs ALWAYS try to show actual favicon, or globe if not available/error.
-            // They are NOT affected by the cloakPresets.
             if (tab.actualFavicon && (tab.actualFavicon.startsWith('http') || tab.actualFavicon.startsWith('data:'))) {
                 faviconHTMLToShow = `<img src="${tab.actualFavicon}" alt="" class="icon-img" onerror="handleFaviconError(this);">`;
             }
@@ -405,8 +422,6 @@
             tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
             tab.actualFavicon = actualPageFaviconUrl || null; 
             updateInternalTabDisplay(tab);
-            // Browser cloak is independent of active internal tab's content for "None" state now.
-            // It's updated when cloak setting changes or on page load.
         }
         
         function updateInitialTopBarHeight() {
@@ -482,12 +497,11 @@
             
             const tabCloakListEl = tabCloakDropdownEl.querySelector('.custom-dropdown-list');
             tabCloakListEl.innerHTML = '';
-            const nonePresetText = "None (Show App Default)"; 
             for (const value in cloakPresets) { 
                 const li = document.createElement('li'); 
                 li.className = 'custom-dropdown-list-item'; 
                 li.dataset.value = value; 
-                li.textContent = (value === 'none') ? nonePresetText : (cloakPresets[value].title || "Unnamed Cloak"); 
+                li.textContent = cloakPresets[value].displayName; 
                 li.setAttribute('role', 'option'); 
                 tabCloakListEl.appendChild(li); 
             }
@@ -513,8 +527,7 @@
             } else if (dropdown.id === 'tab-cloak-dropdown') { 
                 currentCloakPresetKey = value; 
                 localStorage.setItem('vernCloakPreset', currentCloakPresetKey); 
-                applyBrowserCloak(); // Only apply to browser tab. 
-                                     // Internal tabs are not re-rendered based on cloak changes.
+                applyBrowserCloak(); 
             }
         }
 
@@ -523,23 +536,22 @@
         function updateSelectedDropdownText(dropdownId, selectedValue) { 
             const dropdownEl = document.getElementById(dropdownId); if (!dropdownEl) return; 
             const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span'); 
-            const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item'); 
-            let newText = ''; 
-            listItems.forEach(item => { 
-                if (item.dataset.value === selectedValue) { 
-                    item.classList.add('selected'); 
-                    item.setAttribute('aria-selected', 'true'); 
-                    newText = item.textContent; 
-                } else { 
-                    item.classList.remove('selected'); 
-                    item.setAttribute('aria-selected', 'false'); 
-                } 
-            }); 
-            if (selectedTextEl && newText) {
-                 selectedTextEl.textContent = newText; 
-            } else if (selectedTextEl && dropdownId === 'tab-cloak-dropdown' && selectedValue === 'none') {
-                selectedTextEl.textContent = "None (Show App Default)";
+            
+            if (dropdownId === 'tab-cloak-dropdown' && cloakPresets[selectedValue]) {
+                selectedTextEl.textContent = cloakPresets[selectedValue].displayName;
+            } else if (dropdownId === 'search-engine-dropdown' && searchEngines[selectedValue]) {
+                 selectedTextEl.textContent = searchEngines[selectedValue].name;
+            } else if (selectedTextEl) { // Fallback for safety, though should not be needed
+                const selectedListItem = dropdownEl.querySelector(`.custom-dropdown-list-item[data-value="${selectedValue}"]`);
+                if (selectedListItem) selectedTextEl.textContent = selectedListItem.textContent;
             }
+
+            // Update selected class
+            const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item'); 
+            listItems.forEach(item => { 
+                item.classList.toggle('selected', item.dataset.value === selectedValue);
+                item.setAttribute('aria-selected', item.dataset.value === selectedValue);
+            });
         }
         
         function loadSettings() { 
@@ -641,8 +653,8 @@
                 activeTabId = tabId; 
                 searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; 
                 tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); 
-                applyBrowserCloak(); // Update browser tab appearance based on current cloak setting
-                updateInternalTabDisplay(tab); // Ensure internal tab is correctly displayed (always actual content)
+                applyBrowserCloak(); 
+                updateInternalTabDisplay(tab); 
             } 
         }
         function closeTab(tabId) { const tabIndex = tabs.findIndex(t => t.id === tabId); if (tabIndex === -1) return; const tab = tabs[tabIndex]; if (tab.titleObserver) tab.titleObserver.disconnect(); if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1); if (activeTabId === tabId) { if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id); else createTab('about:blank'); } }
