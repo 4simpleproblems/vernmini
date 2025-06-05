@@ -296,8 +296,8 @@
         .tab-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; border: none; }
         .tab-content.active { display: block; }
         .footer-label {
-            position: fixed; bottom: 0; right: 0; margin: 1rem; font-family: var(--font-family-main);
-            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+            position: fixed; bottom: 0; right: 0; margin: 0.25rem; font-family: var(--font-family-main);
+            font-size: 0.75rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
         }
         .sidebar-setting-label { display:block; margin-bottom:7px; font-size: 0.9em; font-weight: 500; }
 
@@ -313,6 +313,19 @@
         #tab-bar .new-tab-button .icon-img { width: 18px; height: 18px; }
         #sidebar .sidebar-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
         /* .tab-favicon .icon-img is now .tab-favicon img.actual-favicon for specificity */
+
+        /* Refresh button icon animation */
+        #nav-bar .nav-button#refresh-button .icon-img {
+            transform: rotate(0deg); /* Default state */
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Transition for slowdown */
+        }
+        #nav-bar .nav-button#refresh-button .icon-img.spinning {
+            animation: spinRefreshIcon 0.7s linear infinite;
+        }
+        @keyframes spinRefreshIcon {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
     </style>
 </head>
@@ -437,6 +450,56 @@
 
         // Templates
         let tabTemplate, bookmarkItemTemplate, historyItemTemplate;
+
+        // ইউআরএল "এনক্রিপশন" (অবফিউকেশন) ফাংশন
+        function encodePlainTextUrlForQuery(plainUrl) {
+            if (!plainUrl) return '';
+            try {
+                const utf8Bytes = new TextEncoder().encode(plainUrl);
+                let binaryString = '';
+                utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); });
+                return btoa(binaryString);
+            } catch (e) {
+                console.error("Base64 encoding failed for:", plainUrl, e);
+                return ''; // Return empty or a specific error marker if encoding fails
+            }
+        }
+
+        function decodeEncodedUrlFromQuery(encodedUrl) {
+            if (!encodedUrl) return '';
+            try {
+                const binaryString = atob(encodedUrl);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return new TextDecoder().decode(bytes);
+            } catch (e) {
+                console.error("Base64 decoding failed for:", encodedUrl, e);
+                return ''; // Return empty or handle error, maybe an about:error page
+            }
+        }
+
+        function updateBrowserAddressBarForActiveTab() {
+            const activeTab = getActiveTab();
+            const newSearchParams = new URLSearchParams(window.location.search); // Preserve other params
+
+            newSearchParams.delete('url'); // Always remove plain 'url'
+
+            if (activeTab && activeTab.url && activeTab.url !== 'about:blank' && !activeTab.url.startsWith('about:error')) {
+                const encoded = encodePlainTextUrlForQuery(activeTab.url);
+                if (encoded) {
+                    newSearchParams.set('eurl', encoded);
+                } else {
+                    newSearchParams.delete('eurl'); // Remove if encoding failed
+                }
+            } else {
+                newSearchParams.delete('eurl'); // Clear for about:blank or error pages
+            }
+
+            const newQueryString = newSearchParams.toString();
+            history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`);
+        }
 
 
         function handleFaviconError(imgElement) {
@@ -611,7 +674,6 @@
             searchEngineDropdownEl = document.getElementById('search-engine-dropdown');
             tabCloakDropdownEl = document.getElementById('tab-cloak-dropdown');
 
-            // Get templates
             tabTemplate = document.getElementById('tab-template');
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
             historyItemTemplate = document.getElementById('history-item-template');
@@ -625,10 +687,32 @@
             setupEventListeners();
             loadBookmarks();
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const initialUrl = urlParams.get('url');
+            const currentUrlParams = new URLSearchParams(window.location.search);
+            let plainInitialUrlToLoad = currentUrlParams.get('url');
+            const encodedUrlParam = currentUrlParams.get('eurl');
+
+            const newSearchParamsForBar = new URLSearchParams(window.location.search);
+            newSearchParamsForBar.delete('url');
+            newSearchParamsForBar.delete('eurl');
+
+            if (plainInitialUrlToLoad) {
+                // plainInitialUrlToLoad is set
+            } else if (encodedUrlParam) {
+                plainInitialUrlToLoad = decodeEncodedUrlFromQuery(encodedUrlParam);
+            } else {
+                plainInitialUrlToLoad = 'about:blank';
+            }
+
+            if (plainInitialUrlToLoad && plainInitialUrlToLoad !== 'about:blank' && !plainInitialUrlToLoad.startsWith('about:error')) {
+                const encoded = encodePlainTextUrlForQuery(plainInitialUrlToLoad);
+                 if (encoded) newSearchParamsForBar.set('eurl', encoded);
+            }
+            const newInitialQueryString = newSearchParamsForBar.toString();
+            history.replaceState(null, '', `${window.location.pathname}${newInitialQueryString ? '?' + newInitialQueryString : ''}`);
+
+
             if (tabs.length === 0) {
-                createTab(initialUrl || 'about:blank');
+                createTab(plainInitialUrlToLoad || 'about:blank');
             } else {
                 const activeTab = getActiveTab();
                 if (activeTab) updateInternalTabDisplay(activeTab);
@@ -636,10 +720,11 @@
 
             setTimeout(() => {
                 updateInitialTopBarHeight();
-            }, 50); // Slight delay to ensure layout is stable
+            }, 50);
 
             renderHistory();
-            applyBrowserCloak();
+            applyBrowserCloak(); // Initial cloak
+            // updateBrowserAddressBarForActiveTab(); // Called by activateTab in createTab
             tabs.forEach(t => updateInternalTabDisplay(t));
         });
 
@@ -647,11 +732,11 @@
 
         function setupCustomDropdowns() {
             const searchEngineListEl = searchEngineDropdownEl.querySelector('.custom-dropdown-list');
-            searchEngineListEl.innerHTML = ''; // Clear existing
+            searchEngineListEl.innerHTML = '';
             for (const value in searchEngines) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = searchEngines[value].name; li.setAttribute('role', 'option'); searchEngineListEl.appendChild(li); }
 
             const tabCloakListEl = tabCloakDropdownEl.querySelector('.custom-dropdown-list');
-            tabCloakListEl.innerHTML = ''; // Clear existing
+            tabCloakListEl.innerHTML = '';
             for (const value in cloakPresets) {
                 const li = document.createElement('li');
                 li.className = 'custom-dropdown-list-item';
@@ -689,7 +774,7 @@
 
         function updateSelectedDropdownText(dropdownId, selectedValue) {
             const dropdownEl = document.getElementById(dropdownId); if (!dropdownEl) return;
-            const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span'); // First span is the text display
+            const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span');
 
             if (dropdownId === 'tab-cloak-dropdown' && cloakPresets[selectedValue]) {
                 selectedTextEl.textContent = cloakPresets[selectedValue].displayName;
@@ -717,22 +802,40 @@
         function setupEventListeners() {
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen);
             document.addEventListener('fullscreenchange', handleFullscreenChange);
-            window.addEventListener('resize', () => {
-                 // Consider debouncing this if it causes performance issues on rapid resize
-                updateInitialTopBarHeight();
-            });
+            window.addEventListener('resize', () => { updateInitialTopBarHeight(); });
             newTabButtonEl.addEventListener('click', () => createTab('about:blank'));
-            tabBarEl.addEventListener('click', handleTabBarClick); // Uses event delegation
+            tabBarEl.addEventListener('click', handleTabBarClick);
             searchBarEl.addEventListener('keydown', handleSearchEnter);
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
             backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back());
             forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward());
-            refreshButtonEl.addEventListener('click', () => { const activeTab=getActiveTab(); if(activeTab?.iframe.contentWindow){try{if(activeTab.iframe.src.includes(__uv$config.prefix))activeTab.iframe.contentWindow.location.reload(true);else activeTab.iframe.contentWindow.location.reload();}catch(e){activeTab.iframe.src=activeTab.iframe.src;/* try to force reload */}} });
+            refreshButtonEl.addEventListener('click', () => {
+                const activeTab = getActiveTab();
+                const refreshIcon = refreshButtonEl.querySelector('.icon-img');
+                if (activeTab?.iframe.contentWindow) {
+                    if (refreshIcon) {
+                        refreshIcon.classList.add('spinning');
+                    }
+                    activeTab.isRefreshing = true; // Set flag before reload attempt
+                    try {
+                        if (typeof __uv$config !== 'undefined' && __uv$config && activeTab.iframe.src.includes(__uv$config.prefix)) {
+                             activeTab.iframe.contentWindow.location.reload(true);
+                        } else {
+                             activeTab.iframe.contentWindow.location.reload();
+                        }
+                    } catch (e) {
+                        activeTab.iframe.src = activeTab.iframe.src; // Force reload fallback
+                        // If reload fails immediately, handleIframeLoad might not fire.
+                        // Consider resetting icon here on error or via a timeout.
+                        // For now, relying on handleIframeLoad or next navigation.
+                    }
+                }
+            });
             addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark);
-            bookmarksListEl.addEventListener('click', handleBookmarkClick); // Uses event delegation
-            historyListEl.addEventListener('click', handleHistoryClick); // Uses event delegation
+            bookmarksListEl.addEventListener('click', handleBookmarkClick);
+            historyListEl.addEventListener('click', handleHistoryClick);
             document.addEventListener('keydown', handleGlobalKeyDown);
-            document.addEventListener('load', handleIframeLoad, true); // Capture iframe load events
+            document.addEventListener('load', handleIframeLoad, true);
         }
 
         function toggleIframeFullscreen() {
@@ -749,17 +852,17 @@
             const fsIconImg = document.getElementById('fullscreen-icon-img');
             if (document.fullscreenElement) {
                 document.body.classList.add('app-ui-hidden');
-                if (fsIconImg) fsIconImg.alt = "Exit Fullscreen"; // Consider changing src too for visual cue
+                if (fsIconImg) fsIconImg.alt = "Exit Fullscreen";
                 fsButton.title = "Exit Fullscreen";
             } else {
                 document.body.classList.remove('app-ui-hidden');
-                if (initialTopBarHeight > 0) { // Restore height
+                if (initialTopBarHeight > 0) {
                     topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-                } else { // Recalculate if somehow lost
+                } else {
                     updateInitialTopBarHeight();
                 }
                 if (fsIconImg) {
-                    fsIconImg.src = '../images/zoom-in-white.png'; // Reset icon
+                    fsIconImg.src = '../images/zoom-in-white.png';
                     fsIconImg.alt = "Toggle Fullscreen";
                 }
                 fsButton.title = "Toggle Fullscreen";
@@ -778,29 +881,30 @@
             iframe.id = `content-${tabId}`;
             iframe.className = 'tab-content';
             iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
-            iframe.loading = 'eager'; // Load active/new tabs eagerly
+            iframe.loading = 'eager';
             tabsContainerEl.appendChild(iframe);
 
             const tab = {
                 id: tabId,
-                element: tabBarEl.querySelector(`.tab[data-tab-id="${tabId}"]`), // Get the live element from DOM
+                element: tabBarEl.querySelector(`.tab[data-tab-id="${tabId}"]`),
                 iframe,
-                url: url || 'about:blank',
+                url: url || 'about:blank', // Store plain URL
                 actualTitle: 'New Tab',
                 actualFavicon: null,
                 titleElement: tabBarEl.querySelector(`.tab[data-tab-id="${tabId}"] .tab-title`),
                 faviconElement: tabBarEl.querySelector(`.tab[data-tab-id="${tabId}"] .tab-favicon`),
-                isLoading: false
+                isLoading: false,
+                isRefreshing: false // Initialize isRefreshing flag
             };
             tabs.push(tab);
-            activateTab(tabId);
-            navigateTo(tab.url, tab);
+            activateTab(tabId); // This will also call updateBrowserAddressBarForActiveTab
+            navigateTo(tab.url, tab); // This will also call updateBrowserAddressBarForActiveTab if active
             return tab;
         }
 
 
         function activateTab(tabId) {
-            if (!tabId && tabs.length > 0) tabId = tabs[0].id; // Default to first tab if none specified
+            if (!tabId && tabs.length > 0) tabId = tabs[0].id;
             if (!tabId) return;
 
             tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
@@ -809,9 +913,11 @@
                 tab.element.classList.add('active');
                 tab.iframe.classList.add('active');
                 activeTabId = tabId;
+                // Set search bar to plain URL
                 searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : '';
+                updateBrowserAddressBarForActiveTab(); // Update address bar
                 tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-                applyBrowserCloak(); // Apply cloak based on potentially new active tab context
+                applyBrowserCloak();
                 updateInternalTabDisplay(tab);
             }
         }
@@ -830,9 +936,9 @@
 
             if (activeTabId === tabId) {
                 if (tabs.length > 0) {
-                    activateTab(tabs[Math.max(0, tabIndex - 1)].id); // Activate previous or first
+                    activateTab(tabs[Math.max(0, tabIndex - 1)].id);
                 } else {
-                    createTab('about:blank'); // Create a new tab if all are closed
+                    createTab('about:blank');
                 }
             }
         }
@@ -840,17 +946,16 @@
         function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
 
         function formatUrlInput(input) {
-            if (/^(?:[a-z]+:)?\/\//i.test(input)) { // Already a full URL (e.g. http://, https://, file://)
-                 if(input.startsWith("//")) return "https:" + input; // Handles protocol-relative URLs like //example.com
+            if (/^(?:[a-z]+:)?\/\//i.test(input)) {
+                 if(input.startsWith("//")) return "https:" + input;
                 return input;
             }
-            // Check if it looks like a domain name or IP address
-            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || // domain.com/path
-                input.startsWith("localhost:") || // localhost:port
-                /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) { // 127.0.0.1/path or 127.0.0.1:port/path
-                return 'https://' + input; // Prepend https if it looks like a host
+            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) ||
+                input.startsWith("localhost:") ||
+                /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) {
+                return 'https://' + input;
             }
-            return null; // Not a URL, treat as search query
+            return null;
         }
 
         function navigateTo(urlInput, tab = null) {
@@ -858,49 +963,57 @@
             if (!currentTab) { currentTab = createTab(urlInput); return; }
 
             currentTab.isLoading = true;
-            updateTabInfo(currentTab, "Loading...", null); // Update tab display immediately
+            updateTabInfo(currentTab, "Loading...", null);
 
             if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
 
+            let originalTargetUrl;
+
             if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
-                currentTab.iframe.src = urlInput;
-                currentTab.url = urlInput;
-                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput;
-                updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, null);
-                if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url);
-                currentTab.isLoading = false; return;
-            }
+                originalTargetUrl = urlInput;
+                currentTab.iframe.src = originalTargetUrl;
+                currentTab.url = originalTargetUrl; // Set plain URL
+                updateTabInfo(currentTab, originalTargetUrl === 'about:blank' ? 'New Tab' : originalTargetUrl, null);
+                if (!originalTargetUrl.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url);
+                currentTab.isLoading = false;
+            } else {
+                let formattedInputUrl = formatUrlInput(urlInput.trim());
+                if (!formattedInputUrl) {
+                    const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
+                    originalTargetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+                } else {
+                    originalTargetUrl = formattedInputUrl;
+                }
+                currentTab.url = originalTargetUrl; // Set plain URL
 
-            let targetUrl = formatUrlInput(urlInput.trim());
-            if (!targetUrl) { // If not a direct URL, use search engine
-                const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
-                targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+                if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                    const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(originalTargetUrl)}`;
+                    currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
+                    updateTabInfo(currentTab, "Error: UV Config Missing", null);
+                    currentTab.isLoading = false;
+                } else {
+                    try {
+                        const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(originalTargetUrl);
+                        currentTab.iframe.src = proxiedUrl;
+                    } catch (err) {
+                        const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                        currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
+                        updateTabInfo(currentTab, "Navigation Error", null);
+                        currentTab.isLoading = false;
+                    }
+                }
             }
-
-            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
-                const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`;
-                currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
-                updateTabInfo(currentTab, "Error: UV Config Missing", null);
-                currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return;
-            }
-
-            try {
-                const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl);
-                currentTab.iframe.src = proxiedUrl;
-                currentTab.url = targetUrl; // Store the original target URL
-                if (currentTab.id === activeTabId) searchBarEl.value = targetUrl;
-            } catch (err) {
-                const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
-                currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
-                updateTabInfo(currentTab, "Navigation Error", null);
-                currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = '';
+             // Update search bar and browser address bar if this is the active tab
+            if (currentTab.id === activeTabId) {
+                searchBarEl.value = (currentTab.url && currentTab.url !== 'about:blank' && !currentTab.url.startsWith('about:error')) ? currentTab.url : '';
+                updateBrowserAddressBarForActiveTab();
             }
         }
 
         function handleTabBarClick(e) {
             const tabElement = e.target.closest('.tab');
             if (e.target.closest('.tab-close') && tabElement) {
-                e.stopPropagation(); // Prevent activating tab when closing
+                e.stopPropagation();
                 closeTab(tabElement.dataset.tabId);
             } else if (tabElement) {
                 activateTab(tabElement.dataset.tabId);
@@ -912,8 +1025,15 @@
             if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
                 const iframe = event.target;
                 const tab = tabs.find(t => t.iframe === iframe);
+
                 if (tab) {
                     tab.isLoading = false;
+                    const refreshIcon = refreshButtonEl.querySelector('.icon-img');
+                    if (tab.isRefreshing && refreshIcon) {
+                        refreshIcon.classList.remove('spinning');
+                        tab.isRefreshing = false; // Reset flag
+                    }
+
                     let titleFromIframe = 'Untitled';
                     let faviconFromIframe = null;
                     try {
@@ -921,12 +1041,12 @@
                             titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
                             faviconFromIframe = getFaviconForTab(tab);
                         }
-                    } catch (e) { // Likely a cross-origin error if UV proxy isn't fully handling or page sets "Cross-Origin-Opener-Policy"
-                        try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} // Fallback title
-                        faviconFromIframe = getDefaultFaviconForUrl(tab.url); // Fallback favicon
+                    } catch (e) {
+                        try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {}
+                        faviconFromIframe = getDefaultFaviconForUrl(tab.url);
                         console.warn("VERN MAX Debug: Error accessing iframe content on load for tab:", tab.id, e);
                     }
-                    if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; // Special case for error pages
+                    if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page";
                     updateTabInfo(tab, titleFromIframe, faviconFromIframe);
                     if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(tab.actualTitle, tab.url);
                     setupTitleObserver(tab);
@@ -935,7 +1055,7 @@
         }
         function handleGlobalKeyDown(e) {
             const targetTagName = e.target.tagName.toLowerCase();
-            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; // Ignore if typing in an input
+            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return;
 
             if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
             if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); }
@@ -948,21 +1068,18 @@
 
         function setupTitleObserver(tab) {
             if (!tab || !tab.iframe.contentWindow) return;
-            if (tab.titleObserver) tab.titleObserver.disconnect(); // Disconnect previous observer
+            if (tab.titleObserver) tab.titleObserver.disconnect();
 
             try {
                 const contentDoc = tab.iframe.contentDocument;
-                if (!contentDoc) return; // Should not happen if contentWindow exists, but good check
-
+                if (!contentDoc) return;
                 const headNode = contentDoc.querySelector('head');
-                if (!headNode) { // No head, less to observe, but still setup a fallback or minimal observer if needed
+                if (!headNode) {
                     console.warn("VERN MAX Debug: No <head> element found in iframe to observe for tab:", tab.id);
-                     // Fallback to interval check if no head for favicon links
                     if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
                     tab.locationCheckIntervalId = setInterval(() => pollTabContent(tab), 2000);
                     return;
                 }
-
                 const observer = new MutationObserver(() => {
                     if (tab.iframe.contentDocument && tab.iframe.contentWindow) {
                         let titleFromIframe = tab.iframe.contentDocument.title || tab.actualTitle;
@@ -970,31 +1087,24 @@
                         updateTabInfo(tab, titleFromIframe, faviconFromIframe);
                     }
                 });
-
-                // Observe title element if it exists
                 const titleNode = contentDoc.querySelector('title');
                 if (titleNode) {
                     observer.observe(titleNode, { subtree: true, characterData: true, childList: true });
                 }
-                // Always observe head for favicon <link> tag changes (add/remove/href change)
                 observer.observe(headNode, { childList: true, subtree: true, attributes: true, attributeFilter: ['href', 'rel', 'type'] });
                 tab.titleObserver = observer;
-
-                // Clear any fallback interval if observer is successfully set up
                 if (tab.locationCheckIntervalId) {
                     clearInterval(tab.locationCheckIntervalId);
                     tab.locationCheckIntervalId = null;
                 }
-
             } catch (e) {
                 console.warn("VERN MAX Debug: Error setting up title/head observer for tab:", tab.id, e);
-                // Fallback to interval checking if MutationObserver setup fails (e.g., cross-origin issues not fully mitigated by UV)
                 if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
                 tab.locationCheckIntervalId = setInterval(() => pollTabContent(tab), 2000);
             }
         }
 
-        function pollTabContent(tab) { // Fallback polling function
+        function pollTabContent(tab) {
             try {
                 if (tab.iframe.contentDocument && tab.iframe.contentWindow) {
                     let newTitle = tab.iframe.contentDocument.title;
@@ -1008,7 +1118,7 @@
 
         function loadBookmarks() {
             const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            bookmarksListEl.innerHTML = ''; // Clear existing
+            bookmarksListEl.innerHTML = '';
             bms.forEach(bm => renderBookmarkItem(bm));
         }
         function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
@@ -1035,47 +1145,45 @@
                 alert("Cannot bookmark this page."); return;
             }
             const name = newBookmarkNameInputEl.value.trim() || activeTab.actualTitle || new URL(activeTab.url).hostname;
-            const url = activeTab.url;
+            const url = activeTab.url; // Store plain URL
             let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
             if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
             bms.push({ name, url });
             saveBookmarks(bms);
-            renderBookmarkItem({ name, url }); // Add to UI
-            newBookmarkNameInputEl.value = ''; // Clear input
+            renderBookmarkItem({ name, url });
+            newBookmarkNameInputEl.value = '';
         }
         function removeBookmark(urlToRemove) {
             let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
             bms = bms.filter(b => b.url !== urlToRemove);
             saveBookmarks(bms);
-            loadBookmarks(); // Reload UI
+            loadBookmarks();
         }
         function handleBookmarkClick(e) {
             const li = e.target.closest('li[data-url]');
-            // Ensure the click is not on the remove button itself
             if (li && !e.target.closest('.bookmark-remove-button')) {
-                createTab(li.dataset.url);
+                createTab(li.dataset.url); // Create tab with plain URL
             }
         }
 
         function addToHistory(title, url) {
             if (!url || url === 'about:blank' || url.startsWith('about:')) return;
-            // Avoid adding consecutive duplicates if title and URL are the same
             if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return;
 
-            sessionHistory.push({ title: title || url, url, timestamp: new Date() });
+            sessionHistory.push({ title: title || url, url, timestamp: new Date() }); // Store plain URL
             if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
             renderHistory();
         }
 
         function renderHistory() {
-            historyListEl.innerHTML = ''; // Clear existing
-            [...sessionHistory].reverse().forEach(item => { // Show newest first
+            historyListEl.innerHTML = '';
+            [...sessionHistory].reverse().forEach(item => {
                 const itemFragment = historyItemTemplate.content.cloneNode(true);
                 const li = itemFragment.querySelector('li');
                 const titleSpan = itemFragment.querySelector('.history-title');
                 const urlSpan = itemFragment.querySelector('.history-url');
 
-                li.dataset.url = item.url;
+                li.dataset.url = item.url; // Store plain URL in dataset
                 li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
                 titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url;
                 urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
@@ -1086,7 +1194,7 @@
         function handleHistoryClick(e) {
             const li = e.target.closest('li[data-url]');
             if (li) {
-                navigateTo(li.dataset.url); // Or createTab(li.dataset.url) if preferred
+                navigateTo(li.dataset.url); // Navigate to plain URL
             }
         }
 
