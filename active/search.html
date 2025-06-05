@@ -3,15 +3,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VERN MAX - SEARCH</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
+    <link rel="stylesheet" href="../css/style.css" /> <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
     <style id="custom-styles">
         /* Core Theme Variables & Component Mappings - Purple & Dark Grey Theme */
         :root {
-            --current-theme-bg: #23272A; 
-            --current-theme-text: #E0E1DD; 
-            --current-theme-accent: #7F5AF0; 
-            --current-theme-neutral: #2C2F33; 
+            --current-theme-bg: #23272A;
+            --current-theme-text: #E0E1DD;
+            --current-theme-accent: #7F5AF0;
+            --current-theme-neutral: #2C2F33;
             --current-theme-button-text: #FFFFFF;
             --current-theme-shadow-rgb: 0, 0, 0;
             --current-theme-shadow-opacity-strong: 0.4;
@@ -23,7 +22,7 @@
             --text-color: var(--current-theme-text);
             --iframe-bg: var(--current-theme-bg);
             --footer-text-color: var(--current-theme-text);
-            --font-family-main: 'PrimaryFont', sans-serif;
+            --font-family-main: 'PrimaryFont', sans-serif; /* Ensure 'PrimaryFont' is defined via @font-face or is a system font */
             --sidebar-width: 280px;
 
             --navbar-bg: var(--current-theme-neutral);
@@ -71,8 +70,19 @@
             overflow-y: auto;
             z-index: 1001; display: flex; flex-direction: column; gap: 20px;
             font-family: var(--font-family-main);
-            margin-left: 0;
+            margin-left: 0; /* Initially shown */
             transition: margin-left 0.30s ease-in-out;
+        }
+        #sidebar-header {
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--sidebar-border-color);
+            text-transform: uppercase;
+        }
+        #sidebar-header h2 {
+            text-align: center;
+            margin-bottom: 0;
+            font-size: 1.4em;
+            font-weight: bold;
         }
 
         #sidebar h3 {
@@ -80,8 +90,8 @@
             border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 8px;
             font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
-        #sidebar h3 .icon-img { 
-            width: 1em; 
+        #sidebar h3 .icon-img {
+            width: 1em;
             height: 1em;
         }
 
@@ -89,20 +99,47 @@
         #sidebar ul::-webkit-scrollbar { width: 5px; }
         #sidebar ul::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
 
-        #sidebar li {
+        #sidebar li { /* Base style for sidebar list items (bookmarks, history) */
             padding: 9px 15px; margin-bottom: 7px; border-radius: 12px;
             cursor: pointer; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
             background-color: var(--button-bg); box-shadow: 0 0 0 1px var(--sidebar-outline-color);
             color: var(--button-text-color);
+            position: relative; /* For absolute positioning of remove button */
         }
         #sidebar li:hover {
             background-color: var(--button-hover-bg);
             box-shadow: 0 0 0 1.5px var(--sidebar-outline-color);
         }
-        #sidebar li .bookmark-url, #sidebar li .history-url {
+        #sidebar li .bookmark-url, #sidebar li .history-url { /* Shared style for URL text in items */
             font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
         }
+        .bookmark-remove-button, .history-remove-button { /* Style for remove button in bookmark/history items */
+            position:absolute;
+            right:12px;
+            top:50%;
+            transform:translateY(-50%);
+            cursor:pointer;
+            padding: 5px; /* Clickable area */
+            opacity: 0.7;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            background: none;
+            border: none;
+            color: inherit;
+        }
+        .bookmark-remove-button:hover, .history-remove-button:hover {
+             opacity: 1;
+             background-color: rgba(var(--current-theme-shadow-rgb),0.1); /* Subtle hover effect */
+             border-radius: 50%;
+        }
+        .bookmark-remove-icon, .history-remove-icon { /* Icon within the remove button */
+            width: 12px;
+            height: 12px;
+            display: block;
+        }
+
 
         #sidebar .sidebar-input {
             width: 100%; height: 38px; padding: 0 15px; margin-bottom: 10px;
@@ -162,7 +199,7 @@
         }
 
         #main-content-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
+
         #top-bar-assembly {
             overflow: hidden;
             transition: max-height 0.25s ease-in-out;
@@ -182,7 +219,7 @@
         #tab-bar::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
         .tab {
             display: flex; align-items: center; min-width: 150px; max-width: 180px; height: 30px;
-            padding: 0px 3px; 
+            padding: 0px 3px;
             background-color: var(--tab-bg); border-radius: 8px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative;
             box-shadow: 0 0 0 1px var(--tab-border);
@@ -192,8 +229,8 @@
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--current-theme-accent) 70%, var(--current-theme-text));
         }
         .tab.active .tab-title { color: var(--button-text-color); }
-        .tab.active .tab-favicon .unicode-icon { color: var(--button-text-color); } 
-        .tab.active .tab-favicon img { filter: brightness(0) invert(1); }
+        .tab.active .tab-favicon .unicode-icon { color: var(--button-text-color); }
+        .tab.active .tab-favicon img.actual-favicon { filter: brightness(0) invert(1); }
 
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 16px; height: 16px; margin-right: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
@@ -202,24 +239,24 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
 
         .tab-close {
-            width: 25px; 
-            height: 25px; 
+            width: 25px;
+            height: 25px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 25%; 
-            margin-left: 4px; flex-shrink: 0; opacity: 1; 
-            transition: opacity 0.2s, background-color 0.2s, width 0.2s, height 0.2s; 
+            border-radius: 25%;
+            margin-left: 4px; flex-shrink: 0; opacity: 1;
+            transition: opacity 0.2s, background-color 0.2s, width 0.2s, height 0.2s;
             cursor: pointer;
         }
-        .tab-close:hover { 
-            opacity: 1; 
-            background-color: rgba(var(--current-theme-shadow-rgb),0.2); 
-            width: 27.5px; 
-            height: 27.5px; 
+        .tab-close:hover {
+            opacity: 1;
+            background-color: rgba(var(--current-theme-shadow-rgb),0.2);
+            width: 27.5px;
+            height: 27.5px;
         }
-        .tab-close-icon { 
-            width: 20px; 
-            height: 20px; 
-            display: block; 
+        .tab-close-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
         }
 
         .new-tab-button {
@@ -242,10 +279,10 @@
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px;
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
-        
+
         #nav-bar #fullscreen-button {
-            margin-left: 8px; 
-            margin-right: 0; 
+            margin-left: 8px;
+            margin-right: 0;
         }
 
         #search-bar {
@@ -263,7 +300,7 @@
             font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
         }
         .sidebar-setting-label { display:block; margin-bottom:7px; font-size: 0.9em; font-weight: 500; }
-        
+
         .unicode-icon { /* General class for unicode characters used as icons */
             font-size: inherit; display: inline-flex; align-items: center; justify-content: center;
         }
@@ -276,20 +313,46 @@
         #tab-bar .new-tab-button .icon-img { width: 18px; height: 18px; }
         #sidebar .sidebar-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
         /* .tab-favicon .icon-img is now .tab-favicon img.actual-favicon for specificity */
-        
-        .bookmark-remove-icon {
-            width: 12px;
-            height: 12px;
-            display: block; 
-        }
 
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+
+    <template id="tab-template">
+        <div class="tab" data-tab-id="">
+            <div class="tab-favicon">
+                <img src="" alt="" class="icon-img actual-favicon" style="display:none;" onerror="handleFaviconError(this);">
+                <span class="unicode-icon default-favicon-globe" style="font-size: 14px; display: inline-flex;">🌐</span>
+            </div>
+            <div class="tab-title">New Tab</div>
+            <div class="tab-close" title="Close Tab">
+                <img src="../images/cross-white.png" alt="Close" class="tab-close-icon">
+            </div>
+        </div>
+    </template>
+
+    <template id="bookmark-item-template">
+        <li>
+            <span class="bookmark-name"></span>
+            <span class="bookmark-url"></span>
+            <button class="bookmark-remove-button" title="Remove Bookmark">
+                <img src="../images/cross-white.png" alt="Remove" class="bookmark-remove-icon">
+            </button>
+        </li>
+    </template>
+
+    <template id="history-item-template">
+        <li>
+            <span class="history-title"></span>
+            <span class="history-url"></span>
+            </li>
+    </template>
+
+
     <div id="sidebar">
-        <div id="sidebar-header" style="padding-bottom: 10px; border-bottom: 1px solid var(--sidebar-border-color); text-transform: uppercase;">
-            <h2 style="text-align: center; margin-bottom: 0; font-size: 1.4em; font-weight: bold;">Vern Max</h2>
+        <div id="sidebar-header">
+            <h2>Vern Max</h2>
         </div>
          <div id="settings-section">
             <h3><img src="../images/gear-white.png" alt="Settings" class="icon-img"> Settings</h3>
@@ -342,6 +405,7 @@
         <div id="tabs-container"></div>
     </div>
     <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Max by 4SP</a>
+
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
     <script src="register-sw.js" defer></script>
@@ -364,12 +428,16 @@
             'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
             'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
-            'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }, 
+            'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' },
             'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'}
         };
-        let currentCloakPresetKey = 'none'; 
+        let currentCloakPresetKey = 'none';
         let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl, topBarAssemblyEl, sidebarEl, mainContentWrapperEl, bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl, historyListEl, searchEngineDropdownEl, tabCloakDropdownEl;
         let initialTopBarHeight = 0;
+
+        // Templates
+        let tabTemplate, bookmarkItemTemplate, historyItemTemplate;
+
 
         function handleFaviconError(imgElement) {
             console.log("VERN MAX Debug: handleFaviconError called for:", imgElement.src);
@@ -386,15 +454,15 @@
 
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
-            const defaultAppTitle = "VERN MAX - SEARCH"; 
-            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; 
+            const defaultAppTitle = "VERN MAX - SEARCH";
+            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png";
 
             let selectedCloak = cloakPresets[currentCloakPresetKey];
 
             if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) {
                 document.title = selectedCloak.title;
                 if (appFaviconEl) {
-                    appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; 
+                    appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon;
                 }
             } else {
                 const nonePreset = cloakPresets['none'] || {};
@@ -406,45 +474,45 @@
         }
 
         function updateInternalTabDisplay(tab) {
-            if (!tab) return;
+            if (!tab || !tab.faviconElement || !tab.titleElement) return; // Ensure elements exist
 
             const imgElement = tab.faviconElement.querySelector('img.actual-favicon');
             const globeElement = tab.faviconElement.querySelector('span.default-favicon-globe');
 
             let displayTitleToShow = tab.actualTitle || "New Tab";
-            
+
             if (tab.actualFavicon && (tab.actualFavicon.startsWith('http') || tab.actualFavicon.startsWith('data:'))) {
                 if (imgElement) {
                     imgElement.src = tab.actualFavicon;
-                    imgElement.style.display = 'block'; 
+                    imgElement.style.display = 'block';
                 }
                 if (globeElement) globeElement.style.display = 'none';
             } else {
                 if (imgElement) {
                     imgElement.style.display = 'none';
-                    imgElement.src = ''; 
+                    imgElement.src = '';
                 }
                 if (globeElement) globeElement.style.display = 'inline-flex';
             }
-            
+
             tab.titleElement.textContent = displayTitleToShow.length > 20 ? displayTitleToShow.substring(0, 18) + '...' : displayTitleToShow;
             tab.titleElement.title = displayTitleToShow;
         }
-        
+
         function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) {
             if (!tab) return;
             tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
-            tab.actualFavicon = actualPageFaviconUrl || null; 
+            tab.actualFavicon = actualPageFaviconUrl || null;
             updateInternalTabDisplay(tab);
         }
-        
+
         function updateInitialTopBarHeight() {
             const currentDisplay = topBarAssemblyEl.style.display;
-            topBarAssemblyEl.style.display = 'block'; 
-            topBarAssemblyEl.style.maxHeight = 'none'; 
+            topBarAssemblyEl.style.display = 'block';
+            topBarAssemblyEl.style.maxHeight = 'none';
             initialTopBarHeight = topBarAssemblyEl.offsetHeight;
-            console.log('VERN MAX Debug: Calculated initialTopBarHeight:', initialTopBarHeight); 
-            topBarAssemblyEl.style.display = currentDisplay; 
+            console.log('VERN MAX Debug: Calculated initialTopBarHeight:', initialTopBarHeight);
+            topBarAssemblyEl.style.display = currentDisplay;
 
             if (!document.body.classList.contains('app-ui-hidden')) {
                 if (initialTopBarHeight > 0) {
@@ -455,45 +523,39 @@
                 }
             }
         }
-        
-        // --- NEW/MODIFIED FAVICON FUNCTIONS ---
+
         function proxyUrl(urlToProxy) {
             if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
             if (urlToProxy.startsWith('data:')) {
-                return urlToProxy; // Data URIs don't need proxying
+                return urlToProxy;
             }
 
             if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
                 console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy);
-                return urlToProxy; // Cannot proxy, return original
+                return urlToProxy;
             }
 
             try {
                 const currentOrigin = self.location.origin;
-                // Avoid re-proxying if it already seems proxied or is on the same origin as the app
-                if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || 
+                if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) ||
                     (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) {
                     return urlToProxy;
                 }
-                
                 const proxied = currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy);
-                // console.log("VERN MAX Debug: Proxying URL:", urlToProxy, "-> Proxied:", proxied);
                 return proxied;
             } catch (e) {
                 console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e);
-                return urlToProxy; // Return original on encoding error
+                return urlToProxy;
             }
         }
 
         function getDefaultFaviconForUrl(basePageUrl) {
             if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) {
-                return null; 
+                return null;
             }
-
             try {
                 const siteOrigin = new URL(basePageUrl).origin;
                 const rawFaviconIcoUrl = new URL('/favicon.ico', siteOrigin).href;
-                // console.log("VERN MAX Debug: Default /favicon.ico attempt for:", basePageUrl, "-> Raw .ico URL:", rawFaviconIcoUrl);
                 return proxyUrl(rawFaviconIcoUrl);
             } catch (e) {
                 console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e);
@@ -506,36 +568,31 @@
                 try {
                     const doc = tab.iframe.contentDocument;
                     const selectors = [
-                        'link[rel="icon"][type="image/svg+xml"]', // Prefer SVG
+                        'link[rel="icon"][type="image/svg+xml"]',
                         'link[rel="icon"]',
-                        'link[rel="apple-touch-icon"]', 
+                        'link[rel="apple-touch-icon"]',
                         'link[rel="shortcut icon"]'
                     ];
                     let bestLinkHref = null;
-
                     for (const selector of selectors) {
                         const link = doc.querySelector(selector);
                         if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') {
-                            bestLinkHref = link.href; // The browser resolves this to an absolute URL
-                            break; 
+                            bestLinkHref = link.href;
+                            break;
                         }
                     }
-                    
                     if (bestLinkHref) {
-                        // console.log("VERN MAX Debug: Favicon from <link> tag:", bestLinkHref, " (for original URL:", tab.url, ")");
-                        return proxyUrl(bestLinkHref); // proxyUrl will handle if it's data:, already proxied, or needs proxying
+                        return proxyUrl(bestLinkHref);
                     }
                 } catch (e) {
                     console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", tab.url, e);
                 }
             }
-            // Fallback to /favicon.ico
             return getDefaultFaviconForUrl(tab ? tab.url : null);
         }
-        // --- END NEW/MODIFIED FAVICON FUNCTIONS ---
 
         document.addEventListener('DOMContentLoaded', async () => {
-            tabBarEl = document.getElementById('tab-bar'); 
+            tabBarEl = document.getElementById('tab-bar');
             tabsContainerEl = document.getElementById('tabs-container');
             searchBarEl = document.getElementById('search-bar');
             newTabButtonEl = document.getElementById('new-tab-button');
@@ -554,50 +611,56 @@
             searchEngineDropdownEl = document.getElementById('search-engine-dropdown');
             tabCloakDropdownEl = document.getElementById('tab-cloak-dropdown');
 
+            // Get templates
+            tabTemplate = document.getElementById('tab-template');
+            bookmarkItemTemplate = document.getElementById('bookmark-item-template');
+            historyItemTemplate = document.getElementById('history-item-template');
+
+
             await initUV();
             setupCustomDropdowns();
-            loadSettings(); 
+            loadSettings();
             sidebarEl.style.marginLeft = '0px';
 
-            setupEventListeners(); 
+            setupEventListeners();
             loadBookmarks();
 
             const urlParams = new URLSearchParams(window.location.search);
             const initialUrl = urlParams.get('url');
             if (tabs.length === 0) {
-                createTab(initialUrl || 'about:blank'); 
-            } else { 
+                createTab(initialUrl || 'about:blank');
+            } else {
                 const activeTab = getActiveTab();
-                if (activeTab) updateInternalTabDisplay(activeTab); 
+                if (activeTab) updateInternalTabDisplay(activeTab);
             }
-            
+
             setTimeout(() => {
                 updateInitialTopBarHeight();
-            }, 50); 
+            }, 50); // Slight delay to ensure layout is stable
 
             renderHistory();
-            applyBrowserCloak(); 
-            tabs.forEach(t => updateInternalTabDisplay(t)); 
+            applyBrowserCloak();
+            tabs.forEach(t => updateInternalTabDisplay(t));
         });
 
         async function initUV() { try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
-        
+
         function setupCustomDropdowns() {
             const searchEngineListEl = searchEngineDropdownEl.querySelector('.custom-dropdown-list');
-            searchEngineListEl.innerHTML = '';
+            searchEngineListEl.innerHTML = ''; // Clear existing
             for (const value in searchEngines) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = searchEngines[value].name; li.setAttribute('role', 'option'); searchEngineListEl.appendChild(li); }
-            
+
             const tabCloakListEl = tabCloakDropdownEl.querySelector('.custom-dropdown-list');
-            tabCloakListEl.innerHTML = '';
-            for (const value in cloakPresets) { 
-                const li = document.createElement('li'); 
-                li.className = 'custom-dropdown-list-item'; 
-                li.dataset.value = value; 
-                li.textContent = cloakPresets[value].displayName; 
-                li.setAttribute('role', 'option'); 
-                tabCloakListEl.appendChild(li); 
+            tabCloakListEl.innerHTML = ''; // Clear existing
+            for (const value in cloakPresets) {
+                const li = document.createElement('li');
+                li.className = 'custom-dropdown-list-item';
+                li.dataset.value = value;
+                li.textContent = cloakPresets[value].displayName;
+                li.setAttribute('role', 'option');
+                tabCloakListEl.appendChild(li);
             }
-            
+
             document.querySelectorAll('.custom-dropdown-header').forEach(header => { header.addEventListener('click', toggleDropdown); header.addEventListener('keydown', handleDropdownKeyDown); });
             document.querySelectorAll('.custom-dropdown-list-item').forEach(item => { item.addEventListener('click', selectDropdownItem); item.addEventListener('keydown', handleDropdownItemKeyDown); });
             document.addEventListener('click', (e) => { document.querySelectorAll('.custom-dropdown-list.show').forEach(list => { if (!list.parentNode.contains(e.target)) { list.classList.remove('show'); const header = list.parentNode.querySelector('.custom-dropdown-header'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); } }); });
@@ -606,299 +669,426 @@
 
         function toggleDropdown() { const header = this; const list = header.nextElementSibling; const isOpen = list.classList.toggle('show'); header.classList.toggle('open', isOpen); header.setAttribute('aria-expanded', isOpen.toString()); document.querySelectorAll('.custom-dropdown-list.show').forEach(otherList => { if (otherList !== list) { otherList.classList.remove('show'); const otherHeader = otherList.parentNode.querySelector('.custom-dropdown-header'); otherHeader.classList.remove('open'); otherHeader.setAttribute('aria-expanded', 'false'); }}); if (isOpen) (list.querySelector('.custom-dropdown-list-item.selected') || list.querySelector('.custom-dropdown-list-item'))?.focus(); }
         function handleDropdownKeyDown(e) { const header = this; const list = header.nextElementSibling; const isOpen = list.classList.contains('show'); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown.call(header); } else if (e.key === 'ArrowDown' && !isOpen) { e.preventDefault(); toggleDropdown.call(header); } else if (e.key === 'ArrowDown' && isOpen) { e.preventDefault(); list.querySelector('.custom-dropdown-list-item')?.focus(); } else if (e.key === 'Escape' && isOpen) { e.preventDefault(); list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus(); }}
-        
+
         function selectDropdownItem() {
             const item = this; const dropdown = item.closest('.custom-dropdown');
             const header = dropdown.querySelector('.custom-dropdown-header'); const list = dropdown.querySelector('.custom-dropdown-list');
-            const value = item.dataset.value; updateSelectedDropdownText(dropdown.id, value); 
+            const value = item.dataset.value; updateSelectedDropdownText(dropdown.id, value);
             list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus();
-            
-            if (dropdown.id === 'search-engine-dropdown') { 
-                currentSearchEngineKey = value; 
-                localStorage.setItem('vernSearchEngine', currentSearchEngineKey); 
-            } else if (dropdown.id === 'tab-cloak-dropdown') { 
-                currentCloakPresetKey = value; 
-                localStorage.setItem('vernCloakPreset', currentCloakPresetKey); 
-                applyBrowserCloak(); 
+
+            if (dropdown.id === 'search-engine-dropdown') {
+                currentSearchEngineKey = value;
+                localStorage.setItem('vernSearchEngine', currentSearchEngineKey);
+            } else if (dropdown.id === 'tab-cloak-dropdown') {
+                currentCloakPresetKey = value;
+                localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
+                applyBrowserCloak();
             }
         }
-
         function handleDropdownItemKeyDown(e) { const item = this; const list = item.closest('.custom-dropdown-list'); const items = Array.from(list.querySelectorAll('.custom-dropdown-list-item')); const currentIndex = items.indexOf(item); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDropdownItem.call(item); } else if (e.key === 'ArrowDown') { e.preventDefault(); items[(currentIndex + 1) % items.length]?.focus(); } else if (e.key === 'ArrowUp') { e.preventDefault(); items[(currentIndex - 1 + items.length) % items.length]?.focus(); } else if (e.key === 'Escape') { e.preventDefault(); const header = list.parentNode.querySelector('.custom-dropdown-header'); list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus(); } }
-        
-        function updateSelectedDropdownText(dropdownId, selectedValue) { 
-            const dropdownEl = document.getElementById(dropdownId); if (!dropdownEl) return; 
-            const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span'); 
-            
+
+        function updateSelectedDropdownText(dropdownId, selectedValue) {
+            const dropdownEl = document.getElementById(dropdownId); if (!dropdownEl) return;
+            const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span'); // First span is the text display
+
             if (dropdownId === 'tab-cloak-dropdown' && cloakPresets[selectedValue]) {
                 selectedTextEl.textContent = cloakPresets[selectedValue].displayName;
             } else if (dropdownId === 'search-engine-dropdown' && searchEngines[selectedValue]) {
                 selectedTextEl.textContent = searchEngines[selectedValue].name;
-            } else if (selectedTextEl) { 
+            } else if (selectedTextEl) {
                 const selectedListItem = dropdownEl.querySelector(`.custom-dropdown-list-item[data-value="${selectedValue}"]`);
                 if (selectedListItem) selectedTextEl.textContent = selectedListItem.textContent;
             }
 
-            const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item'); 
-            listItems.forEach(item => { 
+            const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item');
+            listItems.forEach(item => {
                 item.classList.toggle('selected', item.dataset.value === selectedValue);
                 item.setAttribute('aria-selected', item.dataset.value === selectedValue);
             });
         }
-        
-        function loadSettings() { 
-            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; 
-            updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey); 
-            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; 
-            updateSelectedDropdownText('tab-cloak-dropdown', currentCloakPresetKey); 
+
+        function loadSettings() {
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
+            updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey);
+            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
+            updateSelectedDropdownText('tab-cloak-dropdown', currentCloakPresetKey);
         }
-        
-        function setupEventListeners() { 
-            fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); 
+
+        function setupEventListeners() {
+            fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen);
             document.addEventListener('fullscreenchange', handleFullscreenChange);
-            window.addEventListener('resize', () => { 
-                updateInitialTopBarHeight(); 
+            window.addEventListener('resize', () => {
+                 // Consider debouncing this if it causes performance issues on rapid resize
+                updateInitialTopBarHeight();
             });
-            newTabButtonEl.addEventListener('click', () => createTab('about:blank')); 
-            tabBarEl.addEventListener('click', handleTabBarClick); 
+            newTabButtonEl.addEventListener('click', () => createTab('about:blank'));
+            tabBarEl.addEventListener('click', handleTabBarClick); // Uses event delegation
             searchBarEl.addEventListener('keydown', handleSearchEnter);
-            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); 
-            backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back()); 
-            forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward()); 
-            refreshButtonEl.addEventListener('click', () => { const activeTab=getActiveTab(); if(activeTab?.iframe.contentWindow){try{if(activeTab.iframe.src.includes(__uv$config.prefix))activeTab.iframe.contentWindow.location.reload(true);else activeTab.iframe.contentWindow.location.reload();}catch(e){activeTab.iframe.src=activeTab.iframe.src;}} });
-            addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark); 
-            bookmarksListEl.addEventListener('click', handleBookmarkClick); 
-            historyListEl.addEventListener('click', handleHistoryClick);
-            document.addEventListener('keydown', handleGlobalKeyDown); 
-            document.addEventListener('load', handleIframeLoad, true);
+            homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
+            backButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.back());
+            forwardButtonEl.addEventListener('click', () => getActiveTab()?.iframe.contentWindow.history.forward());
+            refreshButtonEl.addEventListener('click', () => { const activeTab=getActiveTab(); if(activeTab?.iframe.contentWindow){try{if(activeTab.iframe.src.includes(__uv$config.prefix))activeTab.iframe.contentWindow.location.reload(true);else activeTab.iframe.contentWindow.location.reload();}catch(e){activeTab.iframe.src=activeTab.iframe.src;/* try to force reload */}} });
+            addCurrentBookmarkButtonEl.addEventListener('click', handleAddCurrentBookmark);
+            bookmarksListEl.addEventListener('click', handleBookmarkClick); // Uses event delegation
+            historyListEl.addEventListener('click', handleHistoryClick); // Uses event delegation
+            document.addEventListener('keydown', handleGlobalKeyDown);
+            document.addEventListener('load', handleIframeLoad, true); // Capture iframe load events
         }
 
-        function toggleIframeFullscreen() { 
-            if (!document.fullscreenElement) { 
-                const activeTab = getActiveTab(); 
-                if (activeTab && activeTab.iframe) activeTab.iframe.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); 
-            } else { 
-                if (document.exitFullscreen) document.exitFullscreen(); 
-            } 
+        function toggleIframeFullscreen() {
+            if (!document.fullscreenElement) {
+                const activeTab = getActiveTab();
+                if (activeTab && activeTab.iframe) activeTab.iframe.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err));
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
         }
 
-        function handleFullscreenChange() { 
+        function handleFullscreenChange() {
             const fsButton = fullscreenButtonEl;
-            const fsIconImg = document.getElementById('fullscreen-icon-img'); 
+            const fsIconImg = document.getElementById('fullscreen-icon-img');
             if (document.fullscreenElement) {
                 document.body.classList.add('app-ui-hidden');
-                if (fsIconImg) fsIconImg.alt = "Exit Fullscreen"; 
+                if (fsIconImg) fsIconImg.alt = "Exit Fullscreen"; // Consider changing src too for visual cue
                 fsButton.title = "Exit Fullscreen";
             } else {
-                document.body.classList.remove('app-ui-hidden'); 
-                if (initialTopBarHeight > 0) {
+                document.body.classList.remove('app-ui-hidden');
+                if (initialTopBarHeight > 0) { // Restore height
                     topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-                } else {
-                    updateInitialTopBarHeight(); 
+                } else { // Recalculate if somehow lost
+                    updateInitialTopBarHeight();
                 }
                 if (fsIconImg) {
-                    fsIconImg.src = '../images/zoom-in-white.png'; 
-                    fsIconImg.alt = "Toggle Fullscreen"; 
+                    fsIconImg.src = '../images/zoom-in-white.png'; // Reset icon
+                    fsIconImg.alt = "Toggle Fullscreen";
                 }
                 fsButton.title = "Toggle Fullscreen";
             }
         }
 
-        function createTab(url = null) { 
-            const tabId = `tab-${tabCounter++}`; 
-            const tabElement = document.createElement('div'); 
-            tabElement.className = 'tab'; 
-            tabElement.dataset.tabId = tabId; 
-            tabElement.innerHTML = 
-                `<div class="tab-favicon">
-                    <img src="" alt="" class="icon-img actual-favicon" style="display:none;" onerror="handleFaviconError(this);">
-                    <span class="unicode-icon default-favicon-globe" style="font-size: 14px; display: inline-flex;">🌐</span>
-                 </div>
-                 <div class="tab-title">New Tab</div>
-                 <div class="tab-close" title="Close Tab"><img src="../images/cross-white.png" alt="Close" class="tab-close-icon"></div>`;
-            tabBarEl.insertBefore(tabElement, newTabButtonEl); 
-            const iframe = document.createElement('iframe'); 
-            iframe.id = `content-${tabId}`; 
-            iframe.className = 'tab-content'; 
-            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox'; 
-            iframe.loading = 'eager'; 
-            tabsContainerEl.appendChild(iframe); 
-            const tab = { 
-                id: tabId, 
-                element: tabElement, 
-                iframe, 
-                url: url || 'about:blank', 
-                actualTitle: 'New Tab', 
-                actualFavicon: null, 
-                titleElement: tabElement.querySelector('.tab-title'), 
-                faviconElement: tabElement.querySelector('.tab-favicon'), 
-                isLoading: false 
-            }; 
-            tabs.push(tab); 
-            activateTab(tabId); 
-            navigateTo(tab.url, tab); 
-            return tab; 
+        function createTab(url = null) {
+            const tabId = `tab-${tabCounter++}`;
+            const tabFragment = tabTemplate.content.cloneNode(true);
+            const tabElement = tabFragment.querySelector('.tab');
+            tabElement.dataset.tabId = tabId;
+
+            tabBarEl.insertBefore(tabElement, newTabButtonEl);
+
+            const iframe = document.createElement('iframe');
+            iframe.id = `content-${tabId}`;
+            iframe.className = 'tab-content';
+            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox';
+            iframe.loading = 'eager'; // Load active/new tabs eagerly
+            tabsContainerEl.appendChild(iframe);
+
+            const tab = {
+                id: tabId,
+                element: tabBarEl.querySelector(`.tab[data-tab-id="${tabId}"]`), // Get the live element from DOM
+                iframe,
+                url: url || 'about:blank',
+                actualTitle: 'New Tab',
+                actualFavicon: null,
+                titleElement: tabBarEl.querySelector(`.tab[data-tab-id="${tabId}"] .tab-title`),
+                faviconElement: tabBarEl.querySelector(`.tab[data-tab-id="${tabId}"] .tab-favicon`),
+                isLoading: false
+            };
+            tabs.push(tab);
+            activateTab(tabId);
+            navigateTo(tab.url, tab);
+            return tab;
         }
 
-        function activateTab(tabId) { 
-            if (!tabId && tabs.length > 0) tabId = tabs[0].id; 
-            if (!tabId) return; 
-            tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); }); 
-            const tab = tabs.find(t => t.id === tabId); 
-            if (tab) { 
-                tab.element.classList.add('active'); 
-                tab.iframe.classList.add('active'); 
-                activeTabId = tabId; 
-                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; 
-                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); 
-                applyBrowserCloak(); 
-                updateInternalTabDisplay(tab); 
-            } 
+
+        function activateTab(tabId) {
+            if (!tabId && tabs.length > 0) tabId = tabs[0].id; // Default to first tab if none specified
+            if (!tabId) return;
+
+            tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); });
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab) {
+                tab.element.classList.add('active');
+                tab.iframe.classList.add('active');
+                activeTabId = tabId;
+                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : '';
+                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                applyBrowserCloak(); // Apply cloak based on potentially new active tab context
+                updateInternalTabDisplay(tab);
+            }
         }
-        function closeTab(tabId) { const tabIndex = tabs.findIndex(t => t.id === tabId); if (tabIndex === -1) return; const tab = tabs[tabIndex]; if (tab.titleObserver) tab.titleObserver.disconnect(); if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1); if (activeTabId === tabId) { if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id); else createTab('about:blank'); } }
+
+        function closeTab(tabId) {
+            const tabIndex = tabs.findIndex(t => t.id === tabId);
+            if (tabIndex === -1) return;
+            const tab = tabs[tabIndex];
+
+            if (tab.titleObserver) tab.titleObserver.disconnect();
+            if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+
+            tab.element.remove();
+            tab.iframe.remove();
+            tabs.splice(tabIndex, 1);
+
+            if (activeTabId === tabId) {
+                if (tabs.length > 0) {
+                    activateTab(tabs[Math.max(0, tabIndex - 1)].id); // Activate previous or first
+                } else {
+                    createTab('about:blank'); // Create a new tab if all are closed
+                }
+            }
+        }
+
         function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
-        
-        function formatUrlInput(input) { if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
-        
-        function navigateTo(urlInput, tab = null) { 
-            let currentTab = tab || getActiveTab(); 
-            if (!currentTab) { currentTab = createTab(urlInput); return; } 
-            currentTab.isLoading = true; 
-            updateTabInfo(currentTab, "Loading...", null); 
-            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank'; 
-            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { 
-                currentTab.iframe.src = urlInput; 
-                currentTab.url = urlInput; 
-                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput; 
-                updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, null); 
-                if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url); 
-                currentTab.isLoading = false; return; 
-            } 
-            let targetUrl = formatUrlInput(urlInput.trim()); 
-            if (!targetUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); } 
-            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Error: UV Config Missing", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return; } 
-            try { const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl); currentTab.iframe.src = proxiedUrl; currentTab.url = targetUrl; if (currentTab.id === activeTabId) searchBarEl.value = targetUrl; } catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Navigation Error", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; } 
+
+        function formatUrlInput(input) {
+            if (/^(?:[a-z]+:)?\/\//i.test(input)) { // Already a full URL (e.g. http://, https://, file://)
+                 if(input.startsWith("//")) return "https:" + input; // Handles protocol-relative URLs like //example.com
+                return input;
+            }
+            // Check if it looks like a domain name or IP address
+            if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || // domain.com/path
+                input.startsWith("localhost:") || // localhost:port
+                /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) { // 127.0.0.1/path or 127.0.0.1:port/path
+                return 'https://' + input; // Prepend https if it looks like a host
+            }
+            return null; // Not a URL, treat as search query
         }
 
-        function handleTabBarClick(e) { const tabElement = e.target.closest('.tab'); if (e.target.closest('.tab-close') && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); } else if (tabElement) activateTab(tabElement.dataset.tabId); }
+        function navigateTo(urlInput, tab = null) {
+            let currentTab = tab || getActiveTab();
+            if (!currentTab) { currentTab = createTab(urlInput); return; }
+
+            currentTab.isLoading = true;
+            updateTabInfo(currentTab, "Loading...", null); // Update tab display immediately
+
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
+
+            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
+                currentTab.iframe.src = urlInput;
+                currentTab.url = urlInput;
+                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput;
+                updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, null);
+                if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url);
+                currentTab.isLoading = false; return;
+            }
+
+            let targetUrl = formatUrlInput(urlInput.trim());
+            if (!targetUrl) { // If not a direct URL, use search engine
+                const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
+                targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+            }
+
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`;
+                currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Error: UV Config Missing", null);
+                currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return;
+            }
+
+            try {
+                const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl);
+                currentTab.iframe.src = proxiedUrl;
+                currentTab.url = targetUrl; // Store the original target URL
+                if (currentTab.id === activeTabId) searchBarEl.value = targetUrl;
+            } catch (err) {
+                const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                currentTab.iframe.src = errorUrl; currentTab.url = errorUrl;
+                updateTabInfo(currentTab, "Navigation Error", null);
+                currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = '';
+            }
+        }
+
+        function handleTabBarClick(e) {
+            const tabElement = e.target.closest('.tab');
+            if (e.target.closest('.tab-close') && tabElement) {
+                e.stopPropagation(); // Prevent activating tab when closing
+                closeTab(tabElement.dataset.tabId);
+            } else if (tabElement) {
+                activateTab(tabElement.dataset.tabId);
+            }
+        }
         function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
-        
-        function handleIframeLoad(event) { 
-            if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) { 
-                const iframe = event.target; 
-                const tab = tabs.find(t => t.iframe === iframe); 
-                if (tab) { 
-                    tab.isLoading = false; 
-                    let titleFromIframe = 'Untitled'; 
-                    let faviconFromIframe = null; 
-                    try { 
-                        if (iframe.contentWindow && iframe.contentDocument) { 
-                            titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled'; 
-                            faviconFromIframe = getFaviconForTab(tab); // MODIFIED LINE
-                        } 
-                    } catch (e) { 
-                        try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} 
-                        faviconFromIframe = getDefaultFaviconForUrl(tab.url); // Fallback if contentDocument access fails
-                        console.warn("VERN MAX Debug: Error accessing iframe content on load for tab:", tab.id, e);
-                    } 
-                    if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; 
-                    updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
-                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(tab.actualTitle, tab.url); 
-                    setupTitleObserver(tab); 
-                }
-            }
-        }
-        function handleGlobalKeyDown(e) { const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); } if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); } if (e.ctrlKey && e.key === 'Tab') { e.preventDefault(); if (tabs.length > 1) { const currentIndex = tabs.findIndex(t => t.id === activeTabId); const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + tabs.length) % tabs.length; activateTab(tabs[nextIndex].id); }} if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
-        
-        function setupTitleObserver(tab) { 
-            if (!tab || !tab.iframe.contentWindow) return; 
-            if (tab.titleObserver) tab.titleObserver.disconnect(); 
-            try { 
-                const targetNode = tab.iframe.contentDocument.querySelector('title'); 
-                if (!targetNode) { // If no title tag, still try to get favicon based on document changes
-                     const headNode = tab.iframe.contentDocument.querySelector('head');
-                     if (!headNode) return; // No head, can't observe much for favicons via link tags
 
-                     const observer = new MutationObserver(() => {
-                        if (tab.iframe.contentDocument && tab.iframe.contentWindow) {
-                            let titleFromIframe = tab.iframe.contentDocument.title || tab.actualTitle; // Keep old title if new one not found
-                            let faviconFromIframe = getFaviconForTab(tab); // MODIFIED LINE
-                            updateTabInfo(tab, titleFromIframe, faviconFromIframe);
+        function handleIframeLoad(event) {
+            if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) {
+                const iframe = event.target;
+                const tab = tabs.find(t => t.iframe === iframe);
+                if (tab) {
+                    tab.isLoading = false;
+                    let titleFromIframe = 'Untitled';
+                    let faviconFromIframe = null;
+                    try {
+                        if (iframe.contentWindow && iframe.contentDocument) {
+                            titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled';
+                            faviconFromIframe = getFaviconForTab(tab);
                         }
-                     });
-                     observer.observe(headNode, { subtree: true, childList: true, attributes: true, attributeFilter: ['href'] }); // Observe head for link changes
-                     tab.titleObserver = observer;
-                     return;
-                }
-                const observer = new MutationObserver(() => { 
-                    if (tab.iframe.contentDocument && tab.iframe.contentWindow) { 
-                        let titleFromIframe = tab.iframe.contentDocument.title; 
-                        let faviconFromIframe = getFaviconForTab(tab); // MODIFIED LINE
-                        updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
+                    } catch (e) { // Likely a cross-origin error if UV proxy isn't fully handling or page sets "Cross-Origin-Opener-Policy"
+                        try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} // Fallback title
+                        faviconFromIframe = getDefaultFaviconForUrl(tab.url); // Fallback favicon
+                        console.warn("VERN MAX Debug: Error accessing iframe content on load for tab:", tab.id, e);
                     }
-                }); 
-                observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); 
-                // Also observe head for new <link rel="icon"> tags
-                const headNode = tab.iframe.contentDocument.querySelector('head');
-                if (headNode) {
-                    observer.observe(headNode, { childList: true, subtree: true, attributes: true, attributeFilter: ['href', 'rel'] });
+                    if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; // Special case for error pages
+                    updateTabInfo(tab, titleFromIframe, faviconFromIframe);
+                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(tab.actualTitle, tab.url);
+                    setupTitleObserver(tab);
                 }
-                tab.titleObserver = observer; 
-            } catch (e) { 
-                console.warn("VERN MAX Debug: Error setting up title/head observer for tab:", tab.id, e);
-                if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); 
-                tab.locationCheckIntervalId = setInterval(() => { 
-                    try { 
-                        if (tab.iframe.contentDocument && tab.iframe.contentWindow && tab.actualTitle !== tab.iframe.contentDocument.title) {
-                            let title = tab.iframe.contentDocument.title; 
-                            let fav = getFaviconForTab(tab); // MODIFIED LINE
-                            updateTabInfo(tab, title, fav);
-                        } else if (tab.iframe.contentDocument && tab.iframe.contentWindow) { // Check favicon even if title hasn't changed
-                            let currentFavicon = tab.actualFavicon;
-                            let newFavicon = getFaviconForTab(tab);
-                            if (currentFavicon !== newFavicon) {
-                                updateTabInfo(tab, tab.actualTitle, newFavicon);
-                            }
-                        }
-                    } catch (err) { /* console.warn("Interval check error:", err) */ } 
-                }, 2000); 
             }
         }
-        
-        function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm));}
-        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
-        function renderBookmarkItem(bm) { 
-            const li = document.createElement('li'); 
-            li.dataset.url = bm.url; 
-            li.title = `${bm.name}\n${bm.url}`; 
-            const nameSpan = document.createElement('span'); 
-            nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; 
-            const urlSpan = document.createElement('span'); 
-            urlSpan.className = 'bookmark-url'; 
-            urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; 
-            
-            const removeBtn = document.createElement('span');
-            removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7; display:inline-flex; align-items:center; justify-content:center;'; 
-            
-            const img = document.createElement('img');
-            img.src = '../images/cross-white.png';
-            img.alt = 'Remove';
-            img.classList.add('bookmark-remove-icon'); 
-            
-            removeBtn.appendChild(img);
-            removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; 
-            
-            li.appendChild(nameSpan); 
-            li.appendChild(urlSpan); 
-            li.appendChild(removeBtn); 
-            li.style.position = 'relative'; 
-            bookmarksListEl.appendChild(li); 
+        function handleGlobalKeyDown(e) {
+            const targetTagName = e.target.tagName.toLowerCase();
+            if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; // Ignore if typing in an input
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); }
+            if (e.ctrlKey && e.key === 'Tab') { e.preventDefault(); if (tabs.length > 1) { const currentIndex = tabs.findIndex(t => t.id === activeTabId); const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + tabs.length) % tabs.length; activateTab(tabs[nextIndex].id); }}
+            if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); }
+            if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); }
+            if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }
         }
-        function handleAddCurrentBookmark() { const activeTab = getActiveTab(); if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputEl.value.trim() || activeTab.actualTitle || new URL(activeTab.url).hostname; const url = activeTab.url; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputEl.value = ''; }
-        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
-        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.classList.contains('bookmark-remove-icon') && !e.target.parentElement.classList.contains('bookmark-remove-icon')) { createTab(li.dataset.url); }} 
-        function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
-        function renderHistory() { historyListEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = document.createElement('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; const titleSpan = document.createElement('span'); titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li); });}
-        function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); }}
+
+        function setupTitleObserver(tab) {
+            if (!tab || !tab.iframe.contentWindow) return;
+            if (tab.titleObserver) tab.titleObserver.disconnect(); // Disconnect previous observer
+
+            try {
+                const contentDoc = tab.iframe.contentDocument;
+                if (!contentDoc) return; // Should not happen if contentWindow exists, but good check
+
+                const headNode = contentDoc.querySelector('head');
+                if (!headNode) { // No head, less to observe, but still setup a fallback or minimal observer if needed
+                    console.warn("VERN MAX Debug: No <head> element found in iframe to observe for tab:", tab.id);
+                     // Fallback to interval check if no head for favicon links
+                    if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+                    tab.locationCheckIntervalId = setInterval(() => pollTabContent(tab), 2000);
+                    return;
+                }
+
+                const observer = new MutationObserver(() => {
+                    if (tab.iframe.contentDocument && tab.iframe.contentWindow) {
+                        let titleFromIframe = tab.iframe.contentDocument.title || tab.actualTitle;
+                        let faviconFromIframe = getFaviconForTab(tab);
+                        updateTabInfo(tab, titleFromIframe, faviconFromIframe);
+                    }
+                });
+
+                // Observe title element if it exists
+                const titleNode = contentDoc.querySelector('title');
+                if (titleNode) {
+                    observer.observe(titleNode, { subtree: true, characterData: true, childList: true });
+                }
+                // Always observe head for favicon <link> tag changes (add/remove/href change)
+                observer.observe(headNode, { childList: true, subtree: true, attributes: true, attributeFilter: ['href', 'rel', 'type'] });
+                tab.titleObserver = observer;
+
+                // Clear any fallback interval if observer is successfully set up
+                if (tab.locationCheckIntervalId) {
+                    clearInterval(tab.locationCheckIntervalId);
+                    tab.locationCheckIntervalId = null;
+                }
+
+            } catch (e) {
+                console.warn("VERN MAX Debug: Error setting up title/head observer for tab:", tab.id, e);
+                // Fallback to interval checking if MutationObserver setup fails (e.g., cross-origin issues not fully mitigated by UV)
+                if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId);
+                tab.locationCheckIntervalId = setInterval(() => pollTabContent(tab), 2000);
+            }
+        }
+
+        function pollTabContent(tab) { // Fallback polling function
+            try {
+                if (tab.iframe.contentDocument && tab.iframe.contentWindow) {
+                    let newTitle = tab.iframe.contentDocument.title;
+                    let newFavicon = getFaviconForTab(tab);
+                    if (newTitle !== tab.actualTitle || newFavicon !== tab.actualFavicon) {
+                        updateTabInfo(tab, newTitle, newFavicon);
+                    }
+                }
+            } catch (err) { /* console.warn("Interval poll error:", err) */ }
+        }
+
+        function loadBookmarks() {
+            const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            bookmarksListEl.innerHTML = ''; // Clear existing
+            bms.forEach(bm => renderBookmarkItem(bm));
+        }
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+
+        function renderBookmarkItem(bm) {
+            const itemFragment = bookmarkItemTemplate.content.cloneNode(true);
+            const li = itemFragment.querySelector('li');
+            const nameSpan = itemFragment.querySelector('.bookmark-name');
+            const urlSpan = itemFragment.querySelector('.bookmark-url');
+            const removeBtn = itemFragment.querySelector('.bookmark-remove-button');
+
+            li.dataset.url = bm.url;
+            li.title = `${bm.name}\n${bm.url}`;
+            nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name;
+            urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url;
+
+            removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); };
+            bookmarksListEl.appendChild(li);
+        }
+
+        function handleAddCurrentBookmark() {
+            const activeTab = getActiveTab();
+            if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) {
+                alert("Cannot bookmark this page."); return;
+            }
+            const name = newBookmarkNameInputEl.value.trim() || activeTab.actualTitle || new URL(activeTab.url).hostname;
+            const url = activeTab.url;
+            let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
+            bms.push({ name, url });
+            saveBookmarks(bms);
+            renderBookmarkItem({ name, url }); // Add to UI
+            newBookmarkNameInputEl.value = ''; // Clear input
+        }
+        function removeBookmark(urlToRemove) {
+            let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            bms = bms.filter(b => b.url !== urlToRemove);
+            saveBookmarks(bms);
+            loadBookmarks(); // Reload UI
+        }
+        function handleBookmarkClick(e) {
+            const li = e.target.closest('li[data-url]');
+            // Ensure the click is not on the remove button itself
+            if (li && !e.target.closest('.bookmark-remove-button')) {
+                createTab(li.dataset.url);
+            }
+        }
+
+        function addToHistory(title, url) {
+            if (!url || url === 'about:blank' || url.startsWith('about:')) return;
+            // Avoid adding consecutive duplicates if title and URL are the same
+            if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return;
+
+            sessionHistory.push({ title: title || url, url, timestamp: new Date() });
+            if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
+            renderHistory();
+        }
+
+        function renderHistory() {
+            historyListEl.innerHTML = ''; // Clear existing
+            [...sessionHistory].reverse().forEach(item => { // Show newest first
+                const itemFragment = historyItemTemplate.content.cloneNode(true);
+                const li = itemFragment.querySelector('li');
+                const titleSpan = itemFragment.querySelector('.history-title');
+                const urlSpan = itemFragment.querySelector('.history-url');
+
+                li.dataset.url = item.url;
+                li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
+                titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url;
+                urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
+
+                historyListEl.appendChild(li);
+            });
+        }
+        function handleHistoryClick(e) {
+            const li = e.target.closest('li[data-url]');
+            if (li) {
+                navigateTo(li.dataset.url); // Or createTab(li.dataset.url) if preferred
+            }
+        }
 
     </script>
 </body>
