@@ -177,7 +177,7 @@
         #tab-bar::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
         .tab {
             display: flex; align-items: center; min-width: 150px; max-width: 180px; height: 30px;
-            padding: 0px 3px; /* UPDATED from user's HTML */
+            padding: 0px 3px; 
             background-color: var(--tab-bg); border-radius: 6px; cursor: pointer;
             transition: all 0.2s ease; overflow: hidden; position: relative;
             box-shadow: 0 0 0 1px var(--tab-border);
@@ -197,23 +197,23 @@
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
 
         .tab-close {
-            width: 25px; /* UPDATED from user's HTML */
-            height: 25px; /* UPDATED from user's HTML */
+            width: 25px; 
+            height: 25px; 
             display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; /* UPDATED from user's HTML */
-            margin-left: 4px; flex-shrink: 0; opacity: 1; /* UPDATED opacity from user's HTML */
-            transition: opacity 0.2s, background-color 0.2s, width 0.2s, height 0.2s; /* Added width/height transition */
+            border-radius: 6px; 
+            margin-left: 4px; flex-shrink: 0; opacity: 1; 
+            transition: opacity 0.2s, background-color 0.2s, width 0.2s, height 0.2s; 
             cursor: pointer;
         }
         .tab-close:hover { 
             opacity: 1; 
             background-color: rgba(var(--current-theme-shadow-rgb),0.2); 
-            width: 27.5px; /* UPDATED from user's HTML */
-            height: 27.5px; /* UPDATED from user's HTML */
+            width: 27.5px; 
+            height: 27.5px; 
         }
         .tab-close-icon { 
-            width: 20px; /* UPDATED from user's HTML */
-            height: 20px; /* UPDATED from user's HTML */
+            width: 20px; 
+            height: 20px; 
             display: block; 
         }
 
@@ -365,15 +365,14 @@
         function handleFaviconError(imgElement) {
             const parent = imgElement.parentNode;
             if (parent) {
-                // Remove all children of parent (i.e., the broken img and potentially other interfering nodes)
+                // Remove all children of parent (i.e., the broken img)
                 while (parent.firstChild) {
                     parent.removeChild(parent.firstChild);
                 }
                 // Add the new span with the globe icon
                 const span = document.createElement('span');
                 span.className = 'unicode-icon';
-                span.style.fontSize = '14px'; // Consistent with other icon styling
-                // span.style.lineHeight = '1'; // Already handled by .tab-favicon .unicode-icon
+                span.style.fontSize = '14px';
                 span.textContent = '🌐';
                 parent.appendChild(span);
             }
@@ -381,22 +380,22 @@
 
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
-            const defaultAppTitle = "VERN MAX - SEARCH";
-            // Use the 'none' preset's favicon as the ultimate default if other specific images are missing
-            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; 
+            const defaultAppTitle = "VERN MAX - SEARCH"; // Default title if 'none' preset is flawed
+            const defaultAppFavicon = "../images/title-mini.png"; // Default favicon if 'none' preset is flawed
 
             let selectedCloak = cloakPresets[currentCloakPresetKey];
 
-            if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) { // Check title existence
+            if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) {
                 document.title = selectedCloak.title;
                 if (appFaviconEl) {
                     appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; 
                 }
             } else {
                 // "None" selected or invalid cloak key, apply specific default for "None"
-                document.title = cloakPresets['none'].title || defaultAppTitle;
+                const nonePreset = cloakPresets['none'] || {}; // Ensure 'none' preset exists
+                document.title = nonePreset.title || defaultAppTitle;
                 if (appFaviconEl) {
-                    appFaviconEl.href = cloakPresets['none'].faviconUrl || defaultAppFavicon;
+                    appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon;
                 }
             }
         }
@@ -441,6 +440,65 @@
                 }
             }
         }
+        
+        /**
+         * Helper function to find and process favicon URL from a document.
+         * @param {Document} doc - The document (e.g., iframe.contentDocument).
+         * @param {string} basePageUrl - The base URL of the page in the iframe.
+         * @returns {string|null} Processed favicon URL (possibly proxied) or null.
+         */
+        function getAndProcessFaviconUrl(doc, basePageUrl) {
+            let rawFaviconUrl = null;
+            try {
+                if (doc && doc.head) {
+                    const linkTags = Array.from(doc.head.querySelectorAll('link[rel*="icon"]'));
+                    // Prioritize specific 'rel' values
+                    const relPriority = ['shortcut icon', 'icon'];
+                    for (const rel of relPriority) {
+                        const foundLink = linkTags.find(link => link.getAttribute('rel')?.toLowerCase() === rel);
+                        if (foundLink) {
+                            rawFaviconUrl = new URL(foundLink.href, basePageUrl || doc.baseURI).href;
+                            break;
+                        }
+                    }
+                    // If not found by specific rel, take the first one with 'icon' in rel
+                    if (!rawFaviconUrl && linkTags.length > 0) {
+                         rawFaviconUrl = new URL(linkTags[0].href, basePageUrl || doc.baseURI).href;
+                    }
+                }
+            } catch (e) { console.warn("Error parsing favicon URL from link tag:", e); }
+
+            if (!rawFaviconUrl && basePageUrl && (basePageUrl.startsWith('http:') || basePageUrl.startsWith('https:'))) {
+                try {
+                    // Only attempt /favicon.ico if basePageUrl is a full URL
+                    const siteUrl = new URL(basePageUrl);
+                    rawFaviconUrl = new URL('/favicon.ico', siteUrl.origin).href;
+                } catch (e) { console.warn("Error constructing /favicon.ico URL:", e); }
+            }
+
+            let processedFaviconUrl = null;
+            if (rawFaviconUrl) {
+                if (rawFaviconUrl.startsWith('data:')) {
+                    processedFaviconUrl = rawFaviconUrl;
+                } else if (rawFaviconUrl.startsWith('http') && typeof __uv$config !== 'undefined' && __uv$config.prefix && __uv$config.encodeUrl) {
+                    try {
+                        if (!rawFaviconUrl.startsWith(self.location.origin) && !rawFaviconUrl.includes(__uv$config.prefix)) {
+                             processedFaviconUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(rawFaviconUrl);
+                        } else {
+                            processedFaviconUrl = rawFaviconUrl; 
+                        }
+                    } catch (e) {
+                        console.warn("Error proxying favicon URL:", rawFaviconUrl, e);
+                        processedFaviconUrl = rawFaviconUrl; 
+                    }
+                } else {
+                    processedFaviconUrl = rawFaviconUrl; 
+                }
+            }
+            // console.log("Raw Favicon:", rawFaviconUrl, "Processed Favicon:", processedFaviconUrl);
+            return processedFaviconUrl;
+        }
+
 
         document.addEventListener('DOMContentLoaded', async () => {
             tabBarEl = document.getElementById('tab-bar'); 
@@ -541,12 +599,11 @@
                 selectedTextEl.textContent = cloakPresets[selectedValue].displayName;
             } else if (dropdownId === 'search-engine-dropdown' && searchEngines[selectedValue]) {
                  selectedTextEl.textContent = searchEngines[selectedValue].name;
-            } else if (selectedTextEl) { // Fallback for safety, though should not be needed
+            } else if (selectedTextEl) { 
                 const selectedListItem = dropdownEl.querySelector(`.custom-dropdown-list-item[data-value="${selectedValue}"]`);
                 if (selectedListItem) selectedTextEl.textContent = selectedListItem.textContent;
             }
 
-            // Update selected class
             const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item'); 
             listItems.forEach(item => { 
                 item.classList.toggle('selected', item.dataset.value === selectedValue);
@@ -696,13 +753,11 @@
                     try { 
                         if (iframe.contentWindow && iframe.contentDocument) { 
                             titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled'; 
-                            const linkTags = iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); 
-                            if (linkTags.length > 0) { 
-                                try {faviconFromIframe = new URL(linkTags[0].href, iframe.contentWindow.location.href).href; } catch(e){} 
-                            } 
+                            faviconFromIframe = getAndProcessFaviconUrl(iframe.contentDocument, tab.url);
                         } 
                     } catch (e) { 
                         try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} 
+                         console.warn("Error accessing iframe content on load for tab:", tab.id, e);
                     } 
                     if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; 
                     updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
@@ -720,30 +775,25 @@
                 const targetNode = tab.iframe.contentDocument.querySelector('title'); 
                 if (!targetNode) return; 
                 const observer = new MutationObserver(() => { 
-                    if (tab.iframe.contentDocument) { 
+                    if (tab.iframe.contentDocument && tab.iframe.contentWindow) { // Check contentWindow for location
                         let titleFromIframe = tab.iframe.contentDocument.title; 
-                        let faviconFromIframe = null; 
-                        const linkTags = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); 
-                        if (linkTags.length > 0) { 
-                            try {faviconFromIframe = new URL(linkTags[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){} 
-                        } 
+                        let faviconFromIframe = getAndProcessFaviconUrl(tab.iframe.contentDocument, tab.iframe.contentWindow.location.href);
                         updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
                     }
                 }); 
                 observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); 
                 tab.titleObserver = observer; 
             } catch (e) { 
+                 console.warn("Error setting up title observer for tab:", tab.id, e);
                 if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); 
                 tab.locationCheckIntervalId = setInterval(() => { 
                     try { 
-                        if (tab.iframe.contentDocument && tab.actualTitle !== tab.iframe.contentDocument.title) {
+                        if (tab.iframe.contentDocument && tab.iframe.contentWindow && tab.actualTitle !== tab.iframe.contentDocument.title) {
                             let title = tab.iframe.contentDocument.title; 
-                            let fav = null; 
-                            const links = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); 
-                            if(links.length>0){try{fav=new URL(links[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){}} 
+                            let fav = getAndProcessFaviconUrl(tab.iframe.contentDocument, tab.iframe.contentWindow.location.href);
                             updateTabInfo(tab, title, fav);
                         }
-                    } catch (err) {} 
+                    } catch (err) { /* console.warn("Interval check error:", err) */ } 
                 }, 2000); 
             }
         }
