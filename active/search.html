@@ -24,7 +24,7 @@
             --iframe-bg: var(--current-theme-bg);
             --footer-text-color: var(--current-theme-text);
             --font-family-main: 'PrimaryFont', sans-serif;
-            --sidebar-width: 250px;
+            --sidebar-width: 280px;
 
             --navbar-bg: var(--current-theme-neutral);
             --navbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
@@ -80,10 +80,9 @@
             border-bottom: 1px solid var(--sidebar-border-color); padding-bottom: 8px;
             font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
-        #sidebar h3 .icon-img { /* Specific for header icons */
+        #sidebar h3 .icon-img { 
             width: 1em; 
             height: 1em;
-            /* gap property on h3 will provide spacing, no need for margin-right here */
         }
 
         #sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; }
@@ -91,7 +90,7 @@
         #sidebar ul::-webkit-scrollbar-thumb { background-color: var(--sidebar-outline-color); border-radius: 8px; }
 
         #sidebar li {
-            padding: 9px 15px; margin-bottom: 7px; border-radius: 12px;
+            padding: 9px 15px; margin-bottom: 7px; border-radius: 7px;
             cursor: pointer; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
             background-color: var(--button-bg); box-shadow: 0 0 0 1px var(--sidebar-outline-color);
@@ -108,7 +107,7 @@
         #sidebar .sidebar-input {
             width: 100%; height: 38px; padding: 0 15px; margin-bottom: 10px;
             background-color: var(--input-bg); color: var(--text-color);
-            border: none; border-radius: 12px; font-family: var(--font-family-main);
+            border: none; border-radius: 7px; font-family: var(--font-family-main);
             box-sizing: border-box; box-shadow: 0 0 0 1px var(--sidebar-outline-color);
             font-size: 0.9em;
         }
@@ -119,7 +118,7 @@
         #sidebar .sidebar-button {
             width: 100%; height: 38px; padding: 0 15px;
             background-color: var(--button-bg); color: var(--button-text-color);
-            border: none; border-radius: 12px; cursor: pointer;
+            border: none; border-radius: 7px; cursor: pointer;
             transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
             font-family: var(--font-family-main); box-shadow: 0 0 0 1px var(--sidebar-outline-color);
             display: flex; align-items: center; justify-content: center;
@@ -136,7 +135,7 @@
         }
         .custom-dropdown-header {
             width: 100%; height: 38px; padding: 0 15px; background-color: var(--dropdown-bg);
-            border: none; border-radius: 12px; box-sizing: border-box;
+            border: none; border-radius: 7px; box-sizing: border-box;
             box-shadow: 0 0 0 1px var(--sidebar-outline-color); cursor: pointer;
             display: flex; align-items: center; justify-content: space-between;
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -148,7 +147,7 @@
 
         .custom-dropdown-list {
             position: absolute; top: 100%; left: 0; right: 0; background-color: var(--dropdown-bg);
-            border-radius: 12px; box-shadow: 0 4px 8px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
+            border-radius: 7px; box-shadow: 0 4px 8px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
             list-style: none; padding: 8px 0; margin: 4px 0 0 0; max-height: 180px; overflow-y: auto;
             z-index: 1005; display: none;
         }
@@ -198,8 +197,8 @@
 
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 16px; height: 16px; margin-right: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        .tab-favicon img { width: 100%; height: 100%; object-fit: contain; }
-        .tab-favicon .unicode-icon { line-height: 1; } 
+        .tab-favicon img.actual-favicon { width: 100%; height: 100%; object-fit: contain; display: none; } /* Initially hidden */
+        .tab-favicon .default-favicon-globe { line-height: 1; display: inline-flex; } /* Initially visible */
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
 
         .tab-close {
@@ -265,7 +264,7 @@
         }
         .sidebar-setting-label { display:block; margin-bottom:7px; font-size: 0.9em; font-weight: 500; }
         
-        .unicode-icon {
+        .unicode-icon { /* General class for unicode characters used as icons */
             font-size: inherit; display: inline-flex; align-items: center; justify-content: center;
         }
         .icon-img { /* General class for image icons */
@@ -276,13 +275,12 @@
         #nav-bar .nav-button .icon-img { width: 20px; height: 20px; }
         #tab-bar .new-tab-button .icon-img { width: 18px; height: 18px; }
         #sidebar .sidebar-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
-        .tab-favicon .icon-img { width: 100%; height: 100%; } /* For actual favicons if they are images */
+        /* .tab-favicon .icon-img is now .tab-favicon img.actual-favicon for specificity */
         
-        /* Style for the remove bookmark image icon */
         .bookmark-remove-icon {
-            width: 20px;
-            height: 20px;
-            display: block; /* Or inline-block if preferred for layout within its container */
+            width: 12px;
+            height: 12px;
+            display: block; 
         }
 
     </style>
@@ -321,7 +319,7 @@
             <ul id="bookmarks-list"></ul>
         </div>
         <div id="history-section">
-            <h3><span class="unicode-icon">🕒</span> Session History</h3> {/* Kept as emoji if no clock icon provided */}
+            <h3><img src="../images/clock-white.png" alt="History" class="icon-img"> Session History</h3>
             <ul id="history-list"></ul>
         </div>
     </div>
@@ -374,16 +372,15 @@
         let initialTopBarHeight = 0;
 
         function handleFaviconError(imgElement) {
+            console.log("VERN MAX Debug: handleFaviconError called for:", imgElement.src);
             const parent = imgElement.parentNode;
             if (parent) {
-                while (parent.firstChild) {
-                    parent.removeChild(parent.firstChild);
+                const globeElement = parent.querySelector('.default-favicon-globe');
+                imgElement.style.display = 'none'; // Hide broken image
+                imgElement.src = ''; // Prevent potential repeated error loops on some browsers
+                if (globeElement) {
+                    globeElement.style.display = 'inline-flex'; // Show globe
                 }
-                const span = document.createElement('span');
-                span.className = 'unicode-icon';
-                span.style.fontSize = '14px';
-                span.textContent = '🌐';
-                parent.appendChild(span);
             }
         }
 
@@ -410,18 +407,28 @@
 
         function updateInternalTabDisplay(tab) {
             if (!tab) return;
-            const defaultFaviconHTML = `<span class="unicode-icon" style="font-size: 14px;">🌐</span>`;
+
+            const imgElement = tab.faviconElement.querySelector('img.actual-favicon');
+            const globeElement = tab.faviconElement.querySelector('span.default-favicon-globe');
 
             let displayTitleToShow = tab.actualTitle || "New Tab";
-            let faviconHTMLToShow = defaultFaviconHTML; 
-
+            
             if (tab.actualFavicon && (tab.actualFavicon.startsWith('http') || tab.actualFavicon.startsWith('data:'))) {
-                faviconHTMLToShow = `<img src="${tab.actualFavicon}" alt="" class="icon-img" onerror="handleFaviconError(this);">`;
+                if (imgElement) {
+                    imgElement.src = tab.actualFavicon;
+                    imgElement.style.display = 'block'; // Or 'inline-block'
+                }
+                if (globeElement) globeElement.style.display = 'none';
+            } else {
+                if (imgElement) {
+                    imgElement.style.display = 'none';
+                    imgElement.src = ''; // Clear src to prevent errors
+                }
+                if (globeElement) globeElement.style.display = 'inline-flex';
             }
             
             tab.titleElement.textContent = displayTitleToShow.length > 20 ? displayTitleToShow.substring(0, 18) + '...' : displayTitleToShow;
             tab.titleElement.title = displayTitleToShow;
-            tab.faviconElement.innerHTML = faviconHTMLToShow;
         }
         
         function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) {
@@ -456,7 +463,7 @@
                     const siteOrigin = new URL(basePageUrl).origin;
                     rawFaviconUrl = new URL('/favicon.ico', siteOrigin).href;
                 } catch (e) {
-                    console.warn("Error constructing /favicon.ico URL from basePageUrl:", basePageUrl, e);
+                    console.warn("VERN MAX Debug: Error constructing /favicon.ico URL from basePageUrl:", basePageUrl, e);
                     return null; 
                 }
             } else {
@@ -473,15 +480,17 @@
                             processedFaviconUrl = rawFaviconUrl; 
                         }
                     } catch (e) {
-                        console.warn("Error proxying favicon URL:", rawFaviconUrl, e);
+                        console.warn("VERN MAX Debug: Error proxying favicon URL:", rawFaviconUrl, e);
                         processedFaviconUrl = rawFaviconUrl; 
                     }
                 } else {
                     processedFaviconUrl = rawFaviconUrl; 
                 }
             }
+            console.log("VERN MAX Debug: Favicon attempt for:", basePageUrl, "-> Raw:", rawFaviconUrl, "-> Processed:", processedFaviconUrl);
             return processedFaviconUrl;
         }
+
 
         document.addEventListener('DOMContentLoaded', async () => {
             tabBarEl = document.getElementById('tab-bar'); 
@@ -657,7 +666,13 @@
             const tabElement = document.createElement('div'); 
             tabElement.className = 'tab'; 
             tabElement.dataset.tabId = tabId; 
-            tabElement.innerHTML = `<div class="tab-favicon"><span class="unicode-icon" style="font-size: 14px;">🌐</span></div><div class="tab-title">New Tab</div><div class="tab-close" title="Close Tab"><img src="../images/cross-white.png" alt="Close" class="tab-close-icon"></div>`; 
+            tabElement.innerHTML = 
+                `<div class="tab-favicon">
+                    <img src="" alt="" class="icon-img actual-favicon" style="display:none;" onerror="handleFaviconError(this);">
+                    <span class="unicode-icon default-favicon-globe" style="font-size: 14px; display: inline-flex;">🌐</span>
+                 </div>
+                 <div class="tab-title">New Tab</div>
+                 <div class="tab-close" title="Close Tab"><img src="../images/cross-white.png" alt="Close" class="tab-close-icon"></div>`;
             tabBarEl.insertBefore(tabElement, newTabButtonEl); 
             const iframe = document.createElement('iframe'); 
             iframe.id = `content-${tabId}`; 
@@ -740,7 +755,7 @@
                         } 
                     } catch (e) { 
                         try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} 
-                         console.warn("Error accessing iframe content on load for tab:", tab.id, e);
+                         console.warn("VERN MAX Debug: Error accessing iframe content on load for tab:", tab.id, e);
                     } 
                     if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; 
                     updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
@@ -767,7 +782,7 @@
                 observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); 
                 tab.titleObserver = observer; 
             } catch (e) { 
-                 console.warn("Error setting up title observer for tab:", tab.id, e);
+                 console.warn("VERN MAX Debug: Error setting up title observer for tab:", tab.id, e);
                 if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); 
                 tab.locationCheckIntervalId = setInterval(() => { 
                     try { 
@@ -794,13 +809,12 @@
             urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; 
             
             const removeBtn = document.createElement('span');
-            // removeBtn.className = 'unicode-icon'; // Keep if general styling for icon containers is useful
-            removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7; display:inline-flex; align-items:center; justify-content:center;'; // Adjusted for image
+            removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7; display:inline-flex; align-items:center; justify-content:center;'; 
             
             const img = document.createElement('img');
             img.src = '../images/cross-white.png';
             img.alt = 'Remove';
-            img.classList.add('bookmark-remove-icon'); // Use class for styling
+            img.classList.add('bookmark-remove-icon'); 
             
             removeBtn.appendChild(img);
             removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; 
@@ -813,7 +827,7 @@
         }
         function handleAddCurrentBookmark() { const activeTab = getActiveTab(); if (!activeTab || !activeTab.url || activeTab.url === 'about:blank' || activeTab.url.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputEl.value.trim() || activeTab.actualTitle || new URL(activeTab.url).hostname; const url = activeTab.url; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputEl.value = ''; }
         function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
-        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.classList.contains('bookmark-remove-icon') && !e.target.parentElement.classList.contains('bookmark-remove-icon')) { createTab(li.dataset.url); }} // Avoid triggering on remove icon click
+        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.classList.contains('bookmark-remove-icon') && !e.target.parentElement.classList.contains('bookmark-remove-icon')) { createTab(li.dataset.url); }} 
         function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
         function renderHistory() { historyListEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = document.createElement('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; const titleSpan = document.createElement('span'); titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li); });}
         function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); }}
