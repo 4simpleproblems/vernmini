@@ -2,789 +2,647 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Browser</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-    
+    <title>VERN MAX - BROWSER</title>
+    <link rel="stylesheet" href="../css/style.css" /> <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
     <style id="custom-styles">
-        /* Base Elements */
+        /* Core Theme Variables & Component Mappings - Purple & Dark Grey Theme */
         :root {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --navbar-bg: rgba(15, 15, 15, 1);
-            --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            --button-bg: rgba(10, 10, 10, 0.8);
-            --button-hover-bg: rgba(15, 15, 15, 0.9);
-            --search-bg: rgba(10, 10, 10, 0.8);
-            --search-focus-bg: rgba(45, 45, 45, 0.9);
-            --search-focus-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-            --iframe-bg: #202020;
-            --footer-text-color: #fff;
-            --font-family-main: 'Roboto Mono', monospace;
-            --tab-bg: rgba(25, 25, 25, 0.8);
-            --tab-active-bg: rgba(45, 45, 45, 0.9);
-            --tab-border: rgba(60, 60, 60, 0.5);
-            --tab-hover-bg: rgba(35, 35, 35, 0.9);
+            --current-theme-bg: #23272A;
+            --current-theme-text: #E0E1DD;
+            --current-theme-accent: #7F5AF0;
+            --current-theme-neutral: #2C2F33;
+            --current-theme-button-text: #FFFFFF;
+            --current-theme-shadow-rgb: 0, 0, 0;
+            --current-theme-shadow-opacity-strong: 0.4;
+            --current-theme-shadow-opacity-medium: 0.25;
+            --current-theme-shadow-opacity-light: 0.15;
+            --current-theme-focus-ring-color: var(--current-theme-accent);
+
+            --bg-color: var(--current-theme-bg);
+            --text-color: var(--current-theme-text);
+            --iframe-bg: var(--current-theme-bg); /* iframe background */
+            --footer-text-color: var(--current-theme-text);
+            --font-family-main: 'PrimaryFont', sans-serif;
+
+            --toolbar-bg: var(--current-theme-neutral);
+            --toolbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
+            --toolbar-border-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
+
+            --button-bg: var(--current-theme-accent);
+            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, var(--current-theme-text));
+            --button-text-color: var(--current-theme-button-text);
+            --button-outline-color: color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
+
+
+            --input-bg: color-mix(in srgb, var(--current-theme-neutral) 90%, var(--current-theme-bg));
+            --input-focus-bg: var(--current-theme-bg);
+            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 50%, transparent);
+
+            --menu-bg: var(--input-bg);
+            --menu-item-hover-bg: var(--button-hover-bg);
+            --menu-text-color: var(--text-color);
+            --menu-shadow: 0 4px 12px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
+            --menu-border-color: var(--button-outline-color);
         }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            border: none;
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+            margin: 0; padding: 0; border: none; box-sizing: border-box;
+            width: 100%; height: 100%; overflow: hidden;
             font-family: var(--font-family-main);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-        
-        body {
-            display: flex;
+            background-color: var(--bg-color); color: var(--text-color);
+            display: flex; /* Changed from flex to block for simpler top-down layout */
             flex-direction: column;
         }
 
-        #top-bar-assembly {
-            overflow: hidden;
-            transition: max-height 0.35s ease-in-out;
-            /* Set initial max-height via JS for proper first animation */
+        canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
 
-        #top-bar-assembly.hidden {
-            max-height: 0 !important; 
-        }
-        
-        /* Tab Bar */
-        #tab-bar {
-            display: flex;
-            background-color: var(--navbar-bg);
-            padding: 10px 12px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-            position: relative;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        #tab-bar::-webkit-scrollbar { height: 3px; }
-        #tab-bar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
-        
-        .tab {
-            display: flex; align-items: center; min-width: 160px; max-width: 200px; height: 32px;
-            padding: 0 12px; background-color: var(--tab-bg); border-radius: 16px; cursor: pointer;
-            transition: all 0.2s ease; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--tab-border);
-        }
-        .tab.active { background-color: var(--tab-active-bg); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); }
-        .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
-        .tab-favicon { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
-        .tab-close { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 4px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s, background-color 0.2s; }
-        .tab-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.2); }
-        
-        .new-tab-button {
-            width: 32px; height: 32px; min-width: 32px; margin-left: 6px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
-            cursor: pointer; transition: background-color 0.2s; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
-        }
-        .new-tab-button:hover { background-color: var(--button-hover-bg); }
-        
-        /* Navigation Bar */
-        #nav-bar {
+        #toolbar {
             display: flex;
             align-items: center;
-            padding: 10px;
-            background-color: var(--navbar-bg);
-            box-shadow: var(--navbar-shadow);
-            /* Added border for fluent outline with toggle button */
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5); 
+            padding: 8px 10px;
+            background-color: var(--toolbar-bg);
+            box-shadow: var(--toolbar-shadow);
+            border-bottom: 1px solid var(--toolbar-border-color);
+            z-index: 1000; /* Ensure toolbar is above content */
+            position: relative; /* For mini-menu positioning */
         }
-        
-        .nav-button {
-            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-            margin-right: 10px; border-radius: 50%; background-color: var(--button-bg);
-            cursor: pointer; color: var(--text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+
+        .nav-button, .toolbar-button { /* Combined style for toolbar buttons */
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
+            cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
+            box-shadow: 0 0 0 1px var(--button-outline-color); font-size: 20px;
+            position: relative; /* For badges or indicators if needed */
         }
-        .nav-button:hover { background-color: var(--button-hover-bg); }
-        
+        .nav-button:hover, .toolbar-button:hover { background-color: var(--button-hover-bg); }
+
+        .nav-button .icon-img, .toolbar-button .icon-img { width: 20px; height: 20px; }
+
+
         #search-bar {
-            flex: 1; height: 40px; border-radius: 30px; border: none; background-color: var(--search-bg);
-            color: var(--text-color); padding: 0 18px; font-size: 15px; font-weight: 700;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); font-family: var(--font-family-main);
+            flex: 1; height: 36px; border-radius: 8px; border: none; background-color: var(--input-bg);
+            color: var(--text-color); padding: 0 15px; font-size: 14px;
+            box-shadow: 0 0 0 1px var(--button-outline-color); font-family: var(--font-family-main);
         }
-        #search-bar:focus { outline: none; background-color: var(--search-focus-bg); box-shadow: var(--search-focus-shadow); font-weight: 700; }
-        
-        /* Toggle Top Bar Button */
-        #toggle-top-bar-button {
-            position: fixed;
-            z-index: 1001; 
-            width: 40px; 
-            height: 32px; 
-            background-color: var(--navbar-bg); 
-            border-radius: 0 0 100px 100px; 
-            right: 2px;
-            /* top position is set by JS */
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+
+        #fullscreen-button { margin-left: 8px; margin-right: 0; } /* Keep specific margin if needed */
+        #settings-button { margin-left: auto; /* Pushes settings button to the right */ margin-right: 8px;}
+
+
+        /* Mini Menus (for Bookmarks & History) */
+        .mini-menu {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: calc(100% + 5px); /* Position below the toolbar */
+            background-color: var(--menu-bg);
+            border: 1px solid var(--menu-border-color);
+            border-radius: 8px;
+            box-shadow: var(--menu-shadow);
+            z-index: 1005;
+            min-width: 280px;
+            max-width: 350px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            color: var(--menu-text-color);
+        }
+        /* Specific positioning for each menu if they are triggered by different buttons */
+        #bookmark-menu { right: 90px; /* Adjust as needed based on button positions */ }
+        #history-menu { right: 50px; /* Adjust as needed */ }
+
+        .mini-menu h3 {
+            margin-top: 0; margin-bottom: 10px; font-size: 1.1em;
+            border-bottom: 1px solid var(--toolbar-border-color); padding-bottom: 8px;
+            font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        .mini-menu h3 .icon-img { width: 1em; height: 1em; }
+
+        .mini-menu ul { list-style: none; padding: 0; margin: 0; }
+        .mini-menu ul::-webkit-scrollbar { width: 5px; }
+        .mini-menu ul::-webkit-scrollbar-thumb { background-color: var(--button-outline-color); border-radius: 8px; }
+
+        .mini-menu li {
+            padding: 9px 15px; margin-bottom: 7px; border-radius: 12px;
+            cursor: pointer; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-bg));
             color: var(--text-color);
-            transition: top 0.35s ease-in-out, background-color 0.2s ease-in-out;
-            box-shadow: /* This creates the L/R/B white outline for the button itself */
-              -2px 0 0 0 rgba(255, 255, 255, 0.5), /* left */
-               2px 0 0 0 rgba(255, 255, 255, 0.5), /* right */
-               0 2px 0 0 rgba(255, 255, 255, 0.5); /* bottom */
+            position: relative;
         }
-        #toggle-top-bar-button:hover {
-            background-color: var(--button-hover-bg); 
+        .mini-menu li:hover {
+            background-color: var(--menu-item-hover-bg);
+            color: var(--button-text-color);
         }
-        #toggle-top-bar-button .fas {
-            font-size: 14px;
-            transition: transform 0.3s ease-in-out; /* For potential future arrow animations */
+        .mini-menu li .item-url {
+            font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;
+        }
+        .mini-menu .item-remove-button {
+            position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer;
+            padding: 5px; opacity: 0.7; display:inline-flex; align-items:center; justify-content:center;
+            background: none; border: none; color: inherit;
+        }
+        .mini-menu .item-remove-button:hover { opacity: 1; background-color: rgba(var(--current-theme-shadow-rgb),0.1); border-radius: 50%; }
+        .mini-menu .item-remove-icon { width: 12px; height: 12px; display: block; }
+
+        .mini-menu .menu-action-bar { margin-top:15px; padding-top:10px; border-top: 1px solid var(--toolbar-border-color); }
+        .mini-menu .menu-input {
+            width: calc(100% - 30px); height: 38px; padding: 0 15px; margin-bottom: 10px;
+            background-color: var(--input-bg); color: var(--text-color);
+            border: none; border-radius: 12px; font-family: var(--font-family-main);
+            box-sizing: border-box; box-shadow: 0 0 0 1px var(--button-outline-color);
+            font-size: 0.9em;
+        }
+         .mini-menu .menu-input:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+        .mini-menu .menu-button {
+            width: 100%; height: 38px; padding: 0 15px;
+            background-color: var(--button-bg); color: var(--button-text-color);
+            border: none; border-radius: 12px; cursor: pointer;
+            transition: background-color 0.2s ease; font-family: var(--font-family-main);
+            box-shadow: 0 0 0 1px var(--button-outline-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9em; font-weight: 500;
+        }
+        .mini-menu .menu-button:hover { background-color: var(--button-hover-bg); }
+        .mini-menu .menu-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
+
+
+        #content-container {
+            flex: 1; /* Takes remaining vertical space */
+            position: relative;
+            background-color: var(--iframe-bg);
+            overflow: hidden; /* Important for iframe to fill */
+        }
+        #content-iframe { /* Single iframe for content */
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block; /* Ensure it's a block element */
         }
 
-        /* Content Area */
-        #tabs-container {
-            flex: 1; position: relative; background-color: var(--iframe-bg);
-        }
-        .tab-content { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; /* Inactive iframes are hidden, not removed. This preserves their state. */
-            border: none; 
-        }
-        .tab-content.active { 
-            display: block; /* Active iframe is shown. Switching display does not cause reload. */
-        }
-        
         .footer-label {
-            position: fixed; bottom: 0; left: 0; margin: 1rem; font-family: var(--font-family-main);
-            font-size: 0.9rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
+            position: fixed; bottom: 0; right: 0; margin: 0.25rem; font-family: var(--font-family-main);
+            font-size: 0.75rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
         }
-        
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        /* Icon styles (if any were specific to sidebar/tabs and need moving) */
+        .icon-img { display: inline-block; vertical-align: middle; object-fit: contain; }
+
+        /* Refresh button icon animation */
+        #refresh-button .icon-img {
+            transform: rotate(0deg); transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        #refresh-button .icon-img.spinning { animation: spinRefreshIcon 0.7s linear infinite; }
+        @keyframes spinRefreshIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        body.app-ui-hidden #toolbar { display: none !important; }
+
+
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
 
-    <div id="top-bar-assembly">
-        <div id="tab-bar">
-            <div class="new-tab-button" id="new-tab-button" title="New Tab">
-                <i class="fas fa-plus"></i>
-            </div>
+    <template id="bookmark-item-template">
+        <li>
+            <span class="item-name">Bookmark Name</span>
+            <span class="item-url">bookmark.url</span>
+            <button class="item-remove-button" title="Remove Bookmark">
+                <img src="../images/cross-white.png" alt="Remove" class="item-remove-icon">
+            </button>
+        </li>
+    </template>
+
+    <template id="history-item-template">
+        <li>
+            <span class="item-name">History Title</span>
+            <span class="item-url">history.url</span>
+        </li>
+    </template>
+
+    <div id="toolbar">
+        <div class="nav-button" id="home-button" title="Home"><img src="../images/home-white.png" alt="Home" class="icon-img"></div>
+        <div class="nav-button" id="back-button" title="Back"><img src="../images/arrow-left-white.png" alt="Back" class="icon-img"></div>
+        <div class="nav-button" id="forward-button" title="Forward"><img src="../images/arrow-right-white.png" alt="Forward" class="icon-img"></div>
+        <div class="nav-button" id="refresh-button" title="Refresh"><img src="../images/refresh-white.png" alt="Refresh" class="icon-img"></div>
+
+        <input type="text" id="search-bar" placeholder="Search or type a URL">
+
+        <div class="toolbar-button" id="bookmark-button" title="Bookmarks">
+            <img src="../images/star-white.png" alt="Bookmarks" class="icon-img">
         </div>
-        <div id="nav-bar">
-            <div class="nav-button" id="home-button" title="Home"> <i class="fas fa-home"></i> </div>
-            <div class="nav-button" id="back-button" title="Back"> <i class="fas fa-arrow-left"></i> </div>
-            <div class="nav-button" id="forward-button" title="Forward"> <i class="fas fa-arrow-right"></i> </div>
-            <div class="nav-button" id="refresh-button" title="Refresh"> <i class="fas fa-redo"></i> </div>
-            <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
+        <div class="toolbar-button" id="history-button" title="History">
+            <img src="../images/clock-white.png" alt="History" class="icon-img">
+        </div>
+         <div class="nav-button" id="fullscreen-button" title="Toggle Fullscreen">
+            <img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img">
+        </div>
+        <div class="toolbar-button" id="settings-button" title="Settings">
+            <img src="../images/gear-white.png" alt="Settings" class="icon-img">
         </div>
     </div>
 
-    <div id="toggle-top-bar-button" title="Hide Toolbar">
-        <i id="toggle-bar-icon" class="fas fa-chevron-up"></i>
+    <div id="bookmark-menu" class="mini-menu">
+        <h3><img src="../images/star-white.png" alt="Bookmarks" class="icon-img"> Bookmarks</h3>
+        <ul id="bookmarks-list-popup"></ul>
+        <div class="menu-action-bar">
+            <input type="text" id="new-bookmark-name-popup" class="menu-input" placeholder="Bookmark Name (optional)">
+            <button id="add-current-bookmark-button-popup" class="menu-button">
+                <img src="../images/plus-symbol-white.png" alt="Add" class="icon-img">Bookmark Current Page
+            </button>
+        </div>
     </div>
 
-    <div id="tabs-container">
-        </div>
-            <span class="footer-label">Official 4SP Proxy</span>
-    
+    <div id="history-menu" class="mini-menu">
+        <h3><img src="../images/clock-white.png" alt="History" class="icon-img"> Session History</h3>
+        <ul id="history-list-popup"></ul>
+    </div>
+
+    <div id="content-container">
+        <iframe id="content-iframe" title="Content View"></iframe>
+    </div>
+
+    <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Max by 4SP</a>
+
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
     <script src="register-sw.js" defer></script>
-    <script src="search.js" defer></script>
     <script src="stars.js" defer></script>
-
     <script>
-        let tabs = [];
-        let activeTabId = null;
-        let tabCounter = 0;
+        // Single Browse context variables
+        let currentUrl = 'about:blank';
+        let currentTitle = 'New Tab';
+        let currentFavicon = null;
+        let isLoading = false;
+        let isRefreshing = false;
 
-        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fourspButtonEl;
-        
-        let topBarAssemblyEl, toggleTopBarButtonEl, toggleBarIconEl;
-        let initialTopBarHeight = 0;
-        let isTopBarHidden = false;
+        let sessionHistory = [];
+        const MAX_HISTORY_ITEMS = 50;
 
-        // Function to initialize the UV service worker
-        // Assumes registerSW() is provided by register-sw.js
-        async function initUV() { 
-            try { await registerSW(); console.log("Service worker registered"); } 
-            catch (err) { console.error("Failed to register service worker:", err); }
+        const searchEngines = {
+            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
+            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+        };
+        let currentSearchEngineKey = 'duckduckgo'; // Default, loaded from localStorage
+
+        const cloakPresets = {
+            'none': { displayName: "None (Show App Default)", title: "VERN MAX - BROWSER", faviconUrl: "../images/title-mini.png" },
+            'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
+            'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' },
+            'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'}
+        };
+        let currentCloakPresetKey = 'none'; // Default, loaded from localStorage
+
+        // DOM Elements
+        let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
+            fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl,
+            bookmarkMenuEl, historyMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl,
+            addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl;
+
+        // Templates
+        let bookmarkItemTemplate, historyItemTemplate;
+
+
+        function encodePlainTextUrlForQuery(plainUrl) { if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
+        function decodeEncodedUrlFromQuery(encodedUrl) { if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
+
+        function updateBrowserAddressBar() {
+            const newSearchParams = new URLSearchParams(window.location.search);
+            newSearchParams.delete('url');
+
+            if (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) {
+                const encoded = encodePlainTextUrlForQuery(currentUrl);
+                if (encoded) newSearchParams.set('eurl', encoded);
+                else newSearchParams.delete('eurl');
+            } else {
+                newSearchParams.delete('eurl');
+            }
+            const newQueryString = newSearchParams.toString();
+            history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`);
         }
-        
-        function createTab(url = null) { 
-            const tabId = `tab-${tabCounter++}`;
-            const contentId = `content-${tabId}`;
-            const tabElement = document.createElement('div');
-            tabElement.className = 'tab';
-            tabElement.dataset.tabId = tabId;
-            tabElement.innerHTML = `<div class="tab-favicon"><i class="fas fa-globe" style="font-size: 14px;"></i></div><div class="tab-title">New Tab</div><div class="tab-close"><i class="fas fa-times"></i></div>`;
-            tabBarEl.insertBefore(tabElement, newTabButtonEl); 
-            
-            const iframe = document.createElement('iframe');
-            iframe.id = contentId;
-            iframe.className = 'tab-content';
-            iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups';
-            iframe.loading = 'eager'; 
-            tabsContainerEl.appendChild(iframe);
-            
-            const tab = { id: tabId, contentId: contentId, element: tabElement, iframe: iframe, url: url || 'New Tab', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon') };
-            tabs.push(tab);
-            activateTab(tabId); 
-            
-            // Call navigateTo, which will handle the URL including 'about:blank'
-            navigateTo(tab.url, tab); 
-            
-            if (activeTabId === tabId && !url) {
-                 // Clear search bar only if it's the initially created blank tab
-                 if (searchBarEl) searchBarEl.value = '';
-             }
 
-            return tab;
-        }
-        
-        function activateTab(tabId) { 
-            tabs.forEach(t => { 
-                t.element.classList.remove('active'); 
-                t.iframe.classList.remove('active'); 
-            });
-            const tab = tabs.find(t => t.id === tabId);
-            if (tab) {
-                tab.element.classList.add('active');
-                tab.iframe.classList.add('active');
-                activeTabId = tabId;
-                // Update search bar with the tab's current URL, but show blank for 'about:blank'
-                if (searchBarEl) searchBarEl.value = tab.url !== 'about:blank' ? tab.url : '';
-                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                try {
-                    // Update document title based on iframe content or URL
-                    if (tab.iframe.contentDocument && tab.iframe.contentDocument.title && tab.iframe.contentDocument.title !== '') {
-                        document.title = tab.iframe.contentDocument.title + ' - Vern Browser';
-                    } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http')) {
-                        try {
-                             document.title = new URL(tab.url).hostname + ' - Vern Browser';
-                        } catch (e) {
-                            document.title = tab.url + ' - Vern Browser'; // Fallback for invalid URL string
-                        }
-                    } else {
-                        document.title = 'New Tab - Vern Browser';
-                    }
-                } catch (e) {
-                    document.title = 'Vern Browser'; // Fallback if iframe content is inaccessible (cross-origin)
-                }
+        function applyBrowserCloak() {
+            const appFaviconEl = document.getElementById('app-favicon');
+            const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER";
+            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png";
+            let selectedCloak = cloakPresets[currentCloakPresetKey];
+
+            if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) {
+                document.title = selectedCloak.title;
+                if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon;
+            } else {
+                const nonePreset = cloakPresets['none'] || {};
+                document.title = nonePreset.title || defaultAppTitle;
+                if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon;
             }
         }
-        
-        function closeTab(tabId) { 
-            const tabIndex = tabs.findIndex(t => t.id === tabId);
-            if (tabIndex === -1) return;
-            const tab = tabs[tabIndex];
-            tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1);
-            if (activeTabId === tabId) {
-                if (tabs.length > 0) { activateTab(tabs[Math.max(0, tabIndex - 1)].id); } 
-                else { createTab(); } 
-            }
-        }
-        
-        // Navigate function using the searchFast logic from the second HTML's search.js
-        // Assumes searchFast() and __uv$config are provided by the external scripts
-        function navigateTo(urlInput, tab = null) { 
-            if (!urlInput || typeof urlInput !== 'string') { // Also handle null/undefined input
-                 urlInput = 'about:blank'; // Default to about:blank for invalid inputs
-            }
-            
-            let currentTab = tab;
-            if (!currentTab) { 
-                currentTab = getActiveTab() || (tabs.length > 0 ? tabs[0] : createTab('about:blank')); // Ensure a tab exists
-            }
-
-            if (!currentTab) { 
-                console.error("NavigateTo: No current tab available.");
-                return;
-            }
-
-            // --- MODIFICATION START ---
-            // Explicitly handle 'about:blank' to prevent proxying/searching it
-            if (urlInput === 'about:blank') {
-                currentTab.iframe.src = 'about:blank';
-                currentTab.url = 'about:blank';
-                if (searchBarEl && currentTab.id === activeTabId) searchBarEl.value = ''; // Clear search bar for blank tab
-                updateTabInfo(currentTab, 'New Tab'); // Set title for blank tab
-                return; // Stop here, do not process with searchFast or UV
-            }
-            // --- MODIFICATION END ---
 
 
-            // Check if searchFast is available from the external script search.js
-            if (typeof searchFast !== 'function') { 
-                console.error("searchFast function is not available. Ensure search.js is loaded."); 
-                 if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=search_function_missing&query=${encodeURIComponent(urlInput)}`; 
-                 updateTabInfo(currentTab, "Error: Search unavailable"); return; 
+        function proxyUrl(urlToProxy) {
+            if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
+            if (urlToProxy.startsWith('data:')) return urlToProxy;
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy); return urlToProxy;
             }
-            
             try {
-                // Use searchFast from the external script
-                const formattedUrl = searchFast(urlInput, 'https://duckduckgo.com/?q=%s');
-                
-                // Check if UV configuration is available from uv.config.js
-                if (typeof __uv$config === 'undefined' || typeof __uv$config.prefix === 'undefined' || typeof __uv$config.encodeUrl === 'undefined') { 
-                    console.error("UV configuration (__uv$config) is not available. Ensure uv.config.js is loaded."); 
-                    if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=uv_config_missing&url=${encodeURIComponent(formattedUrl)}`; 
-                    updateTabInfo(currentTab, "Error: UV Config Missing"); return; 
-                }
-                const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
-                
-                currentTab.iframe.src = encodedUrl; 
-                currentTab.url = formattedUrl; 
-                if (searchBarEl && currentTab.id === activeTabId) searchBarEl.value = formattedUrl; 
-                
-                let tempTitle = 'Loading...';
+                const currentOrigin = self.location.origin;
+                if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) return urlToProxy;
+                return currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy);
+            } catch (e) { console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e); return urlToProxy; }
+        }
+
+        function getDefaultFaviconForUrl(basePageUrl) {
+            if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) return null;
+            try { return proxyUrl(new URL('/favicon.ico', new URL(basePageUrl).origin).href); }
+            catch (e) { console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e); return null; }
+        }
+
+        function getFaviconFromIframe() {
+            if (contentIframeEl && contentIframeEl.contentDocument && currentUrl) {
                 try {
-                    if (formattedUrl && formattedUrl !== 'about:blank' && formattedUrl.startsWith('http')) {
-                        tempTitle = new URL(formattedUrl).hostname;
+                    const doc = contentIframeEl.contentDocument;
+                    const selectors = ['link[rel="icon"][type="image/svg+xml"]', 'link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="shortcut icon"]'];
+                    for (const selector of selectors) {
+                        const link = doc.querySelector(selector);
+                        if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') return proxyUrl(link.href);
                     }
-                } catch (e) { /* Use 'Loading...' */ }
-                updateTabInfo(currentTab, tempTitle);
-
-            } catch (err) { 
-                console.error("Navigation error:", err); 
-                if (currentTab && currentTab.iframe) currentTab.iframe.src = `about:blank#error=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; 
-                updateTabInfo(currentTab, "Navigation Error"); 
+                } catch (e) { console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", currentUrl, e); }
             }
-        }
-        
-        function updateTabInfo(tab, title, favicon) { 
-            if (!tab) return;
-            const displayTitle = title && title !== '' ? title : (tab.url !== 'about:blank' && tab.url.startsWith('http') ? (()=>{try{return new URL(tab.url).hostname}catch(e){return tab.url}})() : 'New Tab') || 'New Tab';
-            tab.titleElement.textContent = displayTitle; tab.titleElement.title = displayTitle; 
-            // Favicon logic (placeholder - a full implementation would require fetching favicon)
-            if (favicon) { tab.faviconElement.innerHTML = `<img src="${favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`; } 
-            else { tab.faviconElement.innerHTML = `<i class="fas fa-globe" style="font-size: 14px;"></i>`;}
-            
-            if (tab.id === activeTabId) {
-                document.title = displayTitle + ' - Vern Browser';
-            }
-        }
-        
-        function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
-
-        function handleTopBarToggle() {
-            isTopBarHidden = !isTopBarHidden;
-            if (isTopBarHidden) {
-                topBarAssemblyEl.classList.add('hidden');
-                toggleTopBarButtonEl.style.top = '-1px'; 
-                toggleBarIconEl.className = 'fas fa-chevron-down';
-                toggleTopBarButtonEl.title = "Show Toolbar";
-            } else {
-                topBarAssemblyEl.classList.remove('hidden');
-                topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; 
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
-                toggleBarIconEl.className = 'fas fa-chevron-up';
-                toggleTopBarButtonEl.title = "Hide Toolbar";
-            }
-        }
-        
-        function updateInitialTopBarHeight() {
-            const wasHidden = topBarAssemblyEl.classList.contains('hidden');
-            if (wasHidden) {
-              topBarAssemblyEl.classList.remove('hidden'); 
-              topBarAssemblyEl.style.maxHeight = '500px'; // Temporarily allow it to expand fully to measure
-            }
-            
-            initialTopBarHeight = topBarAssemblyEl.offsetHeight; // This now includes the new border on nav-bar
-            
-            if (wasHidden) {
-              topBarAssemblyEl.classList.add('hidden'); 
-            } else {
-              topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; 
-            }
-
-            if (!isTopBarHidden) { 
-                toggleTopBarButtonEl.style.top = (initialTopBarHeight > 0 ? initialTopBarHeight -1 : 0) + 'px';
-            } else {
-                toggleTopBarButtonEl.style.top = '-1px';
-            }
-        }
-
-        // NEW FUNCTION: Track URL/location changes within the iframe
-        function setupRedirectTracking(tab) {
-            if (!tab || !tab.iframe) return;
-            
-            // Create a clean interval ID property for this tab if it doesn't exist
-            if (!tab.locationCheckIntervalId) {
-                tab.lastKnownUrl = tab.url;
-                
-                // Poll for URL changes - necessary since we can't directly access cross-origin iframe locations
-                tab.locationCheckIntervalId = setInterval(() => {
-                    try {
-                        // First try to access the iframe location directly (works for same-origin)
-                        const iframeWindow = tab.iframe.contentWindow;
-                        if (iframeWindow && iframeWindow.location.href) {
-                            const currentUrl = iframeWindow.location.href;
-                            
-                            // Check if URL has changed - if it's a UV/proxy URL, we need to decode it
-                            if (currentUrl !== tab.lastKnownUrl) {
-                                let decodedUrl = currentUrl;
-                                
-                                // Try to decode UV URL if applicable
-                                if (typeof __uv$config !== 'undefined' && typeof __uv$config.decodeUrl === 'function' && 
-                                    currentUrl.includes(__uv$config.prefix)) {
-                                    try {
-                                        const encodedUrl = currentUrl.split(__uv$config.prefix)[1];
-                                        decodedUrl = __uv$config.decodeUrl(encodedUrl);
-                                    } catch (decodeErr) {
-                                        console.warn("Could not decode UV URL:", decodeErr);
-                                    }
-                                }
-                                
-                                // Update tab URL and UI
-                                tab.url = decodedUrl;
-                                tab.lastKnownUrl = currentUrl;
-                                
-                                // Update UI only if this is the active tab
-                                if (tab.id === activeTabId) {
-                                    if (searchBarEl) searchBarEl.value = decodedUrl;
-                                }
-                                
-                                // Update tab title from the page title
-                                if (iframeWindow.document && iframeWindow.document.title) {
-                                    updateTabInfo(tab, iframeWindow.document.title);
-                                } else {
-                                    // Use URL as fallback title if document title isn't available
-                                    try {
-                                        const urlObj = new URL(decodedUrl);
-                                        updateTabInfo(tab, urlObj.hostname);
-                                    } catch (e) {
-                                        updateTabInfo(tab, decodedUrl);
-                                    }
-                                }
-                            }
-                        }
-                    } catch (err) {
-                        // This usually means we're hitting cross-origin restrictions
-                        // We'll handle this with events instead
-                    }
-                }, 500); // Check every half second
-            }
-        }
-
-        // NEW FUNCTION: Clean up interval when tab is closed
-        function cleanupTabTracking(tab) {
-            if (tab && tab.locationCheckIntervalId) {
-                clearInterval(tab.locationCheckIntervalId);
-                tab.locationCheckIntervalId = null;
-            }
-        }
-
-        // MODIFIED closeTab function to clean up tracking interval
-        function closeTab(tabId) { 
-            const tabIndex = tabs.findIndex(t => t.id === tabId);
-            if (tabIndex === -1) return;
-            const tab = tabs[tabIndex];
-            
-            // NEW: Clean up tracking interval before removing tab
-            cleanupTabTracking(tab);
-            
-            tab.element.remove(); 
-            tab.iframe.remove(); 
-            tabs.splice(tabIndex, 1);
-            
-            if (activeTabId === tabId) {
-                if (tabs.length > 0) { 
-                    activateTab(tabs[Math.max(0, tabIndex - 1)].id); 
-                } else { 
-                    createTab(); 
-                } 
-            }
+            return getDefaultFaviconForUrl(currentUrl);
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            tabBarEl = document.getElementById('tab-bar');
-            tabsContainerEl = document.getElementById('tabs-container');
+            toolbarEl = document.getElementById('toolbar');
+            contentIframeEl = document.getElementById('content-iframe');
             searchBarEl = document.getElementById('search-bar');
-            newTabButtonEl = document.getElementById('new-tab-button'); 
             homeButtonEl = document.getElementById('home-button');
             backButtonEl = document.getElementById('back-button');
             forwardButtonEl = document.getElementById('forward-button');
             refreshButtonEl = document.getElementById('refresh-button');
-            fourspButtonEl = document.getElementById('foursp-button');
+            fullscreenButtonEl = document.getElementById('fullscreen-button');
+            settingsButtonEl = document.getElementById('settings-button');
+            bookmarkButtonEl = document.getElementById('bookmark-button');
+            historyButtonEl = document.getElementById('history-button');
+            bookmarkMenuEl = document.getElementById('bookmark-menu');
+            historyMenuEl = document.getElementById('history-menu');
+            bookmarksListPopupEl = document.getElementById('bookmarks-list-popup');
+            newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup');
+            addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
+            historyListPopupEl = document.getElementById('history-list-popup');
 
-            topBarAssemblyEl = document.getElementById('top-bar-assembly');
-            toggleTopBarButtonEl = document.getElementById('toggle-top-bar-button');
-            toggleBarIconEl = document.getElementById('toggle-bar-icon');
+            bookmarkItemTemplate = document.getElementById('bookmark-item-template');
+            historyItemTemplate = document.getElementById('history-item-template');
 
-            // Initialize UV service worker (requires register-sw.js)
             await initUV();
-            
-            // Set initial max-height for the top bar after elements are rendered
-            // Use a small timeout to ensure all elements are measured correctly
-             setTimeout(() => {
-                 updateInitialTopBarHeight(); 
-                 if (!isTopBarHidden) {
-                     topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
-                 } else {
-                     topBarAssemblyEl.style.maxHeight = '0px';
-                     topBarAssemblyEl.classList.add('hidden'); 
-                 }
-             }, 10); 
+            loadSettings(); // For search engine and cloak preset
+            setupEventListeners();
+            loadBookmarks(); // For bookmark mini-menu
 
-            // Event listeners for the top bar toggle button
-            if(toggleTopBarButtonEl) toggleTopBarButtonEl.addEventListener('click', handleTopBarToggle);
-            
-            // Update initial top bar height on window resize
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    if (!isTopBarHidden) { 
-                         updateInitialTopBarHeight();
-                    }
-                }, 100); 
-            });
-            
-            // Create initial tab on load
-            const urlParams = new URLSearchParams(window.location.search);
-            const initialUrl = urlParams.get('url'); // Check for 'url' parameter in the main page URL
-            // If no tabs exist, create a new one, optionally loading a URL from the query parameter
-            if (tabs.length === 0) {
-                // Use 'about:blank' as the default if no URL is provided
-                createTab(initialUrl || 'about:blank'); 
+            const currentUrlParams = new URLSearchParams(window.location.search);
+            let initialUrlToLoad = currentUrlParams.get('url');
+            const encodedUrlParam = currentUrlParams.get('eurl');
+
+            const newSearchParamsForBar = new URLSearchParams(window.location.search);
+            newSearchParamsForBar.delete('url'); newSearchParamsForBar.delete('eurl');
+
+            if (initialUrlToLoad) { /* use it */ }
+            else if (encodedUrlParam) initialUrlToLoad = decodeEncodedUrlFromQuery(encodedUrlParam);
+            else initialUrlToLoad = 'about:blank';
+
+            if (initialUrlToLoad && initialUrlToLoad !== 'about:blank' && !initialUrlToLoad.startsWith('about:error')) {
+                const encoded = encodePlainTextUrlForQuery(initialUrlToLoad);
+                if (encoded) newSearchParamsForBar.set('eurl', encoded);
             }
-            
-            // Event listener for the new tab button
-            if(newTabButtonEl) newTabButtonEl.addEventListener('click', () => createTab('about:blank')); // New tabs should also default to blank
-            
-            // Event listener for clicks on the tab bar (for activating and closing tabs)
-            if(tabBarEl) tabBarEl.addEventListener('click', (e) => { 
-                const tabElement = e.target.closest('.tab'); 
-                const closeButton = e.target.closest('.tab-close');
-                if (closeButton && tabElement) { 
-                    e.stopPropagation(); // Prevent tab activation when clicking close
-                    closeTab(tabElement.dataset.tabId); 
-                } else if (tabElement) { 
-                    activateTab(tabElement.dataset.tabId); 
-                }
-            });
+            history.replaceState(null, '', `${window.location.pathname}${newSearchParamsForBar.toString() ? '?' + newSearchParamsForBar.toString() : ''}`);
 
-            // Event listener for Enter key in the search bar
-            if(searchBarEl) searchBarEl.addEventListener('keydown', (e) => { 
-                if (e.key === 'Enter') {
-                    navigateTo(e.target.value); 
-                }
-            });
-
-            // Event listeners for navigation buttons
-            if(homeButtonEl) homeButtonEl.addEventListener('click', () => { 
-                 // The second HTML's home button navigates the top page, which isn't standard browser behavior.
-                 // Replicating the second HTML's exact JS means navigating the top window.
-                 // If you want it to navigate the active iframe to a homepage, change this line.
-                 window.location.href = "index.html"; // Redirects the main page
-            });
-            
-            // Back, Forward, Refresh buttons target the active iframe
-            if(backButtonEl) backButtonEl.addEventListener('click', () => { 
-                const t = getActiveTab(); 
-                if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.history.back(); } catch (err) {console.error("Back nav error:", err)} 
-                } 
-            });
-            
-            if(forwardButtonEl) forwardButtonEl.addEventListener('click', () => { 
-                const t = getActiveTab(); 
-                if (t && t.iframe.contentWindow) {
-                  try { t.iframe.contentWindow.history.forward(); } catch (err) {console.error("Forward nav error:", err)} 
-                } 
-            });
-            
-            if(refreshButtonEl) refreshButtonEl.addEventListener('click', () => { 
-                const t = getActiveTab(); 
-                if (t && t.iframe.contentWindow) {
-                    try { t.iframe.contentWindow.location.reload(); } catch (err) {
-                        console.error("Refresh error:", err);
-                        // Alternative method if direct reload fails due to cross-origin restrictions
-                        navigateTo(t.url, t);
-                    } 
-                } 
-            });
-
-            // Setup message event listener for communication from iframes
-            window.addEventListener('message', (event) => {
-                // Handle messages from iframes - could be used for title updates, navigation events, etc.
-                try {
-                    if (event.data && event.data.type === 'tabUpdate') {
-                        const tab = tabs.find(t => t.iframe.contentWindow === event.source);
-                        if (tab) {
-                            // Handle different update types
-                            if (event.data.title) {
-                                updateTabInfo(tab, event.data.title);
-                            }
-                            if (event.data.url) {
-                                tab.url = event.data.url;
-                                if (tab.id === activeTabId && searchBarEl) {
-                                    searchBarEl.value = event.data.url;
-                                }
-                            }
-                            if (event.data.favicon) {
-                                // Update favicon if provided
-                                tab.faviconElement.innerHTML = `<img src="${event.data.favicon}" alt="" style="width:16px;height:16px;object-fit:contain;">`;
-                            }
-                        }
-                    }
-                } catch (err) {
-                    console.warn("Error processing iframe message:", err);
-                }
-            });
-
-            // Setup mutation observer for tracking tab content changes
-            const setupTabContentObserver = (tab) => {
-                try {
-                    // Try to access iframe content - will throw if cross-origin
-                    const iframeDocument = tab.iframe.contentDocument;
-                    
-                    // If we can access it, observe title changes
-                    if (iframeDocument) {
-                        const titleObserver = new MutationObserver((mutations) => {
-                            if (iframeDocument.title) {
-                                updateTabInfo(tab, iframeDocument.title);
-                                if (tab.id === activeTabId) {
-                                    document.title = iframeDocument.title + ' - Vern Browser';
-                                }
-                            }
-                        });
-                        
-                        // Observe title element if it exists
-                        const titleEl = iframeDocument.querySelector('title');
-                        if (titleEl) {
-                            titleObserver.observe(titleEl, { 
-                                subtree: true, 
-                                characterData: true, 
-                                childList: true 
-                            });
-                        }
-                        
-                        // Store observer reference for cleanup
-                        tab.titleObserver = titleObserver;
-                    }
-                } catch (err) {
-                    // Cross-origin access error - use URL tracking instead
-                    setupRedirectTracking(tab);
-                }
-            };
-            
-            // Modified activateTab to setup content observers
-            const originalActivateTab = activateTab;
-            activateTab = function(tabId) {
-                originalActivateTab(tabId);
-                const tab = tabs.find(t => t.id === tabId);
-                if (tab) {
-                    setupTabContentObserver(tab);
-                }
-            };
-            
-            // Modified createTab to setup content observers
-            const originalCreateTab = createTab;
-            createTab = function(url = null) {
-                const tab = originalCreateTab(url);
-                setupTabContentObserver(tab);
-                return tab;
-            };
-            
-            // Handle iframe load events to update tab info
-            document.addEventListener('load', (e) => {
-                if (e.target.tagName === 'IFRAME') {
-                    const tabId = e.target.id.replace('content-', 'tab-');
-                    const tab = tabs.find(t => t.id === tabId);
-                    
-                    if (tab) {
-                        try {
-                            // Try to get title from iframe - will throw if cross-origin
-                            const title = e.target.contentDocument.title;
-                            if (title) {
-                                updateTabInfo(tab, title);
-                            }
-                            // Setup observer for future title changes
-                            setupTabContentObserver(tab);
-                        } catch (err) {
-                            // Cross-origin iframe, use URL for title
-                            if (tab.url && tab.url !== 'about:blank') {
-                                try {
-                                    const urlObj = new URL(tab.url);
-                                    updateTabInfo(tab, urlObj.hostname);
-                                } catch (e) {
-                                    updateTabInfo(tab, tab.url);
-                                }
-                            }
-                            // Setup tracking for URL changes
-                            setupRedirectTracking(tab);
-                        }
-                    }
-                }
-            }, true); // Use capture to ensure we get iframe load events
-            
-            // Handle keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                // Only process if not typing in search bar
-                if (e.target === searchBarEl) return;
-                
-                // Handle Ctrl+T for new tab
-                if (e.ctrlKey && e.key === 't') {
-                    e.preventDefault();
-                    createTab('about:blank');
-                }
-                
-                // Handle Ctrl+W for close tab
-                if (e.ctrlKey && e.key === 'w') {
-                    e.preventDefault();
-                    if (activeTabId) {
-                        closeTab(activeTabId);
-                    }
-                }
-                
-                // Handle Ctrl+Tab for next tab
-                if (e.ctrlKey && e.key === 'Tab') {
-                    e.preventDefault();
-                    if (tabs.length > 1) {
-                        const currentIndex = tabs.findIndex(t => t.id === activeTabId);
-                        const nextIndex = (currentIndex + 1) % tabs.length;
-                        activateTab(tabs[nextIndex].id);
-                    }
-                }
-                
-                // Handle Alt+Left/Right for back/forward
-                if (e.altKey && e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    backButtonEl.click();
-                }
-                if (e.altKey && e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    forwardButtonEl.click();
-                }
-                
-                // Handle F5 or Ctrl+R for refresh
-                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                    e.preventDefault();
-                    refreshButtonEl.click();
-                }
-                
-                // Handle F11 for toggling toolbar
-                if (e.key === 'F11') {
-                    e.preventDefault();
-                    handleTopBarToggle();
-                }
-            });
-            
-            // Handle contextmenu events for right-click menu
-            document.addEventListener('contextmenu', (e) => {
-                // Implement right-click context menu here if desired
-                // This would involve creating a custom popup menu
-                // For now, we'll allow the default browser context menu
-            });
+            navigateTo(initialUrlToLoad); // Initial navigation
+            renderHistory(); // For history mini-menu
+            applyBrowserCloak(); // Initial cloak based on loaded settings
         });
+
+        async function initUV() { try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
+
+        function loadSettings() {
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
+            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
+            // No UI elements to update for these on this page anymore
+        }
+
+        function setupEventListeners() {
+            fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen);
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
+            homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
+            backButtonEl.addEventListener('click', () => { try { contentIframeEl.contentWindow.history.back(); } catch(e) { console.warn("Back navigation failed", e); }});
+            forwardButtonEl.addEventListener('click', () => { try { contentIframeEl.contentWindow.history.forward(); } catch(e) { console.warn("Forward navigation failed", e); }});
+            refreshButtonEl.addEventListener('click', () => {
+                if (!contentIframeEl.contentWindow) return;
+                const refreshIcon = refreshButtonEl.querySelector('.icon-img');
+                if (refreshIcon) refreshIcon.classList.add('spinning');
+                isRefreshing = true;
+                try {
+                    if (typeof __uv$config !== 'undefined' && __uv$config && contentIframeEl.src.includes(__uv$config.prefix)) {
+                         contentIframeEl.contentWindow.location.reload(true);
+                    } else {
+                         contentIframeEl.contentWindow.location.reload();
+                    }
+                } catch (e) { contentIframeEl.src = contentIframeEl.src; } // Fallback
+            });
+
+            settingsButtonEl.addEventListener('click', () => { window.location.href = '../active/settings.html'; });
+            bookmarkButtonEl.addEventListener('click', toggleBookmarkMenu);
+            historyButtonEl.addEventListener('click', toggleHistoryMenu);
+
+            addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
+            bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
+            historyListPopupEl.addEventListener('click', handleHistoryClick);
+
+            document.addEventListener('keydown', handleGlobalKeyDown);
+            contentIframeEl.addEventListener('load', handleIframeLoad);
+
+            // Close mini-menus when clicking outside
+            document.addEventListener('click', (event) => {
+                if (bookmarkMenuEl.style.display === 'block' && !bookmarkMenuEl.contains(event.target) && event.target !== bookmarkButtonEl && !bookmarkButtonEl.contains(event.target)) {
+                    bookmarkMenuEl.style.display = 'none';
+                }
+                if (historyMenuEl.style.display === 'block' && !historyMenuEl.contains(event.target) && event.target !== historyButtonEl && !historyButtonEl.contains(event.target)) {
+                    historyMenuEl.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleIframeFullscreen() {
+            if (!document.fullscreenElement) {
+                if (contentIframeEl) contentIframeEl.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err));
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+        function handleFullscreenChange() {
+            const fsIconImg = document.getElementById('fullscreen-icon-img');
+            if (document.fullscreenElement) {
+                document.body.classList.add('app-ui-hidden');
+                if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";}
+                fullscreenButtonEl.title = "Exit Fullscreen";
+            } else {
+                document.body.classList.remove('app-ui-hidden');
+                if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";}
+                fullscreenButtonEl.title = "Toggle Fullscreen";
+            }
+        }
+
+        function formatUrlInput(input) { /* ... (same as original) ... */ if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
+
+        function navigateTo(urlInput) {
+            isLoading = true; currentTitle = "Loading..."; currentFavicon = null; // Reset
+            applyBrowserCloak(); // Update document title based on cloak if active
+
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
+            let targetDisplayUrl; // This will be the URL shown in search bar & used for history
+
+            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
+                targetDisplayUrl = urlInput;
+                contentIframeEl.src = targetDisplayUrl;
+                currentTitle = (targetDisplayUrl === 'about:blank' ? 'New Tab' : targetDisplayUrl);
+                if (!targetDisplayUrl.startsWith('about:error')) addToHistory(currentTitle, targetDisplayUrl);
+                isLoading = false;
+            } else {
+                let formattedInputUrl = formatUrlInput(urlInput.trim());
+                if (!formattedInputUrl) {
+                    const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
+                    targetDisplayUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+                } else {
+                    targetDisplayUrl = formattedInputUrl;
+                }
+
+                if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
+                    const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetDisplayUrl)}`;
+                    contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; // Update targetDisplayUrl to error
+                    currentTitle = "Error: UV Config Missing"; isLoading = false;
+                } else {
+                    try { contentIframeEl.src = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetDisplayUrl); }
+                    catch (err) {
+                        const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
+                        contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; // Update to error
+                        currentTitle = "Navigation Error"; isLoading = false;
+                    }
+                }
+            }
+            currentUrl = targetDisplayUrl; // Store the plain/original target URL
+            searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : '';
+            updateBrowserAddressBar();
+        }
+
+
+        function handleIframeLoad() {
+            isLoading = false;
+            const refreshIcon = refreshButtonEl.querySelector('.icon-img');
+            if (isRefreshing && refreshIcon) { refreshIcon.classList.remove('spinning'); isRefreshing = false; }
+
+            try {
+                if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) {
+                    currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled';
+                    currentFavicon = getFaviconFromIframe();
+                }
+            } catch (e) {
+                try { currentTitle = new URL(currentUrl).hostname || 'New Tab'; } catch {}
+                currentFavicon = getDefaultFaviconForUrl(currentUrl);
+                console.warn("VERN MAX Debug: Error accessing iframe content on load for URL:", currentUrl, e);
+            }
+            if (currentUrl && currentUrl.startsWith('about:error')) currentTitle = "Error Page";
+
+            applyBrowserCloak(); // Re-apply cloak to update document title if needed, based on new iframe title
+            if (currentUrl && !currentUrl.startsWith('about:error') && !currentUrl.startsWith('about:blank')) {
+                addToHistory(currentTitle, currentUrl);
+            }
+            // No title observer for simplicity in single iframe view, relying on load event.
+        }
+
+        function handleGlobalKeyDown(e) { /* ... (same as original, but remove tab-specific ctrl+t, ctrl+w, ctrl+tab) ... */ const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
+
+        function loadBookmarks() {
+            const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            bookmarksListPopupEl.innerHTML = '';
+            bms.forEach(bm => renderBookmarkItem(bm));
+        }
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+
+        function renderBookmarkItem(bm) {
+            const itemFragment = bookmarkItemTemplate.content.cloneNode(true);
+            const li = itemFragment.querySelector('li');
+            const nameSpan = itemFragment.querySelector('.item-name'); // Updated class
+            const urlSpan = itemFragment.querySelector('.item-url');   // Updated class
+            const removeBtn = itemFragment.querySelector('.item-remove-button');
+
+            li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`;
+            nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name;
+            urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url;
+            removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); };
+            bookmarksListPopupEl.appendChild(li);
+        }
+
+        function handleAddCurrentBookmark() {
+            if (!currentUrl || currentUrl === 'about:blank' || currentUrl.startsWith('about:')) { alert("Cannot bookmark this page."); return; }
+            const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle || new URL(currentUrl).hostname;
+            const url = currentUrl;
+            let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
+            if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
+            bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url });
+            newBookmarkNameInputPopupEl.value = '';
+        }
+        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
+
+        function handleBookmarkClick(e) {
+            const li = e.target.closest('li[data-url]');
+            if (li && !e.target.closest('.item-remove-button')) {
+                navigateTo(li.dataset.url);
+                bookmarkMenuEl.style.display = 'none'; // Close menu after click
+            }
+        }
+
+        function addToHistory(title, url) {
+            if (!url || url === 'about:blank' || url.startsWith('about:')) return;
+            if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return;
+            sessionHistory.push({ title: title || url, url, timestamp: new Date() });
+            if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
+            renderHistory();
+        }
+        function renderHistory() {
+            historyListPopupEl.innerHTML = '';
+            [...sessionHistory].reverse().forEach(item => {
+                const itemFragment = historyItemTemplate.content.cloneNode(true);
+                const li = itemFragment.querySelector('li');
+                const titleSpan = itemFragment.querySelector('.item-name'); // Updated class
+                const urlSpan = itemFragment.querySelector('.item-url');   // Updated class
+                li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
+                titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url;
+                urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
+                historyListPopupEl.appendChild(li);
+            });
+        }
+        function handleHistoryClick(e) {
+            const li = e.target.closest('li[data-url]');
+            if (li) {
+                navigateTo(li.dataset.url);
+                historyMenuEl.style.display = 'none'; // Close menu after click
+            }
+        }
+
+        function toggleBookmarkMenu() {
+            historyMenuEl.style.display = 'none'; // Close other menu
+            bookmarkMenuEl.style.display = bookmarkMenuEl.style.display === 'block' ? 'none' : 'block';
+        }
+        function toggleHistoryMenu() {
+            bookmarkMenuEl.style.display = 'none'; // Close other menu
+            historyMenuEl.style.display = historyMenuEl.style.display === 'block' ? 'none' : 'block';
+        }
+
     </script>
 </body>
 </html>
