@@ -1,376 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VERN MAX - HOME</title>
-  <link rel="stylesheet" href="../css/style.css" /> 
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="icon" type="image/png" href="../images/title-mini.png" /> 
-  <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" /> 
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-  <style>
-    /* Embedded styles will complement or override ../css/style.css */
-    html {
-      background-color: #131314; 
-      height: 100%;
-      box-sizing: border-box;
-    }
-    *, *:before, *:after {
-      box-sizing: inherit;
-    }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'PrimaryFont', sans-serif; /* Assumes PrimaryFont is defined in style.css or linked */
-      /* Updated gradient to a darker purple at the bottom */
-      background: linear-gradient(to bottom, #6720bd, #5e1cad); 
-      background-attachment: fixed;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VERN MAX - HOME</title>
+    <link rel="stylesheet" href="../css/style.css" /> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/png" href="../images/title-mini.png" />
+    <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <style>
+        :root {
+            --current-theme-bg: #1e1e20; /* Slightly darker base */
+            --current-theme-text: #E0E1DD;
+            --current-theme-accent: #7F5AF0; /* Purple accent */
+            --current-theme-neutral: #2a2d30; /* Slightly lighter than bg for elements */
+            --current-theme-button-text: #FFFFFF;
+            --current-theme-shadow-rgb: 0, 0, 0;
+            --current-theme-shadow-opacity-medium: 0.3;
+            --current-theme-focus-ring-color: var(--current-theme-accent);
 
-    #starsCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
+            --navbar-bg: #222528; /* Darker for the top search bar container */
+            --navbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
+            
+            --button-bg: var(--current-theme-accent);
+            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, #000000); /* Darken for hover */
+            --button-text-color: var(--current-theme-button-text);
 
-    .search-interface-frame {
-      background-color: #ffffff; 
-      color: #333333; 
-      border-radius: 30px; 
-      padding: 20px; 
-      max-width: 1000px; 
-      width: 95%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08); 
-      border: 1px solid rgba(103, 32, 189, 0.1); 
-      position: relative;
-      z-index: 1;
-      margin-top: 70px; 
-      overflow-y: auto;
-      max-height: calc(100vh - 110px); 
-    }
+            --input-bg: #303438; /* Darker input background */
+            --input-text-color: var(--current-theme-text);
+            --input-placeholder-color: color-mix(in srgb, var(--current-theme-text) 50%, transparent);
+            --input-border-color: #40454a;
+            --input-focus-border-color: var(--current-theme-accent);
+            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 30%, transparent);
+            
+            --font-family-main: 'PrimaryFont', sans-serif; /* Ensure PrimaryFont is loaded */
+            --font-family-monospace: 'Roboto Mono', monospace;
 
-    #header-logo-container {
-      text-align: center;
-      position: absolute;
-      top: -85px; 
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      width: 100%;
-    }
+            --radius-small: 12px;
+            --radius-medium: 18px; /* For slightly larger elements if needed */
+            --radius-large: 16px; /* For "bigger stuff" */
+        }
 
-    #bigTitle {
-      max-width: 170px; 
-      height: auto;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); 
-    }
+        html {
+            height: 100%;
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: var(--font-family-main);
+            background-color: var(--current-theme-bg); /* Dark theme body */
+            color: var(--current-theme-text);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-    .interface-title-header {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 30px; 
-      background: #ffffff; 
-      padding: 18px 25px; 
-      border-radius: 18px; 
-      box-shadow: 0 5px 18px rgba(0,0,0,0.07); 
-      border: 1px solid rgba(103, 32, 189, 0.12); 
-      font-family: 'PrimaryFont', sans-serif;
-    }
-    .interface-title {
-      margin: 0;
-      font-size: 2.1em; 
-      font-weight: bold;
-      background: linear-gradient(135deg, #6720bd 0%, #8a2be2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: #6720bd; /* Fallback */
-    }
+        #starsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
 
-    #searchElementsContainer {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        #main-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    #clock {
-      color: #555555; 
-      font-family: 'Roboto Mono', monospace; /* Uses a monospaced font */
-      font-size: 1.25rem; 
-      margin-bottom: 25px; 
-    }
+        /* Simplified Top Bar - Just a search bar */
+        #top-bar-assembly {
+            background-color: var(--navbar-bg);
+            padding: 10px 15px; /* Adjusted padding */
+            box-shadow: var(--navbar-shadow);
+            z-index: 1000;
+            display: flex; /* To center the search bar or manage its width */
+            justify-content: center; /* Center the search bar container */
+        }
 
-    #uv-form {
-      width: 100%;
-      max-width: 1000px; 
-      display: flex;
-      justify-content: center;
-      margin-bottom: 30px; 
-      position: relative; 
-    }
-    #uv-address {
-      width: 100%;
-      padding: 16px 25px; 
-      padding-left: 30px; 
-      border-radius: 18px;
-      font-size: 1.05rem; 
-      font-family: 'PrimaryFont', sans-serif;
-      background-color: #f8f9fa; 
-      color: #333333; 
-      border: 1px solid #ced4da; 
-      box-sizing: border-box;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    #uv-address::placeholder {
-      color: #6c757d; 
-      text-transform: uppercase; /* Make placeholder text uppercase */
-    }
-    #uv-address:focus {
-        border-color: #8a2be2; 
-        box-shadow: 0 0 0 0.2rem rgba(103, 32, 189, 0.25); 
-        outline: none;
-    }
+        #search-bar-container { /* New container for the lone search bar */
+            width: 100%;
+            max-width: 10000px; /* Max width for the search bar */
+        }
 
-    #popularSites {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px; 
-      margin-bottom: 25px;
-      width: 100%;
-      max-width: 1000px;
-    }
-    #popularSites .btn {
-      font-family: 'PrimaryFont', sans-serif;
-      background-color: #f8f9fa; 
-      color: #495057; 
-      padding: 10px 20px; 
-      text-decoration: none;
-      border-radius: 10px; 
-      border: 1px solid #dee2e6; 
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.2s ease-in-out;
-      text-transform: uppercase;
-      font-weight: 600; 
-      display: inline-flex; 
-      align-items: center;
-      line-height: 1.5;
-    }
-    #popularSites .btn:hover {
-      background-color: #e9ecef; 
-      border-color: #adb5bd; 
-      transform: translateY(-2px); 
-      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-    }
-    #popularSites .btn .icon { 
-        margin-right: 8px;
-        color: #6720bd; 
-        font-size: 1.1em; 
-    }
+        #search-bar { /* Top bar search input */
+            width: 100%; /* Take full width of its container */
+            height: 40px; /* Slightly taller */
+            border-radius: var(--radius-small);
+            border: 1px solid var(--input-border-color);
+            background-color: var(--input-bg);
+            color: var(--input-text-color);
+            padding: 0 15px;
+            font-size: 1rem; /* Adjusted font size */
+            font-family: var(--font-family-main);
+        }
+        #search-bar::placeholder{
+            color: var(--input-placeholder-color);
+        }
+        #search-bar:focus {
+            outline: none;
+            border-color: var(--input-focus-border-color);
+            box-shadow: var(--input-focus-shadow);
+        }
 
+        /* New Tab Page Content Area - Dark Theme */
+        #new-tab-page-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--current-theme-bg); /* Same as body or slightly different dark shade */
+            color: var(--current-theme-text);
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+        }
 
-    .desc {
-      width: 100%;
-      max-width: 600px;
-      text-align: center;
-      margin-top: 15px;
-    }
-    #uv-error {
-      color: #dc3545; 
-      font-size: 0.9em;
-      font-weight: 500;
-    }
-    /* Removed #uv-error-code from user's provided HTML, so I'm removing its style too. 
-       If it's re-added, the styles from previous versions can be used. */
+        #new-tab-logo {
+            width: 180px; /* Slightly adjusted fixed width */
+            height: auto;
+            margin-bottom: 35px;
+        }
 
-    .footer-label {
-      position: fixed;
-      bottom: 12px; 
-      left: 12px;
-      font-family: 'SecondaryFont', sans-serif;
-      font-size: 0.75rem; 
-      color: #e0e0e0; 
-      z-index: 3;
-      background-color: rgba(20, 20, 20, 0.75); 
-      padding: 4px 8px;
-      border-radius: 8px; /* Rounded to match other elements more */
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
+        #new-tab-search-bar-container {
+            width: 100%;
+            max-width: 600px; /* Consistent max width */
+            position: relative;
+            margin-bottom: 25px;
+        }
+        #new-tab-search-input {
+            width: 100%;
+            padding: 14px 22px;
+            padding-left: 48px;
+            font-size: 1rem;
+            border-radius: var(--radius-small); /* Use variable */
+            border: 1px solid var(--input-border-color);
+            background-color: var(--input-bg);
+            color: var(--input-text-color);
+            font-family: var(--font-family-main);
+        }
+        #new-tab-search-input::placeholder { color: var(--input-placeholder-color); }
+        #new-tab-search-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border-color);
+            box-shadow: var(--input-focus-shadow);
+        }
+        #new-tab-search-bar-container::before { /* Search Icon */
+            content: "🔍";
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--input-placeholder-color); /* Use placeholder color for icon */
+            pointer-events: none;
+        }
 
-    @media (max-width: 767px) {
-      body { padding: 10px; }
-      .search-interface-frame {
-        padding: 20px;
-        padding-top: 25px;
-        margin-top: 60px; 
-        max-height: calc(100vh - 90px);
-      }
-      #header-logo-container { top: -70px; }
-      #bigTitle { max-width: 130px; }
-      .interface-title-header { padding: 15px 20px; margin-bottom: 20px; }
-      .interface-title { font-size: 1.6em; }
-      /* Clock and input font already PrimaryFont in their own rules, SecondaryFont was for clock */
-      #clock { font-size: 0.95rem; margin-bottom: 20px; } 
-      #uv-address { padding: 14px 20px; font-size: 0.95rem; }
-      #popularSites .btn { font-size: 0.7rem; padding: 8px 15px;}
-      #popularSites .btn .icon { font-size: 1em; }
-    }
-  </style>
+        #new-tab-clock {
+            font-family: var(--font-family-monospace);
+            font-size: 2rem; /* Larger clock for new tab page */
+            color: var(--current-theme-text);
+            opacity: 0.8; /* Slightly less prominent */
+            margin-bottom: 30px;
+            margin-top: 15px;
+        }
+
+        #popularSites {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+        #popularSites .btn {
+            font-family: var(--font-family-main);
+            background-color: var(--current-theme-neutral); /* Darker buttons */
+            color: var(--current-theme-text);
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: var(--radius-small); /* Use variable */
+            border: 1px solid color-mix(in srgb, var(--current-theme-neutral) 70%, #000000); /* Subtle border */
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            text-transform: uppercase;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1.5;
+        }
+        #popularSites .btn:hover {
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 80%, #ffffff); /* Lighten on hover */
+            border-color: var(--current-theme-accent);
+        }
+        #popularSites .btn .icon {
+            margin-right: 8px;
+            color: var(--current-theme-accent); /* Accent color for icons */
+            font-size: 1.1em;
+        }
+
+        .footer-label {
+            position: fixed;
+            bottom: 12px;
+            left: 12px;
+            font-family: var(--font-family-main); /* Consistent font */
+            font-size: 0.75rem;
+            color: color-mix(in srgb, var(--current-theme-text) 70%, transparent); /* Muted text color */
+            z-index: 1001;
+            background-color: rgba(0,0,0, 0.3); /* Darker, subtle background */
+            padding: 5px 10px;
+            border-radius: var(--radius-small); /* Use variable */
+        }
+
+        @media (max-width: 767px) {
+            #top-bar-assembly { padding: 8px 10px; }
+            #search-bar { height: 36px; font-size: 0.9rem; }
+            #new-tab-logo { width: 140px; margin-bottom: 25px; }
+            #new-tab-search-input { padding: 12px 18px; padding-left: 40px; font-size: 0.9rem; }
+            #new-tab-clock { font-size: 1.5rem; margin-bottom: 25px;}
+            #popularSites .btn { font-size: 0.75rem; padding: 7px 12px;}
+        }
+    </style>
 </head>
 <body>
-  <canvas id="starsCanvas"></canvas>
+    <canvas id="starsCanvas"></canvas>
 
-  <div class="search-interface-frame">
-    <div id="header-logo-container">
-      <img src="../images/title.png" alt="VERN MAX Logo" id="bigTitle" />
+    <div id="main-content-wrapper">
+        <div id="top-bar-assembly">
+            <div id="search-bar-container"> <input type="text" id="search-bar" placeholder="Search or type a URL">
+            </div>
+        </div>
+
+        <div id="new-tab-page-container">
+            <img src="../images/title.png" alt="VERN MAX Logo" id="new-tab-logo" />
+            <div id="new-tab-clock"></div>
+            <div id="new-tab-search-bar-container">
+                <input id="new-tab-search-input" type="text" placeholder="Search the web" />
+            </div>
+            <div id="popularSites">
+                <a class="btn" onclick="autofillAndFocus('http://xbox.com/play')"><span class="icon"><i class="fa-brands fa-xbox"></i></span>XBOX</a>
+                <a class="btn" onclick="autofillAndFocus('https://www.youtube.com')"><span class="icon"><i class="fa-brands fa-youtube"></i></span>YOUTUBE</a>
+                <a class="btn" onclick="autofillAndFocus('https://tiktok.com')"><span class="icon"><i class="fa-brands fa-tiktok"></i></span>TIKTOK</a>
+                <a class="btn" onclick="autofillAndFocus('https://chatgpt.com')"><span class="icon"><i class="fa-solid fa-brain"></i></span>CHATGPT</a>
+                <a class="btn" onclick="autofillAndFocus('http://apple.com')"><span class="icon"><i class="fa-brands fa-apple"></i></span>APPLE</a>
+                <a class="btn" onclick="autofillAndFocus('http://gemini.google.com')"><span class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>GEMINI</a>
+                <a class="btn" onclick="autofillAndFocus('http://totaljerkface.com')"><span class="icon"><i class="fa-solid fa-person-biking"></i></span>HAPPY WHEELS</a>
+            </div>
+            <div class="desc" style="margin-top: 20px;">
+                <p id="uv-error-placeholder" style="color: #e57373; font-size: 0.9em; font-weight: 500;"></p> </div>
+        </div>
     </div>
 
-    <div class="interface-title-header">
-      <h2 class="interface-title">VERN MAX</h2>
-    </div>
-
-    <div id="searchElementsContainer">
-      <form id="uv-form">
-        <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden" />
-        <input id="uv-address" type="text" placeholder="Search, or type a URL" class="form__input" />
-      </form>
-      <div id="popularSites">
-        <a class="btn" onclick="autofill('http://xbox.com/play')"><span class="icon"><i class="fa-brands fa-xbox"></i></span>XBOX</a>
-        <a class="btn" onclick="autofill('http://youtube.com')"><span class="icon"><i class="fa-brands fa-youtube"></i></span>YOUTUBE</a>
-        <a class="btn" onclick="autofill('https://tiktok.com')"><span class="icon"><i class="fa-brands fa-tiktok"></i></span>TIKTOK</a>
-        <a class="btn" onclick="autofill('https://chatgpt.com')"><span class="icon"><i class="fa-solid fa-brain"></i></span>CHATGPT</a>
-        <a class="btn" onclick="autofill('http://apple.com')"><span class="icon"><i class="fa-brands fa-apple"></i></span>APPLE</a>
-        <a class="btn" onclick="autofill('http://gemini.google.com')"><span class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>GEMINI</a>
-        <a class="btn" onclick="autofill('http://totaljerkface.com')"><span class="icon"><i class="fa-solid fa-person-biking"></i></span>HAPPY WHEELS</a>
-      </div>
-      <div class="desc"> 
-          <p id="uv-error"></p>
-      </div>
-    </div>
-  </div>
-
-  <span class="footer-label">Official 4SP Proxy</span>
-
-  <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
-  <script src="uv/uv.config.js" charset="UTF-8" defer></script>
-  <script src="register-sw.js" charset="UTF-8" defer></script>
-  <script src="search.js" charset="UTF-8" defer></script>
-  <script src="index.js" charset="UTF-8" defer></script>
-
-  <script>
-    function updateClock() {
-      const clockElement = document.getElementById('clock');
-      if (clockElement) {
-        const now = new Date();
-        // Consistently use 12-hour format with AM/PM
-        const timeString = now.toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            second: '2-digit', 
-            hour12: true 
-        });
-        clockElement.textContent = timeString;
-      }
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    function autofill(url) {
-      const searchInput = document.getElementById('uv-address');
-      if (searchInput) { searchInput.value = url; }
-      console.log("Autofill called with: " + url);
-    }
-
-    const canvas = document.getElementById('starsCanvas');
-    const ctx = canvas.getContext('2d');
-    const STAR_COLOR = 'rgba(221, 221, 221, 0.6)';
-    const STAR_COUNT = 75;
-    const STAR_SPEED_MIN = 0.5;
-    const STAR_SPEED_MAX = 2.5;
-    const STAR_LENGTH_MIN = 20;
-    const STAR_LENGTH_MAX = 70;
-    const STAR_WIDTH = 1.5;
-    const NEW_STAR_INTERVAL = 80;
-    let stars = [];
-
-    function setCanvasSize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
-    class Star {
-      constructor() { this.reset(); }
-      reset() {
-        this.speed = Math.random() * (STAR_SPEED_MAX - STAR_SPEED_MIN) + STAR_SPEED_MIN;
-        const componentSpeed = this.speed * Math.SQRT1_2;
-        this.vx = componentSpeed; this.vy = componentSpeed;
-        this.length = Math.random() * (STAR_LENGTH_MAX - STAR_LENGTH_MIN) + STAR_LENGTH_MIN;
-        this.opacity = 0.4 + Math.random() * 0.6;
-        let startX, startY;
-        const spawnEdgePoint = Math.random() * (canvas.width + canvas.height);
-        if (spawnEdgePoint < canvas.width) { startX = spawnEdgePoint; startY = 0; }
-        else { startX = 0; startY = spawnEdgePoint - canvas.width; }
-        const backwardDistance = Math.random() * (Math.max(canvas.width, canvas.height) * 0.6) + this.length;
-        this.x = startX - backwardDistance * Math.SQRT1_2;
-        this.y = startY - backwardDistance * Math.SQRT1_2;
-      }
-      draw() {
-        const magnitude = this.speed; if (magnitude === 0) return;
-        const tailDx = (this.vx / magnitude) * this.length; const tailDy = (this.vy / magnitude) * this.length;
-        const tailX = this.x - tailDx; const tailY = this.y - tailDy;
-        ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(tailX, tailY);
-        ctx.strokeStyle = STAR_COLOR.replace(/,\s*\d?\.?\d*\)$/, `, ${this.opacity})`);
-        ctx.lineWidth = STAR_WIDTH; ctx.lineCap = 'round'; ctx.stroke();
-      }
-      update() {
-        this.x += this.vx; this.y += this.vy; this.opacity -= 0.0015;
-        if (this.x - this.length > canvas.width || this.y - this.length > canvas.height || this.opacity <= 0) {
-          this.reset();
+    <span class="footer-label">Vern Max Home</span> <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
+    <script src="uv/uv.config.js" charset="UTF-8" defer></script>
+    <script src="register-sw.js" charset="UTF-8" defer></script>
+    <script>
+        function encodePlainTextUrlForQuery(plainUrl) {
+            if (!plainUrl) return '';
+            try {
+                const utf8Bytes = new TextEncoder().encode(plainUrl);
+                let binaryString = '';
+                utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); });
+                return btoa(binaryString);
+            } catch (e) {
+                console.error("Base64 encoding failed for:", plainUrl, e);
+                return '';
+            }
         }
-      }
-    }
-    function initStars() {
-      stars = []; setCanvasSize();
-      for (let i = 0; i < STAR_COUNT; i++) {
-        setTimeout(() => stars.push(new Star()), i * (NEW_STAR_INTERVAL / 2.5));
-      }
-    }
-    function animateStars() {
-      if (canvas.width > 0 && canvas.height > 0) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        stars.forEach(star => { star.update(); star.draw(); });
-      }
-      requestAnimationFrame(animateStars);
-    }
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => setCanvasSize(), 200);
-    });
-    if (document.fonts) {
-      document.fonts.ready.then(() => { initStars(); animateStars(); });
-    } else {
-      initStars(); animateStars();
-    }
-  </script>
+
+        function isUrl(input) {
+            if (!input) return false;
+            // Basic check: if it contains a dot and no spaces, and doesn't start with a search engine query structure
+            // This is a heuristic and can be improved.
+            if (input.includes('.') && !input.includes(' ') && !input.startsWith('?') && !input.startsWith('#')) {
+                 // More robust check for protocol or common TLDs
+                if (/^(https?:\/\/|www\.)/i.test(input) || /\.[a-z]{2,}$/i.test(input.split('/')[0].split('?')[0])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        function handleSearch(query) {
+            if (!query || query.trim() === "") return;
+            query = query.trim();
+            let targetUrl;
+
+            if (isUrl(query)) {
+                targetUrl = query.startsWith('http://') || query.startsWith('https://') ? query : 'https://' + query;
+            } else {
+                targetUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+            }
+
+            const encodedValue = encodePlainTextUrlForQuery(targetUrl);
+            if (encodedValue) {
+                // Assuming search.html is in the same directory or adjust path as needed
+                // Example: if this home page is in 'active/home.html' and browser is 'active/search.html'
+                window.location.href = `search.html?eurl=${encodedValue}`;
+            } else {
+                const errorEl = document.getElementById('uv-error-placeholder');
+                if(errorEl) errorEl.textContent = "Error preparing search query.";
+                console.error("Could not encode the target URL:", targetUrl);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const topSearchBar = document.getElementById('search-bar');
+            const newTabSearchBar = document.getElementById('new-tab-search-input');
+
+            if (topSearchBar) {
+                topSearchBar.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        handleSearch(topSearchBar.value);
+                    }
+                });
+            }
+
+            if (newTabSearchBar) {
+                newTabSearchBar.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        handleSearch(newTabSearchBar.value);
+                    }
+                });
+            }
+        });
+
+        function updateClock() {
+            const clockElement = document.getElementById('new-tab-clock');
+            if (clockElement) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], {
+                    hour: 'numeric', // '2-digit' can sometimes show leading zero for single digit hours
+                    minute: '2-digit',
+                    hour12: true
+                });
+                clockElement.textContent = timeString;
+            }
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        function autofillAndFocus(url) {
+            const searchInput = document.getElementById('new-tab-search-input');
+            if (searchInput) {
+                searchInput.value = url;
+                searchInput.focus();
+            }
+        }
+
+        const canvas = document.getElementById('starsCanvas');
+        const ctx = canvas.getContext('2d');
+        let STAR_COLOR = 'rgba(200, 200, 220, 0.5)'; // Slightly adjusted for dark theme
+        const STAR_COUNT = 60; // Reduced for potentially better clarity
+        const STAR_SPEED_MIN = 0.2;
+        const STAR_SPEED_MAX = 1.2;
+        const STAR_LENGTH_MIN = 10;
+        const STAR_LENGTH_MAX = 40;
+        const STAR_WIDTH = 1.2;
+        const NEW_STAR_INTERVAL = 120;
+        let stars = [];
+
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Star {
+            constructor() { this.reset(); }
+            reset() {
+                this.speed = Math.random() * (STAR_SPEED_MAX - STAR_SPEED_MIN) + STAR_SPEED_MIN;
+                const angle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(angle) * this.speed;
+                this.vy = Math.sin(angle) * this.speed;
+                this.length = Math.random() * (STAR_LENGTH_MAX - STAR_LENGTH_MIN) + STAR_LENGTH_MIN;
+                this.opacity = 0.1 + Math.random() * 0.4;
+
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+            }
+            draw() {
+                if (this.speed === 0) return;
+                const tailX = this.x - this.vx * this.length / this.speed;
+                const tailY = this.y - this.vy * this.length / this.speed;
+
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(tailX, tailY);
+                ctx.strokeStyle = STAR_COLOR.replace(/,\s*\d?\.?\d*\)$/, `, ${this.opacity})`);
+                ctx.lineWidth = STAR_WIDTH;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.opacity -= 0.0008; // Slower fade
+
+                if (this.x + this.length < 0 || this.x - this.length > canvas.width ||
+                    this.y + this.length < 0 || this.y - this.length > canvas.height ||
+                    this.opacity <= 0) {
+                    this.reset();
+                    const edge = Math.floor(Math.random() * 4);
+                    if (edge === 0) { this.x = 0; this.y = Math.random() * canvas.height; this.vx = Math.abs(this.vx); }
+                    else if (edge === 1) { this.x = canvas.width; this.y = Math.random() * canvas.height; this.vx = -Math.abs(this.vx); }
+                    else if (edge === 2) { this.x = Math.random() * canvas.width; this.y = 0; this.vy = Math.abs(this.vy); }
+                    else { this.x = Math.random() * canvas.width; this.y = canvas.height; this.vy = -Math.abs(this.vy); }
+                    this.opacity = 0.1 + Math.random() * 0.4;
+                }
+            }
+        }
+        function initStars() {
+            stars = [];
+            setCanvasSize();
+            for (let i = 0; i < STAR_COUNT; i++) {
+                setTimeout(() => stars.push(new Star()), i * NEW_STAR_INTERVAL * Math.random());
+            }
+        }
+        function animateStars() {
+            if (canvas.width > 0 && canvas.height > 0) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => { star.update(); star.draw(); });
+            }
+            requestAnimationFrame(animateStars);
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                setCanvasSize();
+            }, 200);
+        });
+
+        if (document.fonts) {
+            document.fonts.ready.then(() => {
+                initStars();
+                animateStars();
+            });
+        } else {
+            initStars();
+            animateStars();
+        }
+    </script>
 </body>
 </html>
