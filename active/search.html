@@ -3,7 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VERN MAX - SEARCH</title>
-    <link rel="stylesheet" href="../css/style.css" /> <link rel="icon" type="image/x-icon" href="logo.png" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
     <style id="custom-styles">
         /* Core Theme Variables & Component Mappings - Purple & Dark Grey Theme */
         :root {
@@ -156,10 +157,10 @@
         }
 
         #main-content-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
         #top-bar-assembly {
             overflow: hidden;
-            max-height: none; 
-            transition: max-height 0.25s ease-in-out; 
+            transition: max-height 0.25s ease-in-out;
         }
 
         body.app-ui-hidden #sidebar,
@@ -186,12 +187,13 @@
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--current-theme-accent) 70%, var(--current-theme-text));
         }
         .tab.active .tab-title { color: var(--button-text-color); }
-        .tab.active .tab-favicon .unicode-icon { color: var(--button-text-color); } /* For unicode if still used */
-        .tab.active .tab-favicon img { filter: brightness(0) invert(1); } /* Inverts white PNGs to black on active tab */
+        .tab.active .tab-favicon .unicode-icon { color: var(--button-text-color); } /* Ensures Unicode globe is white on active tab */
+        .tab.active .tab-favicon img { filter: brightness(0) invert(1); }
 
         .tab:hover:not(.active) { background-color: var(--tab-hover-bg); }
         .tab-favicon { width: 16px; height: 16px; margin-right: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
         .tab-favicon img { width: 100%; height: 100%; object-fit: contain; }
+        .tab-favicon .unicode-icon { line-height: 1; } /* Helps with vertical alignment of the globe */
         .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--text-color); }
 
         .tab-close {
@@ -206,7 +208,7 @@
             width: 30px; height: 30px; min-width: 30px; margin-left: 5px; border-radius: 25%;
             display: flex; align-items: center; justify-content: center; background-color: var(--button-bg);
             color: var(--button-text-color); cursor: pointer; transition: background-color 0.2s;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px; /* Base font size for icon container */
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px;
         }
         .new-tab-button:hover { background-color: var(--button-hover-bg); }
 
@@ -219,9 +221,15 @@
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
             margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px; /* Base font size for icon container */
+            box-shadow: 0 0 0 1px var(--sidebar-outline-color); font-size: 20px;
         }
         .nav-button:hover { background-color: var(--button-hover-bg); }
+        
+        #nav-bar #fullscreen-button {
+            margin-left: 8px; 
+            margin-right: 0; 
+        }
+
 
         #search-bar {
             flex: 1; height: 36px; border-radius: 6px; border: none; background-color: var(--input-bg);
@@ -239,43 +247,16 @@
         }
         .sidebar-setting-label { display:block; margin-bottom:7px; font-size: 0.9em; font-weight: 500; }
         
-        /* Styles for Unicode icons if still used */
         .unicode-icon {
             font-size: inherit; display: inline-flex; align-items: center; justify-content: center;
         }
-
-        /* General style for image icons */
         .icon-img {
-            display: inline-block;
-            vertical-align: middle;
-            object-fit: contain;
+            display: inline-block; vertical-align: middle; object-fit: contain;
         }
-
-        /* Icons in nav buttons (Home, Back, Fwd, Refresh, Fullscreen) */
-        #nav-bar .nav-button .icon-img {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* Icon in the new tab button on the tab bar */
-        #tab-bar .new-tab-button .icon-img {
-            width: 18px; 
-            height: 18px;
-        }
-
-        /* Icon in sidebar buttons like "Add Bookmark" */
-        #sidebar .sidebar-button .icon-img {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px; 
-        }
-        
-        /* For image-based tab favicons (e.g., default) */
-        .tab-favicon .icon-img { /* Covers default-favicon-img styling */
-             width: 100%; /* Inherits 16px from .tab-favicon */
-             height: 100%; /* Inherits 16px from .tab-favicon */
-        }
-
+        #nav-bar .nav-button .icon-img { width: 20px; height: 20px; }
+        #tab-bar .new-tab-button .icon-img { width: 18px; height: 18px; }
+        #sidebar .sidebar-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
+        .tab-favicon .icon-img { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
@@ -284,7 +265,6 @@
         <div id="sidebar-header" style="padding-bottom: 10px; border-bottom: 1px solid var(--sidebar-border-color);">
             <h2 style="text-align: center; margin-bottom: 0; font-size: 1.4em; font-weight: bold;">Vern Max</h2>
         </div>
-
          <div id="settings-section">
             <h3><span class="unicode-icon">⚙️</span> Settings</h3>
             <label for="search-engine-dropdown" class="sidebar-setting-label" style="margin-top: 12px;">Search Engine:</label>
@@ -293,24 +273,17 @@
                     <span id="selected-search-engine-text">DuckDuckGo</span>
                     <span class="dropdown-chevron unicode-icon">▼</span>
                 </div>
-                <ul class="custom-dropdown-list" role="listbox">
-                    {/* Items populated by JS */}
-                </ul>
+                <ul class="custom-dropdown-list" role="listbox"></ul>
             </div>
-
             <label for="tab-cloak-dropdown" class="sidebar-setting-label" style="margin-top: 12px;">Tab Cloaking:</label>
             <div class="custom-dropdown" id="tab-cloak-dropdown">
                 <div class="custom-dropdown-header" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
                     <span id="selected-tab-cloak-text">None</span>
                     <span class="dropdown-chevron unicode-icon">▼</span>
                 </div>
-                <ul class="custom-dropdown-list" role="listbox">
-                     {/* Items populated by JS */}
-                </ul>
+                <ul class="custom-dropdown-list" role="listbox"></ul>
             </div>
         </div>
-
-
         <div id="bookmarks-section">
             <h3><span class="unicode-icon">★</span> Bookmarks</h3>
             <input type="text" id="new-bookmark-name" class="sidebar-input" placeholder="Bookmark Name (optional)">
@@ -319,13 +292,11 @@
             </button>
             <ul id="bookmarks-list"></ul>
         </div>
-
         <div id="history-section">
             <h3><span class="unicode-icon">🕒</span> Session History</h3>
             <ul id="history-list"></ul>
         </div>
     </div>
-
     <div id="main-content-wrapper">
         <div id="top-bar-assembly">
             <div id="tab-bar">
@@ -344,22 +315,17 @@
         </div>
         <div id="tabs-container"></div>
     </div>
-
     <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Max by 4SP</a>
-
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
     <script src="register-sw.js" defer></script>
     <script src="stars.js" defer></script>
-
     <script>
-        // --- CONFIGURATION & GLOBAL STATE ---
         let tabs = [];
         let activeTabId = null;
         let tabCounter = 0;
         let sessionHistory = [];
         const MAX_HISTORY_ITEMS = 50;
-
         const searchEngines = {
             'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
             'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
@@ -367,27 +333,104 @@
             'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
         };
         let currentSearchEngineKey = 'duckduckgo';
-
         const cloakPresets = {
             'none': { title: null, faviconUrl: null },
             'google_docs': { title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_drive': { title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
             'wikipedia': { title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
-            'new_tab': { title: 'New Tab', faviconUrl: '../images/title-mini.png' } // Updated favicon
+            'new_tab': { title: 'New Tab', faviconUrl: '../images/title-mini.png' } // Favicon for the browser tab when "New Tab" cloak is active
         };
         let currentCloakPresetKey = 'none';
-
-        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl;
-        let topBarAssemblyEl;
-        let sidebarEl, mainContentWrapperEl;
-        let bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl;
-        let historyListEl;
-        let searchEngineDropdownEl, tabCloakDropdownEl; 
-
+        let tabBarEl, tabsContainerEl, searchBarEl, newTabButtonEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl, fullscreenButtonEl, topBarAssemblyEl, sidebarEl, mainContentWrapperEl, bookmarksListEl, addCurrentBookmarkButtonEl, newBookmarkNameInputEl, historyListEl, searchEngineDropdownEl, tabCloakDropdownEl;
         let initialTopBarHeight = 0;
 
+        function applyBrowserCloak() {
+            const cloakSetting = cloakPresets[currentCloakPresetKey] || cloakPresets['none'];
+            const appFaviconEl = document.getElementById('app-favicon');
+            const activeTab = getActiveTab();
+
+            if (currentCloakPresetKey !== 'none' && cloakSetting.title) {
+                document.title = cloakSetting.title;
+                if (appFaviconEl) {
+                    appFaviconEl.href = cloakSetting.faviconUrl || '../images/title-mini.png'; 
+                }
+            } else { 
+                if (activeTab && activeTab.actualTitle && activeTab.actualTitle !== "Loading..." && activeTab.actualTitle !== "New Tab") {
+                    document.title = activeTab.actualTitle;
+                } else {
+                    document.title = "VERN MAX - SEARCH"; 
+                }
+                if (appFaviconEl) {
+                    let faviconToSet = 'logo.png'; 
+                    if (activeTab && activeTab.actualFavicon && activeTab.actualFavicon.startsWith('http')) { 
+                        faviconToSet = activeTab.actualFavicon;
+                    } else if (cloakPresets['new_tab'].faviconUrl) { 
+                        faviconToSet = cloakPresets['new_tab'].faviconUrl;
+                    }
+                    if (!faviconToSet || typeof faviconToSet !== 'string' || faviconToSet.trim() === '' || faviconToSet === 'null') { 
+                        faviconToSet = 'logo.png';
+                    }
+                    appFaviconEl.href = faviconToSet;
+                }
+            }
+        }
+
+        function updateInternalTabDisplay(tab) {
+            if (!tab) return;
+            const cloakSetting = cloakPresets[currentCloakPresetKey] || cloakPresets['none'];
+            const defaultFaviconHTML = `<span class="unicode-icon" style="font-size: 14px;">🌐</span>`;
+
+            let displayTitleToShow = tab.actualTitle;
+            let faviconHTMLToShow = defaultFaviconHTML; 
+
+            if (currentCloakPresetKey !== 'none' && cloakSetting.title) {
+                displayTitleToShow = cloakSetting.title;
+                if (cloakSetting.faviconUrl && cloakSetting.faviconUrl.startsWith('http')) {
+                    faviconHTMLToShow = `<img src="${cloakSetting.faviconUrl}" alt="" class="icon-img" onerror="this.outerHTML = '${defaultFaviconHTML}';">`;
+                } // else remains defaultFaviconHTML (globe) for cloak
+            } else { 
+                displayTitleToShow = tab.actualTitle;
+                if (tab.actualFavicon && tab.actualFavicon.startsWith('http')) {
+                    faviconHTMLToShow = `<img src="${tab.actualFavicon}" alt="" class="icon-img" onerror="this.outerHTML = '${defaultFaviconHTML}';">`;
+                } // else remains defaultFaviconHTML (globe)
+            }
+
+            tab.titleElement.textContent = displayTitleToShow.length > 20 ? displayTitleToShow.substring(0, 18) + '...' : displayTitleToShow;
+            tab.titleElement.title = displayTitleToShow;
+            tab.faviconElement.innerHTML = faviconHTMLToShow;
+        }
+        
+        function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) {
+            if (!tab) return;
+            tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
+            tab.actualFavicon = actualPageFaviconUrl || null; // Store actual URL or null
+            updateInternalTabDisplay(tab);
+            if (tab.id === activeTabId) {
+                applyBrowserCloak();
+            }
+        }
+        
+        function updateInitialTopBarHeight() {
+            const currentDisplay = topBarAssemblyEl.style.display;
+            topBarAssemblyEl.style.display = 'block'; 
+            topBarAssemblyEl.style.maxHeight = 'none'; 
+            initialTopBarHeight = topBarAssemblyEl.offsetHeight;
+            console.log('VERN MAX Debug: Calculated initialTopBarHeight:', initialTopBarHeight); 
+            topBarAssemblyEl.style.display = currentDisplay; 
+
+            if (!document.body.classList.contains('app-ui-hidden')) {
+                if (initialTopBarHeight > 0) {
+                    topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                } else {
+                     // If height is 0, explicitly keep it hidden or set a fallback minimum if desired
+                    topBarAssemblyEl.style.maxHeight = '0px';
+                    console.warn("VERN MAX Debug: Top bar calculated height is 0. It might remain hidden.");
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-            tabBarEl = document.getElementById('tab-bar');
+            tabBarEl = document.getElementById('tab-bar'); 
             tabsContainerEl = document.getElementById('tabs-container');
             searchBarEl = document.getElementById('search-bar');
             newTabButtonEl = document.getElementById('new-tab-button');
@@ -408,53 +451,83 @@
 
             await initUV();
             setupCustomDropdowns();
-            loadSettings();
-            updateInitialTopBarHeight();
-            topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+            loadSettings(); 
             sidebarEl.style.marginLeft = '0px';
 
-            setupEventListeners();
+            setupEventListeners(); 
             loadBookmarks();
 
             const urlParams = new URLSearchParams(window.location.search);
             const initialUrl = urlParams.get('url');
-            if (tabs.length === 0) createTab(initialUrl || 'about:blank');
+            if (tabs.length === 0) {
+                createTab(initialUrl || 'about:blank'); 
+            } else { 
+                const activeTab = getActiveTab();
+                if (activeTab) updateInternalTabDisplay(activeTab); 
+            }
+            
+            setTimeout(() => {
+                updateInitialTopBarHeight();
+            }, 50); // Slightly increased delay for good measure
+
             renderHistory();
-            const activeTabForCloak = getActiveTab();
-            if (activeTabForCloak) updateTabInfo(activeTabForCloak, activeTabForCloak.actualTitle, activeTabForCloak.actualFavicon);
+            applyBrowserCloak(); 
+            tabs.forEach(t => updateInternalTabDisplay(t)); 
         });
 
         async function initUV() { try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
+        
         function setupCustomDropdowns() {
             const searchEngineListEl = searchEngineDropdownEl.querySelector('.custom-dropdown-list');
             searchEngineListEl.innerHTML = '';
             for (const value in searchEngines) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = searchEngines[value].name; li.setAttribute('role', 'option'); searchEngineListEl.appendChild(li); }
+            
             const tabCloakListEl = tabCloakDropdownEl.querySelector('.custom-dropdown-list');
             tabCloakListEl.innerHTML = '';
             for (const value in cloakPresets) { const li = document.createElement('li'); li.className = 'custom-dropdown-list-item'; li.dataset.value = value; li.textContent = cloakPresets[value].title || "None (Show Actual)"; li.setAttribute('role', 'option'); tabCloakListEl.appendChild(li); }
+            
             document.querySelectorAll('.custom-dropdown-header').forEach(header => { header.addEventListener('click', toggleDropdown); header.addEventListener('keydown', handleDropdownKeyDown); });
             document.querySelectorAll('.custom-dropdown-list-item').forEach(item => { item.addEventListener('click', selectDropdownItem); item.addEventListener('keydown', handleDropdownItemKeyDown); });
             document.addEventListener('click', (e) => { document.querySelectorAll('.custom-dropdown-list.show').forEach(list => { if (!list.parentNode.contains(e.target)) { list.classList.remove('show'); const header = list.parentNode.querySelector('.custom-dropdown-header'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); } }); });
             document.addEventListener('focusin', (e) => { document.querySelectorAll('.custom-dropdown-list.show').forEach(list => { if (!list.parentNode.contains(e.target) && !list.parentNode.querySelector('.custom-dropdown-header').contains(e.target)) { list.classList.remove('show'); const header = list.parentNode.querySelector('.custom-dropdown-header'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); } }); });
         }
+
         function toggleDropdown() { const header = this; const list = header.nextElementSibling; const isOpen = list.classList.toggle('show'); header.classList.toggle('open', isOpen); header.setAttribute('aria-expanded', isOpen.toString()); document.querySelectorAll('.custom-dropdown-list.show').forEach(otherList => { if (otherList !== list) { otherList.classList.remove('show'); const otherHeader = otherList.parentNode.querySelector('.custom-dropdown-header'); otherHeader.classList.remove('open'); otherHeader.setAttribute('aria-expanded', 'false'); }}); if (isOpen) (list.querySelector('.custom-dropdown-list-item.selected') || list.querySelector('.custom-dropdown-list-item'))?.focus(); }
         function handleDropdownKeyDown(e) { const header = this; const list = header.nextElementSibling; const isOpen = list.classList.contains('show'); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown.call(header); } else if (e.key === 'ArrowDown' && !isOpen) { e.preventDefault(); toggleDropdown.call(header); } else if (e.key === 'ArrowDown' && isOpen) { e.preventDefault(); list.querySelector('.custom-dropdown-list-item')?.focus(); } else if (e.key === 'Escape' && isOpen) { e.preventDefault(); list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus(); }}
+        
         function selectDropdownItem() {
             const item = this; const dropdown = item.closest('.custom-dropdown');
             const header = dropdown.querySelector('.custom-dropdown-header'); const list = dropdown.querySelector('.custom-dropdown-list');
             const value = item.dataset.value; updateSelectedDropdownText(dropdown.id, value);
             list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus();
-            if (dropdown.id === 'search-engine-dropdown') { currentSearchEngineKey = value; localStorage.setItem('vernSearchEngine', currentSearchEngineKey); }
-            else if (dropdown.id === 'tab-cloak-dropdown') { currentCloakPresetKey = value; localStorage.setItem('vernCloakPreset', currentCloakPresetKey); const activeTab = getActiveTab(); if (activeTab) updateTabInfo(activeTab, activeTab.actualTitle, activeTab.actualFavicon); }
+            
+            if (dropdown.id === 'search-engine-dropdown') { 
+                currentSearchEngineKey = value; 
+                localStorage.setItem('vernSearchEngine', currentSearchEngineKey); 
+            } else if (dropdown.id === 'tab-cloak-dropdown') { 
+                currentCloakPresetKey = value; 
+                localStorage.setItem('vernCloakPreset', currentCloakPresetKey); 
+                applyBrowserCloak(); 
+                tabs.forEach(t => updateInternalTabDisplay(t)); 
+            }
         }
+
         function handleDropdownItemKeyDown(e) { const item = this; const list = item.closest('.custom-dropdown-list'); const items = Array.from(list.querySelectorAll('.custom-dropdown-list-item')); const currentIndex = items.indexOf(item); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDropdownItem.call(item); } else if (e.key === 'ArrowDown') { e.preventDefault(); items[(currentIndex + 1) % items.length]?.focus(); } else if (e.key === 'ArrowUp') { e.preventDefault(); items[(currentIndex - 1 + items.length) % items.length]?.focus(); } else if (e.key === 'Escape') { e.preventDefault(); const header = list.parentNode.querySelector('.custom-dropdown-header'); list.classList.remove('show'); header.classList.remove('open'); header.setAttribute('aria-expanded', 'false'); header.focus(); } }
         function updateSelectedDropdownText(dropdownId, selectedValue) { const dropdownEl = document.getElementById(dropdownId); if (!dropdownEl) return; const selectedTextEl = dropdownEl.querySelector('.custom-dropdown-header span'); const listItems = dropdownEl.querySelectorAll('.custom-dropdown-list-item'); let newText = ''; listItems.forEach(item => { if (item.dataset.value === selectedValue) { item.classList.add('selected'); item.setAttribute('aria-selected', 'true'); newText = item.textContent; } else { item.classList.remove('selected'); item.setAttribute('aria-selected', 'false'); } }); if (selectedTextEl && newText) selectedTextEl.textContent = newText; else if (selectedTextEl && dropdownId === 'tab-cloak-dropdown' && selectedValue === 'none') selectedTextEl.textContent = "None (Show Actual)"; }
-        function loadSettings() { currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey); currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; updateSelectedDropdownText('tab-cloak-dropdown', currentCloakPresetKey); }
         
-        function setupEventListeners() {
+        function loadSettings() { 
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; 
+            updateSelectedDropdownText('search-engine-dropdown', currentSearchEngineKey); 
+            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; 
+            updateSelectedDropdownText('tab-cloak-dropdown', currentCloakPresetKey); 
+        }
+        
+        function setupEventListeners() { 
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); 
             document.addEventListener('fullscreenchange', handleFullscreenChange);
-            window.addEventListener('resize', () => { updateInitialTopBarHeight(); topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; });
+            window.addEventListener('resize', () => { 
+                updateInitialTopBarHeight(); 
+            });
             newTabButtonEl.addEventListener('click', () => createTab('about:blank')); 
             tabBarEl.addEventListener('click', handleTabBarClick); 
             searchBarEl.addEventListener('keydown', handleSearchEnter);
@@ -478,21 +551,22 @@
             } 
         }
 
-        function handleFullscreenChange() {
+        function handleFullscreenChange() { 
             const fsButton = fullscreenButtonEl;
-            const fsIconImg = document.getElementById('fullscreen-icon-img'); // Get the <img> element
-
+            const fsIconImg = document.getElementById('fullscreen-icon-img'); 
             if (document.fullscreenElement) {
                 document.body.classList.add('app-ui-hidden');
-                if (fsIconImg) {
-                    // fsIconImg.src = '../images/zoom-out-white.png'; // If you have an exit fullscreen icon
-                    fsIconImg.alt = "Exit Fullscreen"; 
-                }
+                if (fsIconImg) fsIconImg.alt = "Exit Fullscreen"; 
                 fsButton.title = "Exit Fullscreen";
             } else {
-                document.body.classList.remove('app-ui-hidden');
+                document.body.classList.remove('app-ui-hidden'); 
+                if (initialTopBarHeight > 0) {
+                    topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px';
+                } else {
+                    updateInitialTopBarHeight(); 
+                }
                 if (fsIconImg) {
-                    fsIconImg.src = '../images/zoom-in-white.png'; // Reset to zoom-in icon
+                    fsIconImg.src = '../images/zoom-in-white.png'; 
                     fsIconImg.alt = "Toggle Fullscreen"; 
                 }
                 fsButton.title = "Toggle Fullscreen";
@@ -504,8 +578,7 @@
             const tabElement = document.createElement('div'); 
             tabElement.className = 'tab'; 
             tabElement.dataset.tabId = tabId; 
-            // Using title-mini.png as initial/loading icon, consistent with fallback
-            tabElement.innerHTML = `<div class="tab-favicon"><img src="../images/title-mini.png" alt="Tab" class="icon-img"></div><div class="tab-title">New Tab</div><div class="tab-close" title="Close Tab"><img src="../images/cross-white.png" alt="Close" class="tab-close-icon"></div>`; 
+            tabElement.innerHTML = `<div class="tab-favicon"><span class="unicode-icon" style="font-size: 14px;">🌐</span></div><div class="tab-title">New Tab</div><div class="tab-close" title="Close Tab"><img src="../images/cross-white.png" alt="Close" class="tab-close-icon"></div>`; 
             tabBarEl.insertBefore(tabElement, newTabButtonEl); 
             const iframe = document.createElement('iframe'); 
             iframe.id = `content-${tabId}`; 
@@ -513,61 +586,129 @@
             iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-downloads allow-popups-to-escape-sandbox'; 
             iframe.loading = 'eager'; 
             tabsContainerEl.appendChild(iframe); 
-            const tab = { id: tabId, element: tabElement, iframe, url: url || 'about:blank', actualTitle: 'New Tab', actualFavicon: '../images/title-mini.png', titleElement: tabElement.querySelector('.tab-title'), faviconElement: tabElement.querySelector('.tab-favicon'), isLoading: false }; 
+            const tab = { 
+                id: tabId, 
+                element: tabElement, 
+                iframe, 
+                url: url || 'about:blank', 
+                actualTitle: 'New Tab', 
+                actualFavicon: null, 
+                titleElement: tabElement.querySelector('.tab-title'), 
+                faviconElement: tabElement.querySelector('.tab-favicon'), 
+                isLoading: false 
+            }; 
             tabs.push(tab); 
             activateTab(tabId); 
             navigateTo(tab.url, tab); 
             return tab; 
         }
-        function activateTab(tabId) { if (!tabId && tabs.length > 0) tabId = tabs[0].id; if (!tabId) return; tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); }); const tab = tabs.find(t => t.id === tabId); if (tab) { tab.element.classList.add('active'); tab.iframe.classList.add('active'); activeTabId = tabId; searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); updateTabInfo(tab, tab.actualTitle, tab.actualFavicon); document.title = "VERN MAX - SEARCH"; } }
+
+        function activateTab(tabId) { 
+            if (!tabId && tabs.length > 0) tabId = tabs[0].id; 
+            if (!tabId) return; 
+            tabs.forEach(t => { t.element.classList.remove('active'); t.iframe.classList.remove('active'); }); 
+            const tab = tabs.find(t => t.id === tabId); 
+            if (tab) { 
+                tab.element.classList.add('active'); 
+                tab.iframe.classList.add('active'); 
+                activeTabId = tabId; 
+                searchBarEl.value = (tab.url && tab.url !== 'about:blank' && !tab.url.startsWith('about:error')) ? tab.url : ''; 
+                tab.element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); 
+                applyBrowserCloak(); 
+                updateInternalTabDisplay(tab);
+            } 
+        }
         function closeTab(tabId) { const tabIndex = tabs.findIndex(t => t.id === tabId); if (tabIndex === -1) return; const tab = tabs[tabIndex]; if (tab.titleObserver) tab.titleObserver.disconnect(); if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.element.remove(); tab.iframe.remove(); tabs.splice(tabIndex, 1); if (activeTabId === tabId) { if (tabs.length > 0) activateTab(tabs[Math.max(0, tabIndex - 1)].id); else createTab('about:blank'); } }
         function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
         
-        function updateTabInfo(tab, actualPageTitle, actualPageFaviconUrl) {
-            if (!tab) return;
-            tab.actualTitle = actualPageTitle || tab.actualTitle || (tab.url === 'about:blank' ? 'New Tab' : (tab.url || 'Loading...'));
-            tab.actualFavicon = actualPageFaviconUrl || tab.actualFavicon;
-
-            const cloak = cloakPresets[currentCloakPresetKey] || cloakPresets['none'];
-            let displayTitleOnTab, displayFaviconUrlOnTab;
-
-            if (currentCloakPresetKey !== 'none' && cloak.title) {
-                displayTitleOnTab = cloak.title;
-                displayFaviconUrlOnTab = cloak.faviconUrl;
-            } else {
-                displayTitleOnTab = tab.actualTitle;
-                displayFaviconUrlOnTab = tab.actualFavicon;
-            }
-
-            tab.titleElement.textContent = displayTitleOnTab.length > 20 ? displayTitleOnTab.substring(0, 18) + '...' : displayTitleOnTab;
-            tab.titleElement.title = displayTitleOnTab;
-
-            const faviconContainer = tab.faviconElement;
-            let defaultFaviconHTML = `<img src="../images/title-mini.png" alt="Tab" class="icon-img default-favicon-img">`;
-
-            if (displayFaviconUrlOnTab) {
-                faviconContainer.innerHTML = `<img src="${displayFaviconUrlOnTab}" alt="" class="icon-img" onerror="this.outerHTML = '${defaultFaviconHTML}';">`;
-            } else if (tab.url && tab.url !== 'about:blank' && tab.url.startsWith('http') && (!cloakPresets[currentCloakPresetKey] || !cloakPresets[currentCloakPresetKey].faviconUrl)) {
-                try {
-                    const siteUrl = new URL(tab.url);
-                    faviconContainer.innerHTML = `<img src="${siteUrl.protocol}//${siteUrl.hostname}/favicon.ico" alt="" class="icon-img" onerror="this.outerHTML = '${defaultFaviconHTML}';">`;
-                } catch (e) {
-                    faviconContainer.innerHTML = defaultFaviconHTML;
-                }
-            } else {
-                faviconContainer.innerHTML = defaultFaviconHTML;
-            }
-            document.title = "VERN MAX - SEARCH";
+        function formatUrlInput(input) { if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
+        
+        function navigateTo(urlInput, tab = null) { 
+            let currentTab = tab || getActiveTab(); 
+            if (!currentTab) { currentTab = createTab(urlInput); return; } 
+            currentTab.isLoading = true; 
+            updateTabInfo(currentTab, "Loading...", null); 
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank'; 
+            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { 
+                currentTab.iframe.src = urlInput; 
+                currentTab.url = urlInput; 
+                if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput; 
+                updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, null); 
+                if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url); 
+                currentTab.isLoading = false; return; 
+            } 
+            let targetUrl = formatUrlInput(urlInput.trim()); 
+            if (!targetUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); } 
+            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Error: UV Config Missing", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return; } 
+            try { const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl); currentTab.iframe.src = proxiedUrl; currentTab.url = targetUrl; if (currentTab.id === activeTabId) searchBarEl.value = targetUrl; } catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Navigation Error", null); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; } 
         }
 
-        function formatUrlInput(input) { if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
-        function navigateTo(urlInput, tab = null) { let currentTab = tab || getActiveTab(); if (!currentTab) { currentTab = createTab(urlInput); return; } currentTab.isLoading = true; updateTabInfo(currentTab, "Loading...", '../images/title-mini.png'); if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank'; if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { currentTab.iframe.src = urlInput; currentTab.url = urlInput; if (currentTab.id === activeTabId) searchBarEl.value = (urlInput === 'about:blank' || urlInput.startsWith('about:error')) ? '' : urlInput; updateTabInfo(currentTab, urlInput === 'about:blank' ? 'New Tab' : urlInput, '../images/title-mini.png'); if (!urlInput.startsWith('about:error')) addToHistory(currentTab.actualTitle, currentTab.url); currentTab.isLoading = false; return; } let targetUrl = formatUrlInput(urlInput.trim()); if (!targetUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); } if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetUrl)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Error: UV Config Missing", '../images/title-mini.png'); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; return; } try { const proxiedUrl = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetUrl); currentTab.iframe.src = proxiedUrl; currentTab.url = targetUrl; if (currentTab.id === activeTabId) searchBarEl.value = targetUrl; } catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; currentTab.iframe.src = errorUrl; currentTab.url = errorUrl; updateTabInfo(currentTab, "Navigation Error", '../images/title-mini.png'); currentTab.isLoading = false; if (currentTab.id === activeTabId) searchBarEl.value = ''; } }
-        function updateInitialTopBarHeight() { const currentDisplay = topBarAssemblyEl.style.display; topBarAssemblyEl.style.display = ''; topBarAssemblyEl.style.maxHeight = 'none'; initialTopBarHeight = topBarAssemblyEl.offsetHeight; topBarAssemblyEl.style.display = currentDisplay; if (!document.body.classList.contains('app-ui-hidden')) { topBarAssemblyEl.style.maxHeight = initialTopBarHeight + 'px'; } }
         function handleTabBarClick(e) { const tabElement = e.target.closest('.tab'); if (e.target.closest('.tab-close') && tabElement) { e.stopPropagation(); closeTab(tabElement.dataset.tabId); } else if (tabElement) activateTab(tabElement.dataset.tabId); }
         function handleSearchEnter(e) { if (e.key === 'Enter') navigateTo(e.target.value); }
-        function handleIframeLoad(event) { if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) { const iframe = event.target; const tab = tabs.find(t => t.iframe === iframe); if (tab) { tab.isLoading = false; let titleFromIframe = 'Untitled'; let faviconFromIframe = null; try { if (iframe.contentWindow && iframe.contentDocument) { titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled'; const linkTags = iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); if (linkTags.length > 0) { try {faviconFromIframe = new URL(linkTags[0].href, iframe.contentWindow.location.href).href; } catch(e){} } } } catch (e) { try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} } if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; updateTabInfo(tab, titleFromIframe, faviconFromIframe); if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(tab.actualTitle, tab.url); setupTitleObserver(tab); }}}
+        
+        function handleIframeLoad(event) { 
+            if (event.target.tagName === 'IFRAME' && event.target.classList.contains('tab-content')) { 
+                const iframe = event.target; 
+                const tab = tabs.find(t => t.iframe === iframe); 
+                if (tab) { 
+                    tab.isLoading = false; 
+                    let titleFromIframe = 'Untitled'; 
+                    let faviconFromIframe = null; 
+                    try { 
+                        if (iframe.contentWindow && iframe.contentDocument) { 
+                            titleFromIframe = iframe.contentDocument.title || new URL(tab.url).hostname || 'Untitled'; 
+                            const linkTags = iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); 
+                            if (linkTags.length > 0) { 
+                                try {faviconFromIframe = new URL(linkTags[0].href, iframe.contentWindow.location.href).href; } catch(e){} 
+                            } 
+                        } 
+                    } catch (e) { 
+                        try { titleFromIframe = new URL(tab.url).hostname || 'New Tab'; } catch {} 
+                    } 
+                    if(tab.url && tab.url.startsWith('about:error')) titleFromIframe = "Error Page"; 
+                    updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
+                    if (tab.url && !tab.url.startsWith('about:error') && !tab.url.startsWith('about:blank')) addToHistory(tab.actualTitle, tab.url); 
+                    setupTitleObserver(tab); 
+                }
+            }
+        }
         function handleGlobalKeyDown(e) { const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if ((e.ctrlKey || e.metaKey) && e.key === 't') { e.preventDefault(); createTab('about:blank'); } if ((e.ctrlKey || e.metaKey) && e.key === 'w') { e.preventDefault(); if (activeTabId) closeTab(activeTabId); } if (e.ctrlKey && e.key === 'Tab') { e.preventDefault(); if (tabs.length > 1) { const currentIndex = tabs.findIndex(t => t.id === activeTabId); const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + tabs.length) % tabs.length; activateTab(tabs[nextIndex].id); }} if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
-        function setupTitleObserver(tab) { if (!tab || !tab.iframe.contentWindow) return; if (tab.titleObserver) tab.titleObserver.disconnect(); try { const targetNode = tab.iframe.contentDocument.querySelector('title'); if (!targetNode) return; const observer = new MutationObserver(() => { if (tab.iframe.contentDocument) { let titleFromIframe = tab.iframe.contentDocument.title; let faviconFromIframe = tab.actualFavicon; const linkTags = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); if (linkTags.length > 0) { try {faviconFromIframe = new URL(linkTags[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){} } updateTabInfo(tab, titleFromIframe, faviconFromIframe); }}); observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); tab.titleObserver = observer; } catch (e) { if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); tab.locationCheckIntervalId = setInterval(() => { try { if (tab.iframe.contentDocument && tab.actualTitle !== tab.iframe.contentDocument.title) {let title = tab.iframe.contentDocument.title; let fav = tab.actualFavicon; const links = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); if(links.length>0){try{fav=new URL(links[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){}} updateTabInfo(tab, title, fav);}} catch (err) {} }, 2000); }}
+        
+        function setupTitleObserver(tab) { 
+            if (!tab || !tab.iframe.contentWindow) return; 
+            if (tab.titleObserver) tab.titleObserver.disconnect(); 
+            try { 
+                const targetNode = tab.iframe.contentDocument.querySelector('title'); 
+                if (!targetNode) return; 
+                const observer = new MutationObserver(() => { 
+                    if (tab.iframe.contentDocument) { 
+                        let titleFromIframe = tab.iframe.contentDocument.title; 
+                        let faviconFromIframe = null; // Start with null, try to find one
+                        const linkTags = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); 
+                        if (linkTags.length > 0) { 
+                            try {faviconFromIframe = new URL(linkTags[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){} 
+                        } 
+                        updateTabInfo(tab, titleFromIframe, faviconFromIframe); 
+                    }
+                }); 
+                observer.observe(targetNode, { subtree: true, characterData: true, childList: true }); 
+                tab.titleObserver = observer; 
+            } catch (e) { 
+                if (tab.locationCheckIntervalId) clearInterval(tab.locationCheckIntervalId); 
+                tab.locationCheckIntervalId = setInterval(() => { 
+                    try { 
+                        if (tab.iframe.contentDocument && tab.actualTitle !== tab.iframe.contentDocument.title) {
+                            let title = tab.iframe.contentDocument.title; 
+                            let fav = null; 
+                            const links = tab.iframe.contentDocument.head.querySelectorAll('link[rel*="icon"]'); 
+                            if(links.length>0){try{fav=new URL(links[0].href, tab.iframe.contentWindow.location.href).href;}catch(e){}} 
+                            updateTabInfo(tab, title, fav);
+                        }
+                    } catch (err) {} 
+                }, 2000); 
+            }
+        }
+        
         function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm));}
         function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
         function renderBookmarkItem(bm) { const li = document.createElement('li'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; const nameSpan = document.createElement('span'); nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; const urlSpan = document.createElement('span'); urlSpan.className = 'bookmark-url'; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; const removeBtn = document.createElement('span'); removeBtn.className = 'unicode-icon'; removeBtn.textContent = '✖'; removeBtn.style.cssText = 'position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px; opacity: 0.7; font-size: 1.2em;'; removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; li.appendChild(nameSpan); li.appendChild(urlSpan); li.appendChild(removeBtn); li.style.position = 'relative'; bookmarksListEl.appendChild(li); }
@@ -577,6 +718,7 @@
         function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
         function renderHistory() { historyListEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = document.createElement('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; const titleSpan = document.createElement('span'); titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; const urlSpan = document.createElement('span'); urlSpan.className = 'history-url'; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; li.appendChild(titleSpan); li.appendChild(urlSpan); historyListEl.appendChild(li); });}
         function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); }}
+
     </script>
 </body>
 </html>
