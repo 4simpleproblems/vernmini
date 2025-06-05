@@ -50,7 +50,7 @@
             width: 100%; height: 100%; overflow: hidden;
             font-family: var(--font-family-main);
             background-color: var(--bg-color); color: var(--text-color);
-            display: flex; /* Changed from flex to block for simpler top-down layout */
+            display: flex;
             flex-direction: column;
         }
 
@@ -65,16 +65,17 @@
             background-color: var(--toolbar-bg);
             box-shadow: var(--toolbar-shadow);
             border-bottom: 1px solid var(--toolbar-border-color);
-            z-index: 1000; /* Ensure toolbar is above content */
-            position: relative; /* For mini-menu positioning */
+            z-index: 1000;
+            position: relative;
         }
 
-        .nav-button, .toolbar-button { /* Combined style for toolbar buttons */
+        .nav-button, .toolbar-button {
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
             margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
             cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
             box-shadow: 0 0 0 1px var(--button-outline-color); font-size: 20px;
-            position: relative; /* For badges or indicators if needed */
+            position: relative;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
         }
         .nav-button:hover, .toolbar-button:hover { background-color: var(--button-hover-bg); }
 
@@ -85,18 +86,25 @@
             flex: 1; height: 36px; border-radius: 8px; border: none; background-color: var(--input-bg);
             color: var(--text-color); padding: 0 15px; font-size: 14px;
             box-shadow: 0 0 0 1px var(--button-outline-color); font-family: var(--font-family-main);
+            margin-right: 8px; /* Added margin for spacing before next button */
         }
         #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
 
-        #fullscreen-button { margin-left: 8px; margin-right: 0; } /* Keep specific margin if needed */
-        #settings-button { margin-left: auto; /* Pushes settings button to the right */ margin-right: 8px;}
+        /* Ensure all toolbar items (except search bar if it's first after nav) have margin-right */
+        #bookmark-button, #history-button, #fullscreen-button {
+             margin-right: 8px;
+        }
+        #settings-button {
+            margin-left: auto; /* Pushes settings button to the very right */
+            margin-right: 0; /* No margin-right needed if it's the last item */
+        }
 
 
         /* Mini Menus (for Bookmarks & History) */
         .mini-menu {
-            display: none; /* Hidden by default */
+            /* display: none; /* Controlled by 'show' class now */
             position: absolute;
-            top: calc(100% + 5px); /* Position below the toolbar */
+            top: calc(100% + 5px);
             background-color: var(--menu-bg);
             border: 1px solid var(--menu-border-color);
             border-radius: 8px;
@@ -104,14 +112,26 @@
             z-index: 1005;
             min-width: 280px;
             max-width: 350px;
-            max-height: 300px;
+            max-height: 300px; /* Set a max-height for scrolling long lists */
             overflow-y: auto;
             padding: 10px;
             color: var(--menu-text-color);
+
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.98);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0.25s;
         }
-        /* Specific positioning for each menu if they are triggered by different buttons */
-        #bookmark-menu { right: 90px; /* Adjust as needed based on button positions */ }
-        #history-menu { right: 50px; /* Adjust as needed */ }
+        .mini-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0s;
+        }
+
+        #bookmark-menu { right: 10px; /* Adjusted for better positioning, assuming settings is last */ }
+        #history-menu { right: 10px; /* Can be the same if they don't show simultaneously, or adjust based on trigger button */ }
+
 
         .mini-menu h3 {
             margin-top: 0; margin-bottom: 10px; font-size: 1.1em;
@@ -167,19 +187,25 @@
         }
         .mini-menu .menu-button:hover { background-color: var(--button-hover-bg); }
         .mini-menu .menu-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
+        .mini-menu .menu-button.clear-button { /* Specific style for clear button */
+            background-color: color-mix(in srgb, var(--current-theme-accent) 60%, #c0392b); /* Darker red accent */
+        }
+        .mini-menu .menu-button.clear-button:hover {
+            background-color: #c0392b; /* Solid red on hover */
+        }
 
 
         #content-container {
-            flex: 1; /* Takes remaining vertical space */
+            flex: 1;
             position: relative;
             background-color: var(--iframe-bg);
-            overflow: hidden; /* Important for iframe to fill */
+            overflow: hidden;
         }
-        #content-iframe { /* Single iframe for content */
+        #content-iframe {
             width: 100%;
             height: 100%;
             border: none;
-            display: block; /* Ensure it's a block element */
+            display: block;
         }
 
         .footer-label {
@@ -187,10 +213,8 @@
             font-size: 0.75rem; color: var(--footer-text-color); text-decoration: none; z-index: 1000;
         }
 
-        /* Icon styles (if any were specific to sidebar/tabs and need moving) */
         .icon-img { display: inline-block; vertical-align: middle; object-fit: contain; }
 
-        /* Refresh button icon animation */
         #refresh-button .icon-img {
             transform: rotate(0deg); transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
@@ -198,7 +222,6 @@
         @keyframes spinRefreshIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         body.app-ui-hidden #toolbar { display: none !important; }
-
 
     </style>
 </head>
@@ -236,7 +259,7 @@
         <div class="toolbar-button" id="history-button" title="History">
             <img src="../images/clock-white.png" alt="History" class="icon-img">
         </div>
-         <div class="nav-button" id="fullscreen-button" title="Toggle Fullscreen">
+         <div class="toolbar-button" id="fullscreen-button" title="Toggle Fullscreen">
             <img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img">
         </div>
         <div class="toolbar-button" id="settings-button" title="Settings">
@@ -258,10 +281,15 @@
     <div id="history-menu" class="mini-menu">
         <h3><img src="../images/clock-white.png" alt="History" class="icon-img"> Session History</h3>
         <ul id="history-list-popup"></ul>
+        <div class="menu-action-bar">
+            <button id="clear-history-button" class="menu-button clear-button">
+                <img src="../images/trash-white.png" alt="Clear" class="icon-img">Clear History
+            </button>
+        </div>
     </div>
 
     <div id="content-container">
-        <iframe id="content-iframe" title="Content View"></iframe>
+        <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
     </div>
 
     <a href="https://4simpleproblems.github.io" target="_blank" class="footer-label">Vern Max by 4SP</a>
@@ -281,101 +309,33 @@
         let sessionHistory = [];
         const MAX_HISTORY_ITEMS = 50;
 
-        const searchEngines = {
-            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
-            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
-            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
-            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
-        };
-        let currentSearchEngineKey = 'duckduckgo'; // Default, loaded from localStorage
+        const searchEngines = { /* ... (same as original) ... */ 'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' }, 'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' }, 'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' }, 'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' } };
+        let currentSearchEngineKey = 'duckduckgo';
 
-        const cloakPresets = {
-            'none': { displayName: "None (Show App Default)", title: "VERN MAX - BROWSER", faviconUrl: "../images/title-mini.png" },
-            'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
-            'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
-            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
-            'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' },
-            'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'}
-        };
-        let currentCloakPresetKey = 'none'; // Default, loaded from localStorage
+        const cloakPresets = { /* ... (same as original) ... */ 'none': { displayName: "None (Show App Default)", title: "VERN MAX - BROWSER", faviconUrl: "../images/title-mini.png" }, 'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' }, 'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' }, 'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' }, 'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }, 'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'} };
+        let currentCloakPresetKey = 'none';
 
         // DOM Elements
         let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
             fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl,
             bookmarkMenuEl, historyMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl,
-            addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl;
+            addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, clearHistoryButtonEl;
 
         // Templates
         let bookmarkItemTemplate, historyItemTemplate;
 
 
-        function encodePlainTextUrlForQuery(plainUrl) { if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
-        function decodeEncodedUrlFromQuery(encodedUrl) { if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
+        function encodePlainTextUrlForQuery(plainUrl) { /* ... (same as original) ... */ if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
+        function decodeEncodedUrlFromQuery(encodedUrl) { /* ... (same as original) ... */ if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
 
-        function updateBrowserAddressBar() {
-            const newSearchParams = new URLSearchParams(window.location.search);
-            newSearchParams.delete('url');
+        function updateBrowserAddressBar() { /* ... (same as original) ... */ const newSearchParams = new URLSearchParams(window.location.search); newSearchParams.delete('url'); if (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) { const encoded = encodePlainTextUrlForQuery(currentUrl); if (encoded) newSearchParams.set('eurl', encoded); else newSearchParams.delete('eurl'); } else { newSearchParams.delete('eurl'); } const newQueryString = newSearchParams.toString(); history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`); }
 
-            if (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) {
-                const encoded = encodePlainTextUrlForQuery(currentUrl);
-                if (encoded) newSearchParams.set('eurl', encoded);
-                else newSearchParams.delete('eurl');
-            } else {
-                newSearchParams.delete('eurl');
-            }
-            const newQueryString = newSearchParams.toString();
-            history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`);
-        }
+        function applyBrowserCloak() { /* ... (same as original) ... */ const appFaviconEl = document.getElementById('app-favicon'); const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER"; const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; let selectedCloak = cloakPresets[currentCloakPresetKey]; if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) { document.title = selectedCloak.title; if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; } else { const nonePreset = cloakPresets['none'] || {}; document.title = nonePreset.title || defaultAppTitle; if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon; } }
 
-        function applyBrowserCloak() {
-            const appFaviconEl = document.getElementById('app-favicon');
-            const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER";
-            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png";
-            let selectedCloak = cloakPresets[currentCloakPresetKey];
+        function proxyUrl(urlToProxy) { /* ... (same as original) ... */ if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null; if (urlToProxy.startsWith('data:')) return urlToProxy; if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy); return urlToProxy; } try { const currentOrigin = self.location.origin; if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) return urlToProxy; return currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } catch (e) { console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e); return urlToProxy; } }
+        function getDefaultFaviconForUrl(basePageUrl) { /* ... (same as original) ... */ if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) return null; try { return proxyUrl(new URL('/favicon.ico', new URL(basePageUrl).origin).href); } catch (e) { console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e); return null; } }
+        function getFaviconFromIframe() { /* ... (same as original, uses currentUrl and contentIframeEl) ... */ if (contentIframeEl && contentIframeEl.contentDocument && currentUrl) { try { const doc = contentIframeEl.contentDocument; const selectors = ['link[rel="icon"][type="image/svg+xml"]', 'link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="shortcut icon"]']; for (const selector of selectors) { const link = doc.querySelector(selector); if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') return proxyUrl(link.href); } } catch (e) { console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", currentUrl, e); } } return getDefaultFaviconForUrl(currentUrl); }
 
-            if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) {
-                document.title = selectedCloak.title;
-                if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon;
-            } else {
-                const nonePreset = cloakPresets['none'] || {};
-                document.title = nonePreset.title || defaultAppTitle;
-                if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon;
-            }
-        }
-
-
-        function proxyUrl(urlToProxy) {
-            if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
-            if (urlToProxy.startsWith('data:')) return urlToProxy;
-            if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
-                console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy); return urlToProxy;
-            }
-            try {
-                const currentOrigin = self.location.origin;
-                if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) return urlToProxy;
-                return currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy);
-            } catch (e) { console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e); return urlToProxy; }
-        }
-
-        function getDefaultFaviconForUrl(basePageUrl) {
-            if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) return null;
-            try { return proxyUrl(new URL('/favicon.ico', new URL(basePageUrl).origin).href); }
-            catch (e) { console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e); return null; }
-        }
-
-        function getFaviconFromIframe() {
-            if (contentIframeEl && contentIframeEl.contentDocument && currentUrl) {
-                try {
-                    const doc = contentIframeEl.contentDocument;
-                    const selectors = ['link[rel="icon"][type="image/svg+xml"]', 'link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="shortcut icon"]'];
-                    for (const selector of selectors) {
-                        const link = doc.querySelector(selector);
-                        if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') return proxyUrl(link.href);
-                    }
-                } catch (e) { console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", currentUrl, e); }
-            }
-            return getDefaultFaviconForUrl(currentUrl);
-        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             toolbarEl = document.getElementById('toolbar');
@@ -395,44 +355,35 @@
             newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup');
             addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
             historyListPopupEl = document.getElementById('history-list-popup');
+            clearHistoryButtonEl = document.getElementById('clear-history-button');
+
 
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
             historyItemTemplate = document.getElementById('history-item-template');
 
             await initUV();
-            loadSettings(); // For search engine and cloak preset
+            loadSettings();
             setupEventListeners();
-            loadBookmarks(); // For bookmark mini-menu
+            loadBookmarks();
 
             const currentUrlParams = new URLSearchParams(window.location.search);
             let initialUrlToLoad = currentUrlParams.get('url');
             const encodedUrlParam = currentUrlParams.get('eurl');
-
             const newSearchParamsForBar = new URLSearchParams(window.location.search);
             newSearchParamsForBar.delete('url'); newSearchParamsForBar.delete('eurl');
-
             if (initialUrlToLoad) { /* use it */ }
             else if (encodedUrlParam) initialUrlToLoad = decodeEncodedUrlFromQuery(encodedUrlParam);
             else initialUrlToLoad = 'about:blank';
-
-            if (initialUrlToLoad && initialUrlToLoad !== 'about:blank' && !initialUrlToLoad.startsWith('about:error')) {
-                const encoded = encodePlainTextUrlForQuery(initialUrlToLoad);
-                if (encoded) newSearchParamsForBar.set('eurl', encoded);
-            }
+            if (initialUrlToLoad && initialUrlToLoad !== 'about:blank' && !initialUrlToLoad.startsWith('about:error')) { const encoded = encodePlainTextUrlForQuery(initialUrlToLoad); if (encoded) newSearchParamsForBar.set('eurl', encoded); }
             history.replaceState(null, '', `${window.location.pathname}${newSearchParamsForBar.toString() ? '?' + newSearchParamsForBar.toString() : ''}`);
 
-            navigateTo(initialUrlToLoad); // Initial navigation
-            renderHistory(); // For history mini-menu
-            applyBrowserCloak(); // Initial cloak based on loaded settings
+            navigateTo(initialUrlToLoad);
+            renderHistory();
+            applyBrowserCloak();
         });
 
-        async function initUV() { try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
-
-        function loadSettings() {
-            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
-            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
-            // No UI elements to update for these on this page anymore
-        }
+        async function initUV() { /* ... (same as original) ... */ try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
+        function loadSettings() { /* ... (same as original) ... */ currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; }
 
         function setupEventListeners() {
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen);
@@ -446,18 +397,15 @@
                 const refreshIcon = refreshButtonEl.querySelector('.icon-img');
                 if (refreshIcon) refreshIcon.classList.add('spinning');
                 isRefreshing = true;
-                try {
-                    if (typeof __uv$config !== 'undefined' && __uv$config && contentIframeEl.src.includes(__uv$config.prefix)) {
-                         contentIframeEl.contentWindow.location.reload(true);
-                    } else {
-                         contentIframeEl.contentWindow.location.reload();
-                    }
-                } catch (e) { contentIframeEl.src = contentIframeEl.src; } // Fallback
+                try { if (typeof __uv$config !== 'undefined' && __uv$config && contentIframeEl.src.includes(__uv$config.prefix)) { contentIframeEl.contentWindow.location.reload(true); } else { contentIframeEl.contentWindow.location.reload(); } }
+                catch (e) { contentIframeEl.src = contentIframeEl.src; }
             });
 
             settingsButtonEl.addEventListener('click', () => { window.location.href = '../active/settings.html'; });
-            bookmarkButtonEl.addEventListener('click', toggleBookmarkMenu);
-            historyButtonEl.addEventListener('click', toggleHistoryMenu);
+            bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
+            historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
+            clearHistoryButtonEl.addEventListener('click', handleClearHistory);
+
 
             addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
             bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
@@ -466,181 +414,67 @@
             document.addEventListener('keydown', handleGlobalKeyDown);
             contentIframeEl.addEventListener('load', handleIframeLoad);
 
-            // Close mini-menus when clicking outside
             document.addEventListener('click', (event) => {
-                if (bookmarkMenuEl.style.display === 'block' && !bookmarkMenuEl.contains(event.target) && event.target !== bookmarkButtonEl && !bookmarkButtonEl.contains(event.target)) {
-                    bookmarkMenuEl.style.display = 'none';
+                if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && event.target !== bookmarkButtonEl && !bookmarkButtonEl.contains(event.target)) {
+                    bookmarkMenuEl.classList.remove('show');
                 }
-                if (historyMenuEl.style.display === 'block' && !historyMenuEl.contains(event.target) && event.target !== historyButtonEl && !historyButtonEl.contains(event.target)) {
-                    historyMenuEl.style.display = 'none';
+                if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && event.target !== historyButtonEl && !historyButtonEl.contains(event.target)) {
+                    historyMenuEl.classList.remove('show');
                 }
             });
         }
 
-        function toggleIframeFullscreen() {
-            if (!document.fullscreenElement) {
-                if (contentIframeEl) contentIframeEl.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err));
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-            }
-        }
-        function handleFullscreenChange() {
-            const fsIconImg = document.getElementById('fullscreen-icon-img');
-            if (document.fullscreenElement) {
-                document.body.classList.add('app-ui-hidden');
-                if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";}
-                fullscreenButtonEl.title = "Exit Fullscreen";
-            } else {
-                document.body.classList.remove('app-ui-hidden');
-                if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";}
-                fullscreenButtonEl.title = "Toggle Fullscreen";
-            }
-        }
-
+        function toggleIframeFullscreen() { /* ... (same as original) ... */ if (!document.fullscreenElement) { if (contentIframeEl) contentIframeEl.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
+        function handleFullscreenChange() { /* ... (same as original) ... */ const fsIconImg = document.getElementById('fullscreen-icon-img'); if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";} fullscreenButtonEl.title = "Exit Fullscreen"; } else { document.body.classList.remove('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";} fullscreenButtonEl.title = "Toggle Fullscreen"; } }
         function formatUrlInput(input) { /* ... (same as original) ... */ if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
 
-        function navigateTo(urlInput) {
-            isLoading = true; currentTitle = "Loading..."; currentFavicon = null; // Reset
-            applyBrowserCloak(); // Update document title based on cloak if active
+        function navigateTo(urlInput) { /* ... (same as original) ... */ isLoading = true; currentTitle = "Loading..."; currentFavicon = null; applyBrowserCloak(); if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank'; let targetDisplayUrl; if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { targetDisplayUrl = urlInput; contentIframeEl.src = targetDisplayUrl; currentTitle = (targetDisplayUrl === 'about:blank' ? 'New Tab' : targetDisplayUrl); if (!targetDisplayUrl.startsWith('about:error')) addToHistory(currentTitle, targetDisplayUrl); isLoading = false; } else { let formattedInputUrl = formatUrlInput(urlInput.trim()); if (!formattedInputUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetDisplayUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); } else { targetDisplayUrl = formattedInputUrl; } if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetDisplayUrl)}`; contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; currentTitle = "Error: UV Config Missing"; isLoading = false; } else { try { contentIframeEl.src = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetDisplayUrl); } catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; currentTitle = "Navigation Error"; isLoading = false; } } } currentUrl = targetDisplayUrl; searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : ''; updateBrowserAddressBar(); }
 
-            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank';
-            let targetDisplayUrl; // This will be the URL shown in search bar & used for history
+        function handleIframeLoad() { /* ... (same as original) ... */ isLoading = false; const refreshIcon = refreshButtonEl.querySelector('.icon-img'); if (isRefreshing && refreshIcon) { refreshIcon.classList.remove('spinning'); isRefreshing = false; } try { if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) { currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled'; currentFavicon = getFaviconFromIframe(); } } catch (e) { try { currentTitle = new URL(currentUrl).hostname || 'New Tab'; } catch {} currentFavicon = getDefaultFaviconForUrl(currentUrl); console.warn("VERN MAX Debug: Error accessing iframe content on load for URL:", currentUrl, e); } if (currentUrl && currentUrl.startsWith('about:error')) currentTitle = "Error Page"; applyBrowserCloak(); if (currentUrl && !currentUrl.startsWith('about:error') && !currentUrl.startsWith('about:blank')) { addToHistory(currentTitle, currentUrl); } }
+        function handleGlobalKeyDown(e) { /* ... (same as original, adjusted) ... */ const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
 
-            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
-                targetDisplayUrl = urlInput;
-                contentIframeEl.src = targetDisplayUrl;
-                currentTitle = (targetDisplayUrl === 'about:blank' ? 'New Tab' : targetDisplayUrl);
-                if (!targetDisplayUrl.startsWith('about:error')) addToHistory(currentTitle, targetDisplayUrl);
-                isLoading = false;
-            } else {
-                let formattedInputUrl = formatUrlInput(urlInput.trim());
-                if (!formattedInputUrl) {
-                    const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
-                    targetDisplayUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
-                } else {
-                    targetDisplayUrl = formattedInputUrl;
-                }
+        function loadBookmarks() { /* ... (same as original, targets bookmarksListPopupEl) ... */ const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm)); }
+        function saveBookmarks(bms) { /* ... (same as original) ... */ localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+        function renderBookmarkItem(bm) { /* ... (same as original, targets bookmarksListPopupEl) ... */ const itemFragment = bookmarkItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const nameSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); const removeBtn = itemFragment.querySelector('.item-remove-button'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
+        function handleAddCurrentBookmark() { /* ... (same as original, uses newBookmarkNameInputPopupEl) ... */ if (!currentUrl || currentUrl === 'about:blank' || currentUrl.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle || new URL(currentUrl).hostname; const url = currentUrl; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputPopupEl.value = ''; }
+        function removeBookmark(urlToRemove) { /* ... (same as original) ... */ let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
+        function handleBookmarkClick(e) { /* ... (same as original, closes bookmarkMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li && !e.target.closest('.item-remove-button')) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
 
-                if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') {
-                    const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetDisplayUrl)}`;
-                    contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; // Update targetDisplayUrl to error
-                    currentTitle = "Error: UV Config Missing"; isLoading = false;
-                } else {
-                    try { contentIframeEl.src = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetDisplayUrl); }
-                    catch (err) {
-                        const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`;
-                        contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; // Update to error
-                        currentTitle = "Navigation Error"; isLoading = false;
-                    }
-                }
-            }
-            currentUrl = targetDisplayUrl; // Store the plain/original target URL
-            searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : '';
-            updateBrowserAddressBar();
-        }
-
-
-        function handleIframeLoad() {
-            isLoading = false;
-            const refreshIcon = refreshButtonEl.querySelector('.icon-img');
-            if (isRefreshing && refreshIcon) { refreshIcon.classList.remove('spinning'); isRefreshing = false; }
-
-            try {
-                if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) {
-                    currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled';
-                    currentFavicon = getFaviconFromIframe();
-                }
-            } catch (e) {
-                try { currentTitle = new URL(currentUrl).hostname || 'New Tab'; } catch {}
-                currentFavicon = getDefaultFaviconForUrl(currentUrl);
-                console.warn("VERN MAX Debug: Error accessing iframe content on load for URL:", currentUrl, e);
-            }
-            if (currentUrl && currentUrl.startsWith('about:error')) currentTitle = "Error Page";
-
-            applyBrowserCloak(); // Re-apply cloak to update document title if needed, based on new iframe title
-            if (currentUrl && !currentUrl.startsWith('about:error') && !currentUrl.startsWith('about:blank')) {
-                addToHistory(currentTitle, currentUrl);
-            }
-            // No title observer for simplicity in single iframe view, relying on load event.
-        }
-
-        function handleGlobalKeyDown(e) { /* ... (same as original, but remove tab-specific ctrl+t, ctrl+w, ctrl+tab) ... */ const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
-
-        function loadBookmarks() {
-            const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            bookmarksListPopupEl.innerHTML = '';
-            bms.forEach(bm => renderBookmarkItem(bm));
-        }
-        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
-
-        function renderBookmarkItem(bm) {
-            const itemFragment = bookmarkItemTemplate.content.cloneNode(true);
-            const li = itemFragment.querySelector('li');
-            const nameSpan = itemFragment.querySelector('.item-name'); // Updated class
-            const urlSpan = itemFragment.querySelector('.item-url');   // Updated class
-            const removeBtn = itemFragment.querySelector('.item-remove-button');
-
-            li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`;
-            nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name;
-            urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url;
-            removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); };
-            bookmarksListPopupEl.appendChild(li);
-        }
-
-        function handleAddCurrentBookmark() {
-            if (!currentUrl || currentUrl === 'about:blank' || currentUrl.startsWith('about:')) { alert("Cannot bookmark this page."); return; }
-            const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle || new URL(currentUrl).hostname;
-            const url = currentUrl;
-            let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]');
-            if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; }
-            bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url });
-            newBookmarkNameInputPopupEl.value = '';
-        }
-        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
-
-        function handleBookmarkClick(e) {
-            const li = e.target.closest('li[data-url]');
-            if (li && !e.target.closest('.item-remove-button')) {
-                navigateTo(li.dataset.url);
-                bookmarkMenuEl.style.display = 'none'; // Close menu after click
+        function addToHistory(title, url) { /* ... (same as original) ... */ if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
+        function renderHistory() { /* ... (same as original, targets historyListPopupEl) ... */ historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const itemFragment = historyItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const titleSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; historyListPopupEl.appendChild(li); }); }
+        function handleHistoryClick(e) { /* ... (same as original, closes historyMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
+        function handleClearHistory() {
+            if (confirm("Are you sure you want to clear the session history?")) {
+                sessionHistory = [];
+                renderHistory();
+                historyMenuEl.classList.remove('show'); // Optionally close menu
             }
         }
 
-        function addToHistory(title, url) {
-            if (!url || url === 'about:blank' || url.startsWith('about:')) return;
-            if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return;
-            sessionHistory.push({ title: title || url, url, timestamp: new Date() });
-            if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift();
-            renderHistory();
-        }
-        function renderHistory() {
-            historyListPopupEl.innerHTML = '';
-            [...sessionHistory].reverse().forEach(item => {
-                const itemFragment = historyItemTemplate.content.cloneNode(true);
-                const li = itemFragment.querySelector('li');
-                const titleSpan = itemFragment.querySelector('.item-name'); // Updated class
-                const urlSpan = itemFragment.querySelector('.item-url');   // Updated class
-                li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`;
-                titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url;
-                urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url;
-                historyListPopupEl.appendChild(li);
-            });
-        }
-        function handleHistoryClick(e) {
-            const li = e.target.closest('li[data-url]');
-            if (li) {
-                navigateTo(li.dataset.url);
-                historyMenuEl.style.display = 'none'; // Close menu after click
-            }
-        }
 
         function toggleBookmarkMenu() {
-            historyMenuEl.style.display = 'none'; // Close other menu
-            bookmarkMenuEl.style.display = bookmarkMenuEl.style.display === 'block' ? 'none' : 'block';
+            historyMenuEl.classList.remove('show');
+            bookmarkMenuEl.classList.toggle('show');
+            if (bookmarkMenuEl.classList.contains('show')) {
+                // Adjust position if needed, e.g., based on bookmarkButtonEl's position
+                const btnRect = bookmarkButtonEl.getBoundingClientRect();
+                const toolbarRect = toolbarEl.getBoundingClientRect();
+                bookmarkMenuEl.style.top = (toolbarRect.height + 5) + 'px'; // Ensure it's below toolbar
+                // bookmarkMenuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px'; // Align to button's right edge
+                // Or simpler:
+                bookmarkMenuEl.style.right = (document.documentElement.clientWidth - settingsButtonEl.getBoundingClientRect().right - (settingsButtonEl.offsetWidth / 2) + (bookmarkMenuEl.offsetWidth / 2) - 28) + 'px';
+            }
         }
         function toggleHistoryMenu() {
-            bookmarkMenuEl.style.display = 'none'; // Close other menu
-            historyMenuEl.style.display = historyMenuEl.style.display === 'block' ? 'none' : 'block';
+            bookmarkMenuEl.classList.remove('show');
+            historyMenuEl.classList.toggle('show');
+             if (historyMenuEl.classList.contains('show')) {
+                const btnRect = historyButtonEl.getBoundingClientRect();
+                const toolbarRect = toolbarEl.getBoundingClientRect();
+                historyMenuEl.style.top = (toolbarRect.height + 5) + 'px';
+                // historyMenuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px';
+                historyMenuEl.style.right = (document.documentElement.clientWidth - settingsButtonEl.getBoundingClientRect().right - (settingsButtonEl.offsetWidth / 2) + (historyMenuEl.offsetWidth / 2) + 10) + 'px';
+            }
         }
 
     </script>
