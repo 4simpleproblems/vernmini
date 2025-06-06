@@ -332,7 +332,20 @@
         function encodePlainTextUrlForQuery(plainUrl) { /* ... (same as original) ... */ if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
         function decodeEncodedUrlFromQuery(encodedUrl) { /* ... (same as original) ... */ if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
 
-        function updateBrowserAddressBar() { /* ... (same as original) ... */ const newSearchParams = new URLSearchParams(window.location.search); newSearchParams.delete('url'); if (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) { const encoded = encodePlainTextUrlForQuery(currentUrl); if (encoded) newSearchParams.set('eurl', encoded); else newSearchParams.delete('eurl'); } else { newSearchParams.delete('eurl'); } const newQueryString = newSearchParams.toString(); history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`); }
+        function updateBrowserAddressBar() {
+            const newSearchParams = new URLSearchParams(window.location.search);
+            newSearchParams.delete('url'); // Legacy cleanup
+            if (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) {
+                const encoded = encodePlainTextUrlForQuery(currentUrl);
+                if (encoded) newSearchParams.set('eurl', encoded);
+                else newSearchParams.delete('eurl');
+            } else {
+                newSearchParams.delete('eurl');
+            }
+            const newQueryString = newSearchParams.toString();
+            // Use replaceState to avoid cluttering browser history with our internal URL changes
+            history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`);
+        }
 
         function applyBrowserCloak() { /* ... (same as original) ... */ const appFaviconEl = document.getElementById('app-favicon'); const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER"; const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; let selectedCloak = cloakPresets[currentCloakPresetKey]; if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) { document.title = selectedCloak.title; if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; } else { const nonePreset = cloakPresets['none'] || {}; document.title = nonePreset.title || defaultAppTitle; if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon; } }
 
@@ -373,13 +386,9 @@
             const currentUrlParams = new URLSearchParams(window.location.search);
             let initialUrlToLoad = currentUrlParams.get('url');
             const encodedUrlParam = currentUrlParams.get('eurl');
-            const newSearchParamsForBar = new URLSearchParams(window.location.search);
-            newSearchParamsForBar.delete('url'); newSearchParamsForBar.delete('eurl');
             if (initialUrlToLoad) { /* use it */ }
             else if (encodedUrlParam) initialUrlToLoad = decodeEncodedUrlFromQuery(encodedUrlParam);
             else initialUrlToLoad = 'about:blank';
-            if (initialUrlToLoad && initialUrlToLoad !== 'about:blank' && !initialUrlToLoad.startsWith('about:error')) { const encoded = encodePlainTextUrlForQuery(initialUrlToLoad); if (encoded) newSearchParamsForBar.set('eurl', encoded); }
-            history.replaceState(null, '', `${window.location.pathname}${newSearchParamsForBar.toString() ? '?' + newSearchParamsForBar.toString() : ''}`);
 
             navigateTo(initialUrlToLoad);
             renderHistory();
@@ -419,10 +428,10 @@
             contentIframeEl.addEventListener('load', handleIframeLoad);
 
             document.addEventListener('click', (event) => {
-                if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && event.target !== bookmarkButtonEl && !bookmarkButtonEl.contains(event.target)) {
+                if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && !bookmarkButtonEl.contains(event.target)) {
                     bookmarkMenuEl.classList.remove('show');
                 }
-                if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && event.target !== historyButtonEl && !historyButtonEl.contains(event.target)) {
+                if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && !historyButtonEl.contains(event.target)) {
                     historyMenuEl.classList.remove('show');
                 }
             });
@@ -432,9 +441,85 @@
         function handleFullscreenChange() { /* ... (same as original) ... */ const fsIconImg = document.getElementById('fullscreen-icon-img'); if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";} fullscreenButtonEl.title = "Exit Fullscreen"; } else { document.body.classList.remove('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";} fullscreenButtonEl.title = "Toggle Fullscreen"; } }
         function formatUrlInput(input) { /* ... (same as original) ... */ if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
 
-        function navigateTo(urlInput) { /* ... (same as original) ... */ isLoading = true; currentTitle = "Loading..."; currentFavicon = null; applyBrowserCloak(); if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') urlInput = 'about:blank'; let targetDisplayUrl; if (urlInput === 'about:blank' || urlInput.startsWith('about:')) { targetDisplayUrl = urlInput; contentIframeEl.src = targetDisplayUrl; currentTitle = (targetDisplayUrl === 'about:blank' ? 'New Tab' : targetDisplayUrl); if (!targetDisplayUrl.startsWith('about:error')) addToHistory(currentTitle, targetDisplayUrl); isLoading = false; } else { let formattedInputUrl = formatUrlInput(urlInput.trim()); if (!formattedInputUrl) { const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo']; targetDisplayUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim())); } else { targetDisplayUrl = formattedInputUrl; } if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { const errorUrl = `about:error#uv_config_missing&url=${encodeURIComponent(targetDisplayUrl)}`; contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; currentTitle = "Error: UV Config Missing"; isLoading = false; } else { try { contentIframeEl.src = self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(targetDisplayUrl); } catch (err) { const errorUrl = `about:error#navigation_failed&message=${encodeURIComponent(err.message)}&query=${encodeURIComponent(urlInput)}`; contentIframeEl.src = errorUrl; targetDisplayUrl = errorUrl; currentTitle = "Navigation Error"; isLoading = false; } } } currentUrl = targetDisplayUrl; searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : ''; updateBrowserAddressBar(); }
+        function navigateTo(urlInput) {
+            isLoading = true;
+            currentTitle = "Loading...";
+            currentFavicon = null;
+            applyBrowserCloak();
 
-        function handleIframeLoad() { /* ... (same as original) ... */ isLoading = false; const refreshIcon = refreshButtonEl.querySelector('.icon-img'); if (isRefreshing && refreshIcon) { refreshIcon.classList.remove('spinning'); isRefreshing = false; } try { if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) { currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled'; currentFavicon = getFaviconFromIframe(); } } catch (e) { try { currentTitle = new URL(currentUrl).hostname || 'New Tab'; } catch {} currentFavicon = getDefaultFaviconForUrl(currentUrl); console.warn("VERN MAX Debug: Error accessing iframe content on load for URL:", currentUrl, e); } if (currentUrl && currentUrl.startsWith('about:error')) currentTitle = "Error Page"; applyBrowserCloak(); if (currentUrl && !currentUrl.startsWith('about:error') && !currentUrl.startsWith('about:blank')) { addToHistory(currentTitle, currentUrl); } }
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') {
+                urlInput = 'about:blank';
+            }
+
+            let targetUrlForIframe;
+            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
+                currentUrl = urlInput;
+                targetUrlForIframe = urlInput;
+            } else {
+                let formattedInputUrl = formatUrlInput(urlInput.trim());
+                if (!formattedInputUrl) {
+                    const searchEngine = searchEngines[currentSearchEngineKey] || searchEngines['duckduckgo'];
+                    currentUrl = searchEngine.url.replace('%s', encodeURIComponent(urlInput.trim()));
+                } else {
+                    currentUrl = formattedInputUrl;
+                }
+                targetUrlForIframe = proxyUrl(currentUrl);
+            }
+            contentIframeEl.src = targetUrlForIframe;
+            searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : '';
+            updateBrowserAddressBar();
+        }
+
+        function decodeUrlFromSrc(proxiedUrl) {
+            if (!proxiedUrl || typeof __uv$config === 'undefined' || !proxiedUrl.includes(__uv$config.prefix)) {
+                return null;
+            }
+            try {
+                const encodedPart = proxiedUrl.split(__uv$config.prefix)[1];
+                const cleanEncodedPart = encodedPart.endsWith('/') ? encodedPart.slice(0, -1) : encodedPart;
+                return __uv$config.decodeUrl(cleanEncodedPart);
+            } catch (e) {
+                console.error("Failed to decode proxied src URL:", proxiedUrl, e);
+                return null;
+            }
+        }
+
+        function handleIframeLoad() {
+            isLoading = false;
+            const refreshIcon = refreshButtonEl.querySelector('.icon-img');
+            if (isRefreshing && refreshIcon) {
+                refreshIcon.classList.remove('spinning');
+                isRefreshing = false;
+            }
+
+            const newDecodedUrl = decodeUrlFromSrc(contentIframeEl.src);
+            if (newDecodedUrl) {
+                currentUrl = newDecodedUrl;
+            }
+
+            try {
+                if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) {
+                    currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled';
+                    currentFavicon = getFaviconFromIframe();
+                }
+            } catch (e) {
+                try { currentTitle = new URL(currentUrl).hostname || 'New Tab'; } catch {}
+                currentFavicon = getDefaultFaviconForUrl(currentUrl);
+            }
+
+            if (currentUrl && currentUrl.startsWith('about:error')) {
+                currentTitle = "Error Page";
+            }
+
+            searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : '';
+            updateBrowserAddressBar();
+            applyBrowserCloak();
+
+            if (currentUrl && !currentUrl.startsWith('about:error') && !currentUrl.startsWith('about:blank')) {
+                addToHistory(currentTitle, currentUrl);
+            }
+        }
+
         function handleGlobalKeyDown(e) { /* ... (same as original, adjusted) ... */ const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
 
         function loadBookmarks() { /* ... (same as original, targets bookmarksListPopupEl) ... */ const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm)); }
@@ -450,7 +535,7 @@
         function handleClearHistory() {
             if (confirm("Are you sure you want to clear the session history?")) {
                 sessionHistory = [];
-                renderHistory(); // Re-render the now empty list
+                renderHistory();
             }
         }
 
