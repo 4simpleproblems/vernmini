@@ -98,7 +98,7 @@
         }
         #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
 
-        #bookmark-button, #history-button, #fullscreen-button {
+        #fullscreen-button, #bookmark-button, #history-button {
              margin-right: 8px;
         }
         #settings-button {
@@ -112,7 +112,7 @@
             top: calc(100% + 5px);
             background-color: var(--menu-bg);
             border: 1px solid var(--menu-border-color);
-            border-radius: 16px;
+            border-radius: 12px; /* UPDATED */
             box-shadow: var(--menu-shadow);
             z-index: 1005;
             min-width: 280px;
@@ -260,15 +260,12 @@
         <div class="toolbar-button" id="fullscreen-button" title="Toggle Fullscreen">
             <img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img">
         </div>
-
         <div class="toolbar-button" id="bookmark-button" title="Bookmarks">
             <img src="../images/star-white.png" alt="Bookmarks" class="icon-img">
         </div>
-        
         <div class="toolbar-button" id="history-button" title="History">
             <img src="../images/clock-white.png" alt="History" class="icon-img">
         </div>
-    
         <div class="toolbar-button" id="settings-button" title="Settings">
             <img src="../images/gear-white.png" alt="Settings" class="icon-img">
         </div>
@@ -309,17 +306,16 @@
         // Single Browse context variables
         let currentUrl = 'about:blank';
         let currentTitle = 'New Tab';
-        let currentFavicon = null;
         let isLoading = false;
         let isRefreshing = false;
 
         let sessionHistory = [];
         const MAX_HISTORY_ITEMS = 50;
 
-        const searchEngines = { /* ... (same as original) ... */ 'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' }, 'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' }, 'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' }, 'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' } };
+        const searchEngines = { 'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' }, 'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' }, 'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' }, 'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' } };
         let currentSearchEngineKey = 'duckduckgo';
 
-        const cloakPresets = { /* ... (same as original) ... */ 'none': { displayName: "None (Show App Default)", title: "VERN MAX - BROWSER", faviconUrl: "../images/title-mini.png" }, 'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' }, 'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' }, 'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' }, 'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }, 'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'} };
+        const cloakPresets = { 'none': { displayName: "None (Show App Default)", title: "VERN MAX - BROWSER", faviconUrl: "../images/title-mini.png" }, 'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' }, 'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' }, 'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' }, 'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }, 'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'} };
         let currentCloakPresetKey = 'none';
 
         // DOM Elements
@@ -331,13 +327,13 @@
         // Templates
         let bookmarkItemTemplate, historyItemTemplate;
 
-
-        function encodePlainTextUrlForQuery(plainUrl) { /* ... (same as original) ... */ if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
-        function decodeEncodedUrlFromQuery(encodedUrl) { /* ... (same as original) ... */ if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
+        // --- URL Encoding/Decoding ---
+        function encodePlainTextUrlForQuery(plainUrl) { if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
+        function decodeEncodedUrlFromQuery(encodedUrl) { if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
 
         function updateBrowserAddressBar() {
             const newSearchParams = new URLSearchParams(window.location.search);
-            newSearchParams.delete('url'); // Legacy cleanup
+            newSearchParams.delete('url');
             if (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) {
                 const encoded = encodePlainTextUrlForQuery(currentUrl);
                 if (encoded) newSearchParams.set('eurl', encoded);
@@ -346,18 +342,41 @@
                 newSearchParams.delete('eurl');
             }
             const newQueryString = newSearchParams.toString();
-            // Use replaceState to avoid cluttering browser history with our internal URL changes
             history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`);
         }
 
-        function applyBrowserCloak() { /* ... (same as original) ... */ const appFaviconEl = document.getElementById('app-favicon'); const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER"; const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; let selectedCloak = cloakPresets[currentCloakPresetKey]; if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) { document.title = selectedCloak.title; if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; } else { const nonePreset = cloakPresets['none'] || {}; document.title = nonePreset.title || defaultAppTitle; if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon; } }
+        // --- Core UI and State Management ---
 
-        function proxyUrl(urlToProxy) { /* ... (same as original) ... */ if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null; if (urlToProxy.startsWith('data:')) return urlToProxy; if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy); return urlToProxy; } try { const currentOrigin = self.location.origin; if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) return urlToProxy; return currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } catch (e) { console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e); return urlToProxy; } }
-        function getDefaultFaviconForUrl(basePageUrl) { /* ... (same as original) ... */ if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) return null; try { return proxyUrl(new URL('/favicon.ico', new URL(basePageUrl).origin).href); } catch (e) { console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e); return null; } }
-        function getFaviconFromIframe() { /* ... (same as original, uses currentUrl and contentIframeEl) ... */ if (contentIframeEl && contentIframeEl.contentDocument && currentUrl) { try { const doc = contentIframeEl.contentDocument; const selectors = ['link[rel="icon"][type="image/svg+xml"]', 'link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="shortcut icon"]']; for (const selector of selectors) { const link = doc.querySelector(selector); if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') return proxyUrl(link.href); } } catch (e) { console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", currentUrl, e); } } return getDefaultFaviconForUrl(currentUrl); }
+        function updateUiForStateChange() {
+            searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : '';
+            updateBrowserAddressBar();
+            applyBrowserCloak();
+            addToHistory(currentTitle, currentUrl);
+        }
+
+        function applyBrowserCloak() {
+             const appFaviconEl = document.getElementById('app-favicon');
+            const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER";
+            const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png";
+            let selectedCloak = cloakPresets[currentCloakPresetKey];
+
+            if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) {
+                document.title = selectedCloak.title;
+                if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon;
+            } else {
+                const nonePreset = cloakPresets['none'] || {};
+                document.title = nonePreset.title || defaultAppTitle;
+                if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon;
+            }
+        }
+
+        // --- Proxy Logic ---
+        function proxyUrl(urlToProxy) { if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null; if (urlToProxy.startsWith('data:')) return urlToProxy; if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy); return urlToProxy; } try { const currentOrigin = self.location.origin; if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) return urlToProxy; return currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } catch (e) { console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e); return urlToProxy; } }
+        function decodeUrlFromSrc(proxiedUrl) { if (!proxiedUrl || typeof __uv$config === 'undefined' || !proxiedUrl.includes(__uv$config.prefix)) { return null; } try { const encodedPart = proxiedUrl.split(__uv$config.prefix)[1]; const cleanEncodedPart = encodedPart.endsWith('/') ? encodedPart.slice(0, -1) : encodedPart; return __uv$config.decodeUrl(cleanEncodedPart); } catch (e) { console.error("Failed to decode proxied src URL:", proxiedUrl, e); return null; } }
 
 
         document.addEventListener('DOMContentLoaded', async () => {
+            // Assign all DOM Elements
             toolbarEl = document.getElementById('toolbar');
             contentIframeEl = document.getElementById('content-iframe');
             searchBarEl = document.getElementById('search-bar');
@@ -376,11 +395,10 @@
             addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
             historyListPopupEl = document.getElementById('history-list-popup');
             clearHistoryButtonEl = document.getElementById('clear-history-button');
-
-
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
             historyItemTemplate = document.getElementById('history-item-template');
 
+            // Initialize App
             await initUV();
             loadSettings();
             setupEventListeners();
@@ -389,7 +407,7 @@
             const currentUrlParams = new URLSearchParams(window.location.search);
             let initialUrlToLoad = currentUrlParams.get('url');
             const encodedUrlParam = currentUrlParams.get('eurl');
-            if (initialUrlToLoad) { /* use it */ }
+            if (initialUrlToLoad) {}
             else if (encodedUrlParam) initialUrlToLoad = decodeEncodedUrlFromQuery(encodedUrlParam);
             else initialUrlToLoad = 'about:blank';
 
@@ -398,12 +416,12 @@
             applyBrowserCloak();
         });
 
-        async function initUV() { /* ... (same as original) ... */ try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
-        function loadSettings() { /* ... (same as original) ... */ currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; }
+        async function initUV() { try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
+        function loadSettings() { currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; }
 
         function setupEventListeners() {
+            // Toolbar buttons
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen);
-            document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
             backButtonEl.addEventListener('click', () => { try { contentIframeEl.contentWindow.history.back(); } catch(e) { console.warn("Back navigation failed", e); }});
@@ -416,48 +434,52 @@
                 try { if (typeof __uv$config !== 'undefined' && __uv$config && contentIframeEl.src.includes(__uv$config.prefix)) { contentIframeEl.contentWindow.location.reload(true); } else { contentIframeEl.contentWindow.location.reload(); } }
                 catch (e) { contentIframeEl.src = contentIframeEl.src; }
             });
-
             settingsButtonEl.addEventListener('click', () => { window.location.href = '../active/settings.html'; });
             bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
             historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
             clearHistoryButtonEl.addEventListener('click', handleClearHistory);
 
-
+            // Mini-menu actions
             addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
             bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
             historyListPopupEl.addEventListener('click', handleHistoryClick);
 
+            // Global listeners
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
             document.addEventListener('keydown', handleGlobalKeyDown);
             contentIframeEl.addEventListener('load', handleIframeLoad);
-
             document.addEventListener('click', (event) => {
-                if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && !bookmarkButtonEl.contains(event.target)) {
+                if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && event.target !== bookmarkButtonEl) {
                     bookmarkMenuEl.classList.remove('show');
                 }
-                if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && !historyButtonEl.contains(event.target)) {
+                if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && event.target !== historyButtonEl) {
                     historyMenuEl.classList.remove('show');
+                }
+            });
+             // NEW: Listen for messages from the iframe for SPA navigation updates
+            window.addEventListener('message', (event) => {
+                if (event.source !== contentIframeEl.contentWindow) return; // Security: ignore other messages
+                const data = event.data;
+                // This assumes your UV script sends a message with this structure.
+                // This is a robust way to handle Single-Page-App navigation.
+                if (data && data.type === 'uv-location-update' && data.url && data.url !== currentUrl) {
+                    console.log("VERN MAX Debug: Received 'uv-location-update'. New URL:", data.url);
+                    currentUrl = data.url;
+                    currentTitle = data.title || new URL(currentUrl).hostname;
+                    updateUiForStateChange();
                 }
             });
         }
 
-        function toggleIframeFullscreen() { /* ... (same as original) ... */ if (!document.fullscreenElement) { if (contentIframeEl) contentIframeEl.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
-        function handleFullscreenChange() { /* ... (same as original) ... */ const fsIconImg = document.getElementById('fullscreen-icon-img'); if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";} fullscreenButtonEl.title = "Exit Fullscreen"; } else { document.body.classList.remove('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";} fullscreenButtonEl.title = "Toggle Fullscreen"; } }
-        function formatUrlInput(input) { /* ... (same as original) ... */ if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
-
+        // --- Navigation ---
         function navigateTo(urlInput) {
             isLoading = true;
             currentTitle = "Loading...";
-            currentFavicon = null;
-            applyBrowserCloak();
-
-            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '') {
-                urlInput = 'about:blank';
-            }
-
             let targetUrlForIframe;
-            if (urlInput === 'about:blank' || urlInput.startsWith('about:')) {
-                currentUrl = urlInput;
-                targetUrlForIframe = urlInput;
+
+            if (!urlInput || typeof urlInput !== 'string' || urlInput.trim() === '' || urlInput === 'about:blank') {
+                currentUrl = 'about:blank';
+                targetUrlForIframe = 'about:blank';
             } else {
                 let formattedInputUrl = formatUrlInput(urlInput.trim());
                 if (!formattedInputUrl) {
@@ -469,22 +491,7 @@
                 targetUrlForIframe = proxyUrl(currentUrl);
             }
             contentIframeEl.src = targetUrlForIframe;
-            searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : '';
-            updateBrowserAddressBar();
-        }
-
-        function decodeUrlFromSrc(proxiedUrl) {
-            if (!proxiedUrl || typeof __uv$config === 'undefined' || !proxiedUrl.includes(__uv$config.prefix)) {
-                return null;
-            }
-            try {
-                const encodedPart = proxiedUrl.split(__uv$config.prefix)[1];
-                const cleanEncodedPart = encodedPart.endsWith('/') ? encodedPart.slice(0, -1) : encodedPart;
-                return __uv$config.decodeUrl(cleanEncodedPart);
-            } catch (e) {
-                console.error("Failed to decode proxied src URL:", proxiedUrl, e);
-                return null;
-            }
+            updateUiForStateChange();
         }
 
         function handleIframeLoad() {
@@ -495,76 +502,55 @@
                 isRefreshing = false;
             }
 
-            const newDecodedUrl = decodeUrlFromSrc(contentIframeEl.src);
-            if (newDecodedUrl) {
-                currentUrl = newDecodedUrl;
+            const proxiedSrc = contentIframeEl.src;
+            if (!proxiedSrc || proxiedSrc === 'about:blank') {
+                currentUrl = 'about:blank';
+                currentTitle = 'New Tab';
+                updateUiForStateChange();
+                return;
+            }
+
+            const decodedUrlFromSrc = decodeUrlFromSrc(proxiedSrc);
+            if (decodedUrlFromSrc && decodedUrlFromSrc !== currentUrl) {
+                currentUrl = decodedUrlFromSrc;
             }
 
             try {
                 if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) {
-                    currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled';
-                    currentFavicon = getFaviconFromIframe();
+                    currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname;
                 }
             } catch (e) {
-                try { currentTitle = new URL(currentUrl).hostname || 'New Tab'; } catch {}
-                currentFavicon = getDefaultFaviconForUrl(currentUrl);
+                try { currentTitle = new URL(currentUrl).hostname; } catch {}
             }
 
             if (currentUrl && currentUrl.startsWith('about:error')) {
                 currentTitle = "Error Page";
             }
 
-            searchBarEl.value = (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) ? currentUrl : '';
-            updateBrowserAddressBar();
-            applyBrowserCloak();
-
-            if (currentUrl && !currentUrl.startsWith('about:error') && !currentUrl.startsWith('about:blank')) {
-                addToHistory(currentTitle, currentUrl);
-            }
+            updateUiForStateChange();
         }
 
-        function handleGlobalKeyDown(e) { /* ... (same as original, adjusted) ... */ const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
+        // --- Features (Bookmarks, History, Menus) ---
+        function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm)); }
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+        function renderBookmarkItem(bm) { const itemFragment = bookmarkItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const nameSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); const removeBtn = itemFragment.querySelector('.item-remove-button'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
+        function handleAddCurrentBookmark() { if (!currentUrl || currentUrl === 'about:blank' || currentUrl.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle || new URL(currentUrl).hostname; const url = currentUrl; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputPopupEl.value = ''; }
+        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
+        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.closest('.item-remove-button')) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
 
-        function loadBookmarks() { /* ... (same as original, targets bookmarksListPopupEl) ... */ const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm)); }
-        function saveBookmarks(bms) { /* ... (same as original) ... */ localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
-        function renderBookmarkItem(bm) { /* ... (same as original, targets bookmarksListPopupEl) ... */ const itemFragment = bookmarkItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const nameSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); const removeBtn = itemFragment.querySelector('.item-remove-button'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
-        function handleAddCurrentBookmark() { /* ... (same as original, uses newBookmarkNameInputPopupEl) ... */ if (!currentUrl || currentUrl === 'about:blank' || currentUrl.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle || new URL(currentUrl).hostname; const url = currentUrl; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputPopupEl.value = ''; }
-        function removeBookmark(urlToRemove) { /* ... (same as original) ... */ let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
-        function handleBookmarkClick(e) { /* ... (same as original, closes bookmarkMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li && !e.target.closest('.item-remove-button')) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
+        function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
+        function renderHistory() { historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const itemFragment = historyItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const titleSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; historyListPopupEl.appendChild(li); }); }
+        function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
+        function handleClearHistory() { if (confirm("Are you sure you want to clear the session history?")) { sessionHistory = []; renderHistory(); } }
 
-        function addToHistory(title, url) { /* ... (same as original) ... */ if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
-        function renderHistory() { /* ... (same as original, targets historyListPopupEl) ... */ historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const itemFragment = historyItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const titleSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; historyListPopupEl.appendChild(li); }); }
-        function handleHistoryClick(e) { /* ... (same as original, closes historyMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
-        function handleClearHistory() {
-            if (confirm("Are you sure you want to clear the session history?")) {
-                sessionHistory = [];
-                renderHistory();
-            }
-        }
+        function positionMenuUnderButton(menuEl, buttonEl) { const btnRect = buttonEl.getBoundingClientRect(); menuEl.style.top = (toolbarEl.offsetHeight + 5) + 'px'; menuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px'; menuEl.style.left = 'auto'; }
+        function toggleBookmarkMenu() { historyMenuEl.classList.remove('show'); bookmarkMenuEl.classList.toggle('show'); if (bookmarkMenuEl.classList.contains('show')) { positionMenuUnderButton(bookmarkMenuEl, bookmarkButtonEl); } }
+        function toggleHistoryMenu() { bookmarkMenuEl.classList.remove('show'); historyMenuEl.classList.toggle('show'); if (historyMenuEl.classList.contains('show')) { positionMenuUnderButton(historyMenuEl, historyButtonEl); } }
 
-        function positionMenuUnderButton(menuEl, buttonEl) {
-            const btnRect = buttonEl.getBoundingClientRect();
-            const toolbarRect = toolbarEl.getBoundingClientRect();
-
-            menuEl.style.top = (toolbarRect.height + 5) + 'px';
-            menuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px';
-            menuEl.style.left = 'auto';
-        }
-
-        function toggleBookmarkMenu() {
-            historyMenuEl.classList.remove('show');
-            bookmarkMenuEl.classList.toggle('show');
-            if (bookmarkMenuEl.classList.contains('show')) {
-                positionMenuUnderButton(bookmarkMenuEl, bookmarkButtonEl);
-            }
-        }
-        function toggleHistoryMenu() {
-            bookmarkMenuEl.classList.remove('show');
-            historyMenuEl.classList.toggle('show');
-            if (historyMenuEl.classList.contains('show')) {
-                positionMenuUnderButton(historyMenuEl, historyButtonEl);
-            }
-        }
+        // --- Helpers ---
+        function handleGlobalKeyDown(e) { const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
+        function toggleIframeFullscreen() { if (!document.fullscreenElement) { if (contentIframeEl) contentIframeEl.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
+        function handleFullscreenChange() { const fsIconImg = document.getElementById('fullscreen-icon-img'); if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";} fullscreenButtonEl.title = "Exit Fullscreen"; } else { document.body.classList.remove('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";} fullscreenButtonEl.title = "Toggle Fullscreen"; } }
 
     </script>
 </body>
