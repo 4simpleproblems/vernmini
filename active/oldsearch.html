@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
     <style id="custom-styles">
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Crete+Round&display=swap');
+
         /* Core Theme Variables & Component Mappings */
         :root {
             --current-theme-bg: #23272A;
@@ -239,6 +242,136 @@
              backdrop-filter: blur(8px);
         }
 
+        /* --- 10 New Special Themes --- */
+
+        /* 1. 3D Tilt */
+        body.theme-tilt3d { perspective: 1000px; }
+        body.theme-tilt3d #toolbar {
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            transform: rotateX(var(--tilt-x, 0)) rotateY(var(--tilt-y, 0));
+        }
+
+        /* 2. Comic Book */
+        body.theme-comicbook {
+            --font-family-main: 'Bangers', cursive;
+        }
+        body.theme-comicbook #toolbar, 
+        body.theme-comicbook .nav-button, 
+        body.theme-comicbook .toolbar-button, 
+        body.theme-comicbook #search-bar,
+        body.theme-comicbook .mini-menu,
+        body.theme-comicbook #homepage-search-container {
+            border: 3px solid #000 !important;
+            box-shadow: 2px 2px 0px #000 !important;
+            border-radius: 8px !important;
+        }
+        body.theme-comicbook .mini-menu li {
+             border: 2px solid #000 !important;
+        }
+
+        /* 3. CRT Scanlines */
+        body.theme-crtscanlines { position: relative; --font-family-main: 'Courier New', monospace; }
+        body.theme-crtscanlines::after {
+            content: ' ';
+            display: block;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.4) 1px, transparent 1px, transparent 3px);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.7;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.6; } 50% { opacity: 0.7; } 100% { opacity: 0.6; }
+        }
+
+        /* 4. Skewed Look */
+        body.theme-skewedlook #toolbar {
+            transform: skewX(-15deg);
+            transition: transform 0.3s ease;
+        }
+        body.theme-skewedlook #toolbar:hover { transform: skewX(0deg); }
+        body.theme-skewedlook .nav-button, 
+        body.theme-skewedlook .toolbar-button, 
+        body.theme-skewedlook #search-bar {
+            transform: skewX(15deg);
+        }
+
+        /* 5. Text Pop */
+        body.theme-textpop { --font-family-main: 'Arial Black', Gadget, sans-serif; }
+        body.theme-textpop .nav-button, 
+        body.theme-textpop .toolbar-button,
+        body.theme-textpop .mini-menu h3,
+        body.theme-textpop .menu-button {
+            text-shadow: 
+                2px 2px 0 var(--current-theme-accent),
+                -2px -2px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff);
+        }
+        body.theme-textpop #homepage-logo {
+             filter: drop-shadow(5px 5px 0 var(--current-theme-accent)) drop-shadow(-5px -5px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff));
+        }
+
+        /* 6. Focus Mode */
+        body.theme-focusmode #toolbar {
+            transition: opacity 0.4s, filter 0.4s;
+            opacity: 0.5;
+            filter: blur(3px);
+        }
+        body.theme-focusmode #toolbar:hover {
+            opacity: 1;
+            filter: blur(0);
+        }
+
+        /* 7. Inverted UI */
+        body.theme-invertedui {
+            filter: invert(1);
+        }
+        body.theme-invertedui #content-container,
+        body.theme-invertedui #homepage {
+            filter: invert(1); /* Double-invert to restore original colors */
+        }
+        body.theme-invertedui .icon-img,
+        body.theme-invertedui #homepage-logo {
+            filter: invert(1); /* Invert icons back as they are often not inverted correctly */
+        }
+
+        /* 8. Mouse Glow is a canvas effect */
+
+        /* 9. Stealth Mode */
+        body.theme-stealthmode #toolbar {
+            transform: translateY(-105%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        body.theme-stealthmode:hover #toolbar {
+            transform: translateY(0);
+        }
+        body.theme-stealthmode #content-container {
+            height: 100vh; /* Take full viewport height */
+        }
+
+        /* 10. Old Newspaper */
+        body.theme-oldnewspaper {
+            --font-family-main: 'Crete Round', serif;
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            filter: sepia(0.4);
+        }
+        body.theme-oldnewspaper #content-container,
+        body.theme-oldnewspaper #homepage {
+            filter: sepia(0); /* Un-filter the content */
+        }
+        body.theme-oldnewspaper #toolbar {
+            background-color: var(--current-theme-neutral) !important;
+        }
+
+
         /* Homepage Styles */
         #homepage {
             display: none;
@@ -253,20 +386,22 @@
         }
 
         #homepage-logo {
-            max-width: 90%;
+            max-width: 280px;
             height: auto;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         #homepage-search-container {
             position: relative;
             width: 100%;
             max-width: 584px;
+            height: 38px;
             display: flex;
             align-items: center;
-            border-radius: 24px;
+            border-radius: 8px;
             background-color: var(--input-bg);
-            border: 1px solid var(--button-outline-color);
+            border: none;
+            box-shadow: 0 0 0 1px var(--button-outline-color);
             transition: background-color 0.2s, box-shadow 0.2s;
         }
 
@@ -277,20 +412,21 @@
         
         #homepage-search-bar {
             flex: 1;
-            height: 44px;
+            height: 36px;
             border: none;
             background: transparent;
             color: var(--text-color);
-            padding: 0 20px;
-            font-size: 16px;
+            padding: 0 15px;
+            font-size: 14px;
             box-sizing: border-box;
             outline: none;
+            font-family: var(--font-family-main);
         }
 
         #homepage-search-icon {
-            width: 22px;
-            height: 22px;
-            padding: 11px;
+            width: 18px;
+            height: 18px;
+            padding: 9px;
             border-radius: 50%;
             margin-right: 5px;
             cursor: pointer;
@@ -499,12 +635,23 @@
             glitchy: { name: "Glitchy", feature: 'glitchy', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
             flipped_mode: { name: "Flipped Mode", feature: 'flippedMode', colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } },
             translucent_ui: { name: "Translucent UI", feature: 'translucentUi', colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } },
-            // New Special Themes
             aurora: { name: "Aurora", feature: 'aurora', colors: { bg: '#000', text: '#fff', accent: '#00e5ff', neutral: '#111', btnText: '#000' } },
             dynamic_grid: { name: "Dynamic Grid", feature: 'dynamicGrid', colors: { bg: '#101010', text: '#f0f0f0', accent: '#f72585', neutral: '#1a1a1a', btnText: '#FFFFFF' } },
             vintage_paper: { name: "Vintage Paper", feature: 'vintagePaper', colors: { bg: '#f3eacb', text: '#5b4636', accent: '#8c6c5a', neutral: '#e9dcc0', btnText: '#f3eacb' } },
             holographic: { name: "Holographic", feature: 'holographic', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
-            system_match: { name: "System Match", feature: 'systemMatch', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }
+            system_match: { name: "System Match", feature: 'systemMatch', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+
+            // 10 New Special Themes
+            tilt_3d: { name: "3D Tilt", feature: 'tilt3d', colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } },
+            comic_book: { name: "Comic Book", feature: 'comicBook', colors: { bg: '#e5e5e5', text: '#000000', accent: '#3498db', neutral: '#ffffff', btnText: '#ffffff' } },
+            crt_scanlines: { name: "CRT Scanlines", feature: 'crtScanlines', colors: { bg: '#080808', text: '#1ff739', accent: '#16c72e', neutral: '#111111', btnText: '#080808' } },
+            skewed_look: { name: "Skewed Look", feature: 'skewedLook', colors: { bg: '#1a1b36', text: '#c5c8e6', accent: '#6a79f7', neutral: '#292e52', btnText: '#FFFFFF' } },
+            text_pop: { name: "Text Pop", feature: 'textPop', colors: { bg: '#23272A', text: '#FFFFFF', accent: '#ff00c8', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            focus_mode: { name: "Focus Mode", feature: 'focusMode', colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } },
+            inverted_ui: { name: "Inverted UI", feature: 'invertedUi', colors: { bg: '#ddddd3', text: '#1f1f18', accent: '#80a50f', neutral: '#c3c7c9', btnText: '#1f1f18' } },
+            mouse_glow: { name: "Mouse Glow", feature: 'mouseGlow', colors: { bg: '#010101', text: '#f0f0f0', accent: '#f72585', neutral: '#111111', btnText: '#FFFFFF' } },
+            stealth_mode: { name: "Stealth Mode", feature: 'stealthMode', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
+            old_newspaper: { name: "Old Newspaper", feature: 'oldNewspaper', colors: { bg: '#f5e8d7', text: '#5a4d3f', accent: '#7a6a59', neutral: '#e9dacb', btnText: '#FFFFFF' } }
         };
 
 
@@ -520,11 +667,13 @@
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
-        // --- PARTICLE ENGINE ---
+        // --- PARTICLE ENGINE & INTERACTIVITY---
         let particleAnimationId = null;
         const canvasEl = document.getElementById('canvas');
         const canvasCtx = canvasEl.getContext('2d');
         let particles = [];
+        let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
 
         function resizeCanvas() { canvasEl.width = window.innerWidth; canvasEl.height = window.innerHeight; }
         function stopAllParticles() { if (particleAnimationId) { cancelAnimationFrame(particleAnimationId); particleAnimationId = null; } particles = []; canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height); canvasEl.style.display = 'none'; }
@@ -540,6 +689,7 @@
                 case 'sakuraBlossom': config = { count: 30, shape: 'text', text: '🌸', speed: 1, maxSize: 25, color: '#FFB7C5' }; break;
                 case 'dynamicGrid': config = { count: 40, shape: 'grid', speed: 0.5, maxSize: 1.5, color: 'rgba(247, 37, 133, 0.5)'}; break;
                 case 'aurora': config = { shape: 'aurora' }; break;
+                case 'mouseGlow': config = { shape: 'mouseGlow' }; break;
                 default: stopAllParticles(); return;
             }
             if(config.count) {
@@ -553,6 +703,20 @@
         let auroraTime = 0;
         function animateParticles() {
             canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+            
+            if (particles.length > 0 && particles[0].shape === 'mouseGlow') {
+                const p = particles[0];
+                const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
+                const accentColor = THEMES[localStorage.getItem('vernTheme') || 'main'].colors.accent;
+                const accentRGB = accentColor.match(/\w\w/g).map(x => parseInt(x, 16));
+                gradient.addColorStop(0, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0.3)`);
+                gradient.addColorStop(1, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0)`);
+                canvasCtx.fillStyle = gradient;
+                canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                particleAnimationId = requestAnimationFrame(animateParticles);
+                return; 
+            }
+
             for (let i = 0; i < particles.length; i++) {
                 let p = particles[i];
 
@@ -697,6 +861,20 @@
             window.addEventListener('resize', () => {
                 resizeCanvas();
                 if (document.querySelector('.mini-menu.show')) closeAllMenus(new MouseEvent('click'));
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                const bodyClassList = document.body.classList;
+                if (bodyClassList.contains('theme-mouseglow')) {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                }
+                if (bodyClassList.contains('theme-tilt3d')) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+                    const y = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+                    document.documentElement.style.setProperty('--tilt-x', `${-y * 10}deg`);
+                    document.documentElement.style.setProperty('--tilt-y', `${x * 10}deg`);
+                }
             });
         }
 
@@ -899,6 +1077,8 @@
             stopAllParticles();
             document.body.className = '';
             r.style.setProperty('--font-family-main', "'PrimaryFont', sans-serif");
+            r.style.removeProperty('--tilt-x');
+            r.style.removeProperty('--tilt-y');
             
             let theme = THEMES[themeKey] || THEMES.main;
 
@@ -913,10 +1093,10 @@
             r.style.setProperty('--current-theme-button-text', colors.btnText);
 
             if (theme.feature) {
-                document.body.classList.add(`theme-${theme.feature.toLowerCase()}`);
+                document.body.classList.add(`theme-${theme.feature.toLowerCase().replace('_', '')}`);
                 if (theme.feature === 'retroTerminal') r.style.setProperty('--font-family-main', "'Courier New', Courier, monospace");
                 if (theme.feature === 'vintagePaper') r.style.setProperty('--font-family-main', "'Georgia', serif");
-                else if (['particleFlow', 'oceanDeep', 'sakuraBlossom', 'dynamicGrid', 'aurora'].includes(theme.feature)) startParticleEffect(theme.feature);
+                else if (['particleFlow', 'oceanDeep', 'sakuraBlossom', 'dynamicGrid', 'aurora', 'mouseGlow'].includes(theme.feature)) startParticleEffect(theme.feature);
             }
         }
         function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
