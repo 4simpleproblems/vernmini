@@ -53,13 +53,14 @@
             background-color: var(--bg-color); color: var(--text-color);
             display: flex; flex-direction: column;
         }
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;}
 
         /* Toolbar */
         #toolbar {
             display: flex; align-items: center; padding: 8px 10px;
             background-color: var(--toolbar-bg); box-shadow: var(--toolbar-shadow);
             border-bottom: 1px solid var(--toolbar-border-color); z-index: 1000; position: relative;
+            transition: transform 0.3s ease-in-out, background-color 0.3s, border-color 0.3s;
         }
         .nav-button, .toolbar-button {
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
@@ -154,21 +155,14 @@
         .menu-setting-item { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .menu-setting-item label { font-size: 0.85em; opacity: 0.8; padding-left: 5px; }
 
-        /* Conditional Custom Cloak Section */
         #custom-cloak-settings-container {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
+            opacity: 0; max-height: 0; overflow: hidden;
             transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
-            margin-top: 0;
-            padding-top: 0;
+            margin-top: 0; padding-top: 0;
         }
         #custom-cloak-settings-container.visible {
-            opacity: 1;
-            max-height: 300px; 
-            margin-top: 15px; 
-            padding-top: 10px;
-            border-top: 1px solid var(--toolbar-border-color);
+            opacity: 1; max-height: 300px; margin-top: 15px; 
+            padding-top: 10px; border-top: 1px solid var(--toolbar-border-color);
         }
 
         /* Main Content & Footer */
@@ -181,10 +175,39 @@
         #refresh-button .icon-img.spinning { animation: spinRefreshIcon 0.7s linear infinite; }
         @keyframes spinRefreshIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         body.app-ui-hidden #toolbar { display: none !important; }
+
+        /* --- SPECIAL THEME FEATURES --- */
+        .body-toolbar-bottom { flex-direction: column-reverse; }
+        .body-toolbar-bottom #toolbar { border-bottom: none; border-top: 1px solid var(--toolbar-border-color); }
+        .body-toolbar-bottom .mini-menu { top: auto; bottom: calc(100% + 5px); }
+        
+        .body-focus-mode { overflow: visible; }
+        .body-focus-mode #toolbar { transform: translateY(-100%); }
+        .body-focus-mode:hover #toolbar { transform: translateY(0); }
+
+        .iframe-inverted { filter: invert(1) hue-rotate(180deg); background-color: #fff; }
+
+        .body-ghost-mode #toolbar, .body-ghost-mode .mini-menu { background-color: color-mix(in srgb, var(--toolbar-bg) 80%, transparent); backdrop-filter: blur(5px); }
+
+        .body-terminal-mode { --font-family-main: 'Courier New', monospace; }
+        .body-terminal-mode #search-bar:focus { animation: blink 1s step-end infinite; }
+        .body-terminal-mode::after { content: ' '; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: rgba(18, 16, 16, 0.1); opacity: 0; pointer-events: none; animation: flicker 0.15s infinite; }
+        @keyframes blink { 50% { box-shadow: 0 0 0 2px var(--current-theme-text); } }
+        @keyframes flicker { 0% { opacity: 0.1; } 20% { opacity: 1; } 25% { opacity: 0.3; } 30% { opacity: 1; } 35% { opacity: 0.2; } 40% { opacity: 1; } 100% { opacity: 0.1; } }
+
+        .body-sunrise-mode { animation: sunrise-bg 600s linear infinite; }
+        @keyframes sunrise-bg {
+            0%   { --bg-color: #02091a; --current-theme-accent: #ff4e50; }
+            25%  { --bg-color: #f28c5a; --current-theme-accent: #f07986; }
+            50%  { --bg-color: #87CEEB; --current-theme-accent: #3498DB; }
+            75%  { --bg-color: #f28c5a; --current-theme-accent: #f07986; }
+            100% { --bg-color: #02091a; --current-theme-accent: #ff4e50; }
+        }
+
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas-effects"></canvas>
 
     <template id="bookmark-item-template">
         <li>
@@ -266,9 +289,7 @@
         </div>
 
         <div class="menu-action-bar"></div>
-        <button id="clear-browser-data-button" class="menu-button clear-button">
-            <img src="../images/trash-white.png" alt="Clear Data" class="icon-img">Clear All Browser Data
-        </button>
+        <button id="clear-browser-data-button" class="menu-button clear-button">Clear All Browser Data</button>
     </div>
 
     <div id="content-container">
@@ -279,13 +300,13 @@
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
     <script src="register-sw.js" defer></script>
-    <script src="stars.js" defer></script>
     <script>
         // --- CONTEXT & STATE VARIABLES ---
         let currentUrl = 'about:blank';
         let currentTitle = 'New Tab';
         let isLoading = false;
         let isRefreshing = false;
+        let activeCanvasEffect = null; // To hold the current animation frame ID
         
         const searchEngines = {
             'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
@@ -300,12 +321,7 @@
             'custom': { displayName: "Custom (Manual)" },
             'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
-            'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
-            'gmail': { displayName: "Gmail", title: 'Inbox', faviconUrl: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico' },
-            'clever': { displayName: "Clever", title: 'Clever | Portal', faviconUrl: 'https://assets.clever.com/launchpad/1a74895/favicon.ico?1' },
-            'hac': { displayName: "Home Access Center", title: 'Home Access Center', faviconUrl: 'https://hac.doe.k12.de.us/HomeAccess/Content/Images/favicon.ico' },
-            'google_drive': { displayName: "My Drive", title: 'My Drive - Google Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
-            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' }
         };
         let currentCloakPresetKey = 'none';
 
@@ -318,8 +334,6 @@
             forest: { name: "Forest", colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } }, 
             rose: { name: "Rosé Quartz", colors: { bg: '#f7d1cd', text: '#5e3d42', accent: '#e8959e', neutral: '#f2b5b0', btnText: '#5e3d42' } }, 
             coffee: { name: "Coffee House", colors: { bg: '#4a403a', text: '#e7e2dd', accent: '#a5a58d', neutral: '#6b5f58', btnText: '#FFFFFF' } }, 
-            matrix: { name: "Matrix", colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } }, 
-            cyberpunk: { name: "Cyberpunk", colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } }, 
             dracula: { name: "Dracula", colors: { bg: '#282a36', text: '#f8f8f2', accent: '#bd93f9', neutral: '#44475a', btnText: '#f8f8f2' } }, 
             nord: { name: "Nord", colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } }, 
             gruvbox: { name: "Gruvbox", colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } }, 
@@ -334,17 +348,12 @@
             lavender: { name: "Lavender", colors: { bg: '#2E2A3D', text: '#E3DEFF', accent: '#9E78F0', neutral: '#3A3550', btnText: '#FFFFFF' } }, 
             mint: { name: "Minty", colors: { bg: '#1D3532', text: '#C2E8E4', accent: '#3EB489', neutral: '#294B46', btnText: '#FFFFFF' } }, 
             crimson: { name: "Crimson", colors: { bg: '#2B0404', text: '#F2D4D4', accent: '#DC143C', neutral: '#4F1111', btnText: '#FFFFFF' } },
-            // NEW THEMES ADDED
             slate: { name: "Slate", colors: { bg: '#36454F', text: '#EAEAEA', accent: '#708090', neutral: '#435460', btnText: '#FFFFFF' } },
             noir: { name: "Noir", colors: { bg: '#1c1c1c', text: '#d4d4d4', accent: '#a9a9a9', neutral: '#2a2a2a', btnText: '#FFFFFF' } },
             emerald: { name: "Emerald", colors: { bg: '#0D2C22', text: '#C7E5DA', accent: '#50C878', neutral: '#1A4335', btnText: '#FFFFFF' } },
             autumn: { name: "Autumn", colors: { bg: '#4D2C1C', text: '#F2E8DF', accent: '#DA5F02', neutral: '#603822', btnText: '#FFFFFF' } },
             midnight: { name: "Midnight", colors: { bg: '#000033', text: '#E8E8FF', accent: '#5C5CFF', neutral: '#1A1A4D', btnText: '#FFFFFF' } },
             high_contrast: { name: "High Contrast", colors: { bg: '#000000', text: '#FFFFFF', accent: '#FFFF00', neutral: '#222222', btnText: '#000000' } },
-            terminal: { name: "Terminal", colors: { bg: '#0A0E14', text: '#39FF14', accent: '#39FF14', neutral: '#121821', btnText: '#0A0E14' } },
-            arcade: { name: "Arcade", colors: { bg: '#10002B', text: '#E0E1DD', accent: '#FF00A5', neutral: '#240046', btnText: '#FFFFFF' } },
-            coral: { name: "Coral", colors: { bg: '#FF7F50', text: '#FFFFFF', accent: '#FF4500', neutral: '#FF6347', btnText: '#FFFFFF' } },
-            sandstone: { name: "Sandstone", colors: { bg: '#F4A460', text: '#5C3D24', accent: '#C18558', neutral: '#E3995F', btnText: '#5C3D24' } },
             olive: { name: "Olive", colors: { bg: '#556B2F', text: '#F5F5DC', accent: '#BDB76B', neutral: '#6B8E23', btnText: '#F5F5DC' } },
             sky: { name: "Sky", colors: { bg: '#87CEEB', text: '#00008B', accent: '#4682B4', neutral: '#ADD8E6', btnText: '#FFFFFF' } },
             honey: { name: "Honey", colors: { bg: '#EAA221', text: '#4A2D0C', accent: '#FFAA00', neutral: '#F0B849', btnText: '#4A2D0C' } },
@@ -352,8 +361,21 @@
             steel: { name: "Steel", colors: { bg: '#B0C4DE', text: '#2F4F4F', accent: '#778899', neutral: '#C1D1E3', btnText: '#FFFFFF' } }
         };
 
+        const SPECIAL_THEMES = {
+            abyss: { name: "Abyss", feature: 'toolbarBottom', colors: { bg: '#0B0F19', text: '#C7D3F0', accent: '#3A6EA5', neutral: '#161D2E', btnText: '#FFFFFF' } },
+            zenith: { name: "Zenith", feature: 'toolbarBottom', colors: { bg: '#E9F1F7', text: '#2A3B49', accent: '#78A1BB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+            starlight: { name: "Starlight", feature: 'starfield', colors: { bg: '#000000', text: '#FFFFFF', accent: '#FFFFFF', neutral: '#222222', btnText: '#000000' } },
+            matrix: { name: "Matrix", feature: 'matrix', colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } },
+            ocean: { name: "Ocean", feature: 'ocean', colors: { bg: '#030E24', text: '#A8D8F0', accent: '#36A2EB', neutral: '#071A3D', btnText: '#FFFFFF' } },
+            sunrise: { name: "Sunrise", feature: 'sunrise', colors: {} }, /* Colors handled by CSS animation */
+            focus: { name: "Focus", feature: 'focus', colors: { bg: '#EFEFEF', text: '#333333', accent: '#555555', neutral: '#F9F9F9', btnText: '#FFFFFF' } },
+            ghost: { name: "Ghost", feature: 'ghost', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            invert: { name: "Invert", feature: 'invert', colors: { bg: '#FFFFFF', text: '#000000', accent: '#0000FF', neutral: '#EEEEEE', btnText: '#FFFFFF' } },
+            terminal: { name: "Terminal", feature: 'terminal', colors: { bg: '#0A0E14', text: '#39FF14', accent: '#39FF14', neutral: '#121821', btnText: '#0A0E14' } }
+        };
+
         // --- DOM ELEMENT REFERENCES ---
-        let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
+        let canvasEffectsEl, contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
             fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl, bookmarkMenuEl, 
             historyMenuEl, settingsMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl, 
             addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, 
@@ -380,6 +402,7 @@
         });
 
         function assignDOMElements() {
+            canvasEffectsEl = document.getElementById('canvas-effects');
             toolbarEl = document.getElementById('toolbar'); contentIframeEl = document.getElementById('content-iframe'); searchBarEl = document.getElementById('search-bar'); homeButtonEl = document.getElementById('home-button'); backButtonEl = document.getElementById('back-button'); forwardButtonEl = document.getElementById('forward-button'); refreshButtonEl = document.getElementById('refresh-button'); fullscreenButtonEl = document.getElementById('fullscreen-button'); settingsButtonEl = document.getElementById('settings-button'); bookmarkButtonEl = document.getElementById('bookmark-button'); historyButtonEl = document.getElementById('history-button');
             bookmarkMenuEl = document.getElementById('bookmark-menu'); historyMenuEl = document.getElementById('history-menu'); settingsMenuEl = document.getElementById('settings-menu');
             bookmarksListPopupEl = document.getElementById('bookmarks-list-popup'); newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup'); addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
@@ -387,7 +410,6 @@
             themeSelectorEl = document.getElementById('theme-selector'); searchEngineSelectorEl = document.getElementById('search-engine-selector'); historyLifespanSelectorEl = document.getElementById('history-lifespan-selector'); cloakPresetSelectorEl = document.getElementById('cloak-preset-selector');
             customCloakSettingsContainerEl = document.getElementById('custom-cloak-settings-container'); customCloakTitleEl = document.getElementById('custom-cloak-title'); customCloakUrlEl = document.getElementById('custom-cloak-url'); applyCustomCloakButtonEl = document.getElementById('apply-custom-cloak-button');
             clearBrowserDataButtonEl = document.getElementById('clear-browser-data-button');
-            
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
             historyItemTemplate = document.getElementById('history-item-template');
             historyGroupTemplate = document.getElementById('history-group-template');
@@ -402,9 +424,7 @@
 
             currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
             searchEngineSelectorEl.value = currentSearchEngineKey;
-
             historyLifespanSelectorEl.value = localStorage.getItem('vernHistoryLifespan') || '14';
-            
             currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
             cloakPresetSelectorEl.value = currentCloakPresetKey;
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
@@ -414,22 +434,20 @@
         }
 
         function setupEventListeners() {
+            // ... (Event listener setup remains largely the same)
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
             refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank') { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
-            
             settingsButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleSettingsMenu(); });
             bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
             historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
             document.addEventListener('click', closeAllMenus);
-            
             addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
             bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
             historyListPopupEl.addEventListener('click', handleHistoryClick);
             historySearchBarEl.addEventListener('input', () => loadHistory(historySearchBarEl.value));
-
             themeSelectorEl.addEventListener('change', (e) => { applyTheme(e.target.value); localStorage.setItem('vernTheme', e.target.value); });
             searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             historyLifespanSelectorEl.addEventListener('change', (e) => { localStorage.setItem('vernHistoryLifespan', e.target.value); pruneHistory(); loadHistory(); });
@@ -441,7 +459,6 @@
             });
             applyCustomCloakButtonEl.addEventListener('click', applyAndSaveCustomCloak);
             clearBrowserDataButtonEl.addEventListener('click', clearAllData);
-
             document.addEventListener('keydown', handleGlobalKeyDown);
         }
 
@@ -507,7 +524,6 @@
             renderHistory(filteredHistory);
         }
 
-        // EFFICIENT HISTORY RENDERING
         function renderHistory(history) {
             const fragment = document.createDocumentFragment();
             if (history.length === 0) {
@@ -577,9 +593,7 @@
         // --- DATA & SETTINGS MANAGEMENT ---
         function clearAllData() {
             if (confirm("Are you sure you want to clear ALL browser data? This will delete all bookmarks, history, and settings and cannot be undone.")) {
-                localStorage.removeItem('vernBookmarks'); localStorage.removeItem('vernHistory'); localStorage.removeItem('vernTheme');
-                localStorage.removeItem('vernSearchEngine'); localStorage.removeItem('vernHistoryLifespan'); localStorage.removeItem('vernCloakPreset');
-                localStorage.removeItem('vernCustomCloakTitle'); localStorage.removeItem('vernCustomCloakUrl'); localStorage.removeItem('vernLastUrl');
+                localStorage.clear();
                 alert("All browser data has been cleared."); window.location.reload();
             }
         }
@@ -606,11 +620,53 @@
         function toggleHistoryMenu() { [bookmarkMenuEl, settingsMenuEl].forEach(m => m.classList.remove('show')); historyMenuEl.classList.toggle('show'); if (historyMenuEl.classList.contains('show')) { positionMenuUnderButton(historyMenuEl, historyButtonEl); historySearchBarEl.focus(); } }
         function toggleSettingsMenu() { [bookmarkMenuEl, historyMenuEl].forEach(m => m.classList.remove('show')); settingsMenuEl.classList.toggle('show'); if (settingsMenuEl.classList.contains('show')) positionMenuUnderButton(settingsMenuEl, settingsButtonEl); }
         
-        // --- POPULATORS & THEMING ---
-        function populateThemeSelector() { Object.keys(THEMES).forEach(key => themeSelectorEl.add(new Option(THEMES[key].name, key))); }
-        function applyTheme(themeKey) { const t = THEMES[themeKey]?.colors || THEMES.main.colors; const r = document.documentElement; r.style.setProperty('--current-theme-bg', t.bg); r.style.setProperty('--current-theme-text', t.text); r.style.setProperty('--current-theme-accent', t.accent); r.style.setProperty('--current-theme-neutral', t.neutral); r.style.setProperty('--current-theme-button-text', t.btnText); }
-        function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
-        function populateSearchEngineSelector() { Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); }
+        // --- THEME MANAGEMENT ---
+        function populateThemeSelector() {
+            const createGroup = (label, themes) => {
+                const group = document.createElement('optgroup');
+                group.label = label;
+                Object.keys(themes).forEach(key => group.add(new Option(themes[key].name, key)));
+                return group;
+            };
+            themeSelectorEl.appendChild(createGroup('Standard Themes', THEMES));
+            themeSelectorEl.appendChild(createGroup('Special Themes', SPECIAL_THEMES));
+        }
+
+        function applyTheme(themeKey) {
+            // Reset all special features first
+            document.body.className = '';
+            contentIframeEl.classList.remove('iframe-inverted');
+            stopAllCanvasEffects();
+            
+            const themeData = THEMES[themeKey] || SPECIAL_THEMES[themeKey];
+            if (!themeData) { console.error(`Theme ${themeKey} not found.`); return; }
+
+            // Apply colors
+            const colors = themeData.colors;
+            const r = document.documentElement;
+            if (colors && Object.keys(colors).length > 0) {
+                 r.style.setProperty('--current-theme-bg', colors.bg);
+                 r.style.setProperty('--current-theme-text', colors.text);
+                 r.style.setProperty('--current-theme-accent', colors.accent);
+                 r.style.setProperty('--current-theme-neutral', colors.neutral);
+                 r.style.setProperty('--current-theme-button-text', colors.btnText);
+            }
+            
+            // Apply special feature if it exists
+            if (themeData.feature) {
+                switch(themeData.feature) {
+                    case 'toolbarBottom': document.body.classList.add('body-toolbar-bottom'); break;
+                    case 'starfield': startStarfield(); break;
+                    case 'matrix': startMatrix(); break;
+                    case 'ocean': startOcean(); break;
+                    case 'sunrise': document.body.classList.add('body-sunrise-mode'); break;
+                    case 'focus': document.body.classList.add('body-focus-mode'); break;
+                    case 'ghost': document.body.classList.add('body-ghost-mode'); break;
+                    case 'invert': contentIframeEl.classList.add('iframe-inverted'); break;
+                    case 'terminal': document.body.classList.add('body-terminal-mode'); break;
+                }
+            }
+        }
         
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
@@ -634,7 +690,74 @@
             try { const url = new URL(targetUrl); return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`; } 
             catch (e) { return 'logo.png'; }
         }
+
+        // --- CANVAS EFFECTS ---
+        function stopAllCanvasEffects() {
+            if (activeCanvasEffect) cancelAnimationFrame(activeCanvasEffect);
+            const ctx = canvasEffectsEl.getContext('2d');
+            ctx.clearRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
+        }
         
+        function startStarfield() {
+            const ctx = canvasEffectsEl.getContext('2d');
+            canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
+            let stars = [], count = 300;
+            for (let i = 0; i < count; i++) {
+                stars.push({ x: Math.random() * canvasEffectsEl.width, y: Math.random() * canvasEffectsEl.height, radius: Math.random() * 1.1, vx: Math.floor(Math.random()*50)-25, vy: Math.floor(Math.random()*50)-25 });
+            }
+            function draw() {
+                ctx.clearRect(0,0,canvasEffectsEl.width,canvasEffectsEl.height);
+                ctx.globalCompositeOperation = "lighter";
+                for (let i = 0, x = stars.length; i < x; i++) {
+                    let s = stars[i]; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI); ctx.fill();
+                }
+            }
+            activeCanvasEffect = requestAnimationFrame(draw);
+        }
+
+        function startMatrix() {
+            const ctx = canvasEffectsEl.getContext('2d');
+            canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
+            let letters = 'ABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZ1234567890';
+            letters = letters.split('');
+            let fontSize = 10, columns = canvasEffectsEl.width / fontSize;
+            let drops = []; for (let i = 0; i < columns; i++) drops[i] = 1;
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, .1)'; ctx.fillRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
+                for (let i = 0; i < drops.length; i++) {
+                    let text = letters[Math.floor(Math.random() * letters.length)];
+                    ctx.fillStyle = '#0f0'; ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    drops[i]++;
+                    if (drops[i] * fontSize > canvasEffectsEl.height && Math.random() > .95) drops[i] = 0;
+                }
+            }
+            function animate() { draw(); activeCanvasEffect = requestAnimationFrame(animate); }
+            animate();
+        }
+
+        function startOcean() {
+            const ctx = canvasEffectsEl.getContext('2d');
+            canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
+            let time = 0;
+            function draw() {
+                ctx.clearRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
+                ctx.globalCompositeOperation = 'source-over';
+                for (let i = 0; i < 15; i++) {
+                    ctx.beginPath();
+                    let radius = 50 + i * 20;
+                    let alpha = 0.1 - i * 0.005;
+                    ctx.fillStyle = `rgba(54, 162, 235, ${alpha})`;
+                    let x = canvasEffectsEl.width * 0.5 + Math.sin(time * 0.001 + i) * 100;
+                    let y = canvasEffectsEl.height * 0.5 + Math.cos(time * 0.001 + i) * 100;
+                    ctx.arc(x, y, radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                time++;
+                activeCanvasEffect = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
         // --- EVENT HANDLERS & UTILITIES ---
         function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
         function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
