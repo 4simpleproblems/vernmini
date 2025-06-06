@@ -83,10 +83,10 @@
             width: 20px;
             height: 20px;
             -webkit-user-select: none; /* Safari */
-            -moz-user-select: none;    /* Firefox */
-            -ms-user-select: none;     /* IE10+/Edge */
-            user-select: none;         /* Standard */
-            pointer-events: none;      /* Prevents image itself from capturing clicks meant for button */
+            -moz-user-select: none;     /* Firefox */
+            -ms-user-select: none;      /* IE10+/Edge */
+            user-select: none;          /* Standard */
+            pointer-events: none;       /* Prevents image itself from capturing clicks meant for button */
         }
 
 
@@ -99,7 +99,7 @@
         #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
 
         #bookmark-button, #history-button, #fullscreen-button {
-             margin-right: 8px;
+            margin-right: 8px;
         }
         #settings-button {
             margin-left: auto;
@@ -178,7 +178,7 @@
             box-shadow: 0 0 0 1px var(--button-outline-color);
             font-size: 0.9em;
         }
-         .mini-menu .menu-input:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+        .mini-menu .menu-input:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
         .mini-menu .menu-button {
             width: 100%;
             height: 38px; padding: 0 15px;
@@ -479,8 +479,9 @@
             }
             try {
                 const encodedPart = proxiedUrl.split(__uv$config.prefix)[1];
-                const cleanEncodedPart = encodedPart.endsWith('/') ? encodedPart.slice(0, -1) : encodedPart;
-                return __uv$config.decodeUrl(cleanEncodedPart);
+                // The UV decodeUrl function can handle the encoded part directly.
+                // Removing the potentially incorrect logic that stripped trailing slashes.
+                return __uv$config.decodeUrl(encodedPart);
             } catch (e) {
                 console.error("Failed to decode proxied src URL:", proxiedUrl, e);
                 return null;
@@ -495,18 +496,43 @@
                 isRefreshing = false;
             }
 
-            const newDecodedUrl = decodeUrlFromSrc(contentIframeEl.src);
-            if (newDecodedUrl) {
-                currentUrl = newDecodedUrl;
-            }
+            let updatedUrl;
 
             try {
+                // The canonical way to get the URL from a UV-proxied window is via the __uv hook.
+                // This object mimics the standard Location object but returns un-proxied values.
+                if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.__uv) {
+                    updatedUrl = contentIframeEl.contentWindow.__uv.location.toString();
+                } else {
+                    // Fallback for non-proxied content (like about:blank) or if the hook isn't ready.
+                    updatedUrl = decodeUrlFromSrc(contentIframeEl.src) || contentIframeEl.src;
+                }
+            } catch (e) {
+                console.warn("Error accessing iframe's __uv.location, falling back to decoding src attribute.", e);
+                // Fallback if the above fails for any reason (e.g., cross-origin security error).
+                updatedUrl = decodeUrlFromSrc(contentIframeEl.src) || contentIframeEl.src;
+            }
+
+            // Only update currentUrl if we have a valid new URL
+            if (updatedUrl && updatedUrl !== currentUrl) {
+                currentUrl = updatedUrl;
+            }
+
+            // Now, with the correct `currentUrl`, the rest of the function can proceed.
+            try {
                 if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) {
+                    // Use the iframe's title; fallback to a title derived from the URL.
                     currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled';
                     currentFavicon = getFaviconFromIframe();
                 }
             } catch (e) {
-                try { currentTitle = new URL(currentUrl).hostname || 'New Tab'; } catch {}
+                // If there's a security error accessing the document, create a title from the URL.
+                console.warn("Cross-origin error accessing iframe details, creating title from URL.", e);
+                try {
+                    currentTitle = new URL(currentUrl).hostname || 'New Tab';
+                } catch {
+                    currentTitle = 'Untitled';
+                }
                 currentFavicon = getDefaultFaviconForUrl(currentUrl);
             }
 
