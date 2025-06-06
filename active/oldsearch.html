@@ -175,26 +175,23 @@
         body.app-ui-hidden #toolbar { display: none !important; }
 
         /* --- Special Theme Features --- */
-        /* Bottom Bar Theme */
         body.theme-bottom-bar { flex-direction: column-reverse; }
         body.theme-bottom-bar #toolbar { border-top: 1px solid var(--toolbar-border-color); border-bottom: none; }
         body.theme-bottom-bar .mini-menu { transform-origin: bottom right; }
 
-        /* Floating Toolbar Theme */
         body.theme-floating-toolbar #toolbar {
             margin: 10px; border-radius: 12px; width: calc(100% - 20px);
             background-color: color-mix(in srgb, var(--toolbar-bg) 85%, transparent);
             backdrop-filter: blur(5px);
         }
 
-        /* Retro Terminal Theme */
-        body.theme-retro-terminal #search-bar:focus { animation: blink-caret 1s step-end infinite; }
+        body.theme-retro-terminal #search-bar:focus,
+        body.theme-retro-terminal #homepage-search-bar:focus { animation: blink-caret 1s step-end infinite; }
         @keyframes blink-caret {
             from, to { box-shadow: var(--input-focus-shadow), inset 2px 0 0 0 var(--current-theme-accent); }
             50% { box-shadow: var(--input-focus-shadow), inset 2px 0 0 0 transparent; }
         }
 
-        /* Minimalist Theme */
         body.theme-minimalist .toolbar-button, body.theme-minimalist #fullscreen-button {
             opacity: 0; transform: scale(0.8); transition: opacity 0.3s, transform 0.3s;
         }
@@ -202,7 +199,6 @@
             opacity: 1; transform: scale(1);
         }
 
-        /* Glitchy Theme */
         body.theme-glitchy { animation: glitch-anim 7s infinite steps(8) alternate; }
         @keyframes glitch-anim {
             0% { transform: translate(0); } 10% { transform: translate(-2px, 2px); } 20% { transform: translate(2px, -2px); }
@@ -210,13 +206,24 @@
             100% { transform: translate(0); }
         }
 
-        /* Flipped Mode Theme */
         body.theme-flipped-mode #toolbar, body.theme-flipped-mode #content-container { transform: scaleX(-1); }
         body.theme-flipped-mode .nav-button, body.theme-flipped-mode .toolbar-button, body.theme-flipped-mode #search-bar, body.theme-flipped-mode .mini-menu {
             transform: scaleX(-1);
         }
+        
+        body.theme-holographic .nav-button,
+        body.theme-holographic .toolbar-button,
+        body.theme-holographic #homepage-search-icon {
+            background: linear-gradient(135deg, #ff00c8, #00e5ff, #ff005d, #00ff87);
+            background-size: 400% 400%;
+            animation: holographic-shine 5s ease infinite;
+        }
+        @keyframes holographic-shine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        /* Translucent UI Theme */
         body.theme-translucent-ui #toolbar {
             background-color: color-mix(in srgb, var(--toolbar-bg) 60%, transparent);
             border-bottom-color: color-mix(in srgb, var(--toolbar-border-color) 60%, transparent);
@@ -241,88 +248,74 @@
             height: 100%;
             text-align: center;
             background-color: var(--bg-color);
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         #homepage-logo {
-            width: 272px;
-            height: 92px;
-            margin-bottom: 28px;
+            max-width: 90%;
+            height: auto;
+            margin-bottom: 35px;
         }
 
         #homepage-search-container {
             position: relative;
-            width: 584px;
-            max-width: 90%;
+            width: 100%;
+            max-width: 584px;
             display: flex;
             align-items: center;
             border-radius: 24px;
             background-color: var(--input-bg);
             border: 1px solid var(--button-outline-color);
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
 
         #homepage-search-container:focus-within {
+             background-color: var(--input-focus-bg);
              box-shadow: var(--input-focus-shadow);
         }
-
-        #homepage-search-icon {
-            width: 20px;
-            height: 20px;
-            margin: 0 15px;
-            opacity: 0.7;
-        }
-
+        
         #homepage-search-bar {
-            width: 100%;
+            flex: 1;
             height: 44px;
             border: none;
             background: transparent;
             color: var(--text-color);
-            padding: 0;
+            padding: 0 20px;
             font-size: 16px;
             box-sizing: border-box;
             outline: none;
         }
 
-        #homepage-buttons {
-            margin-top: 18px;
-        }
-
-        #homepage-search-button {
-            background-color: var(--button-bg);
-            color: var(--button-text-color);
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            margin: 11px 4px;
-            padding: 0 16px;
-            line-height: 36px;
-            height: 36px;
-            min-width: 54px;
-            text-align: center;
+        #homepage-search-icon {
+            width: 22px;
+            height: 22px;
+            padding: 11px;
+            border-radius: 50%;
+            margin-right: 5px;
             cursor: pointer;
-            user-select: none;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s;
         }
 
-        #homepage-search-button:hover {
-             background-color: var(--button-hover-bg);
+        #homepage-search-icon:hover {
+            background-color: rgba(var(--current-theme-shadow-rgb), 0.1);
         }
 
         #search-suggestions {
             display: none;
             position: absolute;
-            top: 100%;
+            top: calc(100% + 5px);
             left: 0;
             right: 0;
             background-color: var(--menu-bg);
             border: 1px solid var(--menu-border-color);
-            border-top: none;
-            border-radius: 0 0 24px 24px;
+            border-radius: 12px;
             list-style: none;
             padding: 10px 0;
             margin: 0;
             text-align: left;
             z-index: 100;
+            box-shadow: var(--menu-shadow);
         }
 
         #search-suggestions li {
@@ -427,12 +420,9 @@
         <div id="homepage">
             <img id="homepage-logo" src="../images/title.png" alt="VERN MAX">
             <div id="homepage-search-container">
-                <img id="homepage-search-icon" src="../images/magnify-white.png" alt="Search">
                 <input type="text" id="homepage-search-bar" placeholder="Search or type a URL">
+                <img id="homepage-search-icon" src="../images/magnify-white.png" alt="Search">
                 <ul id="search-suggestions"></ul>
-            </div>
-            <div id="homepage-buttons">
-                <button id="homepage-search-button">Search</button>
             </div>
         </div>
         <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
@@ -471,6 +461,7 @@
         let currentCloakPresetKey = 'none';
 
         const THEMES = {
+            // Original
             main: { name: "Main (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } }, 
             light: { name: "Light", colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }, 
             dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } }, 
@@ -485,8 +476,19 @@
             nord: { name: "Nord", colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } }, 
             gruvbox: { name: "Gruvbox", colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } }, 
             tokyo: { name: "Tokyo Night", colors: { bg: '#1a1b26', text: '#a9b1d6', accent: '#7aa2f7', neutral: '#292e42', btnText: '#FFFFFF' } }, 
+            // New Normal Themes
+            slate: { name: "Slate", colors: { bg: '#36454F', text: '#EAEAEA', accent: '#708090', neutral: '#2F3T4F', btnText: '#FFFFFF' } },
+            indigo: { name: "Indigo", colors: { bg: '#1a1b36', text: '#c5c8e6', accent: '#6a79f7', neutral: '#292e52', btnText: '#FFFFFF' } },
+            crimson: { name: "Crimson", colors: { bg: '#3b1a1a', text: '#e6c5c5', accent: '#f76a6a', neutral: '#522929', btnText: '#FFFFFF' } },
+            monokai: { name: "Monokai", colors: { bg: '#272822', text: '#F8F8F2', accent: '#FD971F', neutral: '#3E3D32', btnText: '#FFFFFF' } },
+            lavender: { name: "Lavender", colors: { bg: '#E6E6FA', text: '#333333', accent: '#967BB6', neutral: '#D8BFD8', btnText: '#FFFFFF' } },
+            minty: { name: "Minty", colors: { bg: '#f1f8f6', text: '#2a5247', accent: '#3EB489', neutral: '#d9e9e4', btnText: '#FFFFFF' } },
+            candy: { name: "Candy", colors: { bg: '#ffebf2', text: '#800040', accent: '#ff80bf', neutral: '#ffcce6', btnText: '#FFFFFF' } },
+            solarized_light: { name: "Solarized Light", colors: { bg: '#fdf6e3', text: '#657b83', accent: '#268bd2', neutral: '#eee8d5', btnText: '#FFFFFF' } },
+            solarized_dark: { name: "Solarized Dark", colors: { bg: '#002b36', text: '#839496', accent: '#268bd2', neutral: '#073642', btnText: '#FFFFFF' } },
+            sandy: { name: "Sandy Beach", colors: { bg: '#F4A460', text: '#6B4226', accent: '#87CEEB', neutral: '#DEB887', btnText: '#6B4226' } },
             
-            // SPECIAL THEMES
+            // Original Special Themes
             bottom_bar: { name: "Bottom Bar", feature: 'bottomBar', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
             particle_flow: { name: "Particle Flow", feature: 'particleFlow', colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } },
             retro_terminal: { name: "Retro Terminal", feature: 'retroTerminal', colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } },
@@ -496,8 +498,15 @@
             sakura_blossom: { name: "Sakura Blossom", feature: 'sakuraBlossom', colors: { bg: '#fff0f3', text: '#5e3d42', accent: '#e8959e', neutral: '#ffe0e7', btnText: '#5e3d42' } },
             glitchy: { name: "Glitchy", feature: 'glitchy', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
             flipped_mode: { name: "Flipped Mode", feature: 'flippedMode', colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } },
-            translucent_ui: { name: "Translucent UI", feature: 'translucentUi', colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } }
+            translucent_ui: { name: "Translucent UI", feature: 'translucentUi', colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } },
+            // New Special Themes
+            aurora: { name: "Aurora", feature: 'aurora', colors: { bg: '#000', text: '#fff', accent: '#00e5ff', neutral: '#111', btnText: '#000' } },
+            dynamic_grid: { name: "Dynamic Grid", feature: 'dynamicGrid', colors: { bg: '#101010', text: '#f0f0f0', accent: '#f72585', neutral: '#1a1a1a', btnText: '#FFFFFF' } },
+            vintage_paper: { name: "Vintage Paper", feature: 'vintagePaper', colors: { bg: '#f3eacb', text: '#5b4636', accent: '#8c6c5a', neutral: '#e9dcc0', btnText: '#f3eacb' } },
+            holographic: { name: "Holographic", feature: 'holographic', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            system_match: { name: "System Match", feature: 'systemMatch', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }
         };
+
 
         // --- DOM ELEMENT REFERENCES ---
         let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
@@ -507,7 +516,7 @@
             themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
             searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
-            homepageSearchButtonEl;
+            homepageSearchIconEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
@@ -519,6 +528,7 @@
 
         function resizeCanvas() { canvasEl.width = window.innerWidth; canvasEl.height = window.innerHeight; }
         function stopAllParticles() { if (particleAnimationId) { cancelAnimationFrame(particleAnimationId); particleAnimationId = null; } particles = []; canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height); canvasEl.style.display = 'none'; }
+        
         function startParticleEffect(type) {
             stopAllParticles();
             canvasEl.style.display = 'block';
@@ -528,21 +538,62 @@
                 case 'particleFlow': config = { count: 150, shape: 'line', speed: 1, maxSize: 4, color: 'rgba(247, 37, 133, 0.7)' }; break;
                 case 'oceanDeep': config = { count: 100, shape: 'circle', speed: 0.5, maxSize: 8, color: 'rgba(224, 244, 242, 0.5)', vertical: true }; break;
                 case 'sakuraBlossom': config = { count: 30, shape: 'text', text: '🌸', speed: 1, maxSize: 25, color: '#FFB7C5' }; break;
-                default: return;
+                case 'dynamicGrid': config = { count: 40, shape: 'grid', speed: 0.5, maxSize: 1.5, color: 'rgba(247, 37, 133, 0.5)'}; break;
+                case 'aurora': config = { shape: 'aurora' }; break;
+                default: stopAllParticles(); return;
             }
-            for (let i = 0; i < config.count; i++) { particles.push({ x: Math.random() * canvasEl.width, y: config.vertical ? canvasEl.height + Math.random() * 100 : Math.random() * canvasEl.height, size: Math.random() * config.maxSize + 1, speedX: (Math.random() * 2 - 1) * config.speed, speedY: config.vertical ? (Math.random() * -1 - 0.5) * config.speed : (Math.random() * 2 - 1) * config.speed, ...config }); }
+            if(config.count) {
+                for (let i = 0; i < config.count; i++) { particles.push({ x: Math.random() * canvasEl.width, y: Math.random() * canvasEl.height, size: Math.random() * config.maxSize + 1, speedX: (Math.random() * 2 - 1) * config.speed, speedY: (Math.random() * 2 - 1) * config.speed, ...config }); }
+            } else {
+                 particles.push(config);
+            }
             animateParticles();
         }
+
+        let auroraTime = 0;
         function animateParticles() {
             canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
             for (let i = 0; i < particles.length; i++) {
-                let p = particles[i]; p.x += p.speedX; p.y += p.speedY;
+                let p = particles[i];
+
+                if(p.shape === 'aurora'){
+                    auroraTime += 0.01;
+                    const gradient = canvasCtx.createLinearGradient(0, 0, canvasEl.width, canvasEl.height);
+                    const color1 = `hsla(${180 + Math.sin(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                    const color2 = `hsla(${260 + Math.cos(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                    gradient.addColorStop(0, color1);
+                    gradient.addColorStop(1, color2);
+                    canvasCtx.fillStyle = gradient;
+                    canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                    continue;
+                }
+
+                p.x += p.speedX; p.y += p.speedY;
                 if (p.x > canvasEl.width + p.size) p.x = -p.size; else if (p.x < -p.size) p.x = canvasEl.width + p.size;
-                if (p.y < -p.size) p.y = p.vertical ? canvasEl.height + p.size : canvasEl.height + p.size; else if (p.y > canvasEl.height + p.size && !p.vertical) p.y = -p.size;
+                if (p.y > canvasEl.height + p.size) p.y = -p.size; else if (p.y < -p.size) p.y = canvasEl.height + p.size;
+                
                 canvasCtx.fillStyle = p.color; canvasCtx.strokeStyle = p.color;
+
                 if (p.shape === 'circle') { canvasCtx.beginPath(); canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2); canvasCtx.fill(); } 
                 else if (p.shape === 'line') { canvasCtx.lineWidth = p.size / 2; canvasCtx.beginPath(); canvasCtx.moveTo(p.x, p.y); canvasCtx.lineTo(p.x + p.speedX * 5, p.y + p.speedY * 5); canvasCtx.stroke(); } 
                 else if (p.shape === 'text') { canvasCtx.font = p.size + 'px sans-serif'; canvasCtx.fillText(p.text, p.x, p.y); }
+                else if (p.shape === 'grid') {
+                    canvasCtx.beginPath();
+                    canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    canvasCtx.fill();
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const other = particles[j];
+                        const dist = Math.hypot(p.x - other.x, p.y - other.y);
+                        if(dist < 150){
+                            canvasCtx.beginPath();
+                            canvasCtx.moveTo(p.x, p.y);
+                            canvasCtx.lineTo(other.x, other.y);
+                            canvasCtx.lineWidth = 0.5;
+                            canvasCtx.strokeStyle = `rgba(247, 37, 133, ${1 - dist / 150})`;
+                            canvasCtx.stroke();
+                        }
+                    }
+                }
             }
             particleAnimationId = requestAnimationFrame(animateParticles);
         }
@@ -559,8 +610,8 @@
             pruneHistory();
             loadBookmarks();
             loadHistory();
-            const lastUrl = localStorage.getItem('vernLastUrl') || 'about:blank';
-            navigateTo(lastUrl);
+            // Force homepage on initial load instead of last visited URL
+            navigateTo('about:blank');
         });
 
         function assignDOMElements() {
@@ -575,7 +626,7 @@
             historyItemTemplate = document.getElementById('history-item-template');
             historyGroupTemplate = document.getElementById('history-group-template');
             homepageEl = document.getElementById('homepage'); homepageSearchBarEl = document.getElementById('homepage-search-bar'); searchSuggestionsEl = document.getElementById('search-suggestions');
-            homepageSearchButtonEl = document.getElementById('homepage-search-button');
+            homepageSearchIconEl = document.getElementById('homepage-search-icon');
         }
         
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
@@ -602,13 +653,18 @@
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
-            refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank') { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
+            refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank' && !contentIframeEl.src.endsWith('#')) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
             
             settingsButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleSettingsMenu(); });
             bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
             historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
-            document.addEventListener('click', closeAllMenus);
+            document.addEventListener('click', (e) => {
+                closeAllMenus(e);
+                if (!homepageSearchBarEl.contains(e.target)) {
+                    searchSuggestionsEl.style.display = 'none';
+                }
+            });
             
             addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
             bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
@@ -628,9 +684,10 @@
             clearBrowserDataButtonEl.addEventListener('click', clearAllData);
 
             homepageSearchBarEl.addEventListener('input', handleSearchInput);
+            homepageSearchBarEl.addEventListener('focus', handleSearchInput);
             homepageSearchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
-            homepageSearchButtonEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value));
-            searchSuggestionsEl.addEventListener('click', (e) => {
+            homepageSearchIconEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value));
+            searchSuggestionsEl.addEventListener('mousedown', (e) => {
                 if (e.target.tagName === 'LI') {
                     navigateTo(e.target.textContent);
                 }
@@ -646,6 +703,7 @@
         // --- NAVIGATION & PROXY ---
         function navigateTo(urlInput) {
             isLoading = true;
+            searchSuggestionsEl.style.display = 'none';
             let targetUrl = 'about:blank';
             const trimmedInput = urlInput ? urlInput.trim() : '';
             if (trimmedInput !== '' && trimmedInput !== 'about:blank') {
@@ -665,23 +723,31 @@
             if (isRefreshing) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.remove('spinning'); isRefreshing = false; }
             let finalUrl = 'about:blank', finalTitle = 'New Tab';
             try {
+                if(contentIframeEl.contentWindow.location.href === "about:blank") throw new Error();
                 if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.__uv && contentIframeEl.contentWindow.__uv.location.href !== 'about:blank') {
                     finalUrl = contentIframeEl.contentWindow.__uv.location.href;
                     finalTitle = contentIframeEl.contentDocument.title || new URL(finalUrl).hostname;
                 }
-            } catch (e) { /* silent fail */ }
-            currentUrl = finalUrl;
-            currentTitle = finalTitle;
-            localStorage.setItem('vernLastUrl', currentUrl);
-            searchBarEl.value = (currentUrl !== 'about:blank') ? currentUrl : '';
-            applyBrowserCloak();
-            if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
-
-            if (currentUrl === 'about:blank') {
+            } catch (e) { 
+                // This will catch cross-origin errors and when the iframe is truly blank
+                finalUrl = 'about:blank';
+                finalTitle = 'New Tab';
+            }
+            
+            if(finalUrl === 'about:blank' || contentIframeEl.src.endsWith('#')){
                 showHomepage();
+                searchBarEl.value = '';
+                currentUrl = 'about:blank';
             } else {
                 hideHomepage();
+                currentUrl = finalUrl;
+                searchBarEl.value = finalUrl;
             }
+
+            currentTitle = finalTitle;
+            localStorage.setItem('vernLastUrl', currentUrl);
+            applyBrowserCloak();
+            if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
         }
 
         function proxyUrl(urlToProxy) {
@@ -698,6 +764,8 @@
         function showHomepage() {
             homepageEl.style.display = 'flex';
             contentIframeEl.style.display = 'none';
+            // Use a hash to prevent re-triggering load events unnecessarily
+            if(contentIframeEl.src !== 'about:blank#') contentIframeEl.src = 'about:blank#';
         }
 
         function hideHomepage() {
@@ -708,8 +776,9 @@
         function handleSearchInput() {
             const query = homepageSearchBarEl.value;
             if (query.length > 0) {
-                fetch(`https://www.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
+                // Using a CORS proxy for the suggestions API
+                fetch(`https://api.allorigins.win/raw?url=https://www.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`)
+                    .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
                     .then(data => {
                         const suggestions = data[1];
                         searchSuggestionsEl.innerHTML = '';
@@ -719,12 +788,14 @@
                             searchSuggestionsEl.appendChild(li);
                         });
                         searchSuggestionsEl.style.display = 'block';
+                    }).catch(error => {
+                        console.warn("Could not fetch search suggestions:", error);
+                        searchSuggestionsEl.style.display = 'none';
                     });
             } else {
                 searchSuggestionsEl.style.display = 'none';
             }
         }
-
 
         // --- HISTORY & BOOKMARK MANAGEMENT ---
         function getHistory() { return JSON.parse(localStorage.getItem('vernHistory') || '[]'); }
@@ -780,9 +851,9 @@
         // --- UI & MENU TOGGLING ---
         function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
         function closeAllMenus(event) {
-             if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event?.target) && !bookmarkButtonEl.contains(event?.target)) bookmarkMenuEl.classList.remove('show');
-             if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event?.target) && !historyButtonEl.contains(event?.target)) historyMenuEl.classList.remove('show');
-             if (settingsMenuEl.classList.contains('show') && !settingsMenuEl.contains(event?.target) && !settingsButtonEl.contains(event?.target)) settingsMenuEl.classList.remove('show');
+             if (!event || (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event?.target) && !bookmarkButtonEl.contains(event?.target))) bookmarkMenuEl.classList.remove('show');
+             if (!event || (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event?.target) && !historyButtonEl.contains(event?.target))) historyMenuEl.classList.remove('show');
+             if (!event || (settingsMenuEl.classList.contains('show') && !settingsMenuEl.contains(event?.target) && !settingsButtonEl.contains(event?.target))) settingsMenuEl.classList.remove('show');
         }
         function positionMenuUnderButton(menuEl, buttonEl) {
             const btnRect = buttonEl.getBoundingClientRect();
@@ -829,7 +900,13 @@
             document.body.className = '';
             r.style.setProperty('--font-family-main', "'PrimaryFont', sans-serif");
             
-            const theme = THEMES[themeKey] || THEMES.main;
+            let theme = THEMES[themeKey] || THEMES.main;
+
+            if (theme.feature === 'systemMatch') {
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                theme.colors = prefersDark ? THEMES.dark.colors : THEMES.light.colors;
+            }
+
             const colors = theme.colors;
             r.style.setProperty('--current-theme-bg', colors.bg); r.style.setProperty('--current-theme-text', colors.text);
             r.style.setProperty('--current-theme-accent', colors.accent); r.style.setProperty('--current-theme-neutral', colors.neutral);
@@ -838,7 +915,8 @@
             if (theme.feature) {
                 document.body.classList.add(`theme-${theme.feature.toLowerCase()}`);
                 if (theme.feature === 'retroTerminal') r.style.setProperty('--font-family-main', "'Courier New', Courier, monospace");
-                else if (['particleFlow', 'oceanDeep', 'sakuraBlossom'].includes(theme.feature)) startParticleEffect(theme.feature);
+                if (theme.feature === 'vintagePaper') r.style.setProperty('--font-family-main', "'Georgia', serif");
+                else if (['particleFlow', 'oceanDeep', 'sakuraBlossom', 'dynamicGrid', 'aurora'].includes(theme.feature)) startParticleEffect(theme.feature);
             }
         }
         function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
