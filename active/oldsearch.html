@@ -154,7 +154,7 @@
         .menu-setting-item { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .menu-setting-item label { font-size: 0.85em; opacity: 0.8; padding-left: 5px; }
 
-        /* NEW: Conditional Custom Cloak Section */
+        /* Conditional Custom Cloak Section */
         #custom-cloak-settings-container {
             opacity: 0;
             max-height: 0;
@@ -165,8 +165,8 @@
         }
         #custom-cloak-settings-container.visible {
             opacity: 1;
-            max-height: 300px; /* Adjust as needed, should be > content height */
-            margin-top: 15px; /* Re-applies spacing when visible */
+            max-height: 300px; 
+            margin-top: 15px; 
             padding-top: 10px;
             border-top: 1px solid var(--toolbar-border-color);
         }
@@ -205,9 +205,10 @@
         <div class="nav-button" id="forward-button" title="Forward"><img src="../images/arrow-right-white.png" alt="Forward" class="icon-img"></div>
         <div class="nav-button" id="refresh-button" title="Refresh"><img src="../images/refresh-white.png" alt="Refresh" class="icon-img"></div>
         <input type="text" id="search-bar" placeholder="Search or type a URL">
+        
+        <div class="toolbar-button" id="fullscreen-button" title="Toggle Fullscreen"><img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img"></div>
         <div class="toolbar-button" id="bookmark-button" title="Bookmarks"><img src="../images/star-white.png" alt="Bookmarks" class="icon-img"></div>
         <div class="toolbar-button" id="history-button" title="History"><img src="../images/clock-white.png" alt="History" class="icon-img"></div>
-        <div class="toolbar-button" id="fullscreen-button" title="Toggle Fullscreen"><img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img"></div>
         <div class="toolbar-button" id="settings-button" title="Settings"><img src="../images/gear-white.png" alt="Settings" class="icon-img"></div>
     </div>
 
@@ -332,7 +333,23 @@
             material: { name: "Material Dark", colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } }, 
             lavender: { name: "Lavender", colors: { bg: '#2E2A3D', text: '#E3DEFF', accent: '#9E78F0', neutral: '#3A3550', btnText: '#FFFFFF' } }, 
             mint: { name: "Minty", colors: { bg: '#1D3532', text: '#C2E8E4', accent: '#3EB489', neutral: '#294B46', btnText: '#FFFFFF' } }, 
-            crimson: { name: "Crimson", colors: { bg: '#2B0404', text: '#F2D4D4', accent: '#DC143C', neutral: '#4F1111', btnText: '#FFFFFF' } }
+            crimson: { name: "Crimson", colors: { bg: '#2B0404', text: '#F2D4D4', accent: '#DC143C', neutral: '#4F1111', btnText: '#FFFFFF' } },
+            // NEW THEMES ADDED
+            slate: { name: "Slate", colors: { bg: '#36454F', text: '#EAEAEA', accent: '#708090', neutral: '#435460', btnText: '#FFFFFF' } },
+            noir: { name: "Noir", colors: { bg: '#1c1c1c', text: '#d4d4d4', accent: '#a9a9a9', neutral: '#2a2a2a', btnText: '#FFFFFF' } },
+            emerald: { name: "Emerald", colors: { bg: '#0D2C22', text: '#C7E5DA', accent: '#50C878', neutral: '#1A4335', btnText: '#FFFFFF' } },
+            autumn: { name: "Autumn", colors: { bg: '#4D2C1C', text: '#F2E8DF', accent: '#DA5F02', neutral: '#603822', btnText: '#FFFFFF' } },
+            midnight: { name: "Midnight", colors: { bg: '#000033', text: '#E8E8FF', accent: '#5C5CFF', neutral: '#1A1A4D', btnText: '#FFFFFF' } },
+            high_contrast: { name: "High Contrast", colors: { bg: '#000000', text: '#FFFFFF', accent: '#FFFF00', neutral: '#222222', btnText: '#000000' } },
+            terminal: { name: "Terminal", colors: { bg: '#0A0E14', text: '#39FF14', accent: '#39FF14', neutral: '#121821', btnText: '#0A0E14' } },
+            arcade: { name: "Arcade", colors: { bg: '#10002B', text: '#E0E1DD', accent: '#FF00A5', neutral: '#240046', btnText: '#FFFFFF' } },
+            coral: { name: "Coral", colors: { bg: '#FF7F50', text: '#FFFFFF', accent: '#FF4500', neutral: '#FF6347', btnText: '#FFFFFF' } },
+            sandstone: { name: "Sandstone", colors: { bg: '#F4A460', text: '#5C3D24', accent: '#C18558', neutral: '#E3995F', btnText: '#5C3D24' } },
+            olive: { name: "Olive", colors: { bg: '#556B2F', text: '#F5F5DC', accent: '#BDB76B', neutral: '#6B8E23', btnText: '#F5F5DC' } },
+            sky: { name: "Sky", colors: { bg: '#87CEEB', text: '#00008B', accent: '#4682B4', neutral: '#ADD8E6', btnText: '#FFFFFF' } },
+            honey: { name: "Honey", colors: { bg: '#EAA221', text: '#4A2D0C', accent: '#FFAA00', neutral: '#F0B849', btnText: '#4A2D0C' } },
+            wine: { name: "Wine", colors: { bg: '#4E051C', text: '#EBDDE2', accent: '#8A0332', neutral: '#640725', btnText: '#FFFFFF' } },
+            steel: { name: "Steel", colors: { bg: '#B0C4DE', text: '#2F4F4F', accent: '#778899', neutral: '#C1D1E3', btnText: '#FFFFFF' } }
         };
 
         // --- DOM ELEMENT REFERENCES ---
@@ -433,38 +450,29 @@
             isLoading = true;
             let targetUrl = 'about:blank';
             const trimmedInput = urlInput ? urlInput.trim() : '';
-
             if (trimmedInput !== '' && trimmedInput !== 'about:blank') {
                 const formatted = formatUrlInput(trimmedInput);
                 targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(trimmedInput));
             }
-            
             contentIframeEl.src = proxyUrl(targetUrl);
         }
 
         function handleIframeLoad() {
             isLoading = false;
             if (isRefreshing) { refreshButtonEl.querySelector('.icon-img').classList.remove('spinning'); isRefreshing = false; }
-            
-            let finalUrl = 'about:blank';
-            let finalTitle = 'New Tab';
-
+            let finalUrl = 'about:blank', finalTitle = 'New Tab';
             try {
                 if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.__uv && contentIframeEl.contentWindow.__uv.location.href !== 'about:blank') {
                     finalUrl = contentIframeEl.contentWindow.__uv.location.href;
                     finalTitle = contentIframeEl.contentDocument.title || new URL(finalUrl).hostname;
                 }
-            } catch (e) { console.warn("Cross-origin error accessing iframe details, may not get final URL.", e); }
-
+            } catch (e) { console.warn("Cross-origin error on iframe load.", e); }
             currentUrl = finalUrl;
             currentTitle = finalTitle;
             localStorage.setItem('vernLastUrl', currentUrl);
-            
             searchBarEl.value = (currentUrl !== 'about:blank') ? currentUrl : '';
             applyBrowserCloak();
-            if (currentUrl && !currentUrl.startsWith('about:')) {
-                addToHistory(currentTitle, currentUrl);
-            }
+            if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
         }
 
         function proxyUrl(urlToProxy) {
@@ -499,47 +507,53 @@
             renderHistory(filteredHistory);
         }
 
+        // EFFICIENT HISTORY RENDERING
         function renderHistory(history) {
-            historyListPopupEl.innerHTML = '';
+            const fragment = document.createDocumentFragment();
             if (history.length === 0) {
                 const li = document.createElement('li');
                 li.textContent = 'No history found.';
                 li.style.cursor = 'default'; li.style.textAlign = 'center'; li.style.opacity = '0.7';
-                historyListPopupEl.appendChild(li); return;
-            }
-
-            const grouped = {};
-            [...history].reverse().forEach(item => {
-                const date = new Date(item.timestamp);
-                const groupKey = formatHistoryGroupKey(date);
-                if (!grouped[groupKey]) grouped[groupKey] = [];
-                grouped[groupKey].push(item);
-            });
-
-            for (const groupKey in grouped) {
-                const groupHeader = historyGroupTemplate.content.cloneNode(true).firstElementChild;
-                groupHeader.textContent = groupKey;
-                historyListPopupEl.appendChild(groupHeader);
-                
-                grouped[groupKey].forEach(item => {
-                    const li = historyItemTemplate.content.cloneNode(true).firstElementChild;
-                    li.dataset.url = item.url;
-                    li.title = `${item.title}\n${item.url}`;
-                    li.querySelector('.item-name').textContent = item.title;
-                    li.querySelector('.item-url').textContent = item.url;
-                    historyListPopupEl.appendChild(li);
+                fragment.appendChild(li);
+            } else {
+                const grouped = {};
+                [...history].reverse().forEach(item => {
+                    const date = new Date(item.timestamp);
+                    const groupKey = formatHistoryGroupKey(date);
+                    if (!grouped[groupKey]) grouped[groupKey] = [];
+                    grouped[groupKey].push(item);
                 });
+
+                for (const groupKey in grouped) {
+                    const groupHeaderTpl = historyGroupTemplate.content.cloneNode(true);
+                    groupHeaderTpl.querySelector('.history-group-header').textContent = groupKey;
+                    fragment.appendChild(groupHeaderTpl);
+                    
+                    grouped[groupKey].forEach(item => {
+                        const itemTpl = historyItemTemplate.content.cloneNode(true);
+                        const li = itemTpl.querySelector('li');
+                        li.dataset.url = item.url;
+                        li.title = `${item.title}\n${item.url}`;
+                        li.querySelector('.item-name').textContent = item.title;
+                        li.querySelector('.item-url').textContent = item.url;
+                        fragment.appendChild(itemTpl);
+                    });
+                }
             }
+            historyListPopupEl.innerHTML = '';
+            historyListPopupEl.appendChild(fragment);
         }
         
         function formatHistoryGroupKey(date) {
-            const today = new Date();
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
+            const today = new Date(); today.setHours(0,0,0,0);
+            const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+            const dateCopy = new Date(date); dateCopy.setHours(0,0,0,0);
+            
             let dateString;
-            if (date.toDateString() === today.toDateString()) dateString = 'Today';
-            else if (date.toDateString() === yesterday.toDateString()) dateString = 'Yesterday';
+            if (dateCopy.getTime() === today.getTime()) dateString = 'Today';
+            else if (dateCopy.getTime() === yesterday.getTime()) dateString = 'Yesterday';
             else dateString = date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+            
             return `${dateString} - ${date.toLocaleTimeString(undefined, { hour: 'numeric', hour12: true })}`;
         }
 
@@ -581,11 +595,7 @@
         }
 
         // --- UI & MENU TOGGLING ---
-        function toggleCustomCloakView(show) {
-            if (show) customCloakSettingsContainerEl.classList.add('visible');
-            else customCloakSettingsContainerEl.classList.remove('visible');
-        }
-
+        function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
         function closeAllMenus(event) {
              if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && !bookmarkButtonEl.contains(event.target)) bookmarkMenuEl.classList.remove('show');
              if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && !historyButtonEl.contains(event.target)) historyMenuEl.classList.remove('show');
@@ -605,7 +615,6 @@
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
             const selectedPreset = cloakPresets[currentCloakPresetKey];
-
             if (currentCloakPresetKey === 'custom') {
                 const customTitle = localStorage.getItem('vernCustomCloakTitle') || 'Vern Max';
                 const customFaviconUrlSource = localStorage.getItem('vernCustomCloakUrl') || 'https://google.com';
@@ -620,15 +629,10 @@
             }
         }
         
-        // NEW: Faster favicon method
         function getFaviconUrl(targetUrl) {
             if (!targetUrl || targetUrl.startsWith('about:')) return 'logo.png';
-            try {
-                const url = new URL(targetUrl);
-                return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`;
-            } catch (e) {
-                return 'logo.png';
-            }
+            try { const url = new URL(targetUrl); return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`; } 
+            catch (e) { return 'logo.png'; }
         }
         
         // --- EVENT HANDLERS & UTILITIES ---
