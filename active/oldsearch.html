@@ -3,7 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VERN MAX - BROWSER</title>
-    <link rel="stylesheet" href="../css/style.css" /> <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
     <style id="custom-styles">
         /* Core Theme Variables & Component Mappings - Purple & Dark Grey Theme */
         :root {
@@ -110,7 +111,7 @@
             z-index: 1005;
             min-width: 280px;
             max-width: 350px;
-            max-height: 450px; /* Increased height for custom cloak */
+            max-height: 450px;
             overflow-y: auto;
             padding: 10px;
             color: var(--menu-text-color);
@@ -250,7 +251,7 @@
         <h3><img src="../images/clock-white.png" alt="History" class="icon-img"> Session History</h3>
         <ul id="history-list-popup"></ul>
         <div class="menu-action-bar">
-            <button id="clear-history-button" class="menu-button clear-button"><img src="../images/magnify-white.png" alt="Icon" class="icon-img">Clear History</button>
+            <button id="clear-history-button" class="menu-button clear-button"><img src="../images/trash-white.png" alt="Icon" class="icon-img">Clear History</button>
         </div>
     </div>
 
@@ -260,7 +261,10 @@
             <label for="theme-selector">Theme</label>
             <select id="theme-selector" class="menu-select"></select>
         </div>
-        <div class="menu-action-bar"></div>
+        <div class="menu-setting-item">
+            <label for="search-engine-selector">Search Engine</label>
+            <select id="search-engine-selector" class="menu-select"></select>
+        </div>
         <div class="menu-setting-item">
             <label for="cloak-preset-selector">Tab Cloak Preset</label>
             <select id="cloak-preset-selector" class="menu-select"></select>
@@ -296,10 +300,14 @@
         let isRefreshing = false;
         let sessionHistory = [];
         const MAX_HISTORY_ITEMS = 50;
-        const searchEngines = { 'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' }, 'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' }, 'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' }, 'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' } };
-        let currentSearchEngineKey = 'duckduckgo';
+        const searchEngines = {
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
+            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
+            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+        };
+        let currentSearchEngineKey = 'google';
         
-        // UPDATED cloak presets
         const cloakPresets = {
             'none': { displayName: "None (Real Title/Favicon)" },
             'custom': { displayName: "Custom (Manual)" },
@@ -314,7 +322,7 @@
         };
         let currentCloakPresetKey = 'none';
 
-        const THEMES = { /* Omitted for brevity, same as previous response */ 
+        const THEMES = {
             main: { name: "Main (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } }, light: { name: "Light", colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }, dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } }, oceanic: { name: "Oceanic", colors: { bg: '#0A2E36', text: '#E0F4F2', accent: '#2E8B57', neutral: '#144552', btnText: '#FFFFFF' } }, sunset: { name: "Sunset", colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } }, forest: { name: "Forest", colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } }, rose: { name: "Rosé Quartz", colors: { bg: '#f7d1cd', text: '#5e3d42', accent: '#e8959e', neutral: '#f2b5b0', btnText: '#5e3d42' } }, coffee: { name: "Coffee House", colors: { bg: '#4a403a', text: '#e7e2dd', accent: '#a5a58d', neutral: '#6b5f58', btnText: '#FFFFFF' } }, matrix: { name: "Matrix", colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } }, cyberpunk: { name: "Cyberpunk", colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } }, dracula: { name: "Dracula", colors: { bg: '#282a36', text: '#f8f8f2', accent: '#bd93f9', neutral: '#44475a', btnText: '#f8f8f2' } }, nord: { name: "Nord", colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } }, gruvbox: { name: "Gruvbox", colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } }, solarized: { name: "Solarized Dark", colors: { bg: '#002b36', text: '#839496', accent: '#268bd2', neutral: '#073642', btnText: '#FFFFFF' } }, monokai: { name: "Monokai", colors: { bg: '#272822', text: '#f8f8f2', accent: '#f92672', neutral: '#3d3e37', btnText: '#FFFFFF' } }, tokyo: { name: "Tokyo Night", colors: { bg: '#1a1b26', text: '#a9b1d6', accent: '#7aa2f7', neutral: '#292e42', btnText: '#FFFFFF' } }, catppuccin: { name: "Catppuccin", colors: { bg: '#1e1d2f', text: '#dadae8', accent: '#ABE9B3', neutral: '#181926', btnText: '#1e1d2f' } }, beach: { name: "Beach Day", colors: { bg: '#FEEAA8', text: '#5E412F', accent: '#5096A6', neutral: '#FCE38A', btnText: '#FFFFFF' } }, synthwave: { name: "Synthwave '84", colors: { bg: '#2d2a51', text: '#ffffff', accent: '#ff8b39', neutral: '#252240', btnText: '#FFFFFF' } }, github: { name: "GitHub Dark", colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } }, material: { name: "Material Dark", colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } }, lavender: { name: "Lavender", colors: { bg: '#2E2A3D', text: '#E3DEFF', accent: '#9E78F0', neutral: '#3A3550', btnText: '#FFFFFF' } }, mint: { name: "Minty", colors: { bg: '#1D3532', text: '#C2E8E4', accent: '#3EB489', neutral: '#294B46', btnText: '#FFFFFF' } }, crimson: { name: "Crimson", colors: { bg: '#2B0404', text: '#F2D4D4', accent: '#DC143C', neutral: '#4F1111', btnText: '#FFFFFF' } }
         };
 
@@ -322,35 +330,52 @@
             fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl, bookmarkMenuEl, 
             historyMenuEl, settingsMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl, 
             addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, clearHistoryButtonEl, 
-            themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl;
+            themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
+            searchEngineSelectorEl;
 
         let bookmarkItemTemplate, historyItemTemplate;
+        
+        // --- FIXED URL ENCODING/DECODING ---
+        function encodeUrlForQuery(str) {
+            if (!str) return '';
+            const bytes = new TextEncoder().encode(str);
+            const binaryString = String.fromCodePoint(...bytes);
+            return btoa(binaryString);
+        }
 
-        function encodePlainTextUrlForQuery(url) { return btoa(new TextEncoder().encode(url)); }
-        function decodeEncodedUrlFromQuery(encodedUrl) { try { return new TextDecoder().decode(Uint8Array.from(atob(encodedUrl), c => c.charCodeAt(0))); } catch (e) { return ''; } }
+        function decodeUrlFromQuery(base64) {
+            if (!base64) return '';
+            try {
+                const binaryString = atob(base64);
+                const bytes = Uint8Array.from(binaryString, (m) => m.codePointAt(0));
+                return new TextDecoder().decode(bytes);
+            } catch (e) {
+                console.error("Failed to decode URL from query:", e);
+                return '';
+            }
+        }
 
         function updateBrowserAddressBar() {
             const params = new URLSearchParams(window.location.search);
             if (currentUrl && currentUrl !== 'about:blank' && !currentUrl.startsWith('about:error')) {
-                params.set('eurl', encodePlainTextUrlForQuery(currentUrl));
+                params.set('eurl', encodeUrlForQuery(currentUrl));
             } else {
                 params.delete('eurl');
             }
-            history.replaceState(null, '', `${window.location.pathname}?${params}`);
+            // Use replaceState to avoid cluttering browser history with internal navigation
+            history.replaceState(null, '', `<span class="math-inline">\{window\.location\.pathname\}?</span>{params}`);
         }
         
-        // NEW: Google Favicon Service URL Builder
         function getGoogleFaviconUrl(targetUrl) {
             if (!targetUrl || targetUrl.startsWith('about:')) return 'logo.png';
             try {
-                const url = new URL(targetUrl); // Ensures the URL is valid
+                const url = new URL(targetUrl);
                 return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url.origin}&size=40`;
             } catch (e) {
-                return 'logo.png'; // Fallback for invalid URLs
+                return 'logo.png';
             }
         }
 
-        // REWRITTEN Cloaking Logic
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
             const selectedPreset = cloakPresets[currentCloakPresetKey];
@@ -369,23 +394,38 @@
             }
         }
 
-        function proxyUrl(urlToProxy) { if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null; if (urlToProxy.startsWith('data:')) return urlToProxy; if (typeof __uv$config === 'undefined') return urlToProxy; try { return self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } catch (e) { return urlToProxy; } }
+        function proxyUrl(urlToProxy) {
+            if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
+            if (urlToProxy.startsWith('data:')) return urlToProxy;
+            if (typeof __uv$config === 'undefined') {
+                console.error('UV config not found. Cannot proxy URL.');
+                return urlToProxy; // Fail gracefully
+            }
+            try {
+                return self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy);
+            } catch (e) {
+                console.error('URL proxying failed:', e);
+                return urlToProxy;
+            }
+        }
         
         document.addEventListener('DOMContentLoaded', async () => {
             // Get all DOM elements
             toolbarEl = document.getElementById('toolbar'); contentIframeEl = document.getElementById('content-iframe'); searchBarEl = document.getElementById('search-bar'); homeButtonEl = document.getElementById('home-button'); backButtonEl = document.getElementById('back-button'); forwardButtonEl = document.getElementById('forward-button'); refreshButtonEl = document.getElementById('refresh-button'); fullscreenButtonEl = document.getElementById('fullscreen-button'); settingsButtonEl = document.getElementById('settings-button'); bookmarkButtonEl = document.getElementById('bookmark-button'); historyButtonEl = document.getElementById('history-button'); bookmarkMenuEl = document.getElementById('bookmark-menu'); historyMenuEl = document.getElementById('history-menu'); settingsMenuEl = document.getElementById('settings-menu'); bookmarksListPopupEl = document.getElementById('bookmarks-list-popup'); newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup'); addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup'); historyListPopupEl = document.getElementById('history-list-popup'); clearHistoryButtonEl = document.getElementById('clear-history-button'); themeSelectorEl = document.getElementById('theme-selector'); cloakPresetSelectorEl = document.getElementById('cloak-preset-selector'); customCloakTitleEl = document.getElementById('custom-cloak-title'); customCloakUrlEl = document.getElementById('custom-cloak-url'); applyCustomCloakButtonEl = document.getElementById('apply-custom-cloak-button');
+            searchEngineSelectorEl = document.getElementById('search-engine-selector');
             bookmarkItemTemplate = document.getElementById('bookmark-item-template'); historyItemTemplate = document.getElementById('history-item-template');
             
             // Populate menus
             populateThemeSelector();
             populateCloakSelector();
+            populateSearchEngineSelector();
 
             await initUV();
             loadSettings();
             setupEventListeners();
             loadBookmarks();
 
-            const initialUrl = decodeEncodedUrlFromQuery(new URLSearchParams(window.location.search).get('eurl')) || 'about:blank';
+            const initialUrl = decodeUrlFromQuery(new URLSearchParams(window.location.search).get('eurl')) || 'about:blank';
             navigateTo(initialUrl);
             renderHistory();
         });
@@ -397,6 +437,10 @@
             const savedTheme = localStorage.getItem('vernTheme') || 'main';
             applyTheme(savedTheme);
             themeSelectorEl.value = savedTheme;
+
+            // Search Engine
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
+            searchEngineSelectorEl.value = currentSearchEngineKey;
 
             // Cloak
             currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
@@ -410,7 +454,7 @@
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
-            refreshButtonEl.addEventListener('click', () => { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); });
+            refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank') { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             settingsButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleSettingsMenu(); });
             bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
             historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
@@ -420,6 +464,7 @@
 
             // Settings Listeners
             themeSelectorEl.addEventListener('change', (e) => { applyTheme(e.target.value); localStorage.setItem('vernTheme', e.target.value); });
+            searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             cloakPresetSelectorEl.addEventListener('change', (e) => { currentCloakPresetKey = e.target.value; localStorage.setItem('vernCloakPreset', currentCloakPresetKey); applyBrowserCloak(); });
             applyCustomCloakButtonEl.addEventListener('click', () => {
                 localStorage.setItem('vernCustomCloakTitle', customCloakTitleEl.value);
@@ -432,65 +477,78 @@
             });
 
             document.addEventListener('click', (event) => {
-                if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target)) bookmarkMenuEl.classList.remove('show');
-                if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target)) historyMenuEl.classList.remove('show');
-                if (settingsMenuEl.classList.contains('show') && !settingsMenuEl.contains(event.target)) settingsMenuEl.classList.remove('show');
+                if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && !bookmarkButtonEl.contains(event.target)) bookmarkMenuEl.classList.remove('show');
+                if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && !historyButtonEl.contains(event.target)) historyMenuEl.classList.remove('show');
+                if (settingsMenuEl.classList.contains('show') && !settingsMenuEl.contains(event.target) && !settingsButtonEl.contains(event.target)) settingsMenuEl.classList.remove('show');
             });
         }
         
         function populateThemeSelector() { Object.keys(THEMES).forEach(key => themeSelectorEl.add(new Option(THEMES[key].name, key))); }
         function applyTheme(themeKey) { const t = THEMES[themeKey]?.colors || THEMES.main.colors; const r = document.documentElement; r.style.setProperty('--current-theme-bg', t.bg); r.style.setProperty('--current-theme-text', t.text); r.style.setProperty('--current-theme-accent', t.accent); r.style.setProperty('--current-theme-neutral', t.neutral); r.style.setProperty('--current-theme-button-text', t.btnText); }
         function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
+        function populateSearchEngineSelector() { Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); }
 
         function toggleIframeFullscreen() { if (!document.fullscreenElement) contentIframeEl.requestFullscreen(); else document.exitFullscreen(); }
         function handleFullscreenChange() { const isFullscreen = !!document.fullscreenElement; document.body.classList.toggle('app-ui-hidden', isFullscreen); document.getElementById('fullscreen-icon-img').src = `../images/zoom-${isFullscreen ? 'out' : 'in'}-white.png`; }
         function formatUrlInput(input) { const trimmed = input.trim(); if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) return trimmed; if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed)) return 'https://' + trimmed; return null; }
 
+        // --- REFINED NAVIGATION LOGIC ---
         function navigateTo(urlInput) {
             isLoading = true;
             let targetUrl = 'about:blank';
-            if (urlInput && urlInput.trim() !== '') {
-                const formatted = formatUrlInput(urlInput);
-                targetUrl = formatted ? formatted : (searchEngines[currentSearchEngineKey] || searchEngines.duckduckgo).url.replace('%s', encodeURIComponent(urlInput));
+            const trimmedInput = urlInput ? urlInput.trim() : '';
+
+            if (trimmedInput !== '' && trimmedInput !== 'about:blank') {
+                const formatted = formatUrlInput(trimmedInput);
+                targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(trimmedInput));
             }
-            currentUrl = targetUrl;
+            
             contentIframeEl.src = proxyUrl(targetUrl);
-            searchBarEl.value = (targetUrl !== 'about:blank') ? targetUrl : '';
-            updateBrowserAddressBar();
         }
 
         function handleIframeLoad() {
             isLoading = false;
             if (isRefreshing) { refreshButtonEl.querySelector('.icon-img').classList.remove('spinning'); isRefreshing = false; }
-            let updatedUrl = contentIframeEl.src;
+            
+            let finalUrl = 'about:blank';
+            let finalTitle = 'New Tab';
+
             try {
-                if (contentIframeEl.contentWindow?.__uv) updatedUrl = contentIframeEl.contentWindow.__uv.location.toString();
-                currentUrl = updatedUrl;
-                currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname;
-            } catch (e) { /* cross-origin error */ 
-                try { currentTitle = new URL(currentUrl).hostname || 'Untitled'; } catch { currentTitle = 'Error Loading Page'; }
+                if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.__uv && contentIframeEl.contentWindow.__uv.location.href !== 'about:blank') {
+                    finalUrl = contentIframeEl.contentWindow.__uv.location.href;
+                    finalTitle = contentIframeEl.contentDocument.title || new URL(finalUrl).hostname;
+                }
+            } catch (e) { /* Cross-origin error, fails gracefully to defaults */ 
+                console.warn("Cross-origin error accessing iframe details, may not get final URL.", e);
             }
+
+            currentUrl = finalUrl;
+            currentTitle = finalTitle;
+            
+            // Update UI here, after navigation is complete
             searchBarEl.value = (currentUrl !== 'about:blank') ? currentUrl : '';
             updateBrowserAddressBar();
             applyBrowserCloak();
-            if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
+            if (currentUrl && !currentUrl.startsWith('about:')) {
+                addToHistory(currentTitle, currentUrl);
+            }
         }
 
         function handleGlobalKeyDown(e) { if (e.target.tagName === 'INPUT' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') backButtonEl.click(); if (e.altKey && e.key === 'ArrowRight') forwardButtonEl.click(); if ((e.ctrlKey || e.metaKey) && e.key === 'r') { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.select(); }}
 
         function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(renderBookmarkItem); }
         function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
-        function renderBookmarkItem(bm) { const li = bookmarkItemTemplate.content.cloneNode(true).firstElementChild; li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; li.querySelector('.item-name').textContent = bm.name; li.querySelector('.item-url').textContent = bm.url; li.querySelector('.item-remove-button').onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
-        function handleAddCurrentBookmark() { if (!currentUrl || currentUrl.startsWith('about:')) return alert("Cannot bookmark this page."); const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === currentUrl)) return alert("Already bookmarked."); bms.push({ name, url: currentUrl }); saveBookmarks(bms); renderBookmarkItem({ name, url: currentUrl }); newBookmarkNameInputPopupEl.value = ''; }
+        function renderBookmarkItem(bm) { const li = bookmarkItemTemplate.content.cloneNode(true).firstElementChild; li.dataset.url = bm.url; li.title = `<span class="math-inline">\{bm\.name\}\\n</span>{bm.url}`; li.querySelector('.item-name').textContent = bm.name; li.querySelector('.item-url').textContent = bm.url; li.querySelector('.item-remove-button').onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
+        function handleAddCurrentBookmark() { if (!currentUrl || currentUrl.startsWith('about:')) return alert("Cannot bookmark this page."); const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === currentUrl)) return alert("This page is already bookmarked."); bms.push({ name, url: currentUrl }); saveBookmarks(bms); renderBookmarkItem({ name, url: currentUrl }); newBookmarkNameInputPopupEl.value = ''; }
         function removeBookmark(url) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); saveBookmarks(bms.filter(b => b.url !== url)); loadBookmarks(); }
         function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
 
         function addToHistory(title, url) { if (sessionHistory.some(item => item.url === url)) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
-        function renderHistory() { historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = historyItemTemplate.content.cloneNode(true).firstElementChild; li.dataset.url = item.url; li.title = `${item.title}\n${item.url}`; li.querySelector('.item-name').textContent = item.title; li.querySelector('.item-url').textContent = item.url; historyListPopupEl.appendChild(li); }); }
+        function renderHistory() { historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const li = historyItemTemplate.content.cloneNode(true).firstElementChild; li.dataset.url = item.url; li.title = `<span class="math-inline">\{item\.title\}\\n</span>{item.url}`; li.querySelector('.item-name').textContent = item.title; li.querySelector('.item-url').textContent = item.url; historyListPopupEl.appendChild(li); }); }
         function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
-        function handleClearHistory() { if (confirm("Clear session history?")) { sessionHistory = []; renderHistory(); }}
+        function handleClearHistory() { if (confirm("Are you sure you want to clear your session history? This cannot be undone.")) { sessionHistory = []; renderHistory(); }}
 
-        function positionMenuUnderButton(menuEl, buttonEl) { const btnRect = buttonEl.getBoundingClientRect(); menuEl.style.top = (toolbar.offsetHeight + 5) + 'px'; menuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px'; menuEl.style.left = 'auto'; }
+        function positionMenuUnderButton(menuEl, buttonEl) { const btnRect = buttonEl.getBoundingClientRect(); menuEl.style.top = (toolbarEl.offsetHeight + 5) + 'px'; menuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px'; menuEl.style.left = 'auto'; }
         function toggleBookmarkMenu() { [historyMenuEl, settingsMenuEl].forEach(m => m.classList.remove('show')); bookmarkMenuEl.classList.toggle('show'); if (bookmarkMenuEl.classList.contains('show')) positionMenuUnderButton(bookmarkMenuEl, bookmarkButtonEl); }
         function toggleHistoryMenu() { [bookmarkMenuEl, settingsMenuEl].forEach(m => m.classList.remove('show')); historyMenuEl.classList.toggle('show'); if (historyMenuEl.classList.contains('show')) positionMenuUnderButton(historyMenuEl, historyButtonEl); }
         function toggleSettingsMenu() { [bookmarkMenuEl, historyMenuEl].forEach(m => m.classList.remove('show')); settingsMenuEl.classList.toggle('show'); if (settingsMenuEl.classList.contains('show')) positionMenuUnderButton(settingsMenuEl, settingsButtonEl); }
