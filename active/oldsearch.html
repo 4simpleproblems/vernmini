@@ -306,7 +306,7 @@
         let currentTitle = 'New Tab';
         let isLoading = false;
         let isRefreshing = false;
-        let activeCanvasEffect = null; // To hold the current animation frame ID
+        let activeCanvasEffect = null;
         
         const searchEngines = {
             'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
@@ -328,7 +328,7 @@
         const THEMES = {
             main: { name: "Main (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } }, 
             light: { name: "Light", colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }, 
-            dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } }, 
+            dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BBBBBB', neutral: '#2A2A2A', btnText: '#000000' } }, 
             oceanic: { name: "Oceanic", colors: { bg: '#0A2E36', text: '#E0F4F2', accent: '#2E8B57', neutral: '#144552', btnText: '#FFFFFF' } }, 
             sunset: { name: "Sunset", colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } }, 
             forest: { name: "Forest", colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } }, 
@@ -419,8 +419,8 @@
 
         function loadSettings() {
             const savedTheme = localStorage.getItem('vernTheme') || 'main';
-            applyTheme(savedTheme);
             themeSelectorEl.value = savedTheme;
+            applyTheme(savedTheme);
 
             currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
             searchEngineSelectorEl.value = currentSearchEngineKey;
@@ -434,7 +434,6 @@
         }
 
         function setupEventListeners() {
-            // ... (Event listener setup remains largely the same)
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
@@ -625,7 +624,7 @@
             const createGroup = (label, themes) => {
                 const group = document.createElement('optgroup');
                 group.label = label;
-                Object.keys(themes).forEach(key => group.add(new Option(themes[key].name, key)));
+                Object.keys(themes).forEach(key => group.appendChild(new Option(themes[key].name, key)));
                 return group;
             };
             themeSelectorEl.appendChild(createGroup('Standard Themes', THEMES));
@@ -633,7 +632,6 @@
         }
 
         function applyTheme(themeKey) {
-            // Reset all special features first
             document.body.className = '';
             contentIframeEl.classList.remove('iframe-inverted');
             stopAllCanvasEffects();
@@ -641,7 +639,6 @@
             const themeData = THEMES[themeKey] || SPECIAL_THEMES[themeKey];
             if (!themeData) { console.error(`Theme ${themeKey} not found.`); return; }
 
-            // Apply colors
             const colors = themeData.colors;
             const r = document.documentElement;
             if (colors && Object.keys(colors).length > 0) {
@@ -650,9 +647,10 @@
                  r.style.setProperty('--current-theme-accent', colors.accent);
                  r.style.setProperty('--current-theme-neutral', colors.neutral);
                  r.style.setProperty('--current-theme-button-text', colors.btnText);
+            } else {
+                r.style.animation = 'none'; // Reset for animation-based themes
             }
             
-            // Apply special feature if it exists
             if (themeData.feature) {
                 switch(themeData.feature) {
                     case 'toolbarBottom': document.body.classList.add('body-toolbar-bottom'); break;
@@ -694,6 +692,7 @@
         // --- CANVAS EFFECTS ---
         function stopAllCanvasEffects() {
             if (activeCanvasEffect) cancelAnimationFrame(activeCanvasEffect);
+            activeCanvasEffect = null;
             const ctx = canvasEffectsEl.getContext('2d');
             ctx.clearRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
         }
@@ -702,33 +701,31 @@
             const ctx = canvasEffectsEl.getContext('2d');
             canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
             let stars = [], count = 300;
-            for (let i = 0; i < count; i++) {
-                stars.push({ x: Math.random() * canvasEffectsEl.width, y: Math.random() * canvasEffectsEl.height, radius: Math.random() * 1.1, vx: Math.floor(Math.random()*50)-25, vy: Math.floor(Math.random()*50)-25 });
-            }
+            for (let i = 0; i < count; i++) stars.push({ x: Math.random() * canvasEffectsEl.width, y: Math.random() * canvasEffectsEl.height, radius: Math.random() * 1.1 });
             function draw() {
                 ctx.clearRect(0,0,canvasEffectsEl.width,canvasEffectsEl.height);
                 ctx.globalCompositeOperation = "lighter";
-                for (let i = 0, x = stars.length; i < x; i++) {
-                    let s = stars[i]; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI); ctx.fill();
-                }
+                ctx.fillStyle = "#fff";
+                stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI); ctx.fill(); });
+                activeCanvasEffect = requestAnimationFrame(draw);
             }
-            activeCanvasEffect = requestAnimationFrame(draw);
+            draw();
         }
 
         function startMatrix() {
             const ctx = canvasEffectsEl.getContext('2d');
             canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
-            let letters = 'ABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZ1234567890';
-            letters = letters.split('');
-            let fontSize = 10, columns = canvasEffectsEl.width / fontSize;
-            let drops = []; for (let i = 0; i < columns; i++) drops[i] = 1;
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVXYZ1234567890';
+            const fontSize = 14, columns = canvasEffectsEl.width / fontSize;
+            let drops = Array(Math.floor(columns)).fill(1);
             function draw() {
                 ctx.fillStyle = 'rgba(0, 0, 0, .1)'; ctx.fillRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
+                ctx.fillStyle = '#0f0'; ctx.font = `${fontSize}px monospace`;
                 for (let i = 0; i < drops.length; i++) {
-                    let text = letters[Math.floor(Math.random() * letters.length)];
-                    ctx.fillStyle = '#0f0'; ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    const text = letters[Math.floor(Math.random() * letters.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvasEffectsEl.height && Math.random() > .975) drops[i] = 0;
                     drops[i]++;
-                    if (drops[i] * fontSize > canvasEffectsEl.height && Math.random() > .95) drops[i] = 0;
                 }
             }
             function animate() { draw(); activeCanvasEffect = requestAnimationFrame(animate); }
@@ -740,15 +737,17 @@
             canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
             let time = 0;
             function draw() {
-                ctx.clearRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
                 ctx.globalCompositeOperation = 'source-over';
+                ctx.fillStyle = 'rgba(3, 14, 36, 0.1)';
+                ctx.fillRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
+                ctx.globalCompositeOperation = 'lighter';
                 for (let i = 0; i < 15; i++) {
                     ctx.beginPath();
                     let radius = 50 + i * 20;
-                    let alpha = 0.1 - i * 0.005;
+                    let alpha = 0.05 - i * 0.002;
                     ctx.fillStyle = `rgba(54, 162, 235, ${alpha})`;
-                    let x = canvasEffectsEl.width * 0.5 + Math.sin(time * 0.001 + i) * 100;
-                    let y = canvasEffectsEl.height * 0.5 + Math.cos(time * 0.001 + i) * 100;
+                    let x = canvasEffectsEl.width * 0.5 + Math.sin((time + i*20) * 0.005) * 200;
+                    let y = canvasEffectsEl.height * 0.5 + Math.cos((time + i*20) * 0.005) * 200;
                     ctx.arc(x, y, radius, 0, Math.PI * 2);
                     ctx.fill();
                 }
