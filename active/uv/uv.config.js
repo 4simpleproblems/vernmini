@@ -1,6 +1,6 @@
 self.__uv$config = {
     prefix: "/active/go/",
-    bare: "https://r2fh2387hv2b2rfbiz.site/", // You can replace this with your own Bare server instance if you have one
+    bare: "https://new-copy-project-27r1xgtb.alpha-ai.page/", // You can replace this with your own Bare server instance if you have one
     encodeUrl: Ultraviolet.codec.xor.encode,
     decodeUrl: Ultraviolet.codec.xor.decode,
     handler: "/active/uv/uv.handler.js",
