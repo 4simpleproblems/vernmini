@@ -8,6 +8,8 @@
     <style id="custom-styles">
         @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Crete+Round&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
         /* Core Theme Variables & Component Mappings */
         :root {
@@ -242,9 +244,8 @@
              backdrop-filter: blur(8px);
         }
 
-        /* --- 10 New Special Themes --- */
+        /* --- 10 Previous Special Themes --- */
 
-        /* 1. 3D Tilt */
         body.theme-tilt3d { perspective: 1000px; }
         body.theme-tilt3d #toolbar {
             transition: transform 0.1s ease-out;
@@ -252,7 +253,6 @@
             transform: rotateX(var(--tilt-x, 0)) rotateY(var(--tilt-y, 0));
         }
 
-        /* 2. Comic Book */
         body.theme-comicbook {
             --font-family-main: 'Bangers', cursive;
         }
@@ -270,7 +270,6 @@
              border: 2px solid #000 !important;
         }
 
-        /* 3. CRT Scanlines */
         body.theme-crtscanlines { position: relative; --font-family-main: 'Courier New', monospace; }
         body.theme-crtscanlines::after {
             content: ' ';
@@ -288,7 +287,6 @@
             0% { opacity: 0.6; } 50% { opacity: 0.7; } 100% { opacity: 0.6; }
         }
 
-        /* 4. Skewed Look */
         body.theme-skewedlook #toolbar {
             transform: skewX(-15deg);
             transition: transform 0.3s ease;
@@ -300,7 +298,6 @@
             transform: skewX(15deg);
         }
 
-        /* 5. Text Pop */
         body.theme-textpop { --font-family-main: 'Arial Black', Gadget, sans-serif; }
         body.theme-textpop .nav-button, 
         body.theme-textpop .toolbar-button,
@@ -314,7 +311,6 @@
              filter: drop-shadow(5px 5px 0 var(--current-theme-accent)) drop-shadow(-5px -5px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff));
         }
 
-        /* 6. Focus Mode */
         body.theme-focusmode #toolbar {
             transition: opacity 0.4s, filter 0.4s;
             opacity: 0.5;
@@ -325,22 +321,18 @@
             filter: blur(0);
         }
 
-        /* 7. Inverted UI */
         body.theme-invertedui {
             filter: invert(1);
         }
         body.theme-invertedui #content-container,
         body.theme-invertedui #homepage {
-            filter: invert(1); /* Double-invert to restore original colors */
+            filter: invert(1); 
         }
         body.theme-invertedui .icon-img,
         body.theme-invertedui #homepage-logo {
-            filter: invert(1); /* Invert icons back as they are often not inverted correctly */
+            filter: invert(1);
         }
 
-        /* 8. Mouse Glow is a canvas effect */
-
-        /* 9. Stealth Mode */
         body.theme-stealthmode #toolbar {
             transform: translateY(-105%);
             transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -354,10 +346,9 @@
             transform: translateY(0);
         }
         body.theme-stealthmode #content-container {
-            height: 100vh; /* Take full viewport height */
+            height: 100vh;
         }
 
-        /* 10. Old Newspaper */
         body.theme-oldnewspaper {
             --font-family-main: 'Crete Round', serif;
             background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
@@ -365,12 +356,216 @@
         }
         body.theme-oldnewspaper #content-container,
         body.theme-oldnewspaper #homepage {
-            filter: sepia(0); /* Un-filter the content */
+            filter: sepia(0);
         }
         body.theme-oldnewspaper #toolbar {
             background-color: var(--current-theme-neutral) !important;
         }
 
+        /* --- 25 NEW Special Themes --- */
+
+        #spotlight-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            background: radial-gradient(circle at var(--spotlight-x) var(--spotlight-y), transparent 100px, rgba(0,0,0,0.95) 250px);
+        }
+
+        body.theme-pagecurl::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50.5%, rgba(0,0,0,0.4) 52%, var(--bg-color) 52%);
+            box-shadow: -5px -5px 15px rgba(0,0,0,0.3);
+            transform: rotate(90deg);
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        body.theme-blueprint {
+            --font-family-main: 'Courier New', monospace;
+            background-image: 
+                linear-gradient(rgba(var(--current-theme-shadow-rgb),0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--current-theme-shadow-rgb),0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        body.theme-blueprint #toolbar,
+        body.theme-blueprint .mini-menu {
+            background-color: color-mix(in srgb, var(--toolbar-bg) 80%, transparent);
+            backdrop-filter: blur(2px);
+        }
+
+        body.theme-notebookpaper {
+            --font-family-main: 'Patrick Hand', cursive;
+            background-color: #fff;
+            background-image: 
+                linear-gradient(to right, transparent 39px, #ffb6c1 39px, #ffb6c1 41px, transparent 41px),
+                linear-gradient(to bottom, transparent 19px, #a4d8f2 19px, #a4d8f2 20px, transparent 20px);
+            background-size: 100% 20px;
+        }
+
+        body.theme-zoomhover .nav-button, body.theme-zoomhover .toolbar-button {
+            transition: transform 0.2s ease-out;
+        }
+        body.theme-zoomhover .nav-button:hover, body.theme-zoomhover .toolbar-button:hover {
+            transform: scale(1.15);
+        }
+
+        @keyframes shaky-anim {
+          0% { transform: translate(0, 0); } 25% { transform: translate(1px, -1px); }
+          50% { transform: translate(-1px, 1px); } 75% { transform: translate(1px, 1px); }
+          100% { transform: translate(0, 0); }
+        }
+        body.theme-shakytext .nav-button, body.theme-shakytext .toolbar-button, body.theme-shakytext .mini-menu h3 {
+            animation: shaky-anim 0.2s infinite;
+        }
+
+        @keyframes rainbow-text-anim {
+          0% { color: #ff0000; } 15% { color: #ff7f00; } 30% { color: #ffff00; }
+          45% { color: #00ff00; } 60% { color: #0000ff; } 75% { color: #4b0082; }
+          90% { color: #9400d3; } 100% { color: #ff0000; }
+        }
+        body.theme-rainbowtext .nav-button, body.theme-rainbowtext .toolbar-button, body.theme-rainbowtext .menu-button {
+            animation: rainbow-text-anim 4s linear infinite;
+        }
+
+        @keyframes bounce-in-anim {
+          0% { transform: translateY(-50px); opacity: 0; }
+          50% { transform: translateY(5px); }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        body.theme-bouncingui #toolbar {
+            animation: bounce-in-anim 0.6s ease-out;
+        }
+
+        body.theme-8bitgamer {
+            --font-family-main: 'VT323', monospace;
+            image-rendering: pixelated;
+        }
+        body.theme-8bitgamer .nav-button, body.theme-8bitgamer .toolbar-button, body.theme-8bitgamer #search-bar, body.theme-8bitgamer .mini-menu {
+            border-radius: 0 !important;
+            border: 2px solid var(--text-color);
+        }
+
+        @keyframes construction-anim {
+          0% { background-position: 0 0; }
+          100% { background-position: 56px 0; }
+        }
+        body.theme-underconstruction #toolbar {
+            background-image: repeating-linear-gradient(45deg, #fdd835, #fdd835 20px, #212121 20px, #212121 40px);
+            background-size: 56px 56px;
+            animation: construction-anim 1s linear infinite;
+        }
+
+        @keyframes ghostly-anim {
+          0% { opacity: 0.8; filter: blur(1px); }
+          50% { opacity: 0.6; filter: blur(2px); }
+          100% { opacity: 0.8; filter: blur(1px); }
+        }
+        body.theme-ghostly #toolbar {
+            animation: ghostly-anim 8s ease-in-out infinite;
+            box-shadow: 0 0 15px var(--current-theme-accent);
+        }
+
+        body.theme-typewriter #search-bar:focus,
+        body.theme-typewriter #homepage-search-bar:focus { animation: blink-caret 0.8s step-end infinite; }
+        
+        @keyframes color-cycle-anim {
+            0% { background-color: #23272A; }
+            25% { background-color: #0A2E36; }
+            50% { background-color: #2C3E50; }
+            75% { background-color: #4a403a; }
+            100% { background-color: #23272A; }
+        }
+        body.theme-colorcyclebg {
+            animation: color-cycle-anim 20s linear infinite;
+        }
+
+        body.theme-mirrorworld { transform: scaleY(-1); }
+        body.theme-mirrorworld #toolbar, body.theme-mirrorworld #content-container { transform: scaleY(1); }
+        body.theme-mirrorworld #toolbar { transform: scaleY(-1); }
+
+        body.theme-lensflare::after {
+            content: '';
+            position: fixed;
+            top: -20%; left: -20%;
+            width: 140%; height: 140%;
+            background: url('https://i.ibb.co/L5B0brH/lensflare.png') no-repeat;
+            background-size: contain;
+            background-position: var(--flare-x, 50%) var(--flare-y, 50%);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+        
+        body.theme-commandprompt { --font-family-main: 'Courier New', monospace; }
+        body.theme-commandprompt .nav-button, body.theme-commandprompt .toolbar-button {
+            background: transparent;
+            border: 1px solid var(--text-color);
+        }
+        body.theme-commandprompt .icon-img { display: none; }
+        body.theme-commandprompt .nav-button::after, body.theme-commandprompt .toolbar-button::after {
+            font-size: 12px;
+            color: var(--text-color);
+        }
+        body.theme-commandprompt #home-button::after { content: 'HOME'; }
+        body.theme-commandprompt #back-button::after { content: 'BACK'; }
+        body.theme-commandprompt #forward-button::after { content: 'FWD'; }
+        body.theme-commandprompt #refresh-button::after { content: 'RFRS'; }
+        body.theme-commandprompt #fullscreen-button::after { content: 'FULL'; }
+        body.theme-commandprompt #bookmark-button::after { content: 'BKMK'; }
+        body.theme-commandprompt #history-button::after { content: 'HIST'; }
+        body.theme-commandprompt #settings-button::after { content: 'SET'; }
+
+        body.theme-perspectiveui { perspective: 1500px; }
+        body.theme-perspectiveui #toolbar { transform: rotateY(25deg) scale(0.9); }
+        body.theme-perspectiveui #toolbar:hover { transform: rotateY(0deg) scale(1); }
+
+        body.theme-textfocus .nav-button, body.theme-textfocus .toolbar-button {
+            color: transparent;
+            text-shadow: 0 0 5px var(--text-color);
+            transition: text-shadow 0.2s;
+        }
+        body.theme-textfocus .nav-button:hover, body.theme-textfocus .toolbar-button:hover {
+            color: var(--button-text-color);
+            text-shadow: none;
+        }
+        
+        @keyframes gradient-border-anim {
+            0% { border-color: #ff00c8; } 50% { border-color: #00e5ff; } 100% { border-color: #ff00c8; }
+        }
+        body.theme-gradientborder .nav-button, body.theme-gradientborder .toolbar-button,
+        body.theme-gradientborder #search-bar, body.theme-gradientborder .mini-menu {
+            border: 2px solid;
+            animation: gradient-border-anim 3s linear infinite;
+            box-shadow: none;
+        }
+
+        @keyframes wobbly-anim {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg) scale(1.02); }
+            50% { transform: rotate(2deg) scale(0.98); }
+            75% { transform: rotate(-1deg) scale(1.01); }
+            100% { transform: rotate(0deg); }
+        }
+        body.theme-wobblyui .nav-button, body.theme-wobblyui .toolbar-button, body.theme-wobblyui .mini-menu {
+            animation: wobbly-anim 0.5s ease-in-out;
+        }
+        
+        .shortcut-text {
+            font-size: 9px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: block;
+            margin-top: 2px;
+            opacity: 0.8;
+            color: var(--current-theme-text);
+        }
 
         /* Homepage Styles */
         #homepage {
@@ -573,7 +768,8 @@
         let currentTitle = 'New Tab';
         let isLoading = false;
         let isRefreshing = false;
-        
+        let typewriterInterval = null;
+
         const searchEngines = {
             'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
             'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
@@ -597,7 +793,7 @@
         let currentCloakPresetKey = 'none';
 
         const THEMES = {
-            // Original
+            // --- Normal Themes ---
             main: { name: "Main (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } }, 
             light: { name: "Light", colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }, 
             dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } }, 
@@ -612,7 +808,6 @@
             nord: { name: "Nord", colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } }, 
             gruvbox: { name: "Gruvbox", colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } }, 
             tokyo: { name: "Tokyo Night", colors: { bg: '#1a1b26', text: '#a9b1d6', accent: '#7aa2f7', neutral: '#292e42', btnText: '#FFFFFF' } }, 
-            // New Normal Themes
             slate: { name: "Slate", colors: { bg: '#36454F', text: '#EAEAEA', accent: '#708090', neutral: '#2F3T4F', btnText: '#FFFFFF' } },
             indigo: { name: "Indigo", colors: { bg: '#1a1b36', text: '#c5c8e6', accent: '#6a79f7', neutral: '#292e52', btnText: '#FFFFFF' } },
             crimson: { name: "Crimson", colors: { bg: '#3b1a1a', text: '#e6c5c5', accent: '#f76a6a', neutral: '#522929', btnText: '#FFFFFF' } },
@@ -623,8 +818,23 @@
             solarized_light: { name: "Solarized Light", colors: { bg: '#fdf6e3', text: '#657b83', accent: '#268bd2', neutral: '#eee8d5', btnText: '#FFFFFF' } },
             solarized_dark: { name: "Solarized Dark", colors: { bg: '#002b36', text: '#839496', accent: '#268bd2', neutral: '#073642', btnText: '#FFFFFF' } },
             sandy: { name: "Sandy Beach", colors: { bg: '#F4A460', text: '#6B4226', accent: '#87CEEB', neutral: '#DEB887', btnText: '#6B4226' } },
+            peach: { name: "Peach", colors: { bg: '#ffdab9', text: '#8B4513', accent: '#ffa07a', neutral: '#ffdead', btnText: '#8B4513' } },
+            olive: { name: "Olive", colors: { bg: '#556B2F', text: '#F5F5DC', accent: '#BDB76B', neutral: '#6B8E23', btnText: '#FFFFFF' } },
+            grape: { name: "Grape", colors: { bg: '#483D8B', text: '#E6E6FA', accent: '#9370DB', neutral: '#312A5C', btnText: '#FFFFFF' } },
+            mocha: { name: "Mocha", colors: { bg: '#8B4513', text: '#F5DEB3', accent: '#D2691E', neutral: '#A0522D', btnText: '#FFFFFF' } },
+            teal: { name: "Teal", colors: { bg: '#008080', text: '#E0FFFF', accent: '#48D1CC', neutral: '#20B2AA', btnText: '#FFFFFF' } },
+            maroon: { name: "Maroon", colors: { bg: '#800000', text: '#FFE4E1', accent: '#B22222', neutral: '#8B0000', btnText: '#FFFFFF' } },
+            charcoal: { name: "Charcoal", colors: { bg: '#36454F', text: '#DCDCDC', accent: '#778899', neutral: '#2F4F4F', btnText: '#FFFFFF' } },
+            honey: { name: "Honey", colors: { bg: '#FFD700', text: '#614126', accent: '#FFA500', neutral: '#FFEC8B', btnText: '#614126' } },
+            sky: { name: "Sky", colors: { bg: '#87CEEB', text: '#00008B', accent: '#00BFFF', neutral: '#ADD8E6', btnText: '#FFFFFF' } },
+            rose_gold: { name: "Rose Gold", colors: { bg: '#B76E79', text: '#FFFFFF', accent: '#E1A9B0', neutral: '#C88C95', btnText: '#4A2A2E' } },
+            emerald: { name: "Emerald", colors: { bg: '#006A4E', text: '#F0FFF0', accent: '#50C878', neutral: '#2E8B57', btnText: '#FFFFFF' } },
+            ruby: { name: "Ruby", colors: { bg: '#E0115F', text: '#FFFFFF', accent: '#FF69B4', neutral: '#C71585', btnText: '#FFFFFF' } },
+            sapphire: { name: "Sapphire", colors: { bg: '#0F52BA', text: '#F0F8FF', accent: '#6495ED', neutral: '#4169E1', btnText: '#FFFFFF' } },
+            amethyst: { name: "Amethyst", colors: { bg: '#9966CC', text: '#F3E5AB', accent: '#BA55D3', neutral: '#8A2BE2', btnText: '#FFFFFF' } },
+            clay: { name: "Clay", colors: { bg: '#E3735E', text: '#FFF5EE', accent: '#CD5C5C', neutral: '#F08080', btnText: '#8B4513' } },
             
-            // Original Special Themes
+            // --- Special Themes ---
             bottom_bar: { name: "Bottom Bar", feature: 'bottomBar', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
             particle_flow: { name: "Particle Flow", feature: 'particleFlow', colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } },
             retro_terminal: { name: "Retro Terminal", feature: 'retroTerminal', colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } },
@@ -640,8 +850,6 @@
             vintage_paper: { name: "Vintage Paper", feature: 'vintagePaper', colors: { bg: '#f3eacb', text: '#5b4636', accent: '#8c6c5a', neutral: '#e9dcc0', btnText: '#f3eacb' } },
             holographic: { name: "Holographic", feature: 'holographic', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
             system_match: { name: "System Match", feature: 'systemMatch', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
-
-            // 10 New Special Themes
             tilt_3d: { name: "3D Tilt", feature: 'tilt3d', colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } },
             comic_book: { name: "Comic Book", feature: 'comicBook', colors: { bg: '#e5e5e5', text: '#000000', accent: '#3498db', neutral: '#ffffff', btnText: '#ffffff' } },
             crt_scanlines: { name: "CRT Scanlines", feature: 'crtScanlines', colors: { bg: '#080808', text: '#1ff739', accent: '#16c72e', neutral: '#111111', btnText: '#080808' } },
@@ -651,7 +859,29 @@
             inverted_ui: { name: "Inverted UI", feature: 'invertedUi', colors: { bg: '#ddddd3', text: '#1f1f18', accent: '#80a50f', neutral: '#c3c7c9', btnText: '#1f1f18' } },
             mouse_glow: { name: "Mouse Glow", feature: 'mouseGlow', colors: { bg: '#010101', text: '#f0f0f0', accent: '#f72585', neutral: '#111111', btnText: '#FFFFFF' } },
             stealth_mode: { name: "Stealth Mode", feature: 'stealthMode', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
-            old_newspaper: { name: "Old Newspaper", feature: 'oldNewspaper', colors: { bg: '#f5e8d7', text: '#5a4d3f', accent: '#7a6a59', neutral: '#e9dacb', btnText: '#FFFFFF' } }
+            old_newspaper: { name: "Old Newspaper", feature: 'oldNewspaper', colors: { bg: '#f5e8d7', text: '#5a4d3f', accent: '#7a6a59', neutral: '#e9dacb', btnText: '#FFFFFF' } },
+            page_curl: { name: "Page Curl", feature: 'pageCurl', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+            spotlight: { name: "Spotlight", feature: 'spotlight', colors: { bg: '#000000', text: '#f1f1f1', accent: '#BB86FC', neutral: '#111111', btnText: '#000000' } },
+            blueprint: { name: "Blueprint", feature: 'blueprint', colors: { bg: '#0d2b45', text: '#90e0ef', accent: '#caf0f8', neutral: '#0c3d61', btnText: '#0d2b45' } },
+            notebook_paper: { name: "Notebook Paper", feature: 'notebookPaper', colors: { bg: '#fefefe', text: '#2b2b2b', accent: '#59a5d8', neutral: '#ffffff', btnText: '#ffffff' } },
+            zoom_hover: { name: "Zoom Hover", feature: 'zoomHover', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            shaky_text: { name: "Shaky Text", feature: 'shakyText', colors: { bg: '#2a2a2a', text: '#e0e0e0', accent: '#f44336', neutral: '#3c3c3c', btnText: '#ffffff' } },
+            rainbow_text: { name: "Rainbow Text", feature: 'rainbowText', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
+            bouncing_ui: { name: "Bouncing UI", feature: 'bouncingUi', colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } },
+            '8_bit_gamer': { name: "8-Bit Gamer", feature: '8bitGamer', colors: { bg: '#000000', text: '#ffffff', accent: '#ff0000', neutral: '#333333', btnText: '#000000' } },
+            under_construction: { name: "Under Construction", feature: 'underConstruction', colors: { bg: '#424242', text: '#ffffff', accent: '#fdd835', neutral: '#313131', btnText: '#000000' } },
+            ghostly: { name: "Ghostly", feature: 'ghostly', colors: { bg: '#0d1117', text: '#e6edf3', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            typewriter: { name: "Typewriter", feature: 'typewriter', colors: { bg: '#f3eacb', text: '#5b4636', accent: '#8c6c5a', neutral: '#e9dcc0', btnText: '#f3eacb' } },
+            static_noise: { name: "Static Noise", feature: 'staticNoise', colors: { bg: '#111111', text: '#e0e0e0', accent: '#9e9e9e', neutral: '#212121', btnText: '#000000' } },
+            color_cycle_bg: { name: "Color Cycle BG", feature: 'colorCycleBg', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            mirror_world: { name: "Mirror World", feature: 'mirrorWorld', colors: { bg: '#1a1b26', text: '#a9b1d6', accent: '#7aa2f7', neutral: '#292e42', btnText: '#FFFFFF' } },
+            lens_flare: { name: "Lens Flare", feature: 'lensFlare', colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } },
+            command_prompt: { name: "Command Prompt", feature: 'commandPrompt', colors: { bg: '#0c0c0c', text: '#cccccc', accent: '#ffffff', neutral: '#0c0c0c', btnText: '#0c0c0c' } },
+            perspective_ui: { name: "Perspective UI", feature: 'perspectiveUi', colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } },
+            text_focus: { name: "Text Focus", feature: 'textFocus', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#FFFFFF' } },
+            gradient_border: { name: "Gradient Border", feature: 'gradientBorder', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            wobbly_ui: { name: "Wobbly UI", feature: 'wobblyUi', colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } },
+            keyboard_shortcuts: { name: "Keyboard Shortcuts", feature: 'keyboardShortcuts', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }
         };
 
 
@@ -690,6 +920,7 @@
                 case 'dynamicGrid': config = { count: 40, shape: 'grid', speed: 0.5, maxSize: 1.5, color: 'rgba(247, 37, 133, 0.5)'}; break;
                 case 'aurora': config = { shape: 'aurora' }; break;
                 case 'mouseGlow': config = { shape: 'mouseGlow' }; break;
+                case 'staticNoise': config = { shape: 'staticNoise' }; break;
                 default: stopAllParticles(); return;
             }
             if(config.count) {
@@ -704,18 +935,35 @@
         function animateParticles() {
             canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
             
-            if (particles.length > 0 && particles[0].shape === 'mouseGlow') {
-                const p = particles[0];
-                const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
-                const accentColor = THEMES[localStorage.getItem('vernTheme') || 'main'].colors.accent;
-                const accentRGB = accentColor.match(/\w\w/g).map(x => parseInt(x, 16));
-                gradient.addColorStop(0, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0.3)`);
-                gradient.addColorStop(1, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0)`);
-                canvasCtx.fillStyle = gradient;
-                canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-                particleAnimationId = requestAnimationFrame(animateParticles);
-                return; 
+            if (particles.length > 0) {
+                 const p = particles[0];
+                 if (p.shape === 'mouseGlow') {
+                    const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
+                    const accentColor = THEMES[localStorage.getItem('vernTheme') || 'main'].colors.accent;
+                    const accentRGB = accentColor.match(/\w\w/g).map(x => parseInt(x, 16));
+                    gradient.addColorStop(0, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0.3)`);
+                    gradient.addColorStop(1, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0)`);
+                    canvasCtx.fillStyle = gradient;
+                    canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                    particleAnimationId = requestAnimationFrame(animateParticles);
+                    return; 
+                } else if (p.shape === 'staticNoise') {
+                    const imageData = canvasCtx.createImageData(canvasEl.width, canvasEl.height);
+                    const buffer = new Uint32Array(imageData.data.buffer);
+                    const len = buffer.length - 1;
+                    for(let i=0; i < len; i++) {
+                        if (Math.random() < 0.5) {
+                            buffer[i] = 0xffffffff;
+                        } else {
+                            buffer[i] = 0xff000000;
+                        }
+                    }
+                    canvasCtx.putImageData(imageData, 0, 0);
+                    particleAnimationId = requestAnimationFrame(animateParticles);
+                    return;
+                }
             }
+
 
             for (let i = 0; i < particles.length; i++) {
                 let p = particles[i];
@@ -848,7 +1096,16 @@
             clearBrowserDataButtonEl.addEventListener('click', clearAllData);
 
             homepageSearchBarEl.addEventListener('input', handleSearchInput);
-            homepageSearchBarEl.addEventListener('focus', handleSearchInput);
+            homepageSearchBarEl.addEventListener('focus', () => {
+                if(document.body.classList.contains('theme-typewriter')) {
+                    startTypewriter(homepageSearchBarEl, homepageSearchBarEl.placeholder);
+                }
+            });
+            searchBarEl.addEventListener('focus', () => {
+                if(document.body.classList.contains('theme-typewriter')) {
+                    startTypewriter(searchBarEl, searchBarEl.placeholder);
+                }
+            });
             homepageSearchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
             homepageSearchIconEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value));
             searchSuggestionsEl.addEventListener('mousedown', (e) => {
@@ -865,6 +1122,7 @@
 
             window.addEventListener('mousemove', (e) => {
                 const bodyClassList = document.body.classList;
+                const r = document.documentElement;
                 if (bodyClassList.contains('theme-mouseglow')) {
                     mouse.x = e.clientX;
                     mouse.y = e.clientY;
@@ -872,8 +1130,18 @@
                 if (bodyClassList.contains('theme-tilt3d')) {
                     const x = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
                     const y = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
-                    document.documentElement.style.setProperty('--tilt-x', `${-y * 10}deg`);
-                    document.documentElement.style.setProperty('--tilt-y', `${x * 10}deg`);
+                    r.style.setProperty('--tilt-x', `${-y * 10}deg`);
+                    r.style.setProperty('--tilt-y', `${x * 10}deg`);
+                }
+                if (bodyClassList.contains('theme-spotlight')) {
+                    r.style.setProperty('--spotlight-x', e.clientX + 'px');
+                    r.style.setProperty('--spotlight-y', e.clientY + 'px');
+                }
+                if (bodyClassList.contains('theme-lensflare')) {
+                    const x = (e.clientX / window.innerWidth) * 100;
+                    const y = (e.clientY / window.innerHeight) * 100;
+                    r.style.setProperty('--flare-x', x + '%');
+                    r.style.setProperty('--flare-y', y + '%');
                 }
             });
         }
@@ -907,7 +1175,6 @@
                     finalTitle = contentIframeEl.contentDocument.title || new URL(finalUrl).hostname;
                 }
             } catch (e) { 
-                // This will catch cross-origin errors and when the iframe is truly blank
                 finalUrl = 'about:blank';
                 finalTitle = 'New Tab';
             }
@@ -942,7 +1209,6 @@
         function showHomepage() {
             homepageEl.style.display = 'flex';
             contentIframeEl.style.display = 'none';
-            // Use a hash to prevent re-triggering load events unnecessarily
             if(contentIframeEl.src !== 'about:blank#') contentIframeEl.src = 'about:blank#';
         }
 
@@ -954,7 +1220,6 @@
         function handleSearchInput() {
             const query = homepageSearchBarEl.value;
             if (query.length > 0) {
-                // Using a CORS proxy for the suggestions API
                 fetch(`https://api.allorigins.win/raw?url=https://www.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`)
                     .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
                     .then(data => {
@@ -1026,7 +1291,55 @@
             alert('Custom cloak applied and saved!');
         }
 
-        // --- UI & MENU TOGGLING ---
+        // --- UI, MENU, & THEME HELPERS ---
+        function clearSpecialFeatures() {
+            // Clear spotlight
+            const existingSpotlight = document.getElementById('spotlight-overlay');
+            if (existingSpotlight) existingSpotlight.remove();
+
+            // Clear typewriter
+            if(typewriterInterval) clearInterval(typewriterInterval);
+
+            // Clear keyboard shortcuts
+            document.querySelectorAll('.shortcut-text').forEach(el => el.remove());
+            document.querySelectorAll('.nav-button, .toolbar-button').forEach(btn => {
+                const icon = btn.querySelector('.icon-img');
+                if (icon) icon.style.display = 'block';
+            });
+        }
+
+        function applyKeyboardShortcuts() {
+            const shortcuts = {
+                'back-button': 'Alt+←',
+                'forward-button': 'Alt+→',
+                'refresh-button': 'Ctrl+R',
+            };
+            for(const [id, key] of Object.entries(shortcuts)) {
+                const btn = document.getElementById(id);
+                if(btn) {
+                    btn.querySelector('.icon-img').style.display = 'none';
+                    const span = document.createElement('span');
+                    span.className = 'shortcut-text';
+                    span.textContent = key;
+                    btn.appendChild(span);
+                }
+            }
+        }
+
+        function startTypewriter(element, text) {
+            if (typewriterInterval) clearInterval(typewriterInterval);
+            let i = 0;
+            element.value = '';
+            typewriterInterval = setInterval(() => {
+                if (i < text.length) {
+                    element.value += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typewriterInterval);
+                }
+            }, 50);
+        }
+
         function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
         function closeAllMenus(event) {
              if (!event || (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event?.target) && !bookmarkButtonEl.contains(event?.target))) bookmarkMenuEl.classList.remove('show');
@@ -1058,7 +1371,6 @@
         function toggleHistoryMenu() { toggleMenu(historyMenuEl, historyButtonEl); if(historyMenuEl.classList.contains('show')) historySearchBarEl.focus(); }
         function toggleSettingsMenu() { toggleMenu(settingsMenuEl, settingsButtonEl); }
         
-        // --- POPULATORS & THEMING ---
         function populateThemeSelector() {
             themeSelectorEl.innerHTML = '';
             const standardThemesGroup = document.createElement('optgroup'); standardThemesGroup.label = 'Standard Themes';
@@ -1074,6 +1386,7 @@
         }
         function applyTheme(themeKey) {
             const r = document.documentElement;
+            clearSpecialFeatures();
             stopAllParticles();
             document.body.className = '';
             r.style.setProperty('--font-family-main', "'PrimaryFont', sans-serif");
@@ -1093,10 +1406,21 @@
             r.style.setProperty('--current-theme-button-text', colors.btnText);
 
             if (theme.feature) {
-                document.body.classList.add(`theme-${theme.feature.toLowerCase().replace('_', '')}`);
-                if (theme.feature === 'retroTerminal') r.style.setProperty('--font-family-main', "'Courier New', Courier, monospace");
-                if (theme.feature === 'vintagePaper') r.style.setProperty('--font-family-main', "'Georgia', serif");
-                else if (['particleFlow', 'oceanDeep', 'sakuraBlossom', 'dynamicGrid', 'aurora', 'mouseGlow'].includes(theme.feature)) startParticleEffect(theme.feature);
+                const featureClassName = `theme-${theme.feature.toLowerCase().replace(/_/g, '')}`;
+                document.body.classList.add(featureClassName);
+
+                // Handle JS-based features
+                if (['particleFlow', 'oceanDeep', 'sakuraBlossom', 'dynamicGrid', 'aurora', 'mouseGlow', 'staticNoise'].includes(theme.feature)) {
+                    startParticleEffect(theme.feature);
+                }
+                if(theme.feature === 'spotlight') {
+                    const spotlight = document.createElement('div');
+                    spotlight.id = 'spotlight-overlay';
+                    document.body.appendChild(spotlight);
+                }
+                if(theme.feature === 'keyboardShortcuts') {
+                    applyKeyboardShortcuts();
+                }
             }
         }
         function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
