@@ -97,13 +97,10 @@
             margin-right: 8px;
         }
         #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
-
-        #bookmark-button, #history-button, #fullscreen-button {
-            margin-right: 8px;
-        }
+        
+        /* Removed margin-left: auto from settings button to align with others */
         #settings-button {
-            margin-left: auto;
-            margin-right: 0;
+            margin-right: 0; /* Last button, no right margin */
         }
 
 
@@ -117,7 +114,7 @@
             z-index: 1005;
             min-width: 280px;
             max-width: 350px;
-            max-height: 300px;
+            max-height: 400px; /* Increased max-height for settings */
             overflow-y: auto;
             padding: 10px;
             color: var(--menu-text-color);
@@ -142,8 +139,8 @@
         .mini-menu h3 .icon-img { width: 1em; height: 1em; }
 
         .mini-menu ul { list-style: none; padding: 0; margin: 0; }
-        .mini-menu ul::-webkit-scrollbar { width: 5px; }
-        .mini-menu ul::-webkit-scrollbar-thumb { background-color: var(--button-outline-color); border-radius: 8px; }
+        .mini-menu::-webkit-scrollbar, .mini-menu ul::-webkit-scrollbar { width: 5px; }
+        .mini-menu::-webkit-scrollbar-thumb, .mini-menu ul::-webkit-scrollbar-thumb { background-color: var(--button-outline-color); border-radius: 8px; }
 
         .mini-menu li {
             padding: 9px 15px; margin-bottom: 7px; border-radius: 12px;
@@ -169,7 +166,7 @@
         .mini-menu .item-remove-icon { width: 12px; height: 12px; display: block; }
 
         .mini-menu .menu-action-bar { margin-top:15px; padding-top:10px; border-top: 1px solid var(--toolbar-border-color); }
-        .mini-menu .menu-input {
+        .mini-menu .menu-input, .mini-menu .menu-select {
             width: 100%;
             height: 38px; padding: 0 15px; margin-bottom: 10px;
             background-color: var(--input-bg); color: var(--text-color);
@@ -178,7 +175,7 @@
             box-shadow: 0 0 0 1px var(--button-outline-color);
             font-size: 0.9em;
         }
-        .mini-menu .menu-input:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+        .mini-menu .menu-input:focus, .mini-menu .menu-select:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
         .mini-menu .menu-button {
             width: 100%;
             height: 38px; padding: 0 15px;
@@ -198,6 +195,18 @@
             background-color: #c0392b;
         }
 
+        /* New Styles for Settings Menu */
+        .menu-setting-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .menu-setting-item label {
+            font-size: 0.85em;
+            opacity: 0.8;
+            padding-left: 5px;
+        }
 
         #content-container {
             flex: 1;
@@ -257,16 +266,16 @@
 
         <input type="text" id="search-bar" placeholder="Search or type a URL">
 
-        <div class="toolbar-button" id="fullscreen-button" title="Toggle Fullscreen">
-            <img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img">
-        </div>
-
         <div class="toolbar-button" id="bookmark-button" title="Bookmarks">
             <img src="../images/star-white.png" alt="Bookmarks" class="icon-img">
         </div>
         
         <div class="toolbar-button" id="history-button" title="History">
             <img src="../images/clock-white.png" alt="History" class="icon-img">
+        </div>
+
+        <div class="toolbar-button" id="fullscreen-button" title="Toggle Fullscreen">
+            <img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img">
         </div>
     
         <div class="toolbar-button" id="settings-button" title="Settings">
@@ -295,6 +304,25 @@
         </div>
     </div>
 
+    <div id="settings-menu" class="mini-menu">
+        <h3><img src="../images/gear-white.png" alt="Settings" class="icon-img"> Settings</h3>
+        
+        <div class="menu-setting-item">
+            <label for="theme-selector">Theme</label>
+            <select id="theme-selector" class="menu-select"></select>
+        </div>
+
+        <div class="menu-setting-item">
+            <button id="custom-theme-button" class="menu-button">Custom Theme Editor</button>
+        </div>
+        
+        <div class="menu-action-bar"></div> <div class="menu-setting-item">
+            <label for="cloak-preset-selector">Tab Cloak Preset</label>
+            <select id="cloak-preset-selector" class="menu-select"></select>
+        </div>
+    </div>
+
+
     <div id="content-container">
         <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
     </div>
@@ -316,24 +344,66 @@
         let sessionHistory = [];
         const MAX_HISTORY_ITEMS = 50;
 
-        const searchEngines = { /* ... (same as original) ... */ 'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' }, 'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' }, 'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' }, 'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' } };
+        const searchEngines = { 'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' }, 'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' }, 'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' }, 'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' } };
         let currentSearchEngineKey = 'duckduckgo';
-
-        const cloakPresets = { /* ... (same as original) ... */ 'none': { displayName: "None (Show App Default)", title: "VERN MAX - BROWSER", faviconUrl: "../images/title-mini.png" }, 'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' }, 'google_drive': { displayName: "My Drive", title: 'My Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' }, 'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' }, 'new_tab': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }, 'no_favicon_chrome': { displayName: "No Favicon - Chrome", title: ' ', faviconUrl: '../images/no-favicon-chrome.png'} };
+        
+        // Expanded cloak presets
+        const cloakPresets = {
+            'none': { displayName: "None (Vern Max Default)", title: "VERN MAX - BROWSER", faviconUrl: "logo.png" },
+            'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
+            'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
+            'google_classroom': { displayName: "Google Classroom", title: 'Classes', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
+            'gmail': { displayName: "Gmail", title: 'Inbox', faviconUrl: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico' },
+            'clever': { displayName: "Clever", title: 'Clever | Portal', faviconUrl: 'https://assets.clever.com/launchpad/1a74895/favicon.ico?1' },
+            'hac': { displayName: "Home Access Center", title: 'Home Access Center', faviconUrl: 'https://hac.doe.k12.de.us/HomeAccess/Content/Images/favicon.ico' },
+            'google_drive': { displayName: "My Drive", title: 'My Drive - Google Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'new_tab_chrome': { displayName: "New Tab (Chrome Style)", title: 'New Tab', faviconUrl: '../images/new-tab-chrome.png' }
+        };
         let currentCloakPresetKey = 'none';
+
+        // NEW THEME DEFINITIONS
+        const THEMES = {
+            main: { name: "Main (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            light: { name: "Light", colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+            dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
+            oceanic: { name: "Oceanic", colors: { bg: '#0A2E36', text: '#E0F4F2', accent: '#2E8B57', neutral: '#144552', btnText: '#FFFFFF' } },
+            sunset: { name: "Sunset", colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } },
+            forest: { name: "Forest", colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } },
+            rose: { name: "Rosé Quartz", colors: { bg: '#f7d1cd', text: '#5e3d42', accent: '#e8959e', neutral: '#f2b5b0', btnText: '#5e3d42' } },
+            coffee: { name: "Coffee House", colors: { bg: '#4a403a', text: '#e7e2dd', accent: '#a5a58d', neutral: '#6b5f58', btnText: '#FFFFFF' } },
+            matrix: { name: "Matrix", colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } },
+            cyberpunk: { name: "Cyberpunk", colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } },
+            dracula: { name: "Dracula", colors: { bg: '#282a36', text: '#f8f8f2', accent: '#bd93f9', neutral: '#44475a', btnText: '#f8f8f2' } },
+            nord: { name: "Nord", colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } },
+            gruvbox: { name: "Gruvbox", colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } },
+            solarized: { name: "Solarized Dark", colors: { bg: '#002b36', text: '#839496', accent: '#268bd2', neutral: '#073642', btnText: '#FFFFFF' } },
+            monokai: { name: "Monokai", colors: { bg: '#272822', text: '#f8f8f2', accent: '#f92672', neutral: '#3d3e37', btnText: '#FFFFFF' } },
+            tokyo: { name: "Tokyo Night", colors: { bg: '#1a1b26', text: '#a9b1d6', accent: '#7aa2f7', neutral: '#292e42', btnText: '#FFFFFF' } },
+            catppuccin: { name: "Catppuccin", colors: { bg: '#1e1d2f', text: '#dadae8', accent: '#ABE9B3', neutral: '#181926', btnText: '#1e1d2f' } },
+            beach: { name: "Beach Day", colors: { bg: '#FEEAA8', text: '#5E412F', accent: '#5096A6', neutral: '#FCE38A', btnText: '#FFFFFF' } },
+            synthwave: { name: "Synthwave '84", colors: { bg: '#2d2a51', text: '#ffffff', accent: '#ff8b39', neutral: '#252240', btnText: '#FFFFFF' } },
+            github: { name: "GitHub Dark", colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            material: { name: "Material Dark", colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } },
+            lavender: { name: "Lavender", colors: { bg: '#2E2A3D', text: '#E3DEFF', accent: '#9E78F0', neutral: '#3A3550', btnText: '#FFFFFF' } },
+            mint: { name: "Minty", colors: { bg: '#1D3532', text: '#C2E8E4', accent: '#3EB489', neutral: '#294B46', btnText: '#FFFFFF' } },
+            crimson: { name: "Crimson", colors: { bg: '#2B0404', text: '#F2D4D4', accent: '#DC143C', neutral: '#4F1111', btnText: '#FFFFFF' } },
+        };
 
         // DOM Elements
         let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
             fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl,
-            bookmarkMenuEl, historyMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl,
-            addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, clearHistoryButtonEl;
+            bookmarkMenuEl, historyMenuEl, settingsMenuEl, /* <-- NEW */
+            bookmarksListPopupEl, newBookmarkNameInputPopupEl, addCurrentBookmarkButtonPopupEl, 
+            historyListPopupEl, toolbarEl, clearHistoryButtonEl, themeSelectorEl, /* <-- NEW */
+            cloakPresetSelectorEl, customThemeButtonEl; /* <-- NEW */
 
         // Templates
         let bookmarkItemTemplate, historyItemTemplate;
 
 
-        function encodePlainTextUrlForQuery(plainUrl) { /* ... (same as original) ... */ if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
-        function decodeEncodedUrlFromQuery(encodedUrl) { /* ... (same as original) ... */ if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
+        function encodePlainTextUrlForQuery(plainUrl) { if (!plainUrl) return ''; try { const utf8Bytes = new TextEncoder().encode(plainUrl); let binaryString = ''; utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); }); return btoa(binaryString); } catch (e) { console.error("Base64 encoding failed for:", plainUrl, e); return ''; } }
+        function decodeEncodedUrlFromQuery(encodedUrl) { if (!encodedUrl) return ''; try { const binaryString = atob(encodedUrl); const bytes = new Uint8Array(binaryString.length); for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); } return new TextDecoder().decode(bytes); } catch (e) { console.error("Base64 decoding failed for:", encodedUrl, e); return ''; } }
 
         function updateBrowserAddressBar() {
             const newSearchParams = new URLSearchParams(window.location.search);
@@ -346,15 +416,14 @@
                 newSearchParams.delete('eurl');
             }
             const newQueryString = newSearchParams.toString();
-            // Use replaceState to avoid cluttering browser history with our internal URL changes
             history.replaceState(null, '', `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`);
         }
 
-        function applyBrowserCloak() { /* ... (same as original) ... */ const appFaviconEl = document.getElementById('app-favicon'); const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER"; const defaultAppFavicon = cloakPresets['none'].faviconUrl || "../images/title-mini.png"; let selectedCloak = cloakPresets[currentCloakPresetKey]; if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) { document.title = selectedCloak.title; if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; } else { const nonePreset = cloakPresets['none'] || {}; document.title = nonePreset.title || defaultAppTitle; if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon; } }
+        function applyBrowserCloak() { const appFaviconEl = document.getElementById('app-favicon'); const defaultAppTitle = cloakPresets['none'].title || "VERN MAX - BROWSER"; const defaultAppFavicon = cloakPresets['none'].faviconUrl || "logo.png"; let selectedCloak = cloakPresets[currentCloakPresetKey]; if (currentCloakPresetKey !== 'none' && selectedCloak && selectedCloak.title !== undefined) { document.title = selectedCloak.title; if (appFaviconEl) appFaviconEl.href = selectedCloak.faviconUrl || defaultAppFavicon; } else { const nonePreset = cloakPresets['none'] || {}; document.title = nonePreset.title || defaultAppTitle; if (appFaviconEl) appFaviconEl.href = nonePreset.faviconUrl || defaultAppFavicon; } }
 
-        function proxyUrl(urlToProxy) { /* ... (same as original) ... */ if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null; if (urlToProxy.startsWith('data:')) return urlToProxy; if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy); return urlToProxy; } try { const currentOrigin = self.location.origin; if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) return urlToProxy; return currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } catch (e) { console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e); return urlToProxy; } }
-        function getDefaultFaviconForUrl(basePageUrl) { /* ... (same as original) ... */ if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) return null; try { return proxyUrl(new URL('/favicon.ico', new URL(basePageUrl).origin).href); } catch (e) { console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e); return null; } }
-        function getFaviconFromIframe() { /* ... (same as original, uses currentUrl and contentIframeEl) ... */ if (contentIframeEl && contentIframeEl.contentDocument && currentUrl) { try { const doc = contentIframeEl.contentDocument; const selectors = ['link[rel="icon"][type="image/svg+xml"]', 'link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="shortcut icon"]']; for (const selector of selectors) { const link = doc.querySelector(selector); if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') return proxyUrl(link.href); } } catch (e) { console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", currentUrl, e); } } return getDefaultFaviconForUrl(currentUrl); }
+        function proxyUrl(urlToProxy) { if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null; if (urlToProxy.startsWith('data:')) return urlToProxy; if (typeof __uv$config === 'undefined' || !__uv$config.prefix || typeof __uv$config.encodeUrl !== 'function') { console.warn("VERN MAX Debug: UV config not available for proxying URL:", urlToProxy); return urlToProxy; } try { const currentOrigin = self.location.origin; if (urlToProxy.startsWith(currentOrigin + __uv$config.prefix) || (urlToProxy.startsWith(currentOrigin) && !urlToProxy.includes(__uv$config.prefix))) return urlToProxy; return currentOrigin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } catch (e) { console.warn("VERN MAX Debug: Error during UV URL encoding for:", urlToProxy, e); return urlToProxy; } }
+        function getDefaultFaviconForUrl(basePageUrl) { if (!basePageUrl || typeof basePageUrl !== 'string' || (!basePageUrl.startsWith('http:') && !basePageUrl.startsWith('https:'))) return null; try { return proxyUrl(new URL('/favicon.ico', new URL(basePageUrl).origin).href); } catch (e) { console.warn("VERN MAX Debug: Error constructing or proxying default /favicon.ico URL from basePageUrl:", basePageUrl, e); return null; } }
+        function getFaviconFromIframe() { if (contentIframeEl && contentIframeEl.contentDocument && currentUrl) { try { const doc = contentIframeEl.contentDocument; const selectors = ['link[rel="icon"][type="image/svg+xml"]', 'link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="shortcut icon"]']; for (const selector of selectors) { const link = doc.querySelector(selector); if (link && link.href && link.href.trim() !== '' && link.href.trim() !== '#') return proxyUrl(link.href); } } catch (e) { console.warn("VERN MAX Debug: Error accessing iframe's document for <link> tags for URL:", currentUrl, e); } } return getDefaultFaviconForUrl(currentUrl); }
 
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -371,15 +440,22 @@
             historyButtonEl = document.getElementById('history-button');
             bookmarkMenuEl = document.getElementById('bookmark-menu');
             historyMenuEl = document.getElementById('history-menu');
+            settingsMenuEl = document.getElementById('settings-menu'); // New
             bookmarksListPopupEl = document.getElementById('bookmarks-list-popup');
             newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup');
             addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
             historyListPopupEl = document.getElementById('history-list-popup');
             clearHistoryButtonEl = document.getElementById('clear-history-button');
+            themeSelectorEl = document.getElementById('theme-selector'); // New
+            cloakPresetSelectorEl = document.getElementById('cloak-preset-selector'); // New
+            customThemeButtonEl = document.getElementById('custom-theme-button'); // New
 
 
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
             historyItemTemplate = document.getElementById('history-item-template');
+
+            populateThemeSelector();
+            populateCloakSelector();
 
             await initUV();
             loadSettings();
@@ -398,8 +474,21 @@
             applyBrowserCloak();
         });
 
-        async function initUV() { /* ... (same as original) ... */ try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
-        function loadSettings() { /* ... (same as original) ... */ currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none'; }
+        async function initUV() { try { if (typeof registerSW !== 'function') { console.warn("registerSW() function not found."); return; } await registerSW(); } catch (err) { console.error("Failed to register UV service worker:", err); }}
+        
+        function loadSettings() {
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo';
+            
+            // Theme
+            const savedTheme = localStorage.getItem('vernTheme') || 'main';
+            applyTheme(savedTheme);
+            if (themeSelectorEl) themeSelectorEl.value = savedTheme;
+
+            // Cloak
+            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
+            if (cloakPresetSelectorEl) cloakPresetSelectorEl.value = currentCloakPresetKey;
+            applyBrowserCloak();
+        }
 
         function setupEventListeners() {
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen);
@@ -417,9 +506,11 @@
                 catch (e) { contentIframeEl.src = contentIframeEl.src; }
             });
 
-            settingsButtonEl.addEventListener('click', () => { window.location.href = '../active/settings.html'; });
+            // UPDATED Event Listeners
+            settingsButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleSettingsMenu(); });
             bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
             historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
+            
             clearHistoryButtonEl.addEventListener('click', handleClearHistory);
 
 
@@ -430,6 +521,22 @@
             document.addEventListener('keydown', handleGlobalKeyDown);
             contentIframeEl.addEventListener('load', handleIframeLoad);
 
+            // Settings Menu Listeners
+            themeSelectorEl.addEventListener('change', (e) => {
+                const themeName = e.target.value;
+                applyTheme(themeName);
+                localStorage.setItem('vernTheme', themeName);
+            });
+            cloakPresetSelectorEl.addEventListener('change', (e) => {
+                currentCloakPresetKey = e.target.value;
+                applyBrowserCloak();
+                localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
+            });
+            customThemeButtonEl.addEventListener('click', () => {
+                alert('Custom theme editor is not yet implemented.');
+            });
+
+            // Global click listener to close any open menu
             document.addEventListener('click', (event) => {
                 if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && !bookmarkButtonEl.contains(event.target)) {
                     bookmarkMenuEl.classList.remove('show');
@@ -437,12 +544,48 @@
                 if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && !historyButtonEl.contains(event.target)) {
                     historyMenuEl.classList.remove('show');
                 }
+                if (settingsMenuEl.classList.contains('show') && !settingsMenuEl.contains(event.target) && !settingsButtonEl.contains(event.target)) {
+                    settingsMenuEl.classList.remove('show');
+                }
             });
         }
+        
+        // NEW THEME and CLOAK FUNCTIONS
+        function populateThemeSelector() {
+            if (!themeSelectorEl || !THEMES) return;
+            themeSelectorEl.innerHTML = '';
+            for (const key in THEMES) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = THEMES[key].name;
+                themeSelectorEl.appendChild(option);
+            }
+        }
 
-        function toggleIframeFullscreen() { /* ... (same as original) ... */ if (!document.fullscreenElement) { if (contentIframeEl) contentIframeEl.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
-        function handleFullscreenChange() { /* ... (same as original) ... */ const fsIconImg = document.getElementById('fullscreen-icon-img'); if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";} fullscreenButtonEl.title = "Exit Fullscreen"; } else { document.body.classList.remove('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";} fullscreenButtonEl.title = "Toggle Fullscreen"; } }
-        function formatUrlInput(input) { /* ... (same as original) ... */ if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
+        function applyTheme(themeKey) {
+            const theme = THEMES[themeKey] || THEMES.main;
+            const root = document.documentElement;
+            root.style.setProperty('--current-theme-bg', theme.colors.bg);
+            root.style.setProperty('--current-theme-text', theme.colors.text);
+            root.style.setProperty('--current-theme-accent', theme.colors.accent);
+            root.style.setProperty('--current-theme-neutral', theme.colors.neutral);
+            root.style.setProperty('--current-theme-button-text', theme.colors.btnText);
+        }
+
+        function populateCloakSelector() {
+            if (!cloakPresetSelectorEl || !cloakPresets) return;
+            cloakPresetSelectorEl.innerHTML = '';
+            for (const key in cloakPresets) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = cloakPresets[key].displayName;
+                cloakPresetSelectorEl.appendChild(option);
+            }
+        }
+
+        function toggleIframeFullscreen() { if (!document.fullscreenElement) { if (contentIframeEl) contentIframeEl.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
+        function handleFullscreenChange() { const fsIconImg = document.getElementById('fullscreen-icon-img'); if (document.fullscreenElement) { document.body.classList.add('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-out-white.png'; fsIconImg.alt = "Exit Fullscreen";} fullscreenButtonEl.title = "Exit Fullscreen"; } else { document.body.classList.remove('app-ui-hidden'); if (fsIconImg) {fsIconImg.src = '../images/zoom-in-white.png'; fsIconImg.alt = "Toggle Fullscreen";} fullscreenButtonEl.title = "Toggle Fullscreen"; } }
+        function formatUrlInput(input) { if (/^(?:[a-z]+:)?\/\//i.test(input)) { if(input.startsWith("//")) return "https:" + input; return input; } if (/^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)*$/.test(input) || input.startsWith("localhost:") || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(\/.*)*$/.test(input) ) return 'https://' + input; return null; }
 
         function navigateTo(urlInput) {
             isLoading = true;
@@ -479,8 +622,6 @@
             }
             try {
                 const encodedPart = proxiedUrl.split(__uv$config.prefix)[1];
-                // The UV decodeUrl function can handle the encoded part directly.
-                // Removing the potentially incorrect logic that stripped trailing slashes.
                 return __uv$config.decodeUrl(encodedPart);
             } catch (e) {
                 console.error("Failed to decode proxied src URL:", proxiedUrl, e);
@@ -495,38 +636,28 @@
                 refreshIcon.classList.remove('spinning');
                 isRefreshing = false;
             }
-
             let updatedUrl;
-
             try {
-                // The canonical way to get the URL from a UV-proxied window is via the __uv hook.
-                // This object mimics the standard Location object but returns un-proxied values.
                 if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.__uv) {
                     updatedUrl = contentIframeEl.contentWindow.__uv.location.toString();
                 } else {
-                    // Fallback for non-proxied content (like about:blank) or if the hook isn't ready.
                     updatedUrl = decodeUrlFromSrc(contentIframeEl.src) || contentIframeEl.src;
                 }
             } catch (e) {
                 console.warn("Error accessing iframe's __uv.location, falling back to decoding src attribute.", e);
-                // Fallback if the above fails for any reason (e.g., cross-origin security error).
                 updatedUrl = decodeUrlFromSrc(contentIframeEl.src) || contentIframeEl.src;
             }
 
-            // Only update currentUrl if we have a valid new URL
             if (updatedUrl && updatedUrl !== currentUrl) {
                 currentUrl = updatedUrl;
             }
 
-            // Now, with the correct `currentUrl`, the rest of the function can proceed.
             try {
                 if (contentIframeEl.contentWindow && contentIframeEl.contentDocument) {
-                    // Use the iframe's title; fallback to a title derived from the URL.
                     currentTitle = contentIframeEl.contentDocument.title || new URL(currentUrl).hostname || 'Untitled';
                     currentFavicon = getFaviconFromIframe();
                 }
             } catch (e) {
-                // If there's a security error accessing the document, create a title from the URL.
                 console.warn("Cross-origin error accessing iframe details, creating title from URL.", e);
                 try {
                     currentTitle = new URL(currentUrl).hostname || 'New Tab';
@@ -549,18 +680,18 @@
             }
         }
 
-        function handleGlobalKeyDown(e) { /* ... (same as original, adjusted) ... */ const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
+        function handleGlobalKeyDown(e) { const targetTagName = e.target.tagName.toLowerCase(); if (targetTagName === 'input' || targetTagName === 'textarea' || targetTagName === 'select' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); backButtonEl.click(); } if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forwardButtonEl.click(); } if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.focus(); searchBarEl.select(); }}
 
-        function loadBookmarks() { /* ... (same as original, targets bookmarksListPopupEl) ... */ const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm)); }
-        function saveBookmarks(bms) { /* ... (same as original) ... */ localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
-        function renderBookmarkItem(bm) { /* ... (same as original, targets bookmarksListPopupEl) ... */ const itemFragment = bookmarkItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const nameSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); const removeBtn = itemFragment.querySelector('.item-remove-button'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
-        function handleAddCurrentBookmark() { /* ... (same as original, uses newBookmarkNameInputPopupEl) ... */ if (!currentUrl || currentUrl === 'about:blank' || currentUrl.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle || new URL(currentUrl).hostname; const url = currentUrl; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputPopupEl.value = ''; }
-        function removeBookmark(urlToRemove) { /* ... (same as original) ... */ let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
-        function handleBookmarkClick(e) { /* ... (same as original, closes bookmarkMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li && !e.target.closest('.item-remove-button')) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
+        function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(bm => renderBookmarkItem(bm)); }
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+        function renderBookmarkItem(bm) { const itemFragment = bookmarkItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const nameSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); const removeBtn = itemFragment.querySelector('.item-remove-button'); li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; nameSpan.textContent = bm.name.length > 20 ? bm.name.substring(0,18) + '...' : bm.name; urlSpan.textContent = bm.url.length > 25 ? bm.url.substring(0, 22) + '...' : bm.url; removeBtn.onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
+        function handleAddCurrentBookmark() { if (!currentUrl || currentUrl === 'about:blank' || currentUrl.startsWith('about:')) { alert("Cannot bookmark this page."); return; } const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle || new URL(currentUrl).hostname; const url = currentUrl; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === url)) { alert("This page is already bookmarked."); return; } bms.push({ name, url }); saveBookmarks(bms); renderBookmarkItem({ name, url }); newBookmarkNameInputPopupEl.value = ''; }
+        function removeBookmark(urlToRemove) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bms = bms.filter(b => b.url !== urlToRemove); saveBookmarks(bms); loadBookmarks(); }
+        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li && !e.target.closest('.item-remove-button')) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
 
-        function addToHistory(title, url) { /* ... (same as original) ... */ if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
-        function renderHistory() { /* ... (same as original, targets historyListPopupEl) ... */ historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const itemFragment = historyItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const titleSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; historyListPopupEl.appendChild(li); }); }
-        function handleHistoryClick(e) { /* ... (same as original, closes historyMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
+        function addToHistory(title, url) { if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
+        function renderHistory() { historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const itemFragment = historyItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const titleSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; historyListPopupEl.appendChild(li); }); }
+        function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
         function handleClearHistory() {
             if (confirm("Are you sure you want to clear the session history?")) {
                 sessionHistory = [];
@@ -579,6 +710,7 @@
 
         function toggleBookmarkMenu() {
             historyMenuEl.classList.remove('show');
+            settingsMenuEl.classList.remove('show'); // Close other menus
             bookmarkMenuEl.classList.toggle('show');
             if (bookmarkMenuEl.classList.contains('show')) {
                 positionMenuUnderButton(bookmarkMenuEl, bookmarkButtonEl);
@@ -586,9 +718,19 @@
         }
         function toggleHistoryMenu() {
             bookmarkMenuEl.classList.remove('show');
+            settingsMenuEl.classList.remove('show'); // Close other menus
             historyMenuEl.classList.toggle('show');
             if (historyMenuEl.classList.contains('show')) {
                 positionMenuUnderButton(historyMenuEl, historyButtonEl);
+            }
+        }
+        // NEW MENU TOGGLE FUNCTION
+        function toggleSettingsMenu() {
+            bookmarkMenuEl.classList.remove('show');
+            historyMenuEl.classList.remove('show'); // Close other menus
+            settingsMenuEl.classList.toggle('show');
+            if (settingsMenuEl.classList.contains('show')) {
+                positionMenuUnderButton(settingsMenuEl, settingsButtonEl);
             }
         }
 
