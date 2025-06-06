@@ -154,6 +154,23 @@
         .menu-setting-item { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .menu-setting-item label { font-size: 0.85em; opacity: 0.8; padding-left: 5px; }
 
+        /* NEW: Conditional Custom Cloak Section */
+        #custom-cloak-settings-container {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+            margin-top: 0;
+            padding-top: 0;
+        }
+        #custom-cloak-settings-container.visible {
+            opacity: 1;
+            max-height: 300px; /* Adjust as needed, should be > content height */
+            margin-top: 15px; /* Re-applies spacing when visible */
+            padding-top: 10px;
+            border-top: 1px solid var(--toolbar-border-color);
+        }
+
         /* Main Content & Footer */
         #content-container { flex: 1; position: relative; background-color: var(--iframe-bg); overflow: hidden; }
         #content-iframe { width: 100%; height: 100%; border: none; display: block; }
@@ -233,17 +250,20 @@
             <label for="cloak-preset-selector">Tab Cloak Preset</label>
             <select id="cloak-preset-selector" class="menu-select"></select>
         </div>
-        <div class="menu-action-bar"></div>
-        <h3><img src="../images/plus-symbol-white.png" alt="Custom Cloak" class="icon-img"> Custom Cloak</h3>
-        <div class="menu-setting-item">
-            <label for="custom-cloak-title">Custom Title</label>
-            <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
+        
+        <div id="custom-cloak-settings-container">
+            <h3><img src="../images/plus-symbol-white.png" alt="Custom Cloak" class="icon-img"> Custom Cloak</h3>
+            <div class="menu-setting-item">
+                <label for="custom-cloak-title">Custom Title</label>
+                <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
+            </div>
+            <div class="menu-setting-item">
+                <label for="custom-cloak-url">Favicon URL</label>
+                <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
+            </div>
+            <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
         </div>
-        <div class="menu-setting-item">
-            <label for="custom-cloak-url">Favicon URL</label>
-            <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
-        </div>
-        <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
+
         <div class="menu-action-bar"></div>
         <button id="clear-browser-data-button" class="menu-button clear-button">
             <img src="../images/trash-white.png" alt="Clear Data" class="icon-img">Clear All Browser Data
@@ -321,31 +341,23 @@
             historyMenuEl, settingsMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl, 
             addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, 
             themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
-            searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl;
+            searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
+            customCloakSettingsContainerEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
 
         // --- CORE LOGIC ---
         document.addEventListener('DOMContentLoaded', async () => {
-            // Assign DOM elements
             assignDOMElements();
-            
-            // Populate dynamic menus
             populateThemeSelector();
             populateCloakSelector();
             populateSearchEngineSelector();
-
-            // Initialize services and settings
             await initUV();
             loadSettings();
             setupEventListeners();
-            
-            // Load persistent data
             pruneHistory();
             loadBookmarks();
             loadHistory();
-            
-            // Restore last session or load home
             const lastUrl = localStorage.getItem('vernLastUrl') || 'about:blank';
             navigateTo(lastUrl);
         });
@@ -356,7 +368,7 @@
             bookmarksListPopupEl = document.getElementById('bookmarks-list-popup'); newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup'); addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
             historyListPopupEl = document.getElementById('history-list-popup'); historySearchBarEl = document.getElementById('history-search-bar');
             themeSelectorEl = document.getElementById('theme-selector'); searchEngineSelectorEl = document.getElementById('search-engine-selector'); historyLifespanSelectorEl = document.getElementById('history-lifespan-selector'); cloakPresetSelectorEl = document.getElementById('cloak-preset-selector');
-            customCloakTitleEl = document.getElementById('custom-cloak-title'); customCloakUrlEl = document.getElementById('custom-cloak-url'); applyCustomCloakButtonEl = document.getElementById('apply-custom-cloak-button');
+            customCloakSettingsContainerEl = document.getElementById('custom-cloak-settings-container'); customCloakTitleEl = document.getElementById('custom-cloak-title'); customCloakUrlEl = document.getElementById('custom-cloak-url'); applyCustomCloakButtonEl = document.getElementById('apply-custom-cloak-button');
             clearBrowserDataButtonEl = document.getElementById('clear-browser-data-button');
             
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
@@ -367,55 +379,52 @@
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
 
         function loadSettings() {
-            // Theme
             const savedTheme = localStorage.getItem('vernTheme') || 'main';
             applyTheme(savedTheme);
             themeSelectorEl.value = savedTheme;
 
-            // Search Engine
             currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
             searchEngineSelectorEl.value = currentSearchEngineKey;
 
-            // History Lifespan
             historyLifespanSelectorEl.value = localStorage.getItem('vernHistoryLifespan') || '14';
             
-            // Cloak
             currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
             cloakPresetSelectorEl.value = currentCloakPresetKey;
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
             customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
             applyBrowserCloak();
+            toggleCustomCloakView(currentCloakPresetKey === 'custom');
         }
 
         function setupEventListeners() {
-            // Toolbar
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
             refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank') { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
             
-            // Menus
             settingsButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleSettingsMenu(); });
             bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
             historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
             document.addEventListener('click', closeAllMenus);
             
-            // Menu Actions
             addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
             bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
             historyListPopupEl.addEventListener('click', handleHistoryClick);
             historySearchBarEl.addEventListener('input', () => loadHistory(historySearchBarEl.value));
 
-            // Settings Listeners
             themeSelectorEl.addEventListener('change', (e) => { applyTheme(e.target.value); localStorage.setItem('vernTheme', e.target.value); });
             searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             historyLifespanSelectorEl.addEventListener('change', (e) => { localStorage.setItem('vernHistoryLifespan', e.target.value); pruneHistory(); loadHistory(); });
-            cloakPresetSelectorEl.addEventListener('change', (e) => { currentCloakPresetKey = e.target.value; localStorage.setItem('vernCloakPreset', currentCloakPresetKey); applyBrowserCloak(); });
+            cloakPresetSelectorEl.addEventListener('change', (e) => {
+                currentCloakPresetKey = e.target.value;
+                localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
+                applyBrowserCloak();
+                toggleCustomCloakView(currentCloakPresetKey === 'custom');
+            });
             applyCustomCloakButtonEl.addEventListener('click', applyAndSaveCustomCloak);
             clearBrowserDataButtonEl.addEventListener('click', clearAllData);
 
-            // Global Hotkeys
             document.addEventListener('keydown', handleGlobalKeyDown);
         }
 
@@ -445,15 +454,12 @@
                     finalUrl = contentIframeEl.contentWindow.__uv.location.href;
                     finalTitle = contentIframeEl.contentDocument.title || new URL(finalUrl).hostname;
                 }
-            } catch (e) {
-                console.warn("Cross-origin error accessing iframe details, may not get final URL.", e);
-            }
+            } catch (e) { console.warn("Cross-origin error accessing iframe details, may not get final URL.", e); }
 
             currentUrl = finalUrl;
             currentTitle = finalTitle;
-            localStorage.setItem('vernLastUrl', currentUrl); // Save current page locally
+            localStorage.setItem('vernLastUrl', currentUrl);
             
-            // Update UI
             searchBarEl.value = (currentUrl !== 'about:blank') ? currentUrl : '';
             applyBrowserCloak();
             if (currentUrl && !currentUrl.startsWith('about:')) {
@@ -464,16 +470,9 @@
         function proxyUrl(urlToProxy) {
             if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
             if (urlToProxy.startsWith('data:')) return urlToProxy;
-            if (typeof __uv$config === 'undefined') {
-                console.error('UV config not found. Cannot proxy URL.');
-                return urlToProxy;
-            }
-            try {
-                return self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy);
-            } catch (e) {
-                console.error('URL proxying failed:', e);
-                return urlToProxy;
-            }
+            if (typeof __uv$config === 'undefined') { console.error('UV config not found.'); return urlToProxy; }
+            try { return self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } 
+            catch (e) { console.error('URL proxying failed:', e); return urlToProxy; }
         }
         
         function formatUrlInput(input) { const trimmed = input.trim(); if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) return trimmed; if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed)) return 'https://' + trimmed; return null; }
@@ -483,12 +482,9 @@
         function saveHistory(history) { localStorage.setItem('vernHistory', JSON.stringify(history)); }
         
         function addToHistory(title, url) {
-            const lifespan = localStorage.getItem('vernHistoryLifespan');
-            if (lifespan === "off") return; // "off" is not a value, should be compared to '0' or a specific string. Let's use '0' as never clear.
-            
+            if (localStorage.getItem('vernHistoryLifespan') === '0') return;
             let history = getHistory();
             if (history.length > 0 && history[history.length - 1].url === url) return;
-
             history.push({ title: title || url, url, timestamp: new Date().toISOString() });
             saveHistory(history);
             loadHistory(historySearchBarEl.value);
@@ -508,11 +504,8 @@
             if (history.length === 0) {
                 const li = document.createElement('li');
                 li.textContent = 'No history found.';
-                li.style.cursor = 'default';
-                li.style.textAlign = 'center';
-                li.style.opacity = '0.7';
-                historyListPopupEl.appendChild(li);
-                return;
+                li.style.cursor = 'default'; li.style.textAlign = 'center'; li.style.opacity = '0.7';
+                historyListPopupEl.appendChild(li); return;
             }
 
             const grouped = {};
@@ -543,28 +536,19 @@
             const today = new Date();
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
-            
             let dateString;
-            if (date.toDateString() === today.toDateString()) {
-                dateString = 'Today';
-            } else if (date.toDateString() === yesterday.toDateString()) {
-                dateString = 'Yesterday';
-            } else {
-                dateString = date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-            }
-            
-            const timeString = date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
-            return `${dateString} - ${timeString.split(':')[0]} ${timeString.slice(-2)}`; // Group by hour
+            if (date.toDateString() === today.toDateString()) dateString = 'Today';
+            else if (date.toDateString() === yesterday.toDateString()) dateString = 'Yesterday';
+            else dateString = date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+            return `${dateString} - ${date.toLocaleTimeString(undefined, { hour: 'numeric', hour12: true })}`;
         }
 
         function pruneHistory() {
             const lifespanDays = Number(localStorage.getItem('vernHistoryLifespan') || 14);
             if (lifespanDays === 0) return;
-
             let history = getHistory();
             const cutoffDate = new Date();
             cutoffDate.setDate(cutoffDate.getDate() - lifespanDays);
-
             const pruned = history.filter(item => new Date(item.timestamp) >= cutoffDate);
             saveHistory(pruned);
         }
@@ -579,17 +563,10 @@
         // --- DATA & SETTINGS MANAGEMENT ---
         function clearAllData() {
             if (confirm("Are you sure you want to clear ALL browser data? This will delete all bookmarks, history, and settings and cannot be undone.")) {
-                localStorage.removeItem('vernBookmarks');
-                localStorage.removeItem('vernHistory');
-                localStorage.removeItem('vernTheme');
-                localStorage.removeItem('vernSearchEngine');
-                localStorage.removeItem('vernHistoryLifespan');
-                localStorage.removeItem('vernCloakPreset');
-                localStorage.removeItem('vernCustomCloakTitle');
-                localStorage.removeItem('vernCustomCloakUrl');
-                localStorage.removeItem('vernLastUrl');
-                alert("All browser data has been cleared.");
-                window.location.reload();
+                localStorage.removeItem('vernBookmarks'); localStorage.removeItem('vernHistory'); localStorage.removeItem('vernTheme');
+                localStorage.removeItem('vernSearchEngine'); localStorage.removeItem('vernHistoryLifespan'); localStorage.removeItem('vernCloakPreset');
+                localStorage.removeItem('vernCustomCloakTitle'); localStorage.removeItem('vernCustomCloakUrl'); localStorage.removeItem('vernLastUrl');
+                alert("All browser data has been cleared."); window.location.reload();
             }
         }
 
@@ -604,6 +581,11 @@
         }
 
         // --- UI & MENU TOGGLING ---
+        function toggleCustomCloakView(show) {
+            if (show) customCloakSettingsContainerEl.classList.add('visible');
+            else customCloakSettingsContainerEl.classList.remove('visible');
+        }
+
         function closeAllMenus(event) {
              if (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event.target) && !bookmarkButtonEl.contains(event.target)) bookmarkMenuEl.classList.remove('show');
              if (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event.target) && !historyButtonEl.contains(event.target)) historyMenuEl.classList.remove('show');
@@ -628,21 +610,22 @@
                 const customTitle = localStorage.getItem('vernCustomCloakTitle') || 'Vern Max';
                 const customFaviconUrlSource = localStorage.getItem('vernCustomCloakUrl') || 'https://google.com';
                 document.title = customTitle;
-                appFaviconEl.href = getGoogleFaviconUrl(customFaviconUrlSource);
+                appFaviconEl.href = getFaviconUrl(customFaviconUrlSource);
             } else if (selectedPreset && currentCloakPresetKey !== 'none') {
                 document.title = selectedPreset.title;
                 appFaviconEl.href = selectedPreset.faviconUrl;
             } else {
                 document.title = currentTitle || 'Vern Max';
-                appFaviconEl.href = getGoogleFaviconUrl(currentUrl);
+                appFaviconEl.href = getFaviconUrl(currentUrl);
             }
         }
         
-        function getGoogleFaviconUrl(targetUrl) {
+        // NEW: Faster favicon method
+        function getFaviconUrl(targetUrl) {
             if (!targetUrl || targetUrl.startsWith('about:')) return 'logo.png';
             try {
                 const url = new URL(targetUrl);
-                return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url.origin}&size=40`;
+                return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`;
             } catch (e) {
                 return 'logo.png';
             }
