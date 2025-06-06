@@ -109,7 +109,7 @@
 
         .mini-menu {
             position: absolute;
-            top: calc(100% + 5px); /* Position below the toolbar */
+            top: calc(100% + 5px);
             background-color: var(--menu-bg);
             border: 1px solid var(--menu-border-color);
             border-radius: 8px;
@@ -133,11 +133,6 @@
             transform: translateY(0) scale(1);
             transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0s;
         }
-
-        /* Dynamic positioning via JS will override these if needed, but good for initial layout */
-        /* #bookmark-menu { right: 10px; }
-        #history-menu { right: 10px; } */
-
 
         .mini-menu h3 {
             margin-top: 0; margin-bottom: 10px; font-size: 1.1em;
@@ -175,15 +170,18 @@
 
         .mini-menu .menu-action-bar { margin-top:15px; padding-top:10px; border-top: 1px solid var(--toolbar-border-color); }
         .mini-menu .menu-input {
-            width: calc(100% - 30px); height: 38px; padding: 0 15px; margin-bottom: 10px;
+            width: 100%;
+            height: 38px; padding: 0 15px; margin-bottom: 10px;
             background-color: var(--input-bg); color: var(--text-color);
             border: none; border-radius: 12px; font-family: var(--font-family-main);
-            box-sizing: border-box; box-shadow: 0 0 0 1px var(--button-outline-color);
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px var(--button-outline-color);
             font-size: 0.9em;
         }
          .mini-menu .menu-input:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
         .mini-menu .menu-button {
-            width: 100%; height: 38px; padding: 0 15px;
+            width: 100%;
+            height: 38px; padding: 0 15px;
             background-color: var(--button-bg); color: var(--button-text-color);
             border: none; border-radius: 12px; cursor: pointer;
             transition: background-color 0.2s ease; font-family: var(--font-family-main);
@@ -289,7 +287,7 @@
         <ul id="history-list-popup"></ul>
         <div class="menu-action-bar">
             <button id="clear-history-button" class="menu-button clear-button">
-                <img src="../images/trash-white.png" alt="Clear" class="icon-img">Clear History
+                <img src="../images/magnify-white.png" alt="Icon" class="icon-img">Clear History
             </button>
         </div>
     </div>
@@ -449,36 +447,31 @@
         function addToHistory(title, url) { /* ... (same as original) ... */ if (!url || url === 'about:blank' || url.startsWith('about:')) return; if (sessionHistory.length > 0 && sessionHistory[sessionHistory.length - 1].url === url && sessionHistory[sessionHistory.length - 1].title === title) return; sessionHistory.push({ title: title || url, url, timestamp: new Date() }); if (sessionHistory.length > MAX_HISTORY_ITEMS) sessionHistory.shift(); renderHistory(); }
         function renderHistory() { /* ... (same as original, targets historyListPopupEl) ... */ historyListPopupEl.innerHTML = ''; [...sessionHistory].reverse().forEach(item => { const itemFragment = historyItemTemplate.content.cloneNode(true); const li = itemFragment.querySelector('li'); const titleSpan = itemFragment.querySelector('.item-name'); const urlSpan = itemFragment.querySelector('.item-url'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}\n${item.timestamp.toLocaleTimeString()}`; titleSpan.textContent = item.title && item.title.length > 22 ? item.title.substring(0,19) + '...' : item.title || item.url; urlSpan.textContent = item.url.length > 25 ? item.url.substring(0, 22) + '...' : item.url; historyListPopupEl.appendChild(li); }); }
         function handleHistoryClick(e) { /* ... (same as original, closes historyMenuEl) ... */ const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
-
         function handleClearHistory() {
             if (confirm("Are you sure you want to clear the session history?")) {
                 sessionHistory = [];
                 renderHistory(); // Re-render the now empty list
-                // historyMenuEl.classList.remove('show'); // Optionally close menu
             }
         }
 
         function positionMenuUnderButton(menuEl, buttonEl) {
             const btnRect = buttonEl.getBoundingClientRect();
-            const toolbarRect = toolbarEl.getBoundingClientRect(); // Assuming toolbarEl is globally accessible
+            const toolbarRect = toolbarEl.getBoundingClientRect();
 
-            menuEl.style.top = (toolbarRect.height + 5) + 'px'; // Position below toolbar
-
-            // Align menu's right edge with button's right edge
-            // This calculation positions the menu so its right edge aligns with the button's right edge relative to the viewport
+            menuEl.style.top = (toolbarRect.height + 5) + 'px';
             menuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px';
-            menuEl.style.left = 'auto'; // Ensure left is not conflicting
+            menuEl.style.left = 'auto';
         }
 
         function toggleBookmarkMenu() {
-            historyMenuEl.classList.remove('show'); // Close other menu
+            historyMenuEl.classList.remove('show');
             bookmarkMenuEl.classList.toggle('show');
             if (bookmarkMenuEl.classList.contains('show')) {
                 positionMenuUnderButton(bookmarkMenuEl, bookmarkButtonEl);
             }
         }
         function toggleHistoryMenu() {
-            bookmarkMenuEl.classList.remove('show'); // Close other menu
+            bookmarkMenuEl.classList.remove('show');
             historyMenuEl.classList.toggle('show');
             if (historyMenuEl.classList.contains('show')) {
                 positionMenuUnderButton(historyMenuEl, historyButtonEl);
