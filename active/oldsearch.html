@@ -53,14 +53,13 @@
             background-color: var(--bg-color); color: var(--text-color);
             display: flex; flex-direction: column;
         }
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;}
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; display: none; }
 
         /* Toolbar */
         #toolbar {
             display: flex; align-items: center; padding: 8px 10px;
             background-color: var(--toolbar-bg); box-shadow: var(--toolbar-shadow);
             border-bottom: 1px solid var(--toolbar-border-color); z-index: 1000; position: relative;
-            transition: transform 0.3s ease-in-out, background-color 0.3s, border-color 0.3s;
         }
         .nav-button, .toolbar-button {
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
@@ -155,14 +154,21 @@
         .menu-setting-item { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .menu-setting-item label { font-size: 0.85em; opacity: 0.8; padding-left: 5px; }
 
+        /* Conditional Custom Cloak Section */
         #custom-cloak-settings-container {
-            opacity: 0; max-height: 0; overflow: hidden;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
             transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
-            margin-top: 0; padding-top: 0;
+            margin-top: 0;
+            padding-top: 0;
         }
         #custom-cloak-settings-container.visible {
-            opacity: 1; max-height: 300px; margin-top: 15px; 
-            padding-top: 10px; border-top: 1px solid var(--toolbar-border-color);
+            opacity: 1;
+            max-height: 300px; 
+            margin-top: 15px; 
+            padding-top: 10px;
+            border-top: 1px solid var(--toolbar-border-color);
         }
 
         /* Main Content & Footer */
@@ -176,38 +182,63 @@
         @keyframes spinRefreshIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         body.app-ui-hidden #toolbar { display: none !important; }
 
-        /* --- SPECIAL THEME FEATURES --- */
-        .body-toolbar-bottom { flex-direction: column-reverse; }
-        .body-toolbar-bottom #toolbar { border-bottom: none; border-top: 1px solid var(--toolbar-border-color); }
-        .body-toolbar-bottom .mini-menu { top: auto; bottom: calc(100% + 5px); }
-        
-        .body-focus-mode { overflow: visible; }
-        .body-focus-mode #toolbar { transform: translateY(-100%); }
-        .body-focus-mode:hover #toolbar { transform: translateY(0); }
+        /* --- Special Theme Features --- */
+        /* Bottom Bar Theme */
+        body.theme-bottom-bar { flex-direction: column-reverse; }
+        body.theme-bottom-bar #toolbar { border-top: 1px solid var(--toolbar-border-color); border-bottom: none; }
+        body.theme-bottom-bar .mini-menu { top: auto; bottom: calc(100% + 5px); transform-origin: bottom center; }
 
-        .iframe-inverted { filter: invert(1) hue-rotate(180deg); background-color: #fff; }
+        /* Floating Toolbar Theme */
+        body.theme-floating-toolbar { background-color: var(--current-theme-bg) !important; } /* Ensure body bg is solid */
+        body.theme-floating-toolbar #toolbar {
+            margin: 10px; border-radius: 12px; width: calc(100% - 20px);
+            background-color: color-mix(in srgb, var(--toolbar-bg) 85%, transparent);
+            backdrop-filter: blur(5px);
+        }
+        body.theme-floating-toolbar .mini-menu { top: calc(100% + 15px); }
+        body.theme-floating-toolbar #content-container { border-radius: 12px; }
 
-        .body-ghost-mode #toolbar, .body-ghost-mode .mini-menu { background-color: color-mix(in srgb, var(--toolbar-bg) 80%, transparent); backdrop-filter: blur(5px); }
-
-        .body-terminal-mode { --font-family-main: 'Courier New', monospace; }
-        .body-terminal-mode #search-bar:focus { animation: blink 1s step-end infinite; }
-        .body-terminal-mode::after { content: ' '; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: rgba(18, 16, 16, 0.1); opacity: 0; pointer-events: none; animation: flicker 0.15s infinite; }
-        @keyframes blink { 50% { box-shadow: 0 0 0 2px var(--current-theme-text); } }
-        @keyframes flicker { 0% { opacity: 0.1; } 20% { opacity: 1; } 25% { opacity: 0.3; } 30% { opacity: 1; } 35% { opacity: 0.2; } 40% { opacity: 1; } 100% { opacity: 0.1; } }
-
-        .body-sunrise-mode { animation: sunrise-bg 600s linear infinite; }
-        @keyframes sunrise-bg {
-            0%   { --bg-color: #02091a; --current-theme-accent: #ff4e50; }
-            25%  { --bg-color: #f28c5a; --current-theme-accent: #f07986; }
-            50%  { --bg-color: #87CEEB; --current-theme-accent: #3498DB; }
-            75%  { --bg-color: #f28c5a; --current-theme-accent: #f07986; }
-            100% { --bg-color: #02091a; --current-theme-accent: #ff4e50; }
+        /* Retro Terminal Theme */
+        body.theme-retro-terminal #search-bar:focus { animation: blink-caret 1s step-end infinite; }
+        @keyframes blink-caret {
+            from, to { box-shadow: var(--input-focus-shadow), inset 2px 0 0 0 var(--current-theme-accent); }
+            50% { box-shadow: var(--input-focus-shadow), inset 2px 0 0 0 transparent; }
         }
 
+        /* Minimalist Theme */
+        body.theme-minimalist .toolbar-button, body.theme-minimalist #fullscreen-button {
+            opacity: 0; transform: scale(0.8); transition: opacity 0.3s, transform 0.3s;
+        }
+        body.theme-minimalist #toolbar:hover .toolbar-button, body.theme-minimalist #toolbar:hover #fullscreen-button {
+            opacity: 1; transform: scale(1);
+        }
+
+        /* Glitchy Theme */
+        body.theme-glitchy { animation: glitch-anim 7s infinite steps(8) alternate; }
+        @keyframes glitch-anim {
+            0% { transform: translate(0); } 10% { transform: translate(-2px, 2px); } 20% { transform: translate(2px, -2px); }
+            30% { transform: translate(-2px, -2px); } 40% { transform: translate(2px, 2px); } 50% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+
+        /* Flipped Mode Theme */
+        body.theme-flipped-mode #toolbar, body.theme-flipped-mode #content-container { transform: scaleX(-1); }
+        body.theme-flipped-mode .nav-button, body.theme-flipped-mode .toolbar-button, body.theme-flipped-mode #search-bar, body.theme-flipped-mode .mini-menu {
+            transform: scaleX(-1);
+        }
+
+        /* Invisible UI Theme */
+        body.theme-invisible-ui #toolbar {
+            background-color: transparent; border-bottom-color: transparent; box-shadow: none;
+            transition: background-color 0.3s ease;
+        }
+        body.theme-invisible-ui #toolbar:hover {
+            background-color: var(--toolbar-bg); border-bottom-color: var(--toolbar-border-color);
+        }
     </style>
 </head>
 <body>
-    <canvas id="canvas-effects"></canvas>
+    <canvas id="canvas"></canvas>
 
     <template id="bookmark-item-template">
         <li>
@@ -306,7 +337,6 @@
         let currentTitle = 'New Tab';
         let isLoading = false;
         let isRefreshing = false;
-        let activeCanvasEffect = null;
         
         const searchEngines = {
             'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
@@ -321,7 +351,12 @@
             'custom': { displayName: "Custom (Manual)" },
             'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
-            'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' }
+            'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
+            'gmail': { displayName: "Gmail", title: 'Inbox', faviconUrl: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico' },
+            'clever': { displayName: "Clever", title: 'Clever | Portal', faviconUrl: 'https://assets.clever.com/launchpad/1a74895/favicon.ico?1' },
+            'hac': { displayName: "Home Access Center", title: 'Home Access Center', faviconUrl: 'https://hac.doe.k12.de.us/HomeAccess/Content/Images/favicon.ico' },
+            'google_drive': { displayName: "My Drive", title: 'My Drive - Google Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
         };
         let currentCloakPresetKey = 'none';
 
@@ -334,6 +369,8 @@
             forest: { name: "Forest", colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } }, 
             rose: { name: "Rosé Quartz", colors: { bg: '#f7d1cd', text: '#5e3d42', accent: '#e8959e', neutral: '#f2b5b0', btnText: '#5e3d42' } }, 
             coffee: { name: "Coffee House", colors: { bg: '#4a403a', text: '#e7e2dd', accent: '#a5a58d', neutral: '#6b5f58', btnText: '#FFFFFF' } }, 
+            matrix: { name: "Matrix", colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } }, 
+            cyberpunk: { name: "Cyberpunk", colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } }, 
             dracula: { name: "Dracula", colors: { bg: '#282a36', text: '#f8f8f2', accent: '#bd93f9', neutral: '#44475a', btnText: '#f8f8f2' } }, 
             nord: { name: "Nord", colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } }, 
             gruvbox: { name: "Gruvbox", colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } }, 
@@ -353,29 +390,22 @@
             emerald: { name: "Emerald", colors: { bg: '#0D2C22', text: '#C7E5DA', accent: '#50C878', neutral: '#1A4335', btnText: '#FFFFFF' } },
             autumn: { name: "Autumn", colors: { bg: '#4D2C1C', text: '#F2E8DF', accent: '#DA5F02', neutral: '#603822', btnText: '#FFFFFF' } },
             midnight: { name: "Midnight", colors: { bg: '#000033', text: '#E8E8FF', accent: '#5C5CFF', neutral: '#1A1A4D', btnText: '#FFFFFF' } },
-            high_contrast: { name: "High Contrast", colors: { bg: '#000000', text: '#FFFFFF', accent: '#FFFF00', neutral: '#222222', btnText: '#000000' } },
-            olive: { name: "Olive", colors: { bg: '#556B2F', text: '#F5F5DC', accent: '#BDB76B', neutral: '#6B8E23', btnText: '#F5F5DC' } },
-            sky: { name: "Sky", colors: { bg: '#87CEEB', text: '#00008B', accent: '#4682B4', neutral: '#ADD8E6', btnText: '#FFFFFF' } },
-            honey: { name: "Honey", colors: { bg: '#EAA221', text: '#4A2D0C', accent: '#FFAA00', neutral: '#F0B849', btnText: '#4A2D0C' } },
-            wine: { name: "Wine", colors: { bg: '#4E051C', text: '#EBDDE2', accent: '#8A0332', neutral: '#640725', btnText: '#FFFFFF' } },
-            steel: { name: "Steel", colors: { bg: '#B0C4DE', text: '#2F4F4F', accent: '#778899', neutral: '#C1D1E3', btnText: '#FFFFFF' } }
-        };
-
-        const SPECIAL_THEMES = {
-            abyss: { name: "Abyss", feature: 'toolbarBottom', colors: { bg: '#0B0F19', text: '#C7D3F0', accent: '#3A6EA5', neutral: '#161D2E', btnText: '#FFFFFF' } },
-            zenith: { name: "Zenith", feature: 'toolbarBottom', colors: { bg: '#E9F1F7', text: '#2A3B49', accent: '#78A1BB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
-            starlight: { name: "Starlight", feature: 'starfield', colors: { bg: '#000000', text: '#FFFFFF', accent: '#FFFFFF', neutral: '#222222', btnText: '#000000' } },
-            matrix: { name: "Matrix", feature: 'matrix', colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } },
-            ocean: { name: "Ocean", feature: 'ocean', colors: { bg: '#030E24', text: '#A8D8F0', accent: '#36A2EB', neutral: '#071A3D', btnText: '#FFFFFF' } },
-            sunrise: { name: "Sunrise", feature: 'sunrise', colors: {} }, /* Colors handled by CSS animation */
-            focus: { name: "Focus", feature: 'focus', colors: { bg: '#EFEFEF', text: '#333333', accent: '#555555', neutral: '#F9F9F9', btnText: '#FFFFFF' } },
-            ghost: { name: "Ghost", feature: 'ghost', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
-            invert: { name: "Invert", feature: 'invert', colors: { bg: '#FFFFFF', text: '#000000', accent: '#0000FF', neutral: '#EEEEEE', btnText: '#FFFFFF' } },
-            terminal: { name: "Terminal", feature: 'terminal', colors: { bg: '#0A0E14', text: '#39FF14', accent: '#39FF14', neutral: '#121821', btnText: '#0A0E14' } }
+            
+            // SPECIAL THEMES
+            bottom_bar: { name: "Bottom Bar", feature: 'bottomBar', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            particle_flow: { name: "Particle Flow", feature: 'particleFlow', colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } },
+            retro_terminal: { name: "Retro Terminal", feature: 'retroTerminal', colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } },
+            floating_toolbar: { name: "Floating Toolbar", feature: 'floatingToolbar', colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } },
+            minimalist: { name: "Minimalist", feature: 'minimalist', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+            ocean_deep: { name: "Ocean Deep", feature: 'oceanDeep', colors: { bg: '#0A2E36', text: '#E0F4F2', accent: '#2E8B57', neutral: '#144552', btnText: '#FFFFFF' } },
+            sakura_blossom: { name: "Sakura Blossom", feature: 'sakuraBlossom', colors: { bg: '#fff0f3', text: '#5e3d42', accent: '#e8959e', neutral: '#ffe0e7', btnText: '#5e3d42' } },
+            glitchy: { name: "Glitchy", feature: 'glitchy', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            flipped_mode: { name: "Flipped Mode", feature: 'flippedMode', colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } },
+            invisible_ui: { name: "Invisible UI", feature: 'invisibleUi', colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } }
         };
 
         // --- DOM ELEMENT REFERENCES ---
-        let canvasEffectsEl, contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
+        let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
             fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl, bookmarkMenuEl, 
             historyMenuEl, settingsMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl, 
             addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, 
@@ -384,6 +414,42 @@
             customCloakSettingsContainerEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
+        
+        // --- PARTICLE ENGINE ---
+        let particleAnimationId = null;
+        const canvasEl = document.getElementById('canvas');
+        const canvasCtx = canvasEl.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() { canvasEl.width = window.innerWidth; canvasEl.height = window.innerHeight; }
+        function stopAllParticles() { if (particleAnimationId) { cancelAnimationFrame(particleAnimationId); particleAnimationId = null; } particles = []; canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height); canvasEl.style.display = 'none'; }
+        function startParticleEffect(type) {
+            stopAllParticles();
+            canvasEl.style.display = 'block';
+            resizeCanvas();
+            let config = {};
+            switch(type) {
+                case 'particleFlow': config = { count: 150, shape: 'line', speed: 1, maxSize: 4, color: 'rgba(247, 37, 133, 0.7)' }; break;
+                case 'oceanDeep': config = { count: 100, shape: 'circle', speed: 0.5, maxSize: 8, color: 'rgba(224, 244, 242, 0.5)', vertical: true }; break;
+                case 'sakuraBlossom': config = { count: 30, shape: 'text', text: '🌸', speed: 1, maxSize: 25, color: '#FFB7C5' }; break;
+                default: return;
+            }
+            for (let i = 0; i < config.count; i++) { particles.push({ x: Math.random() * canvasEl.width, y: config.vertical ? canvasEl.height + Math.random() * 100 : Math.random() * canvasEl.height, size: Math.random() * config.maxSize + 1, speedX: (Math.random() * 2 - 1) * config.speed, speedY: config.vertical ? (Math.random() * -1 - 0.5) * config.speed : (Math.random() * 2 - 1) * config.speed, ...config }); }
+            animateParticles();
+        }
+        function animateParticles() {
+            canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i]; p.x += p.speedX; p.y += p.speedY;
+                if (p.x > canvasEl.width + p.size) p.x = -p.size; else if (p.x < -p.size) p.x = canvasEl.width + p.size;
+                if (p.y < -p.size) p.y = p.vertical ? canvasEl.height + p.size : canvasEl.height + p.size; else if (p.y > canvasEl.height + p.size && p.vertical) p.y = -p.size;
+                canvasCtx.fillStyle = p.color; canvasCtx.strokeStyle = p.color;
+                if (p.shape === 'circle') { canvasCtx.beginPath(); canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2); canvasCtx.fill(); } 
+                else if (p.shape === 'line') { canvasCtx.lineWidth = p.size / 2; canvasCtx.beginPath(); canvasCtx.moveTo(p.x, p.y); canvasCtx.lineTo(p.x + p.speedX * 5, p.y + p.speedY * 5); canvasCtx.stroke(); } 
+                else if (p.shape === 'text') { canvasCtx.font = p.size + 'px sans-serif'; canvasCtx.fillText(p.text, p.x, p.y); }
+            }
+            particleAnimationId = requestAnimationFrame(animateParticles);
+        }
 
         // --- CORE LOGIC ---
         document.addEventListener('DOMContentLoaded', async () => {
@@ -402,7 +468,6 @@
         });
 
         function assignDOMElements() {
-            canvasEffectsEl = document.getElementById('canvas-effects');
             toolbarEl = document.getElementById('toolbar'); contentIframeEl = document.getElementById('content-iframe'); searchBarEl = document.getElementById('search-bar'); homeButtonEl = document.getElementById('home-button'); backButtonEl = document.getElementById('back-button'); forwardButtonEl = document.getElementById('forward-button'); refreshButtonEl = document.getElementById('refresh-button'); fullscreenButtonEl = document.getElementById('fullscreen-button'); settingsButtonEl = document.getElementById('settings-button'); bookmarkButtonEl = document.getElementById('bookmark-button'); historyButtonEl = document.getElementById('history-button');
             bookmarkMenuEl = document.getElementById('bookmark-menu'); historyMenuEl = document.getElementById('history-menu'); settingsMenuEl = document.getElementById('settings-menu');
             bookmarksListPopupEl = document.getElementById('bookmarks-list-popup'); newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup'); addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
@@ -410,6 +475,7 @@
             themeSelectorEl = document.getElementById('theme-selector'); searchEngineSelectorEl = document.getElementById('search-engine-selector'); historyLifespanSelectorEl = document.getElementById('history-lifespan-selector'); cloakPresetSelectorEl = document.getElementById('cloak-preset-selector');
             customCloakSettingsContainerEl = document.getElementById('custom-cloak-settings-container'); customCloakTitleEl = document.getElementById('custom-cloak-title'); customCloakUrlEl = document.getElementById('custom-cloak-url'); applyCustomCloakButtonEl = document.getElementById('apply-custom-cloak-button');
             clearBrowserDataButtonEl = document.getElementById('clear-browser-data-button');
+            
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
             historyItemTemplate = document.getElementById('history-item-template');
             historyGroupTemplate = document.getElementById('history-group-template');
@@ -419,12 +485,14 @@
 
         function loadSettings() {
             const savedTheme = localStorage.getItem('vernTheme') || 'main';
-            themeSelectorEl.value = savedTheme;
             applyTheme(savedTheme);
+            themeSelectorEl.value = savedTheme;
 
             currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
             searchEngineSelectorEl.value = currentSearchEngineKey;
+
             historyLifespanSelectorEl.value = localStorage.getItem('vernHistoryLifespan') || '14';
+            
             currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
             cloakPresetSelectorEl.value = currentCloakPresetKey;
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
@@ -439,14 +507,17 @@
             homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
             refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank') { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
+            
             settingsButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleSettingsMenu(); });
             bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
             historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
             document.addEventListener('click', closeAllMenus);
+            
             addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
             bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
             historyListPopupEl.addEventListener('click', handleHistoryClick);
             historySearchBarEl.addEventListener('input', () => loadHistory(historySearchBarEl.value));
+
             themeSelectorEl.addEventListener('change', (e) => { applyTheme(e.target.value); localStorage.setItem('vernTheme', e.target.value); });
             searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             historyLifespanSelectorEl.addEventListener('change', (e) => { localStorage.setItem('vernHistoryLifespan', e.target.value); pruneHistory(); loadHistory(); });
@@ -458,7 +529,9 @@
             });
             applyCustomCloakButtonEl.addEventListener('click', applyAndSaveCustomCloak);
             clearBrowserDataButtonEl.addEventListener('click', clearAllData);
+
             document.addEventListener('keydown', handleGlobalKeyDown);
+            window.addEventListener('resize', resizeCanvas);
         }
 
         // --- NAVIGATION & PROXY ---
@@ -592,7 +665,9 @@
         // --- DATA & SETTINGS MANAGEMENT ---
         function clearAllData() {
             if (confirm("Are you sure you want to clear ALL browser data? This will delete all bookmarks, history, and settings and cannot be undone.")) {
-                localStorage.clear();
+                localStorage.removeItem('vernBookmarks'); localStorage.removeItem('vernHistory'); localStorage.removeItem('vernTheme');
+                localStorage.removeItem('vernSearchEngine'); localStorage.removeItem('vernHistoryLifespan'); localStorage.removeItem('vernCloakPreset');
+                localStorage.removeItem('vernCustomCloakTitle'); localStorage.removeItem('vernCustomCloakUrl'); localStorage.removeItem('vernLastUrl');
                 alert("All browser data has been cleared."); window.location.reload();
             }
         }
@@ -619,52 +694,52 @@
         function toggleHistoryMenu() { [bookmarkMenuEl, settingsMenuEl].forEach(m => m.classList.remove('show')); historyMenuEl.classList.toggle('show'); if (historyMenuEl.classList.contains('show')) { positionMenuUnderButton(historyMenuEl, historyButtonEl); historySearchBarEl.focus(); } }
         function toggleSettingsMenu() { [bookmarkMenuEl, historyMenuEl].forEach(m => m.classList.remove('show')); settingsMenuEl.classList.toggle('show'); if (settingsMenuEl.classList.contains('show')) positionMenuUnderButton(settingsMenuEl, settingsButtonEl); }
         
-        // --- THEME MANAGEMENT ---
+        // --- POPULATORS & THEMING ---
         function populateThemeSelector() {
-            const createGroup = (label, themes) => {
-                const group = document.createElement('optgroup');
-                group.label = label;
-                Object.keys(themes).forEach(key => group.appendChild(new Option(themes[key].name, key)));
-                return group;
-            };
-            themeSelectorEl.appendChild(createGroup('Standard Themes', THEMES));
-            themeSelectorEl.appendChild(createGroup('Special Themes', SPECIAL_THEMES));
+            themeSelectorEl.innerHTML = '';
+            const standardThemesGroup = document.createElement('optgroup'); standardThemesGroup.label = 'Standard Themes';
+            const specialThemesGroup = document.createElement('optgroup'); specialThemesGroup.label = 'Special Themes';
+            Object.keys(THEMES).forEach(key => {
+                const theme = THEMES[key];
+                const option = new Option(theme.name, key);
+                if (theme.feature) { specialThemesGroup.appendChild(option); } 
+                else { standardThemesGroup.appendChild(option); }
+            });
+            themeSelectorEl.appendChild(standardThemesGroup);
+            themeSelectorEl.appendChild(specialThemesGroup);
         }
-
         function applyTheme(themeKey) {
-            document.body.className = '';
-            contentIframeEl.classList.remove('iframe-inverted');
-            stopAllCanvasEffects();
-            
-            const themeData = THEMES[themeKey] || SPECIAL_THEMES[themeKey];
-            if (!themeData) { console.error(`Theme ${themeKey} not found.`); return; }
-
-            const colors = themeData.colors;
             const r = document.documentElement;
-            if (colors && Object.keys(colors).length > 0) {
-                 r.style.setProperty('--current-theme-bg', colors.bg);
-                 r.style.setProperty('--current-theme-text', colors.text);
-                 r.style.setProperty('--current-theme-accent', colors.accent);
-                 r.style.setProperty('--current-theme-neutral', colors.neutral);
-                 r.style.setProperty('--current-theme-button-text', colors.btnText);
-            } else {
-                r.style.animation = 'none'; // Reset for animation-based themes
-            }
+            stopAllParticles();
+            document.body.className = '';
+            r.style.setProperty('--font-family-main', "'PrimaryFont', sans-serif");
             
-            if (themeData.feature) {
-                switch(themeData.feature) {
-                    case 'toolbarBottom': document.body.classList.add('body-toolbar-bottom'); break;
-                    case 'starfield': startStarfield(); break;
-                    case 'matrix': startMatrix(); break;
-                    case 'ocean': startOcean(); break;
-                    case 'sunrise': document.body.classList.add('body-sunrise-mode'); break;
-                    case 'focus': document.body.classList.add('body-focus-mode'); break;
-                    case 'ghost': document.body.classList.add('body-ghost-mode'); break;
-                    case 'invert': contentIframeEl.classList.add('iframe-inverted'); break;
-                    case 'terminal': document.body.classList.add('body-terminal-mode'); break;
+            const theme = THEMES[themeKey] || THEMES.main;
+            const colors = theme.colors;
+            r.style.setProperty('--current-theme-bg', colors.bg);
+            r.style.setProperty('--current-theme-text', colors.text);
+            r.style.setProperty('--current-theme-accent', colors.accent);
+            r.style.setProperty('--current-theme-neutral', colors.neutral);
+            r.style.setProperty('--current-theme-button-text', colors.btnText);
+
+            if (theme.feature) {
+                switch (theme.feature) {
+                    case 'bottomBar': document.body.classList.add('theme-bottom-bar'); break;
+                    case 'floatingToolbar': document.body.classList.add('theme-floating-toolbar'); break;
+                    case 'minimalist': document.body.classList.add('theme-minimalist'); break;
+                    case 'glitchy': document.body.classList.add('theme-glitchy'); break;
+                    case 'flippedMode': document.body.classList.add('theme-flipped-mode'); break;
+                    case 'invisibleUi': document.body.classList.add('theme-invisible-ui'); break;
+                    case 'retroTerminal': document.body.classList.add('theme-retro-terminal'); r.style.setProperty('--font-family-main', "'Courier New', Courier, monospace"); break;
+                    case 'particleFlow': startParticleEffect('particleFlow'); break;
+                    case 'oceanDeep': startParticleEffect('oceanDeep'); break;
+                    case 'sakuraBlossom': startParticleEffect('sakuraBlossom'); break;
                 }
             }
+            if (document.querySelector('.mini-menu.show')) { closeAllMenus(new MouseEvent('click')); }
         }
+        function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
+        function populateSearchEngineSelector() { Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); }
         
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
@@ -688,75 +763,7 @@
             try { const url = new URL(targetUrl); return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`; } 
             catch (e) { return 'logo.png'; }
         }
-
-        // --- CANVAS EFFECTS ---
-        function stopAllCanvasEffects() {
-            if (activeCanvasEffect) cancelAnimationFrame(activeCanvasEffect);
-            activeCanvasEffect = null;
-            const ctx = canvasEffectsEl.getContext('2d');
-            ctx.clearRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
-        }
         
-        function startStarfield() {
-            const ctx = canvasEffectsEl.getContext('2d');
-            canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
-            let stars = [], count = 300;
-            for (let i = 0; i < count; i++) stars.push({ x: Math.random() * canvasEffectsEl.width, y: Math.random() * canvasEffectsEl.height, radius: Math.random() * 1.1 });
-            function draw() {
-                ctx.clearRect(0,0,canvasEffectsEl.width,canvasEffectsEl.height);
-                ctx.globalCompositeOperation = "lighter";
-                ctx.fillStyle = "#fff";
-                stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI); ctx.fill(); });
-                activeCanvasEffect = requestAnimationFrame(draw);
-            }
-            draw();
-        }
-
-        function startMatrix() {
-            const ctx = canvasEffectsEl.getContext('2d');
-            canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVXYZ1234567890';
-            const fontSize = 14, columns = canvasEffectsEl.width / fontSize;
-            let drops = Array(Math.floor(columns)).fill(1);
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, .1)'; ctx.fillRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
-                ctx.fillStyle = '#0f0'; ctx.font = `${fontSize}px monospace`;
-                for (let i = 0; i < drops.length; i++) {
-                    const text = letters[Math.floor(Math.random() * letters.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                    if (drops[i] * fontSize > canvasEffectsEl.height && Math.random() > .975) drops[i] = 0;
-                    drops[i]++;
-                }
-            }
-            function animate() { draw(); activeCanvasEffect = requestAnimationFrame(animate); }
-            animate();
-        }
-
-        function startOcean() {
-            const ctx = canvasEffectsEl.getContext('2d');
-            canvasEffectsEl.width = window.innerWidth; canvasEffectsEl.height = window.innerHeight;
-            let time = 0;
-            function draw() {
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.fillStyle = 'rgba(3, 14, 36, 0.1)';
-                ctx.fillRect(0, 0, canvasEffectsEl.width, canvasEffectsEl.height);
-                ctx.globalCompositeOperation = 'lighter';
-                for (let i = 0; i < 15; i++) {
-                    ctx.beginPath();
-                    let radius = 50 + i * 20;
-                    let alpha = 0.05 - i * 0.002;
-                    ctx.fillStyle = `rgba(54, 162, 235, ${alpha})`;
-                    let x = canvasEffectsEl.width * 0.5 + Math.sin((time + i*20) * 0.005) * 200;
-                    let y = canvasEffectsEl.height * 0.5 + Math.cos((time + i*20) * 0.005) * 200;
-                    ctx.arc(x, y, radius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                time++;
-                activeCanvasEffect = requestAnimationFrame(draw);
-            }
-            draw();
-        }
-
         // --- EVENT HANDLERS & UTILITIES ---
         function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); bookmarkMenuEl.classList.remove('show'); } }
         function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); historyMenuEl.classList.remove('show'); } }
