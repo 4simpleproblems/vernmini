@@ -240,6 +240,7 @@
             align-items: center;
             height: 100%;
             text-align: center;
+            background-color: var(--bg-color);
         }
 
         #homepage-logo {
@@ -252,49 +253,59 @@
             position: relative;
             width: 584px;
             max-width: 90%;
+            display: flex;
+            align-items: center;
+            border-radius: 24px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--button-outline-color);
+        }
+
+        #homepage-search-container:focus-within {
+             box-shadow: var(--input-focus-shadow);
+        }
+
+        #homepage-search-icon {
+            width: 20px;
+            height: 20px;
+            margin: 0 15px;
+            opacity: 0.7;
         }
 
         #homepage-search-bar {
             width: 100%;
             height: 44px;
-            border-radius: 24px;
-            border: 1px solid #5f6368;
-            background-color: #303134;
-            color: #e8eaed;
-            padding: 0 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            padding: 0;
             font-size: 16px;
             box-sizing: border-box;
-        }
-
-        #homepage-search-bar:focus {
             outline: none;
-            border-color: #8ab4f8;
-            background-color: #303134;
         }
 
         #homepage-buttons {
             margin-top: 18px;
         }
 
-        .homepage-button {
-            background-color: #303134;
-            border: 1px solid #303134;
+        #homepage-search-button {
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
             border-radius: 4px;
-            color: #e8eaed;
-            font-family: arial,sans-serif;
             font-size: 14px;
             margin: 11px 4px;
             padding: 0 16px;
-            line-height: 27px;
+            line-height: 36px;
             height: 36px;
             min-width: 54px;
             text-align: center;
             cursor: pointer;
             user-select: none;
+            transition: background-color 0.2s ease;
         }
 
-        .homepage-button:hover {
-            border-color: #5f6368;
+        #homepage-search-button:hover {
+             background-color: var(--button-hover-bg);
         }
 
         #search-suggestions {
@@ -303,12 +314,12 @@
             top: 100%;
             left: 0;
             right: 0;
-            background-color: #303134;
-            border: 1px solid #5f6368;
+            background-color: var(--menu-bg);
+            border: 1px solid var(--menu-border-color);
             border-top: none;
             border-radius: 0 0 24px 24px;
             list-style: none;
-            padding: 0;
+            padding: 10px 0;
             margin: 0;
             text-align: left;
             z-index: 100;
@@ -317,10 +328,12 @@
         #search-suggestions li {
             padding: 10px 20px;
             cursor: pointer;
+            color: var(--menu-text-color);
         }
 
         #search-suggestions li:hover {
-            background-color: #3c4043;
+            background-color: var(--menu-item-hover-bg);
+             color: var(--button-text-color);
         }
     </style>
 </head>
@@ -412,14 +425,14 @@
 
     <div id="content-container">
         <div id="homepage">
-            <img id="homepage-logo" src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google">
+            <img id="homepage-logo" src="../images/title.png" alt="VERN MAX">
             <div id="homepage-search-container">
-                <input type="text" id="homepage-search-bar" placeholder="Search Google or type a URL">
+                <img id="homepage-search-icon" src="../images/magnify-white.png" alt="Search">
+                <input type="text" id="homepage-search-bar" placeholder="Search or type a URL">
                 <ul id="search-suggestions"></ul>
             </div>
             <div id="homepage-buttons">
-                <button class="homepage-button" id="google-search-button">Google Search</button>
-                <button class="homepage-button" id="lucky-button">I'm Feeling Lucky</button>
+                <button id="homepage-search-button">Search</button>
             </div>
         </div>
         <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
@@ -494,7 +507,7 @@
             themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
             searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
-            googleSearchButtonEl, luckyButtonEl;
+            homepageSearchButtonEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
@@ -562,7 +575,7 @@
             historyItemTemplate = document.getElementById('history-item-template');
             historyGroupTemplate = document.getElementById('history-group-template');
             homepageEl = document.getElementById('homepage'); homepageSearchBarEl = document.getElementById('homepage-search-bar'); searchSuggestionsEl = document.getElementById('search-suggestions');
-            googleSearchButtonEl = document.getElementById('google-search-button'); luckyButtonEl = document.getElementById('lucky-button');
+            homepageSearchButtonEl = document.getElementById('homepage-search-button');
         }
         
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
@@ -616,8 +629,7 @@
 
             homepageSearchBarEl.addEventListener('input', handleSearchInput);
             homepageSearchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
-            googleSearchButtonEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value));
-            luckyButtonEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value + " I'm Feeling Lucky"));
+            homepageSearchButtonEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value));
             searchSuggestionsEl.addEventListener('click', (e) => {
                 if (e.target.tagName === 'LI') {
                     navigateTo(e.target.textContent);
