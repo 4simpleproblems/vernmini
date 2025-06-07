@@ -89,8 +89,11 @@
         .mini-menu {
             position: absolute; background-color: var(--menu-bg);
             border: 1px solid var(--menu-border-color); border-radius: 16px;
-            box-shadow: var(--menu-shadow); z-index: 1005; min-width: 280px;
-            max-width: 350px; max-height: 450px; overflow-y: auto; padding: 10px;
+            box-shadow: var(--menu-shadow); z-index: 1005; 
+            min-width: 330px; /* Increased from 280px */
+            max-width: 400px; /* Increased from 350px */
+            max-height: 465px; /* Increased from 450px */
+            overflow-y: auto; padding: 10px;
             color: var(--menu-text-color); opacity: 0; visibility: hidden;
             transform: translateY(-10px) scale(0.98);
             transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0.25s;
@@ -232,15 +235,19 @@
         /* Conditional Custom Sections */
         #custom-cloak-settings-container,
         #custom-theme-settings-container,
-        #custom-history-days-container {
+        #custom-history-days-container,
+        #custom-homepage-settings-container,
+        #cookie-management-container {
             opacity: 0; max-height: 0; overflow: hidden;
             transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin-top 0.3s, padding-top 0.3s;
             margin-top: 0; padding-top: 0;
         }
         #custom-cloak-settings-container.visible,
         #custom-theme-settings-container.visible,
-        #custom-history-days-container.visible {
-            opacity: 1; max-height: 500px; 
+        #custom-history-days-container.visible,
+        #custom-homepage-settings-container.visible,
+        #cookie-management-container.visible {
+            opacity: 1; max-height: 500px; /* Adjust max-height as needed */
             margin-top: 15px; padding-top: 10px;
             border-top: 1px solid var(--toolbar-border-color);
         }
@@ -756,7 +763,81 @@
 
         #search-suggestions li:hover {
             background-color: var(--menu-item-hover-bg);
-             color: var(--button-text-color);
+            color: var(--button-text-color);
+        }
+        .search-engine-explanation {
+            font-size: 0.8em;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-top: -8px; /* Adjust as needed to position it correctly */
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        /* Tutorial Overlay Styles */
+        #tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Darken background */
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #tutorial-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #tutorial-popup {
+            background-color: var(--menu-bg);
+            border: 1px solid var(--menu-border-color);
+            border-radius: 16px;
+            box-shadow: var(--menu-shadow);
+            padding: 20px;
+            width: 350px;
+            max-width: 90%;
+            text-align: center;
+            color: var(--menu-text-color);
+            position: relative;
+            z-index: 2001; /* Above the overlay */
+        }
+
+        #tutorial-text {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            min-height: 50px; /* Prevent content shifting */
+        }
+
+        #tutorial-button {
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-family: var(--font-family-main);
+            font-size: 1em;
+        }
+
+        #tutorial-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        /* Highlighted Element Style */
+        .tutorial-highlight {
+            position: relative; /* Ensure z-index works */
+            z-index: 2002 !important; /* Always on top */
+            box-shadow: 0 0 0 5px var(--current-theme-accent), 0 0 15px rgba(var(--current-theme-shadow-rgb), 0.8) !important;
+            transition: box-shadow 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -829,8 +910,39 @@
         <div class="menu-setting-item">
             <label for="search-engine-selector">Search Engine</label>
             <select id="search-engine-selector" class="menu-select"></select>
+            <p class="search-engine-explanation">Google cannot be used due to security restrictions when using a proxy.</p>
         </div>
-         <div class="menu-setting-item">
+
+        <div class="menu-setting-item toggle-item">
+            <div class="toggle-label-container">
+                <label for="https-enforce-toggle" style="cursor: pointer;">Always Use HTTPS</label>
+                <small class="toggle-description">Attempts to force HTTPS for all navigated URLs.</small>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="https-enforce-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="menu-setting-item">
+            <label for="homepage-url-input">Custom Homepage</label>
+            <input type="text" id="homepage-url-input" class="menu-input" placeholder="e.g., about:blank or a URL">
+            <button id="set-current-page-as-homepage-button" class="menu-button" style="margin-top:-5px;">Set Current Page as Homepage</button>
+            <button id="reset-homepage-button" class="menu-button clear-button" style="margin-top:5px;">Reset Homepage</button>
+        </div>
+
+        <div class="menu-setting-item toggle-item">
+            <div class="toggle-label-container">
+                <label for="restore-session-toggle" style="cursor: pointer;">Restore Last Session</label>
+                <small class="toggle-description">Opens your last visited page when the app starts.</small>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="restore-session-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="menu-setting-item">
             <label for="history-lifespan-selector">Clear History After</label>
             <select id="history-lifespan-selector" class="menu-select">
                 <option value="0">Never</option>
@@ -879,6 +991,22 @@
             <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
         </div>
 
+        <div class="menu-action-bar" id="cookie-management-container">
+            <h3><img src="../images/cookie-white.png" alt="Cookies" class="icon-img"> Cookie Management</h3>
+            <button id="clear-current-site-cookies-button" class="menu-button">Clear Current Site Cookies</button>
+            <button id="clear-all-browser-cookies-button" class="menu-button clear-button" style="margin-top:10px;">Clear All Browser Cookies</button>
+            <div class="menu-setting-item toggle-item" style="margin-top: 15px;">
+                <div class="toggle-label-container">
+                    <label for="block-third-party-cookies-toggle" style="cursor: pointer;">Block Third-Party Cookies</label>
+                    <small class="toggle-description">Prevents third-party sites from setting cookies.</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="block-third-party-cookies-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
         <div class="menu-action-bar">
             <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
         </div>
@@ -898,6 +1026,13 @@
         <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
     </div>
 
+    <div id="tutorial-overlay">
+        <div id="tutorial-popup">
+            <p id="tutorial-text"></p>
+            <button id="tutorial-button">Next</button>
+        </div>
+    </div>
+
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
     <script src="register-sw.js" defer></script>
@@ -910,12 +1045,12 @@
         let typewriterInterval = null;
 
         const searchEngines = {
-            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
             'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
             'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
-            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' },
+            'yahoo': { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=%s' } // Replaced Google
         };
-        let currentSearchEngineKey = 'google';
+        let currentSearchEngineKey = 'duckduckgo'; // Default changed to DuckDuckGo
 
         const cloakPresets = {
             'none': { displayName: "None (Static VERN MAX)" },
@@ -1034,7 +1169,12 @@
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
             homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl,
             customThemeSettingsContainerEl, customThemeBgBaseEl, customThemeAccentBaseEl, applyCustomThemeButtonEl,
-            customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl;
+            customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl,
+            // NEW DOM Elements
+            httpsEnforceToggleEl, homepageUrlInputEl, setCurrentPageAsHomepageButtonEl, resetHomepageButtonEl,
+            restoreSessionToggleEl, clearCurrentSiteCookiesButtonEl, clearAllBrowserCookiesButtonEl,
+            blockThirdPartyCookiesToggleEl, cookieManagementContainerEl,
+            tutorialOverlayEl, tutorialPopupEl, tutorialTextEl, tutorialButtonEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
@@ -1166,8 +1306,21 @@
             loadBookmarks();
             loadHistory();
             updateSaveButtonText();
-            // Force homepage on initial load instead of last visited URL
-            navigateTo('about:blank');
+            
+            // Initial navigation logic considering session restore
+            const restoreSession = localStorage.getItem('vernRestoreSession') === 'true';
+            const lastUrl = localStorage.getItem('vernLastUrl');
+            if (restoreSession && lastUrl && lastUrl !== 'about:blank' && lastUrl !== 'about:blank#') {
+                navigateTo(lastUrl);
+            } else {
+                navigateTo(getHomepageUrl()); // Use getHomepageUrl() for initial load
+            }
+
+            // Always show tutorial in test mode
+            startTutorial();
+
+            // Save session on page unload
+            window.addEventListener('beforeunload', saveSession);
         });
 
         function assignDOMElements() {
@@ -1195,6 +1348,19 @@
             customHistoryDaysContainerEl = document.getElementById('custom-history-days-container');
             customHistoryDaysInputEl = document.getElementById('custom-history-days-input');
             applyCustomHistoryDaysButtonEl = document.getElementById('apply-custom-history-days-button');
+            httpsEnforceToggleEl = document.getElementById('https-enforce-toggle');
+            homepageUrlInputEl = document.getElementById('homepage-url-input');
+            setCurrentPageAsHomepageButtonEl = document.getElementById('set-current-page-as-homepage-button');
+            resetHomepageButtonEl = document.getElementById('reset-homepage-button');
+            restoreSessionToggleEl = document.getElementById('restore-session-toggle');
+            clearCurrentSiteCookiesButtonEl = document.getElementById('clear-current-site-cookies-button');
+            clearAllBrowserCookiesButtonEl = document.getElementById('clear-all-browser-cookies-button');
+            blockThirdPartyCookiesToggleEl = document.getElementById('block-third-party-cookies-toggle');
+            cookieManagementContainerEl = document.getElementById('cookie-management-container');
+            tutorialOverlayEl = document.getElementById('tutorial-overlay');
+            tutorialPopupEl = document.getElementById('tutorial-popup');
+            tutorialTextEl = document.getElementById('tutorial-text');
+            tutorialButtonEl = document.getElementById('tutorial-button');
         }
         
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
@@ -1212,9 +1378,18 @@
 
 
             // Search Engine
-            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; // Default changed
             searchEngineSelectorEl.value = currentSearchEngineKey;
             
+            // NEW: HTTPS Enforcement
+            httpsEnforceToggleEl.checked = localStorage.getItem('vernHttpsEnforce') === 'true';
+
+            // NEW: Custom Homepage
+            homepageUrlInputEl.value = localStorage.getItem('vernCustomHomepage') || '';
+
+            // NEW: Persistent Tabs/Session Restore
+            restoreSessionToggleEl.checked = localStorage.getItem('vernRestoreSession') === 'true';
+
             // History Lifespan
             const savedLifespan = localStorage.getItem('vernHistoryLifespan') || '14';
             const standardLifespans = ['0', '1', '3', '7', '14'];
@@ -1238,12 +1413,16 @@
             customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
             applyBrowserCloak();
             toggleCustomCloakView(currentCloakPresetKey === 'custom');
+
+            // NEW: Block Third-Party Cookies
+            blockThirdPartyCookiesToggleEl.checked = localStorage.getItem('vernBlockThirdPartyCookies') === 'true';
         }
 
         function setupEventListeners() {
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
-            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
+            homeButtonEl.addEventListener('click', () => navigateTo(getHomepageUrl())); // Updated to use custom homepage
+            backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
             refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank' && !contentIframeEl.src.endsWith('#')) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
             
@@ -1344,19 +1523,81 @@
                     r.style.setProperty('--flare-y', y + '%');
                 }
             });
+
+            // NEW: HTTPS Enforcement Toggle
+            httpsEnforceToggleEl.addEventListener('change', (e) => {
+                localStorage.setItem('vernHttpsEnforce', e.target.checked);
+            });
+
+            // NEW: Custom Homepage Buttons
+            homepageUrlInputEl.addEventListener('input', () => {
+                localStorage.setItem('vernCustomHomepage', homepageUrlInputEl.value.trim());
+            });
+            setCurrentPageAsHomepageButtonEl.addEventListener('click', () => {
+                if (currentUrl && currentUrl !== 'about:blank' && currentUrl !== 'about:blank#') {
+                    homepageUrlInputEl.value = currentUrl;
+                    localStorage.setItem('vernCustomHomepage', currentUrl);
+                    alert('Current page set as homepage!');
+                } else {
+                    alert('Cannot set "about:blank" or empty page as homepage.');
+                }
+            });
+            resetHomepageButtonEl.addEventListener('click', () => {
+                homepageUrlInputEl.value = '';
+                localStorage.removeItem('vernCustomHomepage');
+                alert('Homepage reset to default.');
+            });
+
+            // NEW: Persistent Tabs/Session Restore Toggle
+            restoreSessionToggleEl.addEventListener('change', (e) => {
+                localStorage.setItem('vernRestoreSession', e.target.checked);
+            });
+
+            // NEW: Cookie Management Buttons
+            clearCurrentSiteCookiesButtonEl.addEventListener('click', () => {
+                if (confirm("Are you sure you want to clear cookies for the current site? This may log you out of the site.")) {
+                    clearCookiesForCurrentSite();
+                    alert("Attempted to clear cookies for the current site.");
+                }
+            });
+            clearAllBrowserCookiesButtonEl.addEventListener('click', () => {
+                if (confirm("Are you sure you want to clear ALL browser cookies? This will log you out of all sites.")) {
+                    clearAllBrowserCookies();
+                    alert("All browser cookies cleared.");
+                }
+            });
+            blockThirdPartyCookiesToggleEl.addEventListener('change', (e) => {
+                localStorage.setItem('vernBlockThirdPartyCookies', e.target.checked);
+                alert("Please note: Blocking third-party cookies is highly browser-dependent and may not be fully effective in all proxy environments. It's primarily a preference setting.");
+            });
+            tutorialButtonEl.addEventListener('click', nextTutorialStep);
         }
 
         // --- NAVIGATION & PROXY ---
         function navigateTo(urlInput) {
             isLoading = true;
             searchSuggestionsEl.style.display = 'none';
-            let targetUrl = 'about:blank';
-            const trimmedInput = urlInput ? urlInput.trim() : '';
-            if (trimmedInput !== '' && trimmedInput !== 'about:blank') {
-                const formatted = formatUrlInput(trimmedInput);
-                targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(trimmedInput));
+            let targetUrl = urlInput ? urlInput.trim() : '';
+
+            // NEW: HTTPS Enforcement
+            if (localStorage.getItem('vernHttpsEnforce') === 'true') {
+                if (targetUrl.startsWith('http://')) {
+                    targetUrl = 'https://' + targetUrl.substring(7);
+                } else if (!targetUrl.startsWith('https://') && !targetUrl.startsWith('about:') && !targetUrl.startsWith('data:')) {
+                    // Only prepend https if no protocol or http is explicitly used.
+                    // This avoids breaking local paths or data URIs
+                    if (!/^[a-zA-Z]+:\/\//.test(targetUrl)) { // Check if no protocol is explicitly given
+                         targetUrl = 'https://' + targetUrl;
+                    }
+                }
             }
-            if (targetUrl === 'about:blank') {
+
+            if (targetUrl !== '' && targetUrl !== 'about:blank' && targetUrl !== 'about:blank#') {
+                const formatted = formatUrlInput(targetUrl);
+                targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(targetUrl));
+            }
+            
+            if (targetUrl === 'about:blank' || targetUrl === 'about:blank#') {
                 showHomepage();
             } else {
                 hideHomepage();
@@ -1399,7 +1640,10 @@
             }
 
             currentTitle = finalTitle;
-            localStorage.setItem('vernLastUrl', currentUrl);
+            // Only update last visited URL if session restore is enabled
+            if (localStorage.getItem('vernRestoreSession') === 'true') {
+                localStorage.setItem('vernLastUrl', currentUrl);
+            }
             applyBrowserCloak();
             if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
         }
@@ -1413,6 +1657,19 @@
         }
         
         function formatUrlInput(input) { const trimmed = input.trim(); if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) return trimmed; if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed)) return 'https://' + trimmed; return null; }
+
+        // NEW: Get Homepage URL
+        function getHomepageUrl() {
+            const customHomepage = localStorage.getItem('vernCustomHomepage');
+            return customHomepage && customHomepage.trim() !== '' ? customHomepage : 'about:blank';
+        }
+
+        // NEW: Save Session
+        function saveSession() {
+            if (localStorage.getItem('vernRestoreSession') === 'true') {
+                localStorage.setItem('vernLastUrl', currentUrl);
+            }
+        }
 
         // --- HOMEPAGE & SEARCH SUGGESTIONS ---
         function showHomepage() {
@@ -1429,10 +1686,11 @@
         function handleSearchInput() {
             const query = homepageSearchBarEl.value;
             if (query.length > 0) {
-                fetch(`https://api.allorigins.win/raw?url=https://www.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`)
+                // Using DuckDuckGo suggestions instead of Google
+                fetch(`https://api.allorigins.win/raw?url=https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`)
                     .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
                     .then(data => {
-                        const suggestions = data[1];
+                        const suggestions = data.map(item => item.phrase);
                         searchSuggestionsEl.innerHTML = '';
                         suggestions.forEach(suggestion => {
                             const li = document.createElement('li');
@@ -1500,6 +1758,66 @@
             alert('Custom cloak applied and saved!');
         }
 
+        // NEW: Cookie Management Functions
+        function clearCookiesForCurrentSite() {
+            // This can only clear cookies for the main document's domain.
+            // For proxied content inside the iframe, direct access is limited by same-origin policy.
+            // A more robust solution for proxied content would involve the service worker or backend.
+            const cookies = document.cookie.split(';');
+            const currentDomain = window.location.hostname; // This refers to the proxy's domain, not the proxied site's.
+
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                // Attempt to delete for various paths and the current domain
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + currentDomain;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=." + currentDomain; // For subdomains
+            }
+            // For content inside the iframe, clearing document.cookie of the *iframe* is necessary,
+            // but directly accessing that is blocked by same-origin.
+            // A refresh might be needed to reflect changes.
+            if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.location.href !== 'about:blank') {
+                 try {
+                     // This attempts to clear cookies for the iframe's *visible* origin.
+                     // It might still be blocked by sandbox attributes or browser policies.
+                     contentIframeEl.contentWindow.document.cookie.split(';').forEach(function(c) {
+                         document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                     });
+                     contentIframeEl.contentWindow.location.reload(true); // Force reload to apply cookie changes
+                 } catch (e) {
+                     console.warn("Could not directly clear iframe cookies due to security restrictions:", e);
+                     alert("Note: Clearing cookies for the proxied site might be limited by browser security policies. You may need to manually clear site data.");
+                 }
+            }
+        }
+
+        function clearAllBrowserCookies() {
+            // This clears all cookies for the *proxy's domain*.
+            // It doesn't clear cookies for websites *accessed through* the proxy within the iframe's sandbox.
+            // For a complete clear, browser settings would be required, or a very sophisticated proxy.
+            const allCookies = document.cookie.split(';');
+            for (let i = 0; i < allCookies.length; i++) {
+                const cookie = allCookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+            }
+            // Attempt to clear cookies for the iframe's content if possible (same limitations apply)
+            if (contentIframeEl.contentWindow) {
+                try {
+                    contentIframeEl.contentWindow.document.cookie.split(';').forEach(function(c) {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+                } catch (e) {
+                    console.warn("Could not directly clear iframe cookies during all-clear:", e);
+                }
+            }
+            window.location.reload(); // Reload the page to reflect cookie changes
+        }
+
+
         // --- NEW THEME GENERATION LOGIC ---
         function hexToRgb(hex) {
             let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -1524,7 +1842,6 @@
             const rgb = hexToRgb(hex);
             if(!rgb) return hex;
             
-            // For darkening, we use a negative percentage. Multiplying by a value > 1 lightens.
             // For a background, a small additive change is better than multiplicative to avoid oversaturation.
             const amount = Math.floor(2.55 * percent); // percent is -100 to 100
 
@@ -1683,6 +2000,9 @@
         function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomThemeView(show) { customThemeSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomHistoryView(show) { customHistoryDaysContainerEl.classList.toggle('visible', show); }
+        // NEW: Toggle Cookie Management Visibility
+        function toggleCookieManagementView(show) { cookieManagementContainerEl.classList.toggle('visible', show); }
+
 
         function closeAllMenus(event) {
              if (!event || (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event?.target) && !bookmarkButtonEl.contains(event?.target))) bookmarkMenuEl.classList.remove('show');
@@ -1754,7 +2074,7 @@
                     theme = { name: "Custom (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } };
                 }
             } else {
-                 theme = THEMES[themeKey] || THEMES.main;
+                    theme = THEMES[themeKey] || THEMES.main;
             }
 
             if (theme.feature === 'systemMatch') {
@@ -1786,7 +2106,10 @@
             }
         }
         function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
-        function populateSearchEngineSelector() { Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); }
+        function populateSearchEngineSelector() { 
+            searchEngineSelectorEl.innerHTML = ''; // Clear existing options
+            Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); 
+        }
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
             const selectedPreset = cloakPresets[currentCloakPresetKey];
@@ -1817,6 +2140,190 @@
             document.body.classList.toggle('app-ui-hidden', isFullscreen);
             document.getElementById('fullscreen-icon-img').src = `../images/zoom-${isFullscreen ? 'out' : 'in'}-white.png`;
         }
+
+
+        // --- TUTORIAL LOGIC ---
+        const tutorialSteps = [
+            {
+                text: "Welcome to VERN MAX! Let's take a quick tour.",
+                highlight: null,
+                action: () => { }
+            },
+            {
+                text: "This is your search bar. Type any URL or search query here to get started.",
+                highlight: 'search-bar',
+                action: () => { }
+            },
+            {
+                text: "The Home button takes you back to your starting page.",
+                highlight: 'home-button',
+                action: () => { }
+            },
+            {
+                text: "Use the Back and Forward buttons to navigate your Browse history.",
+                highlight: ['back-button', 'forward-button'],
+                action: () => { }
+            },
+            {
+                text: "The Settings menu is where you can customize your experience. Click it now!",
+                highlight: 'settings-button',
+                action: () => {
+                    closeAllMenus(); // Ensure other menus are closed
+                    settingsButtonEl.click(); // Open settings menu
+                }
+            },
+            {
+                text: "Here you can choose a Tab Cloak Preset for added security. This changes the tab's title and favicon to look like a legitimate site.",
+                highlight: 'cloak-preset-selector',
+                action: () => {
+                    // Ensure the settings menu is open and cloak section is visible if it were hidden
+                    toggleSettingsMenu(); 
+                    toggleCustomCloakView(true); // Ensure custom cloak settings are visible if needed
+                }
+            },
+            {
+                text: "You can also create a Custom Cloak with your own title and favicon URL.",
+                highlight: 'custom-cloak-settings-container',
+                action: () => {
+                    toggleCustomCloakView(true);
+                }
+            },
+            {
+                text: "To protect your privacy, we recommend setting a Tab Cloak. Select one from the dropdown or create a custom one!",
+                highlight: 'cloak-preset-selector',
+                action: () => {
+                     // Keep settings open, prompt action
+                }
+            },
+             {
+                text: "Want to make VERN MAX truly yours? Use the Smart Theme Generator to create a custom theme!",
+                highlight: 'custom-theme-settings-container',
+                action: () => {
+                    toggleCustomThemeView(true);
+                }
+            },
+            {
+                text: "You can even set a custom homepage here or enable session restore!",
+                highlight: 'homepage-url-input',
+                action: () => {
+                    // Keep settings open
+                }
+            },
+            {
+                text: "Remember to Save Configuration once you're happy with your settings!",
+                highlight: 'save-config-button',
+                action: () => { }
+            },
+            {
+                text: "That's it for the tour! Have a good day Browse and playing games!",
+                highlight: null,
+                action: () => {
+                    endTutorial();
+                }
+            }
+        ];
+
+        let currentTutorialStep = 0;
+        let lastHighlightedElement = null;
+
+        function startTutorial() {
+            // Force show tutorial for test mode
+            // localStorage.removeItem('vernTutorialSeen'); // Uncomment for testing purposes
+            // if (localStorage.getItem('vernTutorialSeen') !== 'true') {
+                tutorialOverlayEl.classList.add('show');
+                showTutorialStep(currentTutorialStep);
+            // }
+        }
+
+        function showTutorialStep(stepIndex) {
+            if (stepIndex >= tutorialSteps.length) {
+                endTutorial();
+                return;
+            }
+
+            const step = tutorialSteps[stepIndex];
+            tutorialTextEl.textContent = step.text;
+
+            // Remove previous highlight
+            if (lastHighlightedElement) {
+                if (Array.isArray(lastHighlightedElement)) {
+                    lastHighlightedElement.forEach(el => el.classList.remove('tutorial-highlight'));
+                } else {
+                    lastHighlightedElement.classList.remove('tutorial-highlight');
+                }
+            }
+
+            // Apply new highlight
+            if (step.highlight) {
+                if (Array.isArray(step.highlight)) {
+                    lastHighlightedElement = [];
+                    step.highlight.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            el.classList.add('tutorial-highlight');
+                            lastHighlightedElement.push(el);
+                        }
+                    });
+                } else {
+                    const el = document.getElementById(step.highlight);
+                    if (el) {
+                        el.classList.add('tutorial-highlight');
+                        lastHighlightedElement = el;
+                    }
+                }
+            } else {
+                lastHighlightedElement = null;
+            }
+            
+            // Execute action for the step
+            if (step.action) {
+                step.action();
+            }
+
+            // Reposition popup if necessary (e.g., after opening menu)
+            setTimeout(() => {
+                const settingsBtnRect = settingsButtonEl.getBoundingClientRect();
+                const popupWidth = tutorialPopupEl.offsetWidth;
+                const popupHeight = tutorialPopupEl.offsetHeight;
+
+                let popupX = settingsBtnRect.left + (settingsBtnRect.width / 2) - (popupWidth / 2);
+                let popupY = settingsBtnRect.bottom + 20; // 20px below button
+
+                // Keep within screen bounds
+                if (popupX < 10) popupX = 10;
+                if (popupY < 10) popupY = 10;
+                if (popupX + popupWidth > window.innerWidth - 10) popupX = window.innerWidth - popupWidth - 10;
+                if (popupY + popupHeight > window.innerHeight - 10) popupY = window.innerHeight - popupHeight - 10;
+
+                tutorialPopupEl.style.left = `${popupX}px`;
+                tutorialPopupEl.style.top = `${popupY}px`;
+                tutorialPopupEl.style.position = 'fixed'; // Ensure it's fixed relative to viewport
+            }, 100); // Small delay to allow menu to open and elements to render
+        }
+
+        function nextTutorialStep() {
+            currentTutorialStep++;
+            if (currentTutorialStep < tutorialSteps.length) {
+                showTutorialStep(currentTutorialStep);
+            } else {
+                endTutorial();
+            }
+        }
+
+        function endTutorial() {
+            tutorialOverlayEl.classList.remove('show');
+            if (lastHighlightedElement) {
+                if (Array.isArray(lastHighlightedElement)) {
+                    lastHighlightedElement.forEach(el => el.classList.remove('tutorial-highlight'));
+                } else {
+                    lastHighlightedElement.classList.remove('tutorial-highlight');
+                }
+            }
+            localStorage.setItem('vernTutorialSeen', 'true'); // Mark tutorial as seen
+            // Ensure settings menu is closed if it was opened by the tutorial
+            closeAllMenus(); 
+        }
+
     </script>
 </body>
 </html>
