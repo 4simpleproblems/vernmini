@@ -759,7 +759,15 @@
 
         #search-suggestions li:hover {
             background-color: var(--menu-item-hover-bg);
-             color: var(--button-text-color);
+            color: var(--button-text-color);
+        }
+        .search-engine-explanation {
+            font-size: 0.8em;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-top: -8px; /* Adjust as needed to position it correctly */
+            margin-bottom: 10px;
+            padding-left: 5px;
         }
     </style>
 </head>
@@ -832,6 +840,7 @@
         <div class="menu-setting-item">
             <label for="search-engine-selector">Search Engine</label>
             <select id="search-engine-selector" class="menu-select"></select>
+            <p class="search-engine-explanation">Google cannot be used due to security restrictions when using a proxy.</p>
         </div>
          <div class="menu-setting-item">
             <label for="history-lifespan-selector">Clear History After</label>
@@ -913,12 +922,12 @@
         let typewriterInterval = null;
 
         const searchEngines = {
-            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
             'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
             'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
-            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' },
+            'yahoo': { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=%s' } // Replaced Google
         };
-        let currentSearchEngineKey = 'google';
+        let currentSearchEngineKey = 'duckduckgo'; // Default changed to DuckDuckGo
 
         const cloakPresets = {
             'none': { displayName: "None (Static VERN MAX)" },
@@ -1215,7 +1224,7 @@
 
 
             // Search Engine
-            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; // Default changed
             searchEngineSelectorEl.value = currentSearchEngineKey;
             
             // History Lifespan
@@ -1432,10 +1441,11 @@
         function handleSearchInput() {
             const query = homepageSearchBarEl.value;
             if (query.length > 0) {
-                fetch(`https://api.allorigins.win/raw?url=https://www.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`)
+                // Using DuckDuckGo suggestions instead of Google
+                fetch(`https://api.allorigins.win/raw?url=https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`)
                     .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
                     .then(data => {
-                        const suggestions = data[1];
+                        const suggestions = data.map(item => item.phrase);
                         searchSuggestionsEl.innerHTML = '';
                         suggestions.forEach(suggestion => {
                             const li = document.createElement('li');
@@ -1756,7 +1766,7 @@
                     theme = { name: "Custom (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } };
                 }
             } else {
-                 theme = THEMES[themeKey] || THEMES.main;
+                    theme = THEMES[themeKey] || THEMES.main;
             }
 
             if (theme.feature === 'systemMatch') {
@@ -1788,7 +1798,10 @@
             }
         }
         function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
-        function populateSearchEngineSelector() { Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); }
+        function populateSearchEngineSelector() { 
+            searchEngineSelectorEl.innerHTML = ''; // Clear existing options
+            Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); 
+        }
         function applyBrowserCloak() {
             const appFaviconEl = document.getElementById('app-favicon');
             const selectedPreset = cloakPresets[currentCloakPresetKey];
