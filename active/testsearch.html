@@ -233,23 +233,21 @@
         }
         
         /* Conditional Custom Sections */
+        /* Updated visibility logic: default hidden for these containers */
         #custom-cloak-settings-container,
         #custom-theme-settings-container,
-        #custom-history-days-container,
-        #custom-homepage-settings-container,
-        #cookie-management-container {
+        #custom-history-days-container {
             opacity: 0; max-height: 0; overflow: hidden;
-            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin-top 0.3s, padding-top 0.3s;
             margin-top: 0; padding-top: 0;
+            border-top: none; /* No border initially */
+            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin-top 0.3s, padding-top 0.3s, border-top 0.3s;
         }
         #custom-cloak-settings-container.visible,
         #custom-theme-settings-container.visible,
-        #custom-history-days-container.visible,
-        #custom-homepage-settings-container.visible,
-        #cookie-management-container.visible {
+        #custom-history-days-container.visible {
             opacity: 1; max-height: 500px; /* Adjust max-height as needed */
             margin-top: 15px; padding-top: 10px;
-            border-top: 1px solid var(--toolbar-border-color);
+            border-top: 1px solid var(--toolbar-border-color); /* Add border when visible */
         }
         
         /* Style for color inputs to match other inputs */
@@ -839,6 +837,30 @@
             box-shadow: 0 0 0 5px var(--current-theme-accent), 0 0 15px rgba(var(--current-theme-shadow-rgb), 0.8) !important;
             transition: box-shadow 0.3s ease-in-out;
         }
+
+        /* Settings Section Styling */
+        .settings-section {
+            margin-bottom: 20px;
+            padding-top: 10px;
+            border-top: 1px solid var(--toolbar-border-color);
+        }
+
+        .settings-section:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .settings-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-bottom: none; /* Removed redundant border */
+            padding-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 5px; /* Align with label text */
+        }
     </style>
 </head>
 <body>
@@ -888,130 +910,142 @@
     <div id="settings-menu" class="mini-menu">
         <h3><img src="../images/gear-white.png" alt="Settings" class="icon-img"> Settings</h3>
         
-        <div class="menu-setting-item">
-            <label for="theme-selector">Theme</label>
-            <select id="theme-selector" class="menu-select"></select>
-        </div>
-        
-        <div id="custom-theme-settings-container">
-            <h3><img src="../images/plus-symbol-white.png" alt="Custom Theme" class="icon-img"> Smart Theme Generator</h3>
-            <p style="font-size: 0.8em; opacity: 0.8; margin: -5px 5px 15px 5px; text-align: center;">Pick two colors, and the app will intelligently create a full theme for you.</p>
+        <div class="settings-section">
+            <h3><img src="../images/paint-palette-white.png" alt="Theme" class="icon-img"> Appearance</h3>
             <div class="menu-setting-item">
-                <label for="custom-theme-bg-base">Background Color</label>
-                <input type="color" id="custom-theme-bg-base" class="menu-input" value="#23272A">
+                <label for="theme-selector">Theme</label>
+                <select id="theme-selector" class="menu-select"></select>
             </div>
+            
+            <div id="custom-theme-settings-container">
+                <h3><img src="../images/plus-symbol-white.png" alt="Custom Theme" class="icon-img"> Smart Theme Generator</h3>
+                <p style="font-size: 0.8em; opacity: 0.8; margin: -5px 5px 15px 5px; text-align: center;">Pick two colors, and the app will intelligently create a full theme for you.</p>
+                <div class="menu-setting-item">
+                    <label for="custom-theme-bg-base">Background Color</label>
+                    <input type="color" id="custom-theme-bg-base" class="menu-input" value="#23272A">
+                </div>
+                <div class="menu-setting-item">
+                    <label for="custom-theme-accent-base">Accent Color</label>
+                    <input type="color" id="custom-theme-accent-base" class="menu-input" value="#7F5AF0">
+                </div>
+                <button id="apply-custom-theme-button" class="menu-button" style="margin-top:10px;">Apply & Save Smart Theme</button>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3><img src="../images/magnifying-glass-white.png" alt="General" class="icon-img"> General</h3>
             <div class="menu-setting-item">
-                <label for="custom-theme-accent-base">Accent Color</label>
-                <input type="color" id="custom-theme-accent-base" class="menu-input" value="#7F5AF0">
+                <label for="search-engine-selector">Search Engine</label>
+                <select id="search-engine-selector" class="menu-select"></select>
+                <p class="search-engine-explanation">Google cannot be used due to security restrictions when using a proxy.</p>
             </div>
-            <button id="apply-custom-theme-button" class="menu-button" style="margin-top:10px;">Apply & Save Smart Theme</button>
-        </div>
 
-        <div class="menu-setting-item">
-            <label for="search-engine-selector">Search Engine</label>
-            <select id="search-engine-selector" class="menu-select"></select>
-            <p class="search-engine-explanation">Google cannot be used due to security restrictions when using a proxy.</p>
-        </div>
-
-        <div class="menu-setting-item toggle-item">
-            <div class="toggle-label-container">
-                <label for="https-enforce-toggle" style="cursor: pointer;">Always Use HTTPS</label>
-                <small class="toggle-description">Attempts to force HTTPS for all navigated URLs.</small>
-            </div>
-            <label class="toggle-switch">
-                <input type="checkbox" id="https-enforce-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="menu-setting-item">
-            <label for="homepage-url-input">Custom Homepage</label>
-            <input type="text" id="homepage-url-input" class="menu-input" placeholder="e.g., about:blank or a URL">
-            <button id="set-current-page-as-homepage-button" class="menu-button" style="margin-top:-5px;">Set Current Page as Homepage</button>
-            <button id="reset-homepage-button" class="menu-button clear-button" style="margin-top:5px;">Reset Homepage</button>
-        </div>
-
-        <div class="menu-setting-item toggle-item">
-            <div class="toggle-label-container">
-                <label for="restore-session-toggle" style="cursor: pointer;">Restore Last Session</label>
-                <small class="toggle-description">Opens your last visited page when the app starts.</small>
-            </div>
-            <label class="toggle-switch">
-                <input type="checkbox" id="restore-session-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="menu-setting-item">
-            <label for="history-lifespan-selector">Clear History After</label>
-            <select id="history-lifespan-selector" class="menu-select">
-                <option value="0">Never</option>
-                <option value="1">1 Day</option>
-                <option value="3">3 Days</option>
-                <option value="7">7 Days</option>
-                <option value="14">14 Days</option>
-                <option value="custom">Custom...</option>
-            </select>
-        </div>
-
-        <div id="custom-history-days-container">
-            <h3><img src="../images/plus-symbol-white.png" alt="Custom History" class="icon-img"> Custom Lifespan</h3>
-            <div class="menu-setting-item">
-                <label for="custom-history-days-input">Days (0-14)</label>
-                <input type="number" id="custom-history-days-input" class="menu-input" min="0" max="14" placeholder="e.g., 5">
-            </div>
-            <button id="apply-custom-history-days-button" class="menu-button">Set Custom Days</button>
-       </div>
-
-        <div class="menu-setting-item toggle-item">
-            <div class="toggle-label-container">
-                <label for="ad-free-toggle" style="cursor: pointer;">Ad-Free Toggle</label>
-                <small class="toggle-description">Disables Google Vignette ads by reloading the URL automatically.</small>
-            </div>
-            <label class="toggle-switch">
-                <input type="checkbox" id="ad-free-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="menu-setting-item">
-            <label for="cloak-preset-selector">Tab Cloak Preset</label>
-            <select id="cloak-preset-selector" class="menu-select"></select>
-        </div>
-        
-        <div id="custom-cloak-settings-container">
-            <h3><img src="../images/plus-symbol-white.png" alt="Custom Cloak" class="icon-img"> Custom Cloak</h3>
-            <div class="menu-setting-item">
-                <label for="custom-cloak-title">Custom Title</label>
-                <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
-            </div>
-            <div class="menu-setting-item">
-                <label for="custom-cloak-url">Favicon URL</label>
-                <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
-            </div>
-            <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
-        </div>
-
-        <div class="menu-action-bar" id="cookie-management-container">
-            <h3><img src="../images/cookie-white.png" alt="Cookies" class="icon-img"> Cookie Management</h3>
-            <button id="clear-current-site-cookies-button" class="menu-button">Clear Current Site Cookies</button>
-            <button id="clear-all-browser-cookies-button" class="menu-button clear-button" style="margin-top:10px;">Clear All Browser Cookies</button>
-            <div class="menu-setting-item toggle-item" style="margin-top: 15px;">
+            <div class="menu-setting-item toggle-item">
                 <div class="toggle-label-container">
-                    <label for="block-third-party-cookies-toggle" style="cursor: pointer;">Block Third-Party Cookies</label>
-                    <small class="toggle-description">Prevents third-party sites from setting cookies.</small>
+                    <label for="https-enforce-toggle" style="cursor: pointer;">Always Use HTTPS</label>
+                    <small class="toggle-description">Attempts to force HTTPS for all navigated URLs.</small>
                 </div>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="block-third-party-cookies-toggle">
+                    <input type="checkbox" id="https-enforce-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="menu-setting-item">
+                <label for="homepage-url-input">Custom Homepage</label>
+                <input type="text" id="homepage-url-input" class="menu-input" placeholder="e.g., about:blank or a URL">
+                <button id="set-current-page-as-homepage-button" class="menu-button" style="margin-top:-5px;">Set Current Page as Homepage</button>
+                <button id="reset-homepage-button" class="menu-button clear-button" style="margin-top:5px;">Reset Homepage</button>
+            </div>
+
+            <div class="menu-setting-item toggle-item">
+                <div class="toggle-label-container">
+                    <label for="restore-session-toggle" style="cursor: pointer;">Restore Last Session</label>
+                    <small class="toggle-description">Opens your last visited page when the app starts.</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="restore-session-toggle">
                     <span class="slider"></span>
                 </label>
             </div>
         </div>
 
-        <div class="menu-action-bar">
-            <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
+        <div class="settings-section">
+            <h3><img src="../images/shield-white.png" alt="Privacy" class="icon-img"> Privacy</h3>
+            <div class="menu-setting-item">
+                <label for="history-lifespan-selector">Clear History After</label>
+                <select id="history-lifespan-selector" class="menu-select">
+                    <option value="0">Never</option>
+                    <option value="1">1 Day</option>
+                    <option value="3">3 Days</option>
+                    <option value="7">7 Days</option>
+                    <option value="14">14 Days</option>
+                    <option value="custom">Custom...</option>
+                </select>
+            </div>
+
+            <div id="custom-history-days-container">
+                <h3><img src="../images/plus-symbol-white.png" alt="Custom History" class="icon-img"> Custom Lifespan</h3>
+                <div class="menu-setting-item">
+                    <label for="custom-history-days-input">Days (0-14)</label>
+                    <input type="number" id="custom-history-days-input" class="menu-input" min="0" max="14" placeholder="e.g., 5">
+                </div>
+                <button id="apply-custom-history-days-button" class="menu-button">Set Custom Days</button>
+           </div>
+
+            <div class="menu-setting-item toggle-item">
+                <div class="toggle-label-container">
+                    <label for="ad-free-toggle" style="cursor: pointer;">Ad-Free Toggle</label>
+                    <small class="toggle-description">Disables Google Vignette ads by reloading the URL automatically.</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="ad-free-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="menu-setting-item">
+                <label for="cloak-preset-selector">Tab Cloak Preset</label>
+                <select id="cloak-preset-selector" class="menu-select"></select>
+            </div>
+            
+            <div id="custom-cloak-settings-container">
+                <h3><img src="../images/plus-symbol-white.png" alt="Custom Cloak" class="icon-img"> Custom Cloak</h3>
+                <div class="menu-setting-item">
+                    <label for="custom-cloak-title">Custom Title</label>
+                    <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
+                </div>
+                <div class="menu-setting-item">
+                    <label for="custom-cloak-url">Favicon URL</label>
+                    <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
+                </div>
+                <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
+            </div>
+
+            <div class="menu-action-bar" id="cookie-management-container">
+                <h3><img src="../images/cookie-white.png" alt="Cookies" class="icon-img"> Cookie Management</h3>
+                <button id="clear-current-site-cookies-button" class="menu-button">Clear Current Site Cookies</button>
+                <button id="clear-all-browser-cookies-button" class="menu-button clear-button" style="margin-top:10px;">Clear All Browser Cookies</button>
+                <div class="menu-setting-item toggle-item" style="margin-top: 15px;">
+                    <div class="toggle-label-container">
+                        <label for="block-third-party-cookies-toggle" style="cursor: pointer;">Block Third-Party Cookies</label>
+                        <small class="toggle-description">Prevents third-party sites from setting cookies.</small>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="block-third-party-cookies-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
         </div>
-        <div class="menu-action-bar"></div>
-        <button id="clear-browser-data-button" class="menu-button clear-button">Clear All Browser Data</button>
+
+        <div class="settings-section">
+            <h3><img src="../images/save-white.png" alt="Data" class="icon-img"> Data Management</h3>
+            <div class="menu-action-bar">
+                <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
+            </div>
+            <button id="clear-browser-data-button" class="menu-button clear-button">Clear All Browser Data</button>
+        </div>
     </div>
 
     <div id="content-container">
@@ -1137,7 +1171,7 @@
             page_curl: { name: "Page Curl", feature: 'pageCurl', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
             spotlight: { name: "Spotlight", feature: 'spotlight', colors: { bg: '#000000', text: '#f1f1f1', accent: '#BB86FC', neutral: '#111111', btnText: '#000000' } },
             blueprint: { name: "Blueprint", feature: 'blueprint', colors: { bg: '#0d2b45', text: '#90e0ef', accent: '#caf0f8', neutral: '#0c3d61', btnText: '#0d2b45' } },
-            notebook_paper: { name: "Notebook Paper", feature: 'notebookPaper', colors: { bg: '#fefefe', text: '#2b2b2b', accent: '#59a5d8', neutral: '#ffffff', btnText: '#ffffff' } },
+            notebook_paper: { name: "Notebook Paper", feature: 'notebookPaper', colors: { bg: '#fefefe', text: '#2b2b2b', accent: '#59a5d8', neutral: '#ffffff', btnToext: '#ffffff' } },
             zoom_hover: { name: "Zoom Hover", feature: 'zoomHover', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
             shaky_text: { name: "Shaky Text", feature: 'shakyText', colors: { bg: '#2a2a2a', text: '#e0e0e0', accent: '#f44336', neutral: '#3c3c3c', btnText: '#ffffff' } },
             rainbow_text: { name: "Rainbow Text", feature: 'rainbowText', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
@@ -1370,7 +1404,8 @@
             const savedTheme = localStorage.getItem('vernTheme') || 'main';
             applyTheme(savedTheme);
             themeSelectorEl.value = savedTheme;
-            toggleCustomThemeView(savedTheme === 'custom');
+            // Call the toggle function on load to ensure correct initial visibility
+            toggleCustomThemeView(savedTheme === 'custom'); 
             
             // Load the two base colors for the Smart Theme Generator
             customThemeBgBaseEl.value = localStorage.getItem('vernCustomThemeBaseBg') || '#23272A';
@@ -1395,10 +1430,12 @@
             const standardLifespans = ['0', '1', '3', '7', '14'];
             if (standardLifespans.includes(savedLifespan)) {
                 historyLifespanSelectorEl.value = savedLifespan;
+                // Call the toggle function on load
                 toggleCustomHistoryView(false);
             } else {
                 historyLifespanSelectorEl.value = 'custom';
                 customHistoryDaysInputEl.value = savedLifespan;
+                // Call the toggle function on load
                 toggleCustomHistoryView(true);
             }
             
@@ -1412,6 +1449,7 @@
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
             customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
             applyBrowserCloak();
+            // Call the toggle function on load
             toggleCustomCloakView(currentCloakPresetKey === 'custom');
 
             // NEW: Block Third-Party Cookies
@@ -1445,12 +1483,12 @@
                 const themeKey = e.target.value;
                 applyTheme(themeKey);
                 localStorage.setItem('vernTheme', themeKey);
-                toggleCustomThemeView(themeKey === 'custom');
+                toggleCustomThemeView(themeKey === 'custom'); // Call on change
             });
             searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             historyLifespanSelectorEl.addEventListener('change', (e) => {
                 const value = e.target.value;
-                toggleCustomHistoryView(value === 'custom');
+                toggleCustomHistoryView(value === 'custom'); // Call on change
                 if (value !== 'custom') {
                     localStorage.setItem('vernHistoryLifespan', value);
                     pruneHistory();
@@ -1463,7 +1501,7 @@
                 currentCloakPresetKey = e.target.value;
                 localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
                 applyBrowserCloak();
-                toggleCustomCloakView(currentCloakPresetKey === 'custom');
+                toggleCustomCloakView(currentCloakPresetKey === 'custom'); // Call on change
             });
 
             // New listeners
@@ -1997,10 +2035,11 @@
             }, 50);
         }
 
+        // Modified: These functions now only control visibility based on 'custom' selection
         function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomThemeView(show) { customThemeSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomHistoryView(show) { customHistoryDaysContainerEl.classList.toggle('visible', show); }
-        // NEW: Toggle Cookie Management Visibility
+        // NEW: Toggle Cookie Management Visibility (added for consistency, though not conditional yet)
         function toggleCookieManagementView(show) { cookieManagementContainerEl.classList.toggle('visible', show); }
 
 
@@ -2178,14 +2217,16 @@
                 action: () => {
                     // Ensure the settings menu is open and cloak section is visible if it were hidden
                     toggleSettingsMenu(); 
-                    toggleCustomCloakView(true); // Ensure custom cloak settings are visible if needed
+                    // No need to explicitly toggle custom cloak view here, as it's controlled by the selector's value
                 }
             },
             {
                 text: "You can also create a Custom Cloak with your own title and favicon URL.",
                 highlight: 'custom-cloak-settings-container',
                 action: () => {
-                    toggleCustomCloakView(true);
+                    // Set selector to custom to show the custom cloak fields
+                    cloakPresetSelectorEl.value = 'custom';
+                    cloakPresetSelectorEl.dispatchEvent(new Event('change')); // Trigger change to show custom fields
                 }
             },
             {
@@ -2199,7 +2240,9 @@
                 text: "Want to make VERN MAX truly yours? Use the Smart Theme Generator to create a custom theme!",
                 highlight: 'custom-theme-settings-container',
                 action: () => {
-                    toggleCustomThemeView(true);
+                    // Set selector to custom to show the custom theme fields
+                    themeSelectorEl.value = 'custom';
+                    themeSelectorEl.dispatchEvent(new Event('change')); // Trigger change to show custom fields
                 }
             },
             {
