@@ -158,6 +158,60 @@
         .menu-setting-item { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .menu-setting-item label { font-size: 0.85em; opacity: 0.8; padding-left: 5px; }
 
+        /* Toggle Switch Styles */
+        .menu-setting-item.toggle-item {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 5px;
+        }
+        .menu-setting-item.toggle-item label {
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-bg));
+            transition: .3s;
+            border-radius: 24px;
+            border: 1px solid var(--button-outline-color);
+        }
+        .toggle-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-color);
+            transition: .3s;
+            border-radius: 50%;
+        }
+        .toggle-switch input:checked + .slider {
+            background-color: var(--current-theme-accent);
+        }
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(20px);
+            background-color: var(--current-theme-button-text);
+        }
+        
         /* Conditional Custom Cloak Section */
         #custom-cloak-settings-container {
             opacity: 0; max-height: 0; overflow: hidden;
@@ -725,6 +779,13 @@
                 <option value="14">14 Days</option>
             </select>
         </div>
+        <div class="menu-setting-item toggle-item">
+            <label for="vignette-remover-toggle">Anti-Google Vignette</label>
+            <div class="toggle-switch">
+                <input type="checkbox" id="vignette-remover-toggle">
+                <span class="slider"></span>
+            </div>
+        </div>
         <div class="menu-setting-item">
             <label for="cloak-preset-selector">Tab Cloak Preset</label>
             <select id="cloak-preset-selector" class="menu-select"></select>
@@ -893,7 +954,7 @@
             themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
             searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
-            homepageSearchIconEl;
+            homepageSearchIconEl, vignetteRemoverToggleEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
@@ -1039,6 +1100,7 @@
             historyGroupTemplate = document.getElementById('history-group-template');
             homepageEl = document.getElementById('homepage'); homepageSearchBarEl = document.getElementById('homepage-search-bar'); searchSuggestionsEl = document.getElementById('search-suggestions');
             homepageSearchIconEl = document.getElementById('homepage-search-icon');
+            vignetteRemoverToggleEl = document.getElementById('vignette-remover-toggle');
         }
         
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
@@ -1053,6 +1115,9 @@
 
             historyLifespanSelectorEl.value = localStorage.getItem('vernHistoryLifespan') || '14';
             
+            const vignetteRemoverEnabled = localStorage.getItem('vernVignetteRemover') === 'true';
+            vignetteRemoverToggleEl.checked = vignetteRemoverEnabled;
+
             currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
             cloakPresetSelectorEl.value = currentCloakPresetKey;
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
@@ -1086,6 +1151,8 @@
             themeSelectorEl.addEventListener('change', (e) => { applyTheme(e.target.value); localStorage.setItem('vernTheme', e.target.value); });
             searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             historyLifespanSelectorEl.addEventListener('change', (e) => { localStorage.setItem('vernHistoryLifespan', e.target.value); pruneHistory(); loadHistory(); });
+            vignetteRemoverToggleEl.addEventListener('change', (e) => { localStorage.setItem('vernVignetteRemover', e.target.checked); });
+
             cloakPresetSelectorEl.addEventListener('change', (e) => {
                 currentCloakPresetKey = e.target.value;
                 localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
@@ -1167,6 +1234,7 @@
         function handleIframeLoad() {
             isLoading = false;
             if (isRefreshing) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.remove('spinning'); isRefreshing = false; }
+            
             let finalUrl = 'about:blank', finalTitle = 'New Tab';
             try {
                 if(contentIframeEl.contentWindow.location.href === "about:blank") throw new Error();
@@ -1177,6 +1245,14 @@
             } catch (e) { 
                 finalUrl = 'about:blank';
                 finalTitle = 'New Tab';
+            }
+
+            // Anti-Google Vignette Logic
+            const isVignetteRemoverEnabled = localStorage.getItem('vernVignetteRemover') === 'true';
+            if (isVignetteRemoverEnabled && finalUrl.includes('/#google_vignette')) {
+                const cleanUrl = finalUrl.split('/#google_vignette')[0];
+                navigateTo(cleanUrl);
+                return; // Stop processing this "dirty" URL load
             }
             
             if(finalUrl === 'about:blank' || contentIframeEl.src.endsWith('#')){
