@@ -107,7 +107,7 @@
             border-bottom: 1px solid var(--toolbar-border-color); padding-bottom: 8px;
             font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
-        .mini-menu h3 .icon-img { width: 1em; height: 1em; }
+        /* DELETED: .mini-menu h3 .icon-img { width: 1em; height: 1em; } */
         .mini-menu ul { list-style: none; padding: 0; margin: 0; }
         .mini-menu::-webkit-scrollbar, .mini-menu ul::-webkit-scrollbar { width: 5px; }
         .mini-menu::-webkit-scrollbar-thumb, .mini-menu ul::-webkit-scrollbar-thumb { background-color: var(--button-outline-color); border-radius: 8px; }
@@ -227,9 +227,9 @@
             background-color: var(--current-theme-button-text);
         }
         #save-timestamp {
-             font-size: 0.8em;
-             opacity: 0.8;
-             margin-left: 8px;
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-left: 8px;
         }
         
         /* Conditional Custom Sections */
@@ -341,11 +341,11 @@
         }
         body.theme-translucent-ui .nav-button,
         body.theme-translucent-ui .toolbar-button {
-             background-color: color-mix(in srgb, var(--button-bg) 60%, transparent);
+            background-color: color-mix(in srgb, var(--button-bg) 60%, transparent);
         }
         body.theme-translucent-ui .mini-menu {
-             background-color: color-mix(in srgb, var(--menu-bg) 60%, transparent);
-             backdrop-filter: blur(8px);
+            background-color: color-mix(in srgb, var(--menu-bg) 60%, transparent);
+            backdrop-filter: blur(8px);
         }
 
         /* --- 10 Previous Special Themes --- */
@@ -371,7 +371,7 @@
             border-radius: 8px !important;
         }
         body.theme-comicbook .mini-menu li {
-             border: 2px solid #000 !important;
+            border: 2px solid #000 !important;
         }
 
         body.theme-crtscanlines { position: relative; --font-family-main: 'Courier New', monospace; }
@@ -412,7 +412,7 @@
                 -2px -2px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff);
         }
         body.theme-textpop #homepage-logo {
-             filter: drop-shadow(5px 5px 0 var(--current-theme-accent)) drop-shadow(-5px -5px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff));
+            filter: drop-shadow(5px 5px 0 var(--current-theme-accent)) drop-shadow(-5px -5px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff));
         }
 
         body.theme-focusmode #toolbar {
@@ -705,8 +705,8 @@
         }
 
         #homepage-search-container:focus-within {
-             background-color: var(--input-focus-bg);
-             box-shadow: var(--input-focus-shadow);
+            background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow);
         }
         
         #homepage-search-bar {
@@ -772,72 +772,6 @@
             padding-left: 5px;
         }
 
-        /* Tutorial Overlay Styles */
-        #tutorial-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Darken background */
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        #tutorial-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        #tutorial-popup {
-            background-color: var(--menu-bg);
-            border: 1px solid var(--menu-border-color);
-            border-radius: 16px;
-            box-shadow: var(--menu-shadow);
-            padding: 20px;
-            width: 350px;
-            max-width: 90%;
-            text-align: center;
-            color: var(--menu-text-color);
-            position: relative;
-            z-index: 2001; /* Above the overlay */
-        }
-
-        #tutorial-text {
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            min-height: 50px; /* Prevent content shifting */
-        }
-
-        #tutorial-button {
-            background-color: var(--button-bg);
-            color: var(--button-text-color);
-            border: none;
-            border-radius: 12px;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            font-family: var(--font-family-main);
-            font-size: 1em;
-        }
-
-        #tutorial-button:hover {
-            background-color: var(--button-hover-bg);
-        }
-
-        /* Highlighted Element Style */
-        .tutorial-highlight {
-            position: relative; /* Ensure z-index works */
-            z-index: 2002 !important; /* Always on top */
-            box-shadow: 0 0 0 5px var(--current-theme-accent), 0 0 15px rgba(var(--current-theme-shadow-rgb), 0.8) !important;
-            transition: box-shadow 0.3s ease-in-out;
-        }
-
         /* Settings Section Styling */
         .settings-section {
             margin-bottom: 20px;
@@ -860,6 +794,17 @@
             align-items: center;
             gap: 8px;
             padding-left: 5px; /* Align with label text */
+        }
+        /* ADDED: Padding to all settings menu items */
+        #settings-menu .menu-setting-item,
+        #settings-menu .menu-action-bar {
+            padding: 8px 10px; /* Adjust padding as needed */
+            border-radius: 8px; /* Optional: adds a subtle rounding */
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 50%, var(--current-theme-bg) 20%); /* Optional: subtle background for sections */
+            margin-bottom: 10px; /* Spacing between padded items */
+        }
+        #settings-menu .menu-setting-item:last-child {
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -893,7 +838,7 @@
     </div>
 
     <div id="bookmark-menu" class="mini-menu">
-        <h3><img src="../images/star-white.png" alt="Bookmarks" class="icon-img"> Bookmarks</h3>
+        <h3>Bookmarks</h3>
         <ul id="bookmarks-list-popup"></ul>
         <div class="menu-action-bar">
             <input type="text" id="new-bookmark-name-popup" class="menu-input" placeholder="Bookmark Name (optional)">
@@ -902,23 +847,23 @@
     </div>
     
     <div id="history-menu" class="mini-menu">
-        <h3><img src="../images/clock-white.png" alt="History" class="icon-img"> History</h3>
+        <h3>History</h3>
         <input type="text" id="history-search-bar" class="menu-input" placeholder="Search history">
         <ul id="history-list-popup"></ul>
     </div>
 
     <div id="settings-menu" class="mini-menu">
-        <h3><img src="../images/gear-white.png" alt="Settings" class="icon-img"> Settings</h3>
+        <h3>Settings</h3>
         
         <div class="settings-section">
-            <h3><img src="../images/paint-palette-white.png" alt="Theme" class="icon-img"> Appearance</h3>
+            <h3>Appearance</h3>
             <div class="menu-setting-item">
                 <label for="theme-selector">Theme</label>
                 <select id="theme-selector" class="menu-select"></select>
             </div>
             
             <div id="custom-theme-settings-container">
-                <h3><img src="../images/plus-symbol-white.png" alt="Custom Theme" class="icon-img"> Smart Theme Generator</h3>
+                <h3>Smart Theme Generator</h3>
                 <p style="font-size: 0.8em; opacity: 0.8; margin: -5px 5px 15px 5px; text-align: center;">Pick two colors, and the app will intelligently create a full theme for you.</p>
                 <div class="menu-setting-item">
                     <label for="custom-theme-bg-base">Background Color</label>
@@ -933,7 +878,7 @@
         </div>
 
         <div class="settings-section">
-            <h3><img src="../images/magnifying-glass-white.png" alt="General" class="icon-img"> General</h3>
+            <h3>General</h3>
             <div class="menu-setting-item">
                 <label for="search-engine-selector">Search Engine</label>
                 <select id="search-engine-selector" class="menu-select"></select>
@@ -951,13 +896,6 @@
                 </label>
             </div>
 
-            <div class="menu-setting-item">
-                <label for="homepage-url-input">Custom Homepage</label>
-                <input type="text" id="homepage-url-input" class="menu-input" placeholder="e.g., about:blank or a URL">
-                <button id="set-current-page-as-homepage-button" class="menu-button" style="margin-top:-5px;">Set Current Page as Homepage</button>
-                <button id="reset-homepage-button" class="menu-button clear-button" style="margin-top:5px;">Reset Homepage</button>
-            </div>
-
             <div class="menu-setting-item toggle-item">
                 <div class="toggle-label-container">
                     <label for="restore-session-toggle" style="cursor: pointer;">Restore Last Session</label>
@@ -971,7 +909,7 @@
         </div>
 
         <div class="settings-section">
-            <h3><img src="../images/shield-white.png" alt="Privacy" class="icon-img"> Privacy</h3>
+            <h3>Privacy</h3>
             <div class="menu-setting-item">
                 <label for="history-lifespan-selector">Clear History After</label>
                 <select id="history-lifespan-selector" class="menu-select">
@@ -985,23 +923,12 @@
             </div>
 
             <div id="custom-history-days-container">
-                <h3><img src="../images/plus-symbol-white.png" alt="Custom History" class="icon-img"> Custom Lifespan</h3>
+                <h3>Custom Lifespan</h3>
                 <div class="menu-setting-item">
                     <label for="custom-history-days-input">Days (0-14)</label>
                     <input type="number" id="custom-history-days-input" class="menu-input" min="0" max="14" placeholder="e.g., 5">
                 </div>
                 <button id="apply-custom-history-days-button" class="menu-button">Set Custom Days</button>
-           </div>
-
-            <div class="menu-setting-item toggle-item">
-                <div class="toggle-label-container">
-                    <label for="ad-free-toggle" style="cursor: pointer;">Ad-Free Toggle</label>
-                    <small class="toggle-description">Disables Google Vignette ads by reloading the URL automatically.</small>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="ad-free-toggle">
-                    <span class="slider"></span>
-                </label>
             </div>
 
             <div class="menu-setting-item">
@@ -1010,7 +937,7 @@
             </div>
             
             <div id="custom-cloak-settings-container">
-                <h3><img src="../images/plus-symbol-white.png" alt="Custom Cloak" class="icon-img"> Custom Cloak</h3>
+                <h3>Custom Cloak</h3>
                 <div class="menu-setting-item">
                     <label for="custom-cloak-title">Custom Title</label>
                     <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
@@ -1023,7 +950,7 @@
             </div>
 
             <div class="menu-action-bar" id="cookie-management-container">
-                <h3><img src="../images/cookie-white.png" alt="Cookies" class="icon-img"> Cookie Management</h3>
+                <h3>Cookie Management</h3>
                 <button id="clear-current-site-cookies-button" class="menu-button">Clear Current Site Cookies</button>
                 <button id="clear-all-browser-cookies-button" class="menu-button clear-button" style="margin-top:10px;">Clear All Browser Cookies</button>
                 <div class="menu-setting-item toggle-item" style="margin-top: 15px;">
@@ -1040,7 +967,7 @@
         </div>
 
         <div class="settings-section">
-            <h3><img src="../images/save-white.png" alt="Data" class="icon-img"> Data Management</h3>
+            <h3>Data Management</h3>
             <div class="menu-action-bar">
                 <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
             </div>
@@ -1058,13 +985,6 @@
             </div>
         </div>
         <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
-    </div>
-
-    <div id="tutorial-overlay">
-        <div id="tutorial-popup">
-            <p id="tutorial-text"></p>
-            <button id="tutorial-button">Next</button>
-        </div>
     </div>
 
     <script src="uv/uv.bundle.js" defer></script>
@@ -1088,7 +1008,6 @@
 
         const cloakPresets = {
             'none': { displayName: "None (Static VERN MAX)" },
-            'custom': { displayName: "Custom (Manual)" },
             'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
             'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
@@ -1097,8 +1016,9 @@
             'hac': { displayName: "Home Access Center", title: 'Home Access Center', faviconUrl: 'https://hac.doe.k12.de.us/HomeAccess/Content/Images/favicon.ico' },
             'google_drive': { displayName: "My Drive", title: 'My Drive - Google Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
             'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'custom': { displayName: "Custom (Manual)" }, // Moved custom to the end for better default ordering
         };
-        let currentCloakPresetKey = 'none';
+        let currentCloakPresetKey = 'google_docs'; // Default changed to Google Docs
 
         const THEMES = {
             // --- Normal Themes ---
@@ -1125,7 +1045,7 @@
             candy: { name: "Candy", colors: { bg: '#ffebf2', text: '#800040', accent: '#ff80bf', neutral: '#ffcce6', btnText: '#FFFFFF' } },
             solarized_light: { name: "Solarized Light", colors: { bg: '#fdf6e3', text: '#657b83', accent: '#268bd2', neutral: '#eee8d5', btnText: '#FFFFFF' } },
             solarized_dark: { name: "Solarized Dark", colors: { bg: '#002b36', text: '#839496', accent: '#268bd2', neutral: '#073642', btnText: '#FFFFFF' } },
-            sandy: { name: "Sandy Beach", colors: { bg: '#F4A460', text: '#6B4226', accent: '#87CEEB', neutral: '#DEB887', btnText: '#6B4226' } },
+            sandy: { name: "Sandy Beach", colors: { bg: '#F4A460', text: '#6B4226', accent: '#87CEEB', neutral: '#DEB887', btnText: '#6B4226' },
             peach: { name: "Peach", colors: { bg: '#ffdab9', text: '#8B4513', accent: '#ffa07a', neutral: '#ffdead', btnText: '#8B4513' } },
             olive: { name: "Olive", colors: { bg: '#556B2F', text: '#F5F5DC', accent: '#BDB76B', neutral: '#6B8E23', btnText: '#FFFFFF' } },
             grape: { name: "Grape", colors: { bg: '#483D8B', text: '#E6E6FA', accent: '#9370DB', neutral: '#312A5C', btnText: '#FFFFFF' } },
@@ -1201,14 +1121,13 @@
             themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
             searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
-            homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl,
+            homepageSearchIconEl, saveConfigButtonEl, saveTimestampEl,
             customThemeSettingsContainerEl, customThemeBgBaseEl, customThemeAccentBaseEl, applyCustomThemeButtonEl,
             customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl,
             // NEW DOM Elements
-            httpsEnforceToggleEl, homepageUrlInputEl, setCurrentPageAsHomepageButtonEl, resetHomepageButtonEl,
+            httpsEnforceToggleEl,
             restoreSessionToggleEl, clearCurrentSiteCookiesButtonEl, clearAllBrowserCookiesButtonEl,
-            blockThirdPartyCookiesToggleEl, cookieManagementContainerEl,
-            tutorialOverlayEl, tutorialPopupEl, tutorialTextEl, tutorialButtonEl;
+            blockThirdPartyCookiesToggleEl, cookieManagementContainerEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
@@ -1347,11 +1266,8 @@
             if (restoreSession && lastUrl && lastUrl !== 'about:blank' && lastUrl !== 'about:blank#') {
                 navigateTo(lastUrl);
             } else {
-                navigateTo(getHomepageUrl()); // Use getHomepageUrl() for initial load
+                navigateTo('about:blank'); // Always default to about:blank if no session restore or custom homepage
             }
-
-            // Always show tutorial in test mode
-            startTutorial();
 
             // Save session on page unload
             window.addEventListener('beforeunload', saveSession);
@@ -1370,7 +1286,6 @@
             historyGroupTemplate = document.getElementById('history-group-template');
             homepageEl = document.getElementById('homepage'); homepageSearchBarEl = document.getElementById('homepage-search-bar'); searchSuggestionsEl = document.getElementById('search-suggestions');
             homepageSearchIconEl = document.getElementById('homepage-search-icon');
-            adFreeToggleEl = document.getElementById('ad-free-toggle');
             saveConfigButtonEl = document.getElementById('save-config-button');
             saveTimestampEl = document.getElementById('save-timestamp');
 
@@ -1383,18 +1298,11 @@
             customHistoryDaysInputEl = document.getElementById('custom-history-days-input');
             applyCustomHistoryDaysButtonEl = document.getElementById('apply-custom-history-days-button');
             httpsEnforceToggleEl = document.getElementById('https-enforce-toggle');
-            homepageUrlInputEl = document.getElementById('homepage-url-input');
-            setCurrentPageAsHomepageButtonEl = document.getElementById('set-current-page-as-homepage-button');
-            resetHomepageButtonEl = document.getElementById('reset-homepage-button');
             restoreSessionToggleEl = document.getElementById('restore-session-toggle');
             clearCurrentSiteCookiesButtonEl = document.getElementById('clear-current-site-cookies-button');
             clearAllBrowserCookiesButtonEl = document.getElementById('clear-all-browser-cookies-button');
             blockThirdPartyCookiesToggleEl = document.getElementById('block-third-party-cookies-toggle');
             cookieManagementContainerEl = document.getElementById('cookie-management-container');
-            tutorialOverlayEl = document.getElementById('tutorial-overlay');
-            tutorialPopupEl = document.getElementById('tutorial-popup');
-            tutorialTextEl = document.getElementById('tutorial-text');
-            tutorialButtonEl = document.getElementById('tutorial-button');
         }
         
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
@@ -1405,7 +1313,7 @@
             applyTheme(savedTheme);
             themeSelectorEl.value = savedTheme;
             // Call the toggle function on load to ensure correct initial visibility
-            toggleCustomThemeView(savedTheme === 'custom'); 
+            toggleCustomThemeView(false); // Default to custom theme section closed
             
             // Load the two base colors for the Smart Theme Generator
             customThemeBgBaseEl.value = localStorage.getItem('vernCustomThemeBaseBg') || '#23272A';
@@ -1413,17 +1321,14 @@
 
 
             // Search Engine
-            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; // Default changed
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; // Default changed to DuckDuckGo
             searchEngineSelectorEl.value = currentSearchEngineKey;
             
             // NEW: HTTPS Enforcement
-            httpsEnforceToggleEl.checked = localStorage.getItem('vernHttpsEnforce') === 'true';
-
-            // NEW: Custom Homepage
-            homepageUrlInputEl.value = localStorage.getItem('vernCustomHomepage') || '';
+            httpsEnforceToggleEl.checked = false; // Default off
 
             // NEW: Persistent Tabs/Session Restore
-            restoreSessionToggleEl.checked = localStorage.getItem('vernRestoreSession') === 'true';
+            restoreSessionToggleEl.checked = false; // Default off
 
             // History Lifespan
             const savedLifespan = localStorage.getItem('vernHistoryLifespan') || '14';
@@ -1431,35 +1336,32 @@
             if (standardLifespans.includes(savedLifespan)) {
                 historyLifespanSelectorEl.value = savedLifespan;
                 // Call the toggle function on load
-                toggleCustomHistoryView(false);
+                toggleCustomHistoryView(false); // Default to custom history section closed
             } else {
                 historyLifespanSelectorEl.value = 'custom';
                 customHistoryDaysInputEl.value = savedLifespan;
                 // Call the toggle function on load
-                toggleCustomHistoryView(true);
+                toggleCustomHistoryView(false); // Default to custom history section closed
             }
             
-            // Ad-Free Toggle
-            const adFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
-            adFreeToggleEl.checked = adFreeEnabled;
-
             // Cloak
-            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
+            currentCloakPresetKey = 'google_docs'; // Default changed to Google Docs
+            localStorage.setItem('vernCloakPreset', currentCloakPresetKey); // Ensure it's saved
             cloakPresetSelectorEl.value = currentCloakPresetKey;
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
             customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
             applyBrowserCloak();
             // Call the toggle function on load
-            toggleCustomCloakView(currentCloakPresetKey === 'custom');
+            toggleCustomCloakView(false); // Default to custom cloak section closed
 
             // NEW: Block Third-Party Cookies
-            blockThirdPartyCookiesToggleEl.checked = localStorage.getItem('vernBlockThirdPartyCookies') === 'true';
+            blockThirdPartyCookiesToggleEl.checked = false; // Default off
         }
 
         function setupEventListeners() {
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
-            homeButtonEl.addEventListener('click', () => navigateTo(getHomepageUrl())); // Updated to use custom homepage
+            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); // Updated to always use about:blank
             backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
             refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank' && !contentIframeEl.src.endsWith('#')) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
@@ -1495,7 +1397,6 @@
                     loadHistory();
                 }
             });
-            adFreeToggleEl.addEventListener('change', (e) => { localStorage.setItem('vernAdFreeToggle', e.target.checked); });
 
             cloakPresetSelectorEl.addEventListener('change', (e) => {
                 currentCloakPresetKey = e.target.value;
@@ -1567,25 +1468,6 @@
                 localStorage.setItem('vernHttpsEnforce', e.target.checked);
             });
 
-            // NEW: Custom Homepage Buttons
-            homepageUrlInputEl.addEventListener('input', () => {
-                localStorage.setItem('vernCustomHomepage', homepageUrlInputEl.value.trim());
-            });
-            setCurrentPageAsHomepageButtonEl.addEventListener('click', () => {
-                if (currentUrl && currentUrl !== 'about:blank' && currentUrl !== 'about:blank#') {
-                    homepageUrlInputEl.value = currentUrl;
-                    localStorage.setItem('vernCustomHomepage', currentUrl);
-                    alert('Current page set as homepage!');
-                } else {
-                    alert('Cannot set "about:blank" or empty page as homepage.');
-                }
-            });
-            resetHomepageButtonEl.addEventListener('click', () => {
-                homepageUrlInputEl.value = '';
-                localStorage.removeItem('vernCustomHomepage');
-                alert('Homepage reset to default.');
-            });
-
             // NEW: Persistent Tabs/Session Restore Toggle
             restoreSessionToggleEl.addEventListener('change', (e) => {
                 localStorage.setItem('vernRestoreSession', e.target.checked);
@@ -1608,7 +1490,6 @@
                 localStorage.setItem('vernBlockThirdPartyCookies', e.target.checked);
                 alert("Please note: Blocking third-party cookies is highly browser-dependent and may not be fully effective in all proxy environments. It's primarily a preference setting.");
             });
-            tutorialButtonEl.addEventListener('click', nextTutorialStep);
         }
 
         // --- NAVIGATION & PROXY ---
@@ -1625,11 +1506,11 @@
                     // Only prepend https if no protocol or http is explicitly used.
                     // This avoids breaking local paths or data URIs
                     if (!/^[a-zA-Z]+:\/\//.test(targetUrl)) { // Check if no protocol is explicitly given
-                         targetUrl = 'https://' + targetUrl;
+                            targetUrl = 'https://' + targetUrl;
                     }
                 }
             }
-
+            
             if (targetUrl !== '' && targetUrl !== 'about:blank' && targetUrl !== 'about:blank#') {
                 const formatted = formatUrlInput(targetUrl);
                 targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(targetUrl));
@@ -1637,6 +1518,8 @@
             
             if (targetUrl === 'about:blank' || targetUrl === 'about:blank#') {
                 showHomepage();
+                searchBarEl.value = '';
+                currentUrl = 'about:blank';
             } else {
                 hideHomepage();
                 contentIframeEl.src = proxyUrl(targetUrl);
@@ -1659,14 +1542,6 @@
                 finalTitle = 'New Tab';
             }
 
-            // Anti-Google Vignette Logic
-            const isAdFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
-            if (isAdFreeEnabled && finalUrl.includes('/#google_vignette')) {
-                const cleanUrl = finalUrl.split('/#google_vignette')[0];
-                navigateTo(cleanUrl);
-                return; // Stop processing this "dirty" URL load
-            }
-            
             if(finalUrl === 'about:blank' || contentIframeEl.src.endsWith('#')){
                 showHomepage();
                 searchBarEl.value = '';
@@ -1695,12 +1570,6 @@
         }
         
         function formatUrlInput(input) { const trimmed = input.trim(); if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) return trimmed; if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed)) return 'https://' + trimmed; return null; }
-
-        // NEW: Get Homepage URL
-        function getHomepageUrl() {
-            const customHomepage = localStorage.getItem('vernCustomHomepage');
-            return customHomepage && customHomepage.trim() !== '' ? customHomepage : 'about:blank';
-        }
 
         // NEW: Save Session
         function saveSession() {
@@ -1817,17 +1686,17 @@
             // but directly accessing that is blocked by same-origin.
             // A refresh might be needed to reflect changes.
             if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.location.href !== 'about:blank') {
-                 try {
-                     // This attempts to clear cookies for the iframe's *visible* origin.
-                     // It might still be blocked by sandbox attributes or browser policies.
-                     contentIframeEl.contentWindow.document.cookie.split(';').forEach(function(c) {
-                         document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-                     });
-                     contentIframeEl.contentWindow.location.reload(true); // Force reload to apply cookie changes
-                 } catch (e) {
-                     console.warn("Could not directly clear iframe cookies due to security restrictions:", e);
-                     alert("Note: Clearing cookies for the proxied site might be limited by browser security policies. You may need to manually clear site data.");
-                 }
+                    try {
+                        // This attempts to clear cookies for the iframe's *visible* origin.
+                        // It might still be blocked by sandbox attributes or browser policies.
+                        contentIframeEl.contentWindow.document.cookie.split(';').forEach(function(c) {
+                            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                        });
+                        contentIframeEl.contentWindow.location.reload(true); // Force reload to apply cookie changes
+                    } catch (e) {
+                        console.warn("Could not directly clear iframe cookies due to security restrictions:", e);
+                        alert("Note: Clearing cookies for the proxied site might be limited by browser security policies. You may need to manually clear site data.");
+                    }
             }
         }
 
@@ -2113,7 +1982,7 @@
                     theme = { name: "Custom (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } };
                 }
             } else {
-                    theme = THEMES[themeKey] || THEMES.main;
+                        theme = THEMES[themeKey] || THEMES.main;
             }
 
             if (theme.feature === 'systemMatch') {
@@ -2179,194 +2048,6 @@
             document.body.classList.toggle('app-ui-hidden', isFullscreen);
             document.getElementById('fullscreen-icon-img').src = `../images/zoom-${isFullscreen ? 'out' : 'in'}-white.png`;
         }
-
-
-        // --- TUTORIAL LOGIC ---
-        const tutorialSteps = [
-            {
-                text: "Welcome to VERN MAX! Let's take a quick tour.",
-                highlight: null,
-                action: () => { }
-            },
-            {
-                text: "This is your search bar. Type any URL or search query here to get started.",
-                highlight: 'search-bar',
-                action: () => { }
-            },
-            {
-                text: "The Home button takes you back to your starting page.",
-                highlight: 'home-button',
-                action: () => { }
-            },
-            {
-                text: "Use the Back and Forward buttons to navigate your Browse history.",
-                highlight: ['back-button', 'forward-button'],
-                action: () => { }
-            },
-            {
-                text: "The Settings menu is where you can customize your experience. Click it now!",
-                highlight: 'settings-button',
-                action: () => {
-                    closeAllMenus(); // Ensure other menus are closed
-                    settingsButtonEl.click(); // Open settings menu
-                }
-            },
-            {
-                text: "Here you can choose a Tab Cloak Preset for added security. This changes the tab's title and favicon to look like a legitimate site.",
-                highlight: 'cloak-preset-selector',
-                action: () => {
-                    // Ensure the settings menu is open and cloak section is visible if it were hidden
-                    toggleSettingsMenu(); 
-                    // No need to explicitly toggle custom cloak view here, as it's controlled by the selector's value
-                }
-            },
-            {
-                text: "You can also create a Custom Cloak with your own title and favicon URL.",
-                highlight: 'custom-cloak-settings-container',
-                action: () => {
-                    // Set selector to custom to show the custom cloak fields
-                    cloakPresetSelectorEl.value = 'custom';
-                    cloakPresetSelectorEl.dispatchEvent(new Event('change')); // Trigger change to show custom fields
-                }
-            },
-            {
-                text: "To protect your privacy, we recommend setting a Tab Cloak. Select one from the dropdown or create a custom one!",
-                highlight: 'cloak-preset-selector',
-                action: () => {
-                     // Keep settings open, prompt action
-                }
-            },
-             {
-                text: "Want to make VERN MAX truly yours? Use the Smart Theme Generator to create a custom theme!",
-                highlight: 'custom-theme-settings-container',
-                action: () => {
-                    // Set selector to custom to show the custom theme fields
-                    themeSelectorEl.value = 'custom';
-                    themeSelectorEl.dispatchEvent(new Event('change')); // Trigger change to show custom fields
-                }
-            },
-            {
-                text: "You can even set a custom homepage here or enable session restore!",
-                highlight: 'homepage-url-input',
-                action: () => {
-                    // Keep settings open
-                }
-            },
-            {
-                text: "Remember to Save Configuration once you're happy with your settings!",
-                highlight: 'save-config-button',
-                action: () => { }
-            },
-            {
-                text: "That's it for the tour! Have a good day Browse and playing games!",
-                highlight: null,
-                action: () => {
-                    endTutorial();
-                }
-            }
-        ];
-
-        let currentTutorialStep = 0;
-        let lastHighlightedElement = null;
-
-        function startTutorial() {
-            // Force show tutorial for test mode
-            // localStorage.removeItem('vernTutorialSeen'); // Uncomment for testing purposes
-            // if (localStorage.getItem('vernTutorialSeen') !== 'true') {
-                tutorialOverlayEl.classList.add('show');
-                showTutorialStep(currentTutorialStep);
-            // }
-        }
-
-        function showTutorialStep(stepIndex) {
-            if (stepIndex >= tutorialSteps.length) {
-                endTutorial();
-                return;
-            }
-
-            const step = tutorialSteps[stepIndex];
-            tutorialTextEl.textContent = step.text;
-
-            // Remove previous highlight
-            if (lastHighlightedElement) {
-                if (Array.isArray(lastHighlightedElement)) {
-                    lastHighlightedElement.forEach(el => el.classList.remove('tutorial-highlight'));
-                } else {
-                    lastHighlightedElement.classList.remove('tutorial-highlight');
-                }
-            }
-
-            // Apply new highlight
-            if (step.highlight) {
-                if (Array.isArray(step.highlight)) {
-                    lastHighlightedElement = [];
-                    step.highlight.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) {
-                            el.classList.add('tutorial-highlight');
-                            lastHighlightedElement.push(el);
-                        }
-                    });
-                } else {
-                    const el = document.getElementById(step.highlight);
-                    if (el) {
-                        el.classList.add('tutorial-highlight');
-                        lastHighlightedElement = el;
-                    }
-                }
-            } else {
-                lastHighlightedElement = null;
-            }
-            
-            // Execute action for the step
-            if (step.action) {
-                step.action();
-            }
-
-            // Reposition popup if necessary (e.g., after opening menu)
-            setTimeout(() => {
-                const settingsBtnRect = settingsButtonEl.getBoundingClientRect();
-                const popupWidth = tutorialPopupEl.offsetWidth;
-                const popupHeight = tutorialPopupEl.offsetHeight;
-
-                let popupX = settingsBtnRect.left + (settingsBtnRect.width / 2) - (popupWidth / 2);
-                let popupY = settingsBtnRect.bottom + 20; // 20px below button
-
-                // Keep within screen bounds
-                if (popupX < 10) popupX = 10;
-                if (popupY < 10) popupY = 10;
-                if (popupX + popupWidth > window.innerWidth - 10) popupX = window.innerWidth - popupWidth - 10;
-                if (popupY + popupHeight > window.innerHeight - 10) popupY = window.innerHeight - popupHeight - 10;
-
-                tutorialPopupEl.style.left = `${popupX}px`;
-                tutorialPopupEl.style.top = `${popupY}px`;
-                tutorialPopupEl.style.position = 'fixed'; // Ensure it's fixed relative to viewport
-            }, 100); // Small delay to allow menu to open and elements to render
-        }
-
-        function nextTutorialStep() {
-            currentTutorialStep++;
-            if (currentTutorialStep < tutorialSteps.length) {
-                showTutorialStep(currentTutorialStep);
-            } else {
-                endTutorial();
-            }
-        }
-
-        function endTutorial() {
-            tutorialOverlayEl.classList.remove('show');
-            if (lastHighlightedElement) {
-                if (Array.isArray(lastHighlightedElement)) {
-                    lastHighlightedElement.forEach(el => el.classList.remove('tutorial-highlight'));
-                } else {
-                    lastHighlightedElement.classList.remove('tutorial-highlight');
-                }
-            }
-            localStorage.setItem('vernTutorialSeen', 'true'); // Mark tutorial as seen
-            // Ensure settings menu is closed if it was opened by the tutorial
-            closeAllMenus(); 
-        }
-
     </script>
 </body>
 </html>
