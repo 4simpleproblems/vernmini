@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VERN MAX - BROWSER</title>
+    <title>Vern MAX</title>
     <link rel="stylesheet" href="../css/style.css" />
-    <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
+    <link rel="icon" type="image/x-icon" href="../images/favicon.png" id="app-favicon" />
     <style id="custom-styles">
         @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Crete+Round&display=swap');
@@ -417,27 +417,27 @@
         }
 
         @keyframes shaky-anim {
-          0% { transform: translate(0, 0); } 25% { transform: translate(1px, -1px); }
-          50% { transform: translate(-1px, 1px); } 75% { transform: translate(1px, 1px); }
-          100% { transform: translate(0, 0); }
+            0% { transform: translate(0, 0); } 25% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); } 75% { transform: translate(1px, 1px); }
+            100% { transform: translate(0, 0); }
         }
         body.theme-shakytext .nav-button, body.theme-shakytext .toolbar-button, body.theme-shakytext .mini-menu h3 {
             animation: shaky-anim 0.2s infinite;
         }
 
         @keyframes rainbow-text-anim {
-          0% { color: #ff0000; } 15% { color: #ff7f00; } 30% { color: #ffff00; }
-          45% { color: #00ff00; } 60% { color: #0000ff; } 75% { color: #4b0082; }
-          90% { color: #9400d3; } 100% { color: #ff0000; }
+            0% { color: #ff0000; } 15% { color: #ff7f00; } 30% { color: #ffff00; }
+            45% { color: #00ff00; } 60% { color: #0000ff; } 75% { color: #4b0082; }
+            90% { color: #9400d3; } 100% { color: #ff0000; }
         }
         body.theme-rainbowtext .nav-button, body.theme-rainbowtext .toolbar-button, body.theme-rainbowtext .menu-button {
             animation: rainbow-text-anim 4s linear infinite;
         }
 
         @keyframes bounce-in-anim {
-          0% { transform: translateY(-50px); opacity: 0; }
-          50% { transform: translateY(5px); }
-          100% { transform: translateY(0); opacity: 1; }
+            0% { transform: translateY(-50px); opacity: 0; }
+            50% { transform: translateY(5px); }
+            100% { transform: translateY(0); opacity: 1; }
         }
         body.theme-bouncingui #toolbar {
             animation: bounce-in-anim 0.6s ease-out;
@@ -453,8 +453,8 @@
         }
 
         @keyframes construction-anim {
-          0% { background-position: 0 0; }
-          100% { background-position: 56px 0; }
+            0% { background-position: 0 0; }
+            100% { background-position: 56px 0; }
         }
         body.theme-underconstruction #toolbar {
             background-image: repeating-linear-gradient(45deg, #fdd835, #fdd835 20px, #212121 20px, #212121 40px);
@@ -463,9 +463,9 @@
         }
 
         @keyframes ghostly-anim {
-          0% { opacity: 0.8; filter: blur(1px); }
-          50% { opacity: 0.6; filter: blur(2px); }
-          100% { opacity: 0.8; filter: blur(1px); }
+            0% { opacity: 0.8; filter: blur(1px); }
+            50% { opacity: 0.6; filter: blur(2px); }
+            100% { opacity: 0.8; filter: blur(1px); }
         }
         body.theme-ghostly #toolbar {
             animation: ghostly-anim 8s ease-in-out infinite;
@@ -779,7 +779,7 @@
         let currentSearchEngineKey = 'google';
 
         const cloakPresets = {
-            'none': { displayName: "None (Real Title/Favicon)" },
+            'none': { displayName: "None (Static Vern MAX)" },
             'custom': { displayName: "Custom (Manual)" },
             'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
@@ -947,21 +947,21 @@
                     canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
                     particleAnimationId = requestAnimationFrame(animateParticles);
                     return; 
-                } else if (p.shape === 'staticNoise') {
-                    const imageData = canvasCtx.createImageData(canvasEl.width, canvasEl.height);
-                    const buffer = new Uint32Array(imageData.data.buffer);
-                    const len = buffer.length - 1;
-                    for(let i=0; i < len; i++) {
-                        if (Math.random() < 0.5) {
-                            buffer[i] = 0xffffffff;
-                        } else {
-                            buffer[i] = 0xff000000;
-                        }
-                    }
-                    canvasCtx.putImageData(imageData, 0, 0);
-                    particleAnimationId = requestAnimationFrame(animateParticles);
-                    return;
-                }
+                 } else if (p.shape === 'staticNoise') {
+                     const imageData = canvasCtx.createImageData(canvasEl.width, canvasEl.height);
+                     const buffer = new Uint32Array(imageData.data.buffer);
+                     const len = buffer.length - 1;
+                     for(let i=0; i < len; i++) {
+                         if (Math.random() < 0.5) {
+                             buffer[i] = 0xffffffff;
+                         } else {
+                             buffer[i] = 0xff000000;
+                         }
+                     }
+                     canvasCtx.putImageData(imageData, 0, 0);
+                     particleAnimationId = requestAnimationFrame(animateParticles);
+                     return;
+                 }
             }
 
 
@@ -969,15 +969,15 @@
                 let p = particles[i];
 
                 if(p.shape === 'aurora'){
-                    auroraTime += 0.01;
-                    const gradient = canvasCtx.createLinearGradient(0, 0, canvasEl.width, canvasEl.height);
-                    const color1 = `hsla(${180 + Math.sin(auroraTime) * 20}, 100%, 50%, 0.3)`;
-                    const color2 = `hsla(${260 + Math.cos(auroraTime) * 20}, 100%, 50%, 0.3)`;
-                    gradient.addColorStop(0, color1);
-                    gradient.addColorStop(1, color2);
-                    canvasCtx.fillStyle = gradient;
-                    canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-                    continue;
+                     auroraTime += 0.01;
+                     const gradient = canvasCtx.createLinearGradient(0, 0, canvasEl.width, canvasEl.height);
+                     const color1 = `hsla(${180 + Math.sin(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                     const color2 = `hsla(${260 + Math.cos(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                     gradient.addColorStop(0, color1);
+                     gradient.addColorStop(1, color2);
+                     canvasCtx.fillStyle = gradient;
+                     canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                     continue;
                 }
 
                 p.x += p.speedX; p.y += p.speedY;
@@ -990,21 +990,21 @@
                 else if (p.shape === 'line') { canvasCtx.lineWidth = p.size / 2; canvasCtx.beginPath(); canvasCtx.moveTo(p.x, p.y); canvasCtx.lineTo(p.x + p.speedX * 5, p.y + p.speedY * 5); canvasCtx.stroke(); } 
                 else if (p.shape === 'text') { canvasCtx.font = p.size + 'px sans-serif'; canvasCtx.fillText(p.text, p.x, p.y); }
                 else if (p.shape === 'grid') {
-                    canvasCtx.beginPath();
-                    canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    canvasCtx.fill();
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const other = particles[j];
-                        const dist = Math.hypot(p.x - other.x, p.y - other.y);
-                        if(dist < 150){
-                            canvasCtx.beginPath();
-                            canvasCtx.moveTo(p.x, p.y);
-                            canvasCtx.lineTo(other.x, other.y);
-                            canvasCtx.lineWidth = 0.5;
-                            canvasCtx.strokeStyle = `rgba(247, 37, 133, ${1 - dist / 150})`;
-                            canvasCtx.stroke();
-                        }
-                    }
+                     canvasCtx.beginPath();
+                     canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                     canvasCtx.fill();
+                     for (let j = i + 1; j < particles.length; j++) {
+                         const other = particles[j];
+                         const dist = Math.hypot(p.x - other.x, p.y - other.y);
+                         if(dist < 150){
+                             canvasCtx.beginPath();
+                             canvasCtx.moveTo(p.x, p.y);
+                             canvasCtx.lineTo(other.x, other.y);
+                             canvasCtx.lineWidth = 0.5;
+                             canvasCtx.strokeStyle = `rgba(247, 37, 133, ${1 - dist / 150})`;
+                             canvasCtx.stroke();
+                         }
+                     }
                 }
             }
             particleAnimationId = requestAnimationFrame(animateParticles);
@@ -1430,18 +1430,19 @@
             const selectedPreset = cloakPresets[currentCloakPresetKey];
             if (currentCloakPresetKey === 'custom') {
                 const customTitle = localStorage.getItem('vernCustomCloakTitle') || 'Vern Max';
-                const customFaviconUrlSource = localStorage.getItem('vernCustomCloakUrl') || 'logo.png';
+                const customFaviconUrlSource = localStorage.getItem('vernCustomCloakUrl') || '../images/favicon.png';
                 document.title = customTitle; appFaviconEl.href = getFaviconUrl(customFaviconUrlSource);
             } else if (selectedPreset && currentCloakPresetKey !== 'none') {
                 document.title = selectedPreset.title; appFaviconEl.href = selectedPreset.faviconUrl;
             } else {
-                document.title = currentTitle || 'Vern Max'; appFaviconEl.href = getFaviconUrl(currentUrl);
+                document.title = 'Vern MAX';
+                appFaviconEl.href = '../images/favicon.png';
             }
         }
         function getFaviconUrl(targetUrl) {
-            if (!targetUrl || targetUrl.startsWith('about:')) return 'logo.png';
+            if (!targetUrl || targetUrl.startsWith('about:')) return '../images/favicon.png';
             try { const url = new URL(targetUrl); return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`; } 
-            catch (e) { return 'logo.png'; }
+            catch (e) { return '../images/favicon.png'; }
         }
         
         // --- EVENT HANDLERS & UTILITIES ---
