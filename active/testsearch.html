@@ -896,6 +896,13 @@
                 </label>
             </div>
 
+            <div class="menu-setting-item">
+                <label for="homepage-url-input">Custom Homepage</label>
+                <input type="text" id="homepage-url-input" class="menu-input" placeholder="e.g., about:blank or a URL">
+                <button id="set-current-page-as-homepage-button" class="menu-button" style="margin-top:-5px;">Set Current Page as Homepage</button>
+                <button id="reset-homepage-button" class="menu-button clear-button" style="margin-top:5px;">Reset Homepage</button>
+            </div>
+
             <div class="menu-setting-item toggle-item">
                 <div class="toggle-label-container">
                     <label for="restore-session-toggle" style="cursor: pointer;">Restore Last Session</label>
@@ -929,6 +936,17 @@
                     <input type="number" id="custom-history-days-input" class="menu-input" min="0" max="14" placeholder="e.g., 5">
                 </div>
                 <button id="apply-custom-history-days-button" class="menu-button">Set Custom Days</button>
+           </div>
+
+            <div class="menu-setting-item toggle-item">
+                <div class="toggle-label-container">
+                    <label for="ad-free-toggle" style="cursor: pointer;">Ad-Free Toggle</label>
+                    <small class="toggle-description">Blocks known ad domains and hides ad elements on pages.</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="ad-free-toggle">
+                    <span class="slider"></span>
+                </label>
             </div>
 
             <div class="menu-setting-item">
@@ -1023,10 +1041,10 @@
         const THEMES = {
             // --- Normal Themes ---
             main: { name: "Main (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } }, 
-            light: { name: "Light", colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }, 
-            dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } }, 
+            light: { name: "Light", colors: { bg: '#EDEDED', text: '#333333', accent: '#A6A6A6', neutral: '#FFFFFF', btnText: '#FFFFFF' } }, 
+            dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#999999', neutral: '#2A2A2A', btnText: '#000000' } }, 
             oceanic: { name: "Oceanic", colors: { bg: '#0A2E36', text: '#E0F4F2', accent: '#2E8B57', neutral: '#144552', btnText: '#FFFFFF' } }, 
-            sunset: { name: "Sunset", colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } }, 
+            sunset: { name: "Crimson Navy", colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } }, 
             forest: { name: "Forest", colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } }, 
             rose: { name: "Rosé Quartz", colors: { bg: '#f7d1cd', text: '#5e3d42', accent: '#e8959e', neutral: '#f2b5b0', btnText: '#5e3d42' } }, 
             coffee: { name: "Coffee House", colors: { bg: '#4a403a', text: '#e7e2dd', accent: '#a5a58d', neutral: '#6b5f58', btnText: '#FFFFFF' } }, 
@@ -1045,7 +1063,7 @@
             candy: { name: "Candy", colors: { bg: '#ffebf2', text: '#800040', accent: '#ff80bf', neutral: '#ffcce6', btnText: '#FFFFFF' } },
             solarized_light: { name: "Solarized Light", colors: { bg: '#fdf6e3', text: '#657b83', accent: '#268bd2', neutral: '#eee8d5', btnText: '#FFFFFF' } },
             solarized_dark: { name: "Solarized Dark", colors: { bg: '#002b36', text: '#839496', accent: '#268bd2', neutral: '#073642', btnText: '#FFFFFF' } },
-            sandy: { name: "Sandy Beach", colors: { bg: '#F4A460', text: '#6B4226', accent: '#87CEEB', neutral: '#DEB887', btnText: '#6B4226' },
+            sandy: { name: "Sandy Beach", colors: { bg: '#F4A460', text: '#6B4226', accent: '#87CEEB', neutral: '#DEB887', btnText: '#6B4226' } },
             peach: { name: "Peach", colors: { bg: '#ffdab9', text: '#8B4513', accent: '#ffa07a', neutral: '#ffdead', btnText: '#8B4513' } },
             olive: { name: "Olive", colors: { bg: '#556B2F', text: '#F5F5DC', accent: '#BDB76B', neutral: '#6B8E23', btnText: '#FFFFFF' } },
             grape: { name: "Grape", colors: { bg: '#483D8B', text: '#E6E6FA', accent: '#9370DB', neutral: '#312A5C', btnText: '#FFFFFF' } },
@@ -1112,6 +1130,20 @@
             keyboard_shortcuts: { name: "Keyboard Shortcuts", feature: 'keyboardShortcuts', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }
         };
 
+        // --- AD BLOCKER VARIABLES ---
+        const adBlockerDomains = [
+            'doubleclick.net', 'adservice.google.com', 'googleadservices.com', 'googlesyndication.com',
+            'adnxs.com', 'adroll.com', 'criteo.com', 'pubmatic.com', 'rubiconproject.com',
+            'scorecardresearch.com', 'zedo.com', 'adsrvr.org', 'openx.net', 'yieldmo.com',
+            'taboola.com', 'outbrain.com', 'revcontent.com', 'bidvertiser.com', 'popads.net',
+            'propellerads.com', 'adcash.com', 'yllix.com', 'exoclick.com'
+        ];
+        const adBlockerSelectors = [
+            '[class*="adsbygoogle"]', '[id*="google_ads"]', '[class*="ad-"]', '[id*="ad-"]',
+            '.ad-banner', '.ad-container', '.ad-wrapper', '.advertisement', '.advertising',
+            '#google_vignette', 'div[id^="ad_"]', 'ins.adsbygoogle', 'a[href*="/ads/"]',
+            'div[data-ad-format]', 'div[data-ad-unit-path]', '[aria-label="advertisement"]'
+        ];
 
         // --- DOM ELEMENT REFERENCES ---
         let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
@@ -1121,11 +1153,11 @@
             themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
             searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
-            homepageSearchIconEl, saveConfigButtonEl, saveTimestampEl,
+            homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl,
             customThemeSettingsContainerEl, customThemeBgBaseEl, customThemeAccentBaseEl, applyCustomThemeButtonEl,
             customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl,
             // NEW DOM Elements
-            httpsEnforceToggleEl,
+            httpsEnforceToggleEl, homepageUrlInputEl, setCurrentPageAsHomepageButtonEl, resetHomepageButtonEl,
             restoreSessionToggleEl, clearCurrentSiteCookiesButtonEl, clearAllBrowserCookiesButtonEl,
             blockThirdPartyCookiesToggleEl, cookieManagementContainerEl;
 
@@ -1176,10 +1208,10 @@
                     const accentColor = document.documentElement.style.getPropertyValue('--current-theme-accent') || '#7F5AF0';
                     const accentRGB = hexToRgb(accentColor);
                     if (accentRGB) {
-                       gradient.addColorStop(0, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0.3)`);
-                       gradient.addColorStop(1, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0)`);
-                       canvasCtx.fillStyle = gradient;
-                       canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                        gradient.addColorStop(0, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0.3)`);
+                        gradient.addColorStop(1, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0)`);
+                        canvasCtx.fillStyle = gradient;
+                        canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
                     }
                     particleAnimationId = requestAnimationFrame(animateParticles);
                     return; 
@@ -1246,6 +1278,57 @@
             particleAnimationId = requestAnimationFrame(animateParticles);
         }
 
+        // --- AD BLOCKER LOGIC ---
+        function runAdBlocker(iframe) {
+            const isAdFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
+            if (!isAdFreeEnabled) return;
+
+            try {
+                const doc = iframe.contentDocument;
+                if (!doc || !doc.body) return;
+
+                const removeAds = (documentNode) => {
+                    let adsFound = 0;
+                    adBlockerSelectors.forEach(selector => {
+                        try {
+                            const elements = documentNode.querySelectorAll(selector);
+                            elements.forEach(el => {
+                                if (el.style.display !== 'none') {
+                                    el.style.setProperty('display', 'none', 'important');
+                                    adsFound++;
+                                }
+                            });
+                        } catch (e) {
+                            // Non-critical error, selector might be invalid in some contexts
+                        }
+                    });
+                    if (adsFound > 0) {
+                        console.log(`[AdBlock] Hid ${adsFound} ad element(s).`);
+                    }
+                };
+
+                // Create an observer to watch for dynamically added ads
+                const observer = new MutationObserver((mutations) => {
+                    // Re-run the ad remover if new nodes are added to the page
+                    if (mutations.some(m => m.addedNodes.length > 0)) {
+                         removeAds(doc);
+                    }
+                });
+                
+                // Initial run on the document
+                removeAds(doc);
+
+                // Start observing the body for changes
+                observer.observe(doc.body, {
+                    childList: true,
+                    subtree: true
+                });
+
+            } catch (e) {
+                console.warn("Ad blocker could not access iframe content. This is often expected due to security policies.", e);
+            }
+        }
+
         // --- CORE LOGIC ---
         document.addEventListener('DOMContentLoaded', async () => {
             assignDOMElements();
@@ -1266,7 +1349,7 @@
             if (restoreSession && lastUrl && lastUrl !== 'about:blank' && lastUrl !== 'about:blank#') {
                 navigateTo(lastUrl);
             } else {
-                navigateTo('about:blank'); // Always default to about:blank if no session restore or custom homepage
+                navigateTo(getHomepageUrl()); // Use getHomepageUrl() for initial load
             }
 
             // Save session on page unload
@@ -1286,6 +1369,7 @@
             historyGroupTemplate = document.getElementById('history-group-template');
             homepageEl = document.getElementById('homepage'); homepageSearchBarEl = document.getElementById('homepage-search-bar'); searchSuggestionsEl = document.getElementById('search-suggestions');
             homepageSearchIconEl = document.getElementById('homepage-search-icon');
+            adFreeToggleEl = document.getElementById('ad-free-toggle');
             saveConfigButtonEl = document.getElementById('save-config-button');
             saveTimestampEl = document.getElementById('save-timestamp');
 
@@ -1298,6 +1382,9 @@
             customHistoryDaysInputEl = document.getElementById('custom-history-days-input');
             applyCustomHistoryDaysButtonEl = document.getElementById('apply-custom-history-days-button');
             httpsEnforceToggleEl = document.getElementById('https-enforce-toggle');
+            homepageUrlInputEl = document.getElementById('homepage-url-input');
+            setCurrentPageAsHomepageButtonEl = document.getElementById('set-current-page-as-homepage-button');
+            resetHomepageButtonEl = document.getElementById('reset-homepage-button');
             restoreSessionToggleEl = document.getElementById('restore-session-toggle');
             clearCurrentSiteCookiesButtonEl = document.getElementById('clear-current-site-cookies-button');
             clearAllBrowserCookiesButtonEl = document.getElementById('clear-all-browser-cookies-button');
@@ -1325,10 +1412,13 @@
             searchEngineSelectorEl.value = currentSearchEngineKey;
             
             // NEW: HTTPS Enforcement
-            httpsEnforceToggleEl.checked = false; // Default off
+            httpsEnforceToggleEl.checked = localStorage.getItem('vernHttpsEnforce') === 'true';
+
+            // NEW: Custom Homepage
+            homepageUrlInputEl.value = localStorage.getItem('vernCustomHomepage') || '';
 
             // NEW: Persistent Tabs/Session Restore
-            restoreSessionToggleEl.checked = false; // Default off
+            restoreSessionToggleEl.checked = localStorage.getItem('vernRestoreSession') === 'true';
 
             // History Lifespan
             const savedLifespan = localStorage.getItem('vernHistoryLifespan') || '14';
@@ -1341,27 +1431,29 @@
                 historyLifespanSelectorEl.value = 'custom';
                 customHistoryDaysInputEl.value = savedLifespan;
                 // Call the toggle function on load
-                toggleCustomHistoryView(false); // Default to custom history section closed
+                toggleCustomHistoryView(true);
             }
             
+            // Ad-Free Toggle
+            adFreeToggleEl.checked = localStorage.getItem('vernAdFreeToggle') === 'true';
+
             // Cloak
-            currentCloakPresetKey = 'google_docs'; // Default changed to Google Docs
-            localStorage.setItem('vernCloakPreset', currentCloakPresetKey); // Ensure it's saved
+            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'google_docs';
             cloakPresetSelectorEl.value = currentCloakPresetKey;
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
             customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
             applyBrowserCloak();
             // Call the toggle function on load
-            toggleCustomCloakView(false); // Default to custom cloak section closed
+            toggleCustomCloakView(currentCloakPresetKey === 'custom');
 
             // NEW: Block Third-Party Cookies
-            blockThirdPartyCookiesToggleEl.checked = false; // Default off
+            blockThirdPartyCookiesToggleEl.checked = localStorage.getItem('vernBlockThirdPartyCookies') === 'true';
         }
 
         function setupEventListeners() {
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
-            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); // Updated to always use about:blank
+            homeButtonEl.addEventListener('click', () => navigateTo(getHomepageUrl())); // Updated to use custom homepage
             backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
             refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank' && !contentIframeEl.src.endsWith('#')) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
@@ -1397,6 +1489,12 @@
                     loadHistory();
                 }
             });
+            adFreeToggleEl.addEventListener('change', (e) => { 
+                localStorage.setItem('vernAdFreeToggle', e.target.checked);
+                if (e.target.checked) {
+                    runAdBlocker(contentIframeEl); // Run blocker immediately if turned on
+                }
+             });
 
             cloakPresetSelectorEl.addEventListener('change', (e) => {
                 currentCloakPresetKey = e.target.value;
@@ -1468,6 +1566,25 @@
                 localStorage.setItem('vernHttpsEnforce', e.target.checked);
             });
 
+            // NEW: Custom Homepage Buttons
+            homepageUrlInputEl.addEventListener('input', () => {
+                localStorage.setItem('vernCustomHomepage', homepageUrlInputEl.value.trim());
+            });
+            setCurrentPageAsHomepageButtonEl.addEventListener('click', () => {
+                if (currentUrl && currentUrl !== 'about:blank' && currentUrl !== 'about:blank#') {
+                    homepageUrlInputEl.value = currentUrl;
+                    localStorage.setItem('vernCustomHomepage', currentUrl);
+                    alert('Current page set as homepage!');
+                } else {
+                    alert('Cannot set "about:blank" or empty page as homepage.');
+                }
+            });
+            resetHomepageButtonEl.addEventListener('click', () => {
+                homepageUrlInputEl.value = '';
+                localStorage.removeItem('vernCustomHomepage');
+                alert('Homepage reset to default.');
+            });
+
             // NEW: Persistent Tabs/Session Restore Toggle
             restoreSessionToggleEl.addEventListener('change', (e) => {
                 localStorage.setItem('vernRestoreSession', e.target.checked);
@@ -1497,17 +1614,26 @@
             isLoading = true;
             searchSuggestionsEl.style.display = 'none';
             let targetUrl = urlInput ? urlInput.trim() : '';
+            const isAdFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
+
+            // --- AD BLOCKER: Domain Check ---
+            if (isAdFreeEnabled && targetUrl) {
+                try {
+                    const urlHostname = new URL(formatUrlInput(targetUrl) || targetUrl).hostname;
+                    if (adBlockerDomains.some(domain => urlHostname.includes(domain))) {
+                        console.log(`[AdBlock] Blocked navigation to ad domain: ${targetUrl}`);
+                        isLoading = false;
+                        return; // Stop the navigation
+                    }
+                } catch (e) {
+                    // Not a full URL, likely a search term. Ignore error and let search logic handle it.
+                }
+            }
 
             // NEW: HTTPS Enforcement
             if (localStorage.getItem('vernHttpsEnforce') === 'true') {
                 if (targetUrl.startsWith('http://')) {
                     targetUrl = 'https://' + targetUrl.substring(7);
-                } else if (!targetUrl.startsWith('https://') && !targetUrl.startsWith('about:') && !targetUrl.startsWith('data:')) {
-                    // Only prepend https if no protocol or http is explicitly used.
-                    // This avoids breaking local paths or data URIs
-                    if (!/^[a-zA-Z]+:\/\//.test(targetUrl)) { // Check if no protocol is explicitly given
-                            targetUrl = 'https://' + targetUrl;
-                    }
                 }
             }
             
@@ -1542,6 +1668,16 @@
                 finalTitle = 'New Tab';
             }
 
+            const isAdFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
+
+            // --- AD BLOCKER: Google Vignette Check ---
+            if (isAdFreeEnabled && finalUrl.includes('#google_vignette')) {
+                const cleanUrl = finalUrl.split('#google_vignette')[0];
+                console.log(`[AdBlock] Detected Google Vignette. Reloading to: ${cleanUrl}`);
+                navigateTo(cleanUrl);
+                return; // Stop processing this "dirty" URL load
+            }
+            
             if(finalUrl === 'about:blank' || contentIframeEl.src.endsWith('#')){
                 showHomepage();
                 searchBarEl.value = '';
@@ -1553,12 +1689,16 @@
             }
 
             currentTitle = finalTitle;
-            // Only update last visited URL if session restore is enabled
             if (localStorage.getItem('vernRestoreSession') === 'true') {
                 localStorage.setItem('vernLastUrl', currentUrl);
             }
             applyBrowserCloak();
             if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
+
+            // --- AD BLOCKER: Element Hiding ---
+            if (isAdFreeEnabled && finalUrl !== 'about:blank') {
+                runAdBlocker(contentIframeEl);
+            }
         }
 
         function proxyUrl(urlToProxy) {
@@ -1570,6 +1710,12 @@
         }
         
         function formatUrlInput(input) { const trimmed = input.trim(); if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) return trimmed; if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed)) return 'https://' + trimmed; return null; }
+
+        // NEW: Get Homepage URL
+        function getHomepageUrl() {
+            const customHomepage = localStorage.getItem('vernCustomHomepage');
+            return customHomepage && customHomepage.trim() !== '' ? customHomepage : 'about:blank';
+        }
 
         // NEW: Save Session
         function saveSession() {
@@ -1634,7 +1780,7 @@
             if (history.length === 0) { const li = document.createElement('li'); li.textContent = 'No history found.'; li.style.cssText = 'cursor: default; text-align: center; opacity: 0.7;'; fragment.appendChild(li); } 
             else { const grouped = {}; [...history].reverse().forEach(item => { const groupKey = new Date(item.timestamp).toDateString(); if (!grouped[groupKey]) grouped[groupKey] = []; grouped[groupKey].push(item); });
                 for (const groupKey in grouped) { const headerTpl = historyGroupTemplate.content.cloneNode(true); headerTpl.querySelector('.history-group-header').textContent = groupKey; fragment.appendChild(headerTpl); 
-                    grouped[groupKey].forEach(item => { const itemTpl = historyItemTemplate.content.cloneNode(true); const li = itemTpl.querySelector('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}`; li.querySelector('.item-name').textContent = item.title; li.querySelector('.item-url').textContent = item.url; fragment.appendChild(itemTpl); }); }
+                    grouped[groupKey].forEach(item => { const itemTpl = historyItemTemplate.content.cloneNode(true); const li = itemTpl.querySelector('li'); li.dataset.url = item.url; li.title = `<span class="math-inline">\{item\.title\}\\n</span>{item.url}`; li.querySelector('.item-name').textContent = item.title; li.querySelector('.item-url').textContent = item.url; fragment.appendChild(itemTpl); }); }
             }
             historyListPopupEl.innerHTML = ''; historyListPopupEl.appendChild(fragment);
         }
