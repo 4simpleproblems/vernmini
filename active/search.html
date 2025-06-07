@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VERN MAX - SEARCH</title>
+    <title>VERN MAX</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="icon" type="image/x-icon" href="../images/favicon.png" id="app-favicon" />
     <style id="custom-styles">
@@ -1025,7 +1025,7 @@
         let currentSearchEngineKey = 'duckduckgo'; // Default changed to DuckDuckGo
 
         const cloakPresets = {
-            'none': { displayName: "None (VERN MAX)" },
+            'none': { displayName: "None (Static VERN MAX)" },
             'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
             'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
@@ -2168,13 +2168,13 @@
             const appFaviconEl = document.getElementById('app-favicon');
             const selectedPreset = cloakPresets[currentCloakPresetKey];
             if (currentCloakPresetKey === 'custom') {
-                const customTitle = localStorage.getItem('vernCustomCloakTitle') || 'VERN MAX - SEARCH';
+                const customTitle = localStorage.getItem('vernCustomCloakTitle') || 'VERN MAX';
                 const customFaviconUrlSource = localStorage.getItem('vernCustomCloakUrl') || '../images/favicon.png';
                 document.title = customTitle; appFaviconEl.href = getFaviconUrl(customFaviconUrlSource);
             } else if (selectedPreset && currentCloakPresetKey !== 'none') {
                 document.title = selectedPreset.title; appFaviconEl.href = selectedPreset.faviconUrl;
             } else {
-                document.title = 'VERN MAX - SEARCH';
+                document.title = 'VERN MAX';
                 appFaviconEl.href = '../images/favicon.png';
             }
         }
