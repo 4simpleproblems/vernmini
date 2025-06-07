@@ -1,125 +1,1822 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vern Max</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="index.css" />
-    <link rel="icon" type="image/x-icon" href="logo.png" />
-    <link rel="shortcut icon" type="image/jpg" href="logo.png" />
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        border: none;
-        box-sizing: border-box;
-      }
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-family: 'Outfit', monospace;
-        font-weight: bold;
-      }
-      #header,
-      #content {
-        width: 100%;
-        max-width: 700px;
-        text-align: center;
-        margin-bottom: 2rem;
-      }
-      #clock {
-        color: #fff;
-        font-family: 'Outfit', monospace;
-        font-weight: bold;
-        font-size: 1.2rem;
-        margin-top: 0.5rem;
-        margin-bottom: 0.9rem;
-      }
-      #uv-form {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-      #uv-address {
-        width: 90%;
-        padding: 14px;
-        border-radius: 100px;
-        font-size: 1rem;
-      }
-      #popularSites {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin: 1rem 0;
-      }
-      #popularSites .btn {
-      }
-      #footer {
-        display: none; /* Hides any leftover footer styling or content */
-      }
-      /* Official label in bottom-left */
-      .footer-label {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        margin: 1rem;
-        font-family: 'Outfit', monospace;
-        font-weight: bold;
-        font-size: 0.9rem;
-        color: #fff;
-      }
+    <title>VERN MAX</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" type="image/x-icon" href="../images/favicon.png" id="app-favicon" />
+    <style id="custom-styles">
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Crete+Round&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+        /* Core Theme Variables & Component Mappings */
+        :root {
+            --current-theme-bg: #23272A;
+            --current-theme-text: #E0E1DD;
+            --current-theme-accent: #7F5AF0;
+            --current-theme-neutral: #2C2F33;
+            --current-theme-button-text: #FFFFFF;
+            --current-theme-shadow-rgb: 0, 0, 0;
+            --current-theme-shadow-opacity-strong: 0.4;
+            --current-theme-shadow-opacity-medium: 0.25;
+            --current-theme-shadow-opacity-light: 0.15;
+            --current-theme-focus-ring-color: var(--current-theme-accent);
+
+            --bg-color: var(--current-theme-bg);
+            --text-color: var(--current-theme-text);
+            --iframe-bg: var(--current-theme-bg);
+            --font-family-main: 'PrimaryFont', sans-serif;
+
+            --toolbar-bg: var(--current-theme-neutral);
+            --toolbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
+            --toolbar-border-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
+
+            --button-bg: var(--current-theme-accent);
+            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, var(--current-theme-text));
+            --button-text-color: var(--current-theme-button-text);
+            --button-outline-color: color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
+
+            --input-bg: color-mix(in srgb, var(--current-theme-neutral) 90%, var(--current-theme-bg));
+            --input-focus-bg: var(--current-theme-bg);
+            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 50%, transparent);
+
+            --menu-bg: var(--input-bg);
+            --menu-item-hover-bg: var(--button-hover-bg);
+            --menu-text-color: var(--text-color);
+            --menu-shadow: 0 4px 12px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
+            --menu-border-color: var(--button-outline-color);
+        }
+
+        /* Base Styles */
+        html, body {
+            margin: 0; padding: 0; border: none; box-sizing: border-box;
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: var(--font-family-main);
+            background-color: var(--bg-color); color: var(--text-color);
+            display: flex; flex-direction: column;
+        }
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; display: none; pointer-events: none; }
+
+        /* Toolbar */
+        #toolbar {
+            display: flex; align-items: center; padding: 8px 10px;
+            background-color: var(--toolbar-bg); box-shadow: var(--toolbar-shadow);
+            border-bottom: 1px solid var(--toolbar-border-color); z-index: 1000; position: relative;
+        }
+        .nav-button, .toolbar-button {
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
+            cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
+            box-shadow: 0 0 0 1px var(--button-outline-color); font-size: 20px;
+            position: relative; flex-shrink: 0;
+        }
+        .nav-button:hover, .toolbar-button:hover { background-color: var(--button-hover-bg); }
+        .nav-button .icon-img, .toolbar-button .icon-img {
+            width: 20px; height: 20px; user-select: none; pointer-events: none;
+        }
+        #search-bar {
+            flex: 1; height: 36px; border-radius: 8px; border: none; background-color: var(--input-bg);
+            color: var(--text-color); padding: 0 15px; font-size: 14px;
+            box-shadow: 0 0 0 1px var(--button-outline-color); font-family: var(--font-family-main);
+            margin-right: 8px;
+        }
+        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+        #settings-button { margin-right: 0; }
+
+        /* Menus */
+        .mini-menu {
+            position: absolute; background-color: var(--menu-bg);
+            border: 1px solid var(--menu-border-color); border-radius: 16px;
+            box-shadow: var(--menu-shadow); z-index: 1005; min-width: 280px;
+            max-width: 350px; max-height: 450px; overflow-y: auto; padding: 10px;
+            color: var(--menu-text-color); opacity: 0; visibility: hidden;
+            transform: translateY(-10px) scale(0.98);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0.25s;
+        }
+        .mini-menu.show {
+            opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0s;
+        }
+        .mini-menu h3 {
+            margin-top: 0; margin-bottom: 10px; font-size: 1.1em;
+            border-bottom: 1px solid var(--toolbar-border-color); padding-bottom: 8px;
+            font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        .mini-menu h3 .icon-img { width: 1em; height: 1em; }
+        .mini-menu ul { list-style: none; padding: 0; margin: 0; }
+        .mini-menu::-webkit-scrollbar, .mini-menu ul::-webkit-scrollbar { width: 5px; }
+        .mini-menu::-webkit-scrollbar-thumb, .mini-menu ul::-webkit-scrollbar-thumb { background-color: var(--button-outline-color); border-radius: 8px; }
+
+        /* Menu Items & Controls */
+        .mini-menu li {
+            padding: 9px 15px; margin-bottom: 7px; border-radius: 12px;
+            cursor: pointer; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-bg));
+            color: var(--text-color); position: relative;
+        }
+        .mini-menu li:hover { background-color: var(--menu-item-hover-bg); color: var(--button-text-color); }
+        .mini-menu li .item-url { font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px; }
+        .mini-menu .item-remove-button {
+            position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; padding: 5px;
+            opacity: 0.7; display:inline-flex; align-items:center; justify-content:center;
+            background: none; border: none; color: inherit;
+        }
+        .mini-menu .item-remove-button:hover { opacity: 1; background-color: rgba(var(--current-theme-shadow-rgb),0.1); border-radius: 50%; }
+        .mini-menu .item-remove-icon { width: 12px; height: 12px; display: block; }
+
+        /* History Menu Specifics */
+        .history-group-header {
+            font-size: 0.8em; font-weight: bold; color: var(--text-color);
+            opacity: 0.7; padding: 10px 15px 5px; text-transform: uppercase;
+        }
+
+        /* Menu Controls */
+        .mini-menu .menu-action-bar { margin-top:15px; padding-top:10px; border-top: 1px solid var(--toolbar-border-color); }
+        .mini-menu .menu-input, .mini-menu .menu-select {
+            width: 100%; height: 38px; padding: 0 15px; margin-bottom: 10px;
+            background-color: var(--input-bg); color: var(--text-color);
+            border: none; border-radius: 12px; font-family: var(--font-family-main);
+            box-sizing: border-box; box-shadow: 0 0 0 1px var(--button-outline-color); font-size: 0.9em;
+        }
+        .mini-menu .menu-input:focus, .mini-menu .menu-select:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+        .mini-menu .menu-button {
+            width: 100%; height: 38px; padding: 0 15px; background-color: var(--button-bg);
+            color: var(--button-text-color); border: none; border-radius: 12px; cursor: pointer;
+            transition: background-color 0.2s ease; font-family: var(--font-family-main);
+            box-shadow: 0 0 0 1px var(--button-outline-color); display: flex;
+            align-items: center; justify-content: center; font-size: 0.9em; font-weight: 500;
+        }
+        .mini-menu .menu-button:hover { background-color: var(--button-hover-bg); }
+        .mini-menu .menu-button .icon-img { width: 16px; height: 16px; margin-right: 8px; }
+        .mini-menu .menu-button.clear-button { background-color: color-mix(in srgb, var(--current-theme-accent) 60%, #c0392b); }
+        .mini-menu .menu-button.clear-button:hover { background-color: #c0392b; }
+
+        /* Settings Menu */
+        .menu-setting-item { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .menu-setting-item label { font-size: 0.85em; opacity: 0.8; padding-left: 5px; }
+
+        /* Toggle Switch Styles */
+        .menu-setting-item.toggle-item {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 5px;
+        }
+        .toggle-label-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-right: 10px;
+        }
+        .menu-setting-item.toggle-item .toggle-label-container label {
+            padding-left: 0;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        .toggle-description {
+            font-size: 0.8em;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-bg));
+            transition: .3s;
+            border-radius: 24px;
+            border: 1px solid var(--button-outline-color);
+        }
+        .toggle-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-color);
+            transition: .3s;
+            border-radius: 50%;
+        }
+        .toggle-switch input:checked + .slider {
+            background-color: var(--current-theme-accent);
+        }
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(20px);
+            background-color: var(--current-theme-button-text);
+        }
+        #save-timestamp {
+             font-size: 0.8em;
+             opacity: 0.8;
+             margin-left: 8px;
+        }
+        
+        /* Conditional Custom Sections */
+        #custom-cloak-settings-container,
+        #custom-theme-settings-container,
+        #custom-history-days-container {
+            opacity: 0; max-height: 0; overflow: hidden;
+            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin-top 0.3s, padding-top 0.3s;
+            margin-top: 0; padding-top: 0;
+        }
+        #custom-cloak-settings-container.visible,
+        #custom-theme-settings-container.visible,
+        #custom-history-days-container.visible {
+            opacity: 1; max-height: 500px; 
+            margin-top: 15px; padding-top: 10px;
+            border-top: 1px solid var(--toolbar-border-color);
+        }
+        
+        /* Style for color inputs to match other inputs */
+        .mini-menu .menu-input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 38px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        .mini-menu .menu-input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 4px;
+        }
+        .mini-menu .menu-input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 8px;
+        }
+        .mini-menu .menu-input[type="color"]::-moz-color-swatch {
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Main Content */
+        #content-container { flex: 1; position: relative; background-color: var(--iframe-bg); overflow: hidden; }
+        #content-iframe { width: 100%; height: 100%; border: none; display: block; }
+        
+        /* Animations & States */
+        #refresh-button .icon-img.spinning { animation: spinRefreshIcon 0.7s linear infinite; }
+        @keyframes spinRefreshIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        body.app-ui-hidden #toolbar { display: none !important; }
+
+        /* --- Special Theme Features --- */
+        body.theme-bottom-bar { flex-direction: column-reverse; }
+        body.theme-bottom-bar #toolbar { border-top: 1px solid var(--toolbar-border-color); border-bottom: none; }
+        body.theme-bottom-bar .mini-menu { transform-origin: bottom right; }
+
+        body.theme-floating-toolbar #toolbar {
+            margin: 10px; border-radius: 12px; width: calc(100% - 20px);
+            background-color: color-mix(in srgb, var(--toolbar-bg) 85%, transparent);
+            backdrop-filter: blur(5px);
+        }
+
+        body.theme-retro-terminal #search-bar:focus,
+        body.theme-retro-terminal #homepage-search-bar:focus { animation: blink-caret 1s step-end infinite; }
+        @keyframes blink-caret {
+            from, to { box-shadow: var(--input-focus-shadow), inset 2px 0 0 0 var(--current-theme-accent); }
+            50% { box-shadow: var(--input-focus-shadow), inset 2px 0 0 0 transparent; }
+        }
+
+        body.theme-minimalist .toolbar-button, body.theme-minimalist #fullscreen-button {
+            opacity: 0; transform: scale(0.8); transition: opacity 0.3s, transform 0.3s;
+        }
+        body.theme-minimalist #toolbar:hover .toolbar-button, body.theme-minimalist #toolbar:hover #fullscreen-button {
+            opacity: 1; transform: scale(1);
+        }
+
+        body.theme-glitchy { animation: glitch-anim 7s infinite steps(8) alternate; }
+        @keyframes glitch-anim {
+            0% { transform: translate(0); } 10% { transform: translate(-2px, 2px); } 20% { transform: translate(2px, -2px); }
+            30% { transform: translate(-2px, -2px); } 40% { transform: translate(2px, 2px); } 50% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+
+        body.theme-flipped-mode #toolbar, body.theme-flipped-mode #content-container { transform: scaleX(-1); }
+        body.theme-flipped-mode .nav-button, body.theme-flipped-mode .toolbar-button, body.theme-flipped-mode #search-bar, body.theme-flipped-mode .mini-menu {
+            transform: scaleX(-1);
+        }
+        
+        body.theme-holographic .nav-button,
+        body.theme-holographic .toolbar-button,
+        body.theme-holographic #homepage-search-icon {
+            background: linear-gradient(135deg, #ff00c8, #00e5ff, #ff005d, #00ff87);
+            background-size: 400% 400%;
+            animation: holographic-shine 5s ease infinite;
+        }
+        @keyframes holographic-shine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body.theme-translucent-ui #toolbar {
+            background-color: color-mix(in srgb, var(--toolbar-bg) 60%, transparent);
+            border-bottom-color: color-mix(in srgb, var(--toolbar-border-color) 60%, transparent);
+            box-shadow: none;
+            backdrop-filter: blur(8px);
+        }
+        body.theme-translucent-ui .nav-button,
+        body.theme-translucent-ui .toolbar-button {
+             background-color: color-mix(in srgb, var(--button-bg) 60%, transparent);
+        }
+        body.theme-translucent-ui .mini-menu {
+             background-color: color-mix(in srgb, var(--menu-bg) 60%, transparent);
+             backdrop-filter: blur(8px);
+        }
+
+        /* --- 10 Previous Special Themes --- */
+
+        body.theme-tilt3d { perspective: 1000px; }
+        body.theme-tilt3d #toolbar {
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            transform: rotateX(var(--tilt-x, 0)) rotateY(var(--tilt-y, 0));
+        }
+
+        body.theme-comicbook {
+            --font-family-main: 'Bangers', cursive;
+        }
+        body.theme-comicbook #toolbar, 
+        body.theme-comicbook .nav-button, 
+        body.theme-comicbook .toolbar-button, 
+        body.theme-comicbook #search-bar,
+        body.theme-comicbook .mini-menu,
+        body.theme-comicbook #homepage-search-container {
+            border: 3px solid #000 !important;
+            box-shadow: 2px 2px 0px #000 !important;
+            border-radius: 8px !important;
+        }
+        body.theme-comicbook .mini-menu li {
+             border: 2px solid #000 !important;
+        }
+
+        body.theme-crtscanlines { position: relative; --font-family-main: 'Courier New', monospace; }
+        body.theme-crtscanlines::after {
+            content: ' ';
+            display: block;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.4) 1px, transparent 1px, transparent 3px);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.7;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.6; } 50% { opacity: 0.7; } 100% { opacity: 0.6; }
+        }
+
+        body.theme-skewedlook #toolbar {
+            transform: skewX(-15deg);
+            transition: transform 0.3s ease;
+        }
+        body.theme-skewedlook #toolbar:hover { transform: skewX(0deg); }
+        body.theme-skewedlook .nav-button, 
+        body.theme-skewedlook .toolbar-button, 
+        body.theme-skewedlook #search-bar {
+            transform: skewX(15deg);
+        }
+
+        body.theme-textpop { --font-family-main: 'Arial Black', Gadget, sans-serif; }
+        body.theme-textpop .nav-button, 
+        body.theme-textpop .toolbar-button,
+        body.theme-textpop .mini-menu h3,
+        body.theme-textpop .menu-button {
+            text-shadow: 
+                2px 2px 0 var(--current-theme-accent),
+                -2px -2px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff);
+        }
+        body.theme-textpop #homepage-logo {
+             filter: drop-shadow(5px 5px 0 var(--current-theme-accent)) drop-shadow(-5px -5px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff));
+        }
+
+        body.theme-focusmode #toolbar {
+            transition: opacity 0.4s, filter 0.4s;
+            opacity: 0.5;
+            filter: blur(3px);
+        }
+        body.theme-focusmode #toolbar:hover {
+            opacity: 1;
+            filter: blur(0);
+        }
+
+        body.theme-invertedui {
+            filter: invert(1);
+        }
+        body.theme-invertedui #content-container,
+        body.theme-invertedui #homepage {
+            filter: invert(1); 
+        }
+        body.theme-invertedui .icon-img,
+        body.theme-invertedui #homepage-logo {
+            filter: invert(1);
+        }
+
+        body.theme-stealthmode #toolbar {
+            transform: translateY(-105%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        body.theme-stealthmode:hover #toolbar {
+            transform: translateY(0);
+        }
+        body.theme-stealthmode #content-container {
+            height: 100vh;
+        }
+
+        body.theme-oldnewspaper {
+            --font-family-main: 'Crete Round', serif;
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            filter: sepia(0.4);
+        }
+        body.theme-oldnewspaper #content-container,
+        body.theme-oldnewspaper #homepage {
+            filter: sepia(0);
+        }
+        body.theme-oldnewspaper #toolbar {
+            background-color: var(--current-theme-neutral) !important;
+        }
+
+        /* --- 25 NEW Special Themes --- */
+
+        #spotlight-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            background: radial-gradient(circle at var(--spotlight-x) var(--spotlight-y), transparent 100px, rgba(0,0,0,0.95) 250px);
+        }
+
+        body.theme-pagecurl::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50.5%, rgba(0,0,0,0.4) 52%, var(--bg-color) 52%);
+            box-shadow: -5px -5px 15px rgba(0,0,0,0.3);
+            transform: rotate(90deg);
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        body.theme-blueprint {
+            --font-family-main: 'Courier New', monospace;
+            background-image: 
+                linear-gradient(rgba(var(--current-theme-shadow-rgb),0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--current-theme-shadow-rgb),0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        body.theme-blueprint #toolbar,
+        body.theme-blueprint .mini-menu {
+            background-color: color-mix(in srgb, var(--toolbar-bg) 80%, transparent);
+            backdrop-filter: blur(2px);
+        }
+
+        body.theme-notebookpaper {
+            --font-family-main: 'Patrick Hand', cursive;
+            background-color: #fff;
+            background-image: 
+                linear-gradient(to right, transparent 39px, #ffb6c1 39px, #ffb6c1 41px, transparent 41px),
+                linear-gradient(to bottom, transparent 19px, #a4d8f2 19px, #a4d8f2 20px, transparent 20px);
+            background-size: 100% 20px;
+        }
+
+        body.theme-zoomhover .nav-button, body.theme-zoomhover .toolbar-button {
+            transition: transform 0.2s ease-out;
+        }
+        body.theme-zoomhover .nav-button:hover, body.theme-zoomhover .toolbar-button:hover {
+            transform: scale(1.15);
+        }
+
+        @keyframes shaky-anim {
+            0% { transform: translate(0, 0); } 25% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); } 75% { transform: translate(1px, 1px); }
+            100% { transform: translate(0, 0); }
+        }
+        body.theme-shakytext .nav-button, body.theme-shakytext .toolbar-button, body.theme-shakytext .mini-menu h3 {
+            animation: shaky-anim 0.2s infinite;
+        }
+
+        @keyframes rainbow-text-anim {
+            0% { color: #ff0000; } 15% { color: #ff7f00; } 30% { color: #ffff00; }
+            45% { color: #00ff00; } 60% { color: #0000ff; } 75% { color: #4b0082; }
+            90% { color: #9400d3; } 100% { color: #ff0000; }
+        }
+        body.theme-rainbowtext .nav-button, body.theme-rainbowtext .toolbar-button, body.theme-rainbowtext .menu-button {
+            animation: rainbow-text-anim 4s linear infinite;
+        }
+
+        @keyframes bounce-in-anim {
+            0% { transform: translateY(-50px); opacity: 0; }
+            50% { transform: translateY(5px); }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        body.theme-bouncingui #toolbar {
+            animation: bounce-in-anim 0.6s ease-out;
+        }
+
+        body.theme-8bitgamer {
+            --font-family-main: 'VT323', monospace;
+            image-rendering: pixelated;
+        }
+        body.theme-8bitgamer .nav-button, body.theme-8bitgamer .toolbar-button, body.theme-8bitgamer #search-bar, body.theme-8bitgamer .mini-menu {
+            border-radius: 0 !important;
+            border: 2px solid var(--text-color);
+        }
+
+        @keyframes construction-anim {
+            0% { background-position: 0 0; }
+            100% { background-position: 56px 0; }
+        }
+        body.theme-underconstruction #toolbar {
+            background-image: repeating-linear-gradient(45deg, #fdd835, #fdd835 20px, #212121 20px, #212121 40px);
+            background-size: 56px 56px;
+            animation: construction-anim 1s linear infinite;
+        }
+
+        @keyframes ghostly-anim {
+            0% { opacity: 0.8; filter: blur(1px); }
+            50% { opacity: 0.6; filter: blur(2px); }
+            100% { opacity: 0.8; filter: blur(1px); }
+        }
+        body.theme-ghostly #toolbar {
+            animation: ghostly-anim 8s ease-in-out infinite;
+            box-shadow: 0 0 15px var(--current-theme-accent);
+        }
+
+        body.theme-typewriter #search-bar:focus,
+        body.theme-typewriter #homepage-search-bar:focus { animation: blink-caret 0.8s step-end infinite; }
+        
+        @keyframes color-cycle-anim {
+            0% { background-color: #23272A; }
+            25% { background-color: #0A2E36; }
+            50% { background-color: #2C3E50; }
+            75% { background-color: #4a403a; }
+            100% { background-color: #23272A; }
+        }
+        body.theme-colorcyclebg {
+            animation: color-cycle-anim 20s linear infinite;
+        }
+
+        body.theme-mirrorworld { transform: scaleY(-1); }
+        body.theme-mirrorworld #toolbar, body.theme-mirrorworld #content-container { transform: scaleY(1); }
+        body.theme-mirrorworld #toolbar { transform: scaleY(-1); }
+
+        body.theme-lensflare::after {
+            content: '';
+            position: fixed;
+            top: -20%; left: -20%;
+            width: 140%; height: 140%;
+            background: url('https://i.ibb.co/L5B0brH/lensflare.png') no-repeat;
+            background-size: contain;
+            background-position: var(--flare-x, 50%) var(--flare-y, 50%);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+        
+        body.theme-commandprompt { --font-family-main: 'Courier New', monospace; }
+        body.theme-commandprompt .nav-button, body.theme-commandprompt .toolbar-button {
+            background: transparent;
+            border: 1px solid var(--text-color);
+        }
+        body.theme-commandprompt .icon-img { display: none; }
+        body.theme-commandprompt .nav-button::after, body.theme-commandprompt .toolbar-button::after {
+            font-size: 12px;
+            color: var(--text-color);
+        }
+        body.theme-commandprompt #home-button::after { content: 'HOME'; }
+        body.theme-commandprompt #back-button::after { content: 'BACK'; }
+        body.theme-commandprompt #forward-button::after { content: 'FWD'; }
+        body.theme-commandprompt #refresh-button::after { content: 'RFRS'; }
+        body.theme-commandprompt #fullscreen-button::after { content: 'FULL'; }
+        body.theme-commandprompt #bookmark-button::after { content: 'BKMK'; }
+        body.theme-commandprompt #history-button::after { content: 'HIST'; }
+        body.theme-commandprompt #settings-button::after { content: 'SET'; }
+
+        body.theme-perspectiveui { perspective: 1500px; }
+        body.theme-perspectiveui #toolbar { transform: rotateY(25deg) scale(0.9); }
+        body.theme-perspectiveui #toolbar:hover { transform: rotateY(0deg) scale(1); }
+
+        body.theme-textfocus .nav-button, body.theme-textfocus .toolbar-button {
+            color: transparent;
+            text-shadow: 0 0 5px var(--text-color);
+            transition: text-shadow 0.2s;
+        }
+        body.theme-textfocus .nav-button:hover, body.theme-textfocus .toolbar-button:hover {
+            color: var(--button-text-color);
+            text-shadow: none;
+        }
+        
+        @keyframes gradient-border-anim {
+            0% { border-color: #ff00c8; } 50% { border-color: #00e5ff; } 100% { border-color: #ff00c8; }
+        }
+        body.theme-gradientborder .nav-button, body.theme-gradientborder .toolbar-button,
+        body.theme-gradientborder #search-bar, body.theme-gradientborder .mini-menu {
+            border: 2px solid;
+            animation: gradient-border-anim 3s linear infinite;
+            box-shadow: none;
+        }
+
+        @keyframes wobbly-anim {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg) scale(1.02); }
+            50% { transform: rotate(2deg) scale(0.98); }
+            75% { transform: rotate(-1deg) scale(1.01); }
+            100% { transform: rotate(0deg); }
+        }
+        body.theme-wobblyui .nav-button, body.theme-wobblyui .toolbar-button, body.theme-wobblyui .mini-menu {
+            animation: wobbly-anim 0.5s ease-in-out;
+        }
+        
+        .shortcut-text {
+            font-size: 9px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: block;
+            margin-top: 2px;
+            opacity: 0.8;
+            color: var(--current-theme-text);
+        }
+
+        /* Homepage Styles */
+        #homepage {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            background-color: var(--bg-color);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #homepage-logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        #homepage-search-container {
+            position: relative;
+            width: 100%;
+            max-width: 584px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            border: none;
+            box-shadow: 0 0 0 1px var(--button-outline-color);
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        #homepage-search-container:focus-within {
+             background-color: var(--input-focus-bg);
+             box-shadow: var(--input-focus-shadow);
+        }
+        
+        #homepage-search-bar {
+            flex: 1;
+            height: 36px;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            padding: 0 15px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: var(--font-family-main);
+        }
+
+        #homepage-search-icon {
+            width: 18px;
+            height: 18px;
+            padding: 9px;
+            border-radius: 50%;
+            margin-right: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #homepage-search-icon:hover {
+            background-color: rgba(var(--current-theme-shadow-rgb), 0.1);
+        }
+
+        #search-suggestions {
+            display: none;
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            background-color: var(--menu-bg);
+            border: 1px solid var(--menu-border-color);
+            border-radius: 12px;
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            text-align: left;
+            z-index: 100;
+            box-shadow: var(--menu-shadow);
+        }
+
+        #search-suggestions li {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: var(--menu-text-color);
+        }
+
+        #search-suggestions li:hover {
+            background-color: var(--menu-item-hover-bg);
+             color: var(--button-text-color);
+        }
     </style>
-    <!-- Removed discord alert -->
-  </head>
-  <body>
+</head>
+<body>
     <canvas id="canvas"></canvas>
-    <div id="header">
-      <img src="Title.png" alt="Logo" id="bigTitle" />
-      <div id="clock"></div>
+
+    <template id="bookmark-item-template">
+        <li>
+            <span class="item-name"></span><span class="item-url"></span>
+            <button class="item-remove-button" title="Remove Bookmark"><img src="../images/cross-white.png" alt="Remove" class="item-remove-icon"></button>
+        </li>
+    </template>
+    <template id="history-item-template">
+        <li><span class="item-name"></span><span class="item-url"></span></li>
+    </template>
+    <template id="history-group-template">
+        <div class="history-group-header"></div>
+    </template>
+
+    <div id="toolbar">
+        <div class="nav-button" id="home-button" title="Home"><img src="../images/home-white.png" alt="Home" class="icon-img"></div>
+        <div class="nav-button" id="back-button" title="Back"><img src="../images/arrow-left-white.png" alt="Back" class="icon-img"></div>
+        <div class="nav-button" id="forward-button" title="Forward"><img src="../images/arrow-right-white.png" alt="Forward" class="icon-img"></div>
+        <div class="nav-button" id="refresh-button" title="Refresh"><img src="../images/refresh-white.png" alt="Refresh" class="icon-img"></div>
+        <input type="text" id="search-bar" placeholder="Search or type a URL">
+        
+        <div class="toolbar-button" id="fullscreen-button" title="Toggle Fullscreen"><img src="../images/zoom-in-white.png" alt="Toggle Fullscreen" id="fullscreen-icon-img" class="icon-img"></div>
+        <div class="toolbar-button" id="bookmark-button" title="Bookmarks"><img src="../images/star-white.png" alt="Bookmarks" class="icon-img"></div>
+        <div class="toolbar-button" id="history-button" title="History"><img src="../images/clock-white.png" alt="History" class="icon-img"></div>
+        <div class="toolbar-button" id="settings-button" title="Settings"><img src="../images/gear-white.png" alt="Settings" class="icon-img"></div>
     </div>
-    <div id="content">
-      <form id="uv-form">
-        <input id="uv-search-engine" value="https://duckduckgo.com/search?q=%s" type="hidden" />
-        <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL" class="form__input" />
-      </form>
-      <div id="popularSites">
-        <a class="btn secondary" onclick="autofill('http://xbox.com/play')">XBOX</a>
-        <a class="btn secondary" onclick="autofill('http://youtube.com')">YOUTUBE</a>
-        <a class="btn secondary" onclick="autofill('https://tiktok.com')">TIKTOK</a>
-        <a class="btn secondary" onclick="autofill('https://chatgpt.com')">CHATGPT</a>
-        <a class="btn secondary" onclick="autofill('http://apple.com')">APPLE</a>
-        <a class="btn secondary" onclick="autofill('http://gemini.google.com')">GEMINI</a>
-        <a class="btn secondary" onclick="autofill('http://totaljerkface.com')">HAPPY WHEELS</a>
-      </div>
-      <div class="desc left-margin">
-        <p id="uv-error"></p>
-        <pre id="uv-error-code"></pre>
-      </div>
+
+    <div id="bookmark-menu" class="mini-menu">
+        <h3><img src="../images/star-white.png" alt="Bookmarks" class="icon-img"> Bookmarks</h3>
+        <ul id="bookmarks-list-popup"></ul>
+        <div class="menu-action-bar">
+            <input type="text" id="new-bookmark-name-popup" class="menu-input" placeholder="Bookmark Name (optional)">
+            <button id="add-current-bookmark-button-popup" class="menu-button"><img src="../images/plus-symbol-white.png" alt="Add" class="icon-img">Bookmark Current Page</button>
+        </div>
     </div>
-    <script src="stars.js"></script>
-    <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
-    <script src="uv/uv.config.js" charset="UTF-8" defer></script>
-    <script src="register-sw.js" charset="UTF-8" defer></script>
-    <script src="search.js" charset="UTF-8" defer></script>
-    <script src="index.js" charset="UTF-8" defer></script>
-    <!-- Script for clock display -->
+    
+    <div id="history-menu" class="mini-menu">
+        <h3><img src="../images/clock-white.png" alt="History" class="icon-img"> History</h3>
+        <input type="text" id="history-search-bar" class="menu-input" placeholder="Search history">
+        <ul id="history-list-popup"></ul>
+    </div>
+
+    <div id="settings-menu" class="mini-menu">
+        <h3><img src="../images/gear-white.png" alt="Settings" class="icon-img"> Settings</h3>
+        
+        <div class="menu-setting-item">
+            <label for="theme-selector">Theme</label>
+            <select id="theme-selector" class="menu-select"></select>
+        </div>
+        
+        <div id="custom-theme-settings-container">
+            <h3><img src="../images/plus-symbol-white.png" alt="Custom Theme" class="icon-img"> Smart Theme Generator</h3>
+            <p style="font-size: 0.8em; opacity: 0.8; margin: -5px 5px 15px 5px; text-align: center;">Pick two colors, and the app will intelligently create a full theme for you.</p>
+            <div class="menu-setting-item">
+                <label for="custom-theme-bg-base">Background Color</label>
+                <input type="color" id="custom-theme-bg-base" class="menu-input" value="#23272A">
+            </div>
+            <div class="menu-setting-item">
+                <label for="custom-theme-accent-base">Accent Color</label>
+                <input type="color" id="custom-theme-accent-base" class="menu-input" value="#7F5AF0">
+            </div>
+            <button id="apply-custom-theme-button" class="menu-button" style="margin-top:10px;">Apply & Save Smart Theme</button>
+        </div>
+
+        <div class="menu-setting-item">
+            <label for="search-engine-selector">Search Engine</label>
+            <select id="search-engine-selector" class="menu-select"></select>
+        </div>
+         <div class="menu-setting-item">
+            <label for="history-lifespan-selector">Clear History After</label>
+            <select id="history-lifespan-selector" class="menu-select">
+                <option value="0">Never</option>
+                <option value="1">1 Day</option>
+                <option value="3">3 Days</option>
+                <option value="7">7 Days</option>
+                <option value="14">14 Days</option>
+                <option value="custom">Custom...</option>
+            </select>
+        </div>
+
+        <div id="custom-history-days-container">
+            <h3><img src="../images/plus-symbol-white.png" alt="Custom History" class="icon-img"> Custom Lifespan</h3>
+            <div class="menu-setting-item">
+                <label for="custom-history-days-input">Days (0-14)</label>
+                <input type="number" id="custom-history-days-input" class="menu-input" min="0" max="14" placeholder="e.g., 5">
+            </div>
+            <button id="apply-custom-history-days-button" class="menu-button">Set Custom Days</button>
+       </div>
+
+        <div class="menu-setting-item toggle-item">
+            <div class="toggle-label-container">
+                <label for="ad-free-toggle" style="cursor: pointer;">Ad-Free Toggle</label>
+                <small class="toggle-description">Disables Google Vignette ads by reloading the URL automatically.</small>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="ad-free-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="menu-setting-item">
+            <label for="cloak-preset-selector">Tab Cloak Preset</label>
+            <select id="cloak-preset-selector" class="menu-select"></select>
+        </div>
+        
+        <div id="custom-cloak-settings-container">
+            <h3><img src="../images/plus-symbol-white.png" alt="Custom Cloak" class="icon-img"> Custom Cloak</h3>
+            <div class="menu-setting-item">
+                <label for="custom-cloak-title">Custom Title</label>
+                <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
+            </div>
+            <div class="menu-setting-item">
+                <label for="custom-cloak-url">Favicon URL</label>
+                <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
+            </div>
+            <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
+        </div>
+
+        <div class="menu-action-bar">
+            <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
+        </div>
+        <div class="menu-action-bar"></div>
+        <button id="clear-browser-data-button" class="menu-button clear-button">Clear All Browser Data</button>
+    </div>
+
+    <div id="content-container">
+        <div id="homepage">
+            <img id="homepage-logo" src="../images/title.png" alt="VERN MAX">
+            <div id="homepage-search-container">
+                <input type="text" id="homepage-search-bar" placeholder="Search or type a URL">
+                <img id="homepage-search-icon" src="../images/magnify-white.png" alt="Search">
+                <ul id="search-suggestions"></ul>
+            </div>
+        </div>
+        <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
+    </div>
+
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script>
     <script>
-      function updateClock() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString();
-        document.getElementById('clock').textContent = timeString;
-      }
-      
-      // Update clock immediately and then every second
-      updateClock();
-      setInterval(updateClock, 1000);
+        // --- CONTEXT & STATE VARIABLES ---
+        let currentUrl = 'about:blank';
+        let currentTitle = 'New Tab';
+        let isLoading = false;
+        let isRefreshing = false;
+        let typewriterInterval = null;
+
+        const searchEngines = {
+            'google': { name: 'Google', url: 'https://www.google.com/search?q=%s' },
+            'duckduckgo': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=%s' },
+            'bing': { name: 'Bing', url: 'https://www.bing.com/search?q=%s' },
+            'brave': { name: 'Brave Search', url: 'https://search.brave.com/search?q=%s' }
+        };
+        let currentSearchEngineKey = 'google';
+
+        const cloakPresets = {
+            'none': { displayName: "None (Static VERN MAX)" },
+            'custom': { displayName: "Custom (Manual)" },
+            'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
+            'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
+            'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
+            'gmail': { displayName: "Gmail", title: 'Inbox', faviconUrl: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico' },
+            'clever': { displayName: "Clever", title: 'Clever | Portal', faviconUrl: 'https://assets.clever.com/launchpad/1a74895/favicon.ico?1' },
+            'hac': { displayName: "Home Access Center", title: 'Home Access Center', faviconUrl: 'https://hac.doe.k12.de.us/HomeAccess/Content/Images/favicon.ico' },
+            'google_drive': { displayName: "My Drive", title: 'My Drive - Google Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+        };
+        let currentCloakPresetKey = 'none';
+
+        const THEMES = {
+            // --- Normal Themes ---
+            main: { name: "Main (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } }, 
+            light: { name: "Light", colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }, 
+            dark: { name: "Dark", colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } }, 
+            oceanic: { name: "Oceanic", colors: { bg: '#0A2E36', text: '#E0F4F2', accent: '#2E8B57', neutral: '#144552', btnText: '#FFFFFF' } }, 
+            sunset: { name: "Sunset", colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } }, 
+            forest: { name: "Forest", colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } }, 
+            rose: { name: "Rosé Quartz", colors: { bg: '#f7d1cd', text: '#5e3d42', accent: '#e8959e', neutral: '#f2b5b0', btnText: '#5e3d42' } }, 
+            coffee: { name: "Coffee House", colors: { bg: '#4a403a', text: '#e7e2dd', accent: '#a5a58d', neutral: '#6b5f58', btnText: '#FFFFFF' } }, 
+            matrix: { name: "Matrix", colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } }, 
+            cyberpunk: { name: "Cyberpunk", colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } }, 
+            dracula: { name: "Dracula", colors: { bg: '#282a36', text: '#f8f8f2', accent: '#bd93f9', neutral: '#44475a', btnText: '#f8f8f2' } }, 
+            nord: { name: "Nord", colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } }, 
+            gruvbox: { name: "Gruvbox", colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } }, 
+            tokyo: { name: "Tokyo Night", colors: { bg: '#1a1b26', text: '#a9b1d6', accent: '#7aa2f7', neutral: '#292e42', btnText: '#FFFFFF' } }, 
+            slate: { name: "Slate", colors: { bg: '#36454F', text: '#EAEAEA', accent: '#708090', neutral: '#2F3T4F', btnText: '#FFFFFF' } },
+            indigo: { name: "Indigo", colors: { bg: '#1a1b36', text: '#c5c8e6', accent: '#6a79f7', neutral: '#292e52', btnText: '#FFFFFF' } },
+            crimson: { name: "Crimson", colors: { bg: '#3b1a1a', text: '#e6c5c5', accent: '#f76a6a', neutral: '#522929', btnText: '#FFFFFF' } },
+            monokai: { name: "Monokai", colors: { bg: '#272822', text: '#F8F8F2', accent: '#FD971F', neutral: '#3E3D32', btnText: '#FFFFFF' } },
+            lavender: { name: "Lavender", colors: { bg: '#E6E6FA', text: '#333333', accent: '#967BB6', neutral: '#D8BFD8', btnText: '#FFFFFF' } },
+            minty: { name: "Minty", colors: { bg: '#f1f8f6', text: '#2a5247', accent: '#3EB489', neutral: '#d9e9e4', btnText: '#FFFFFF' } },
+            candy: { name: "Candy", colors: { bg: '#ffebf2', text: '#800040', accent: '#ff80bf', neutral: '#ffcce6', btnText: '#FFFFFF' } },
+            solarized_light: { name: "Solarized Light", colors: { bg: '#fdf6e3', text: '#657b83', accent: '#268bd2', neutral: '#eee8d5', btnText: '#FFFFFF' } },
+            solarized_dark: { name: "Solarized Dark", colors: { bg: '#002b36', text: '#839496', accent: '#268bd2', neutral: '#073642', btnText: '#FFFFFF' } },
+            sandy: { name: "Sandy Beach", colors: { bg: '#F4A460', text: '#6B4226', accent: '#87CEEB', neutral: '#DEB887', btnText: '#6B4226' } },
+            peach: { name: "Peach", colors: { bg: '#ffdab9', text: '#8B4513', accent: '#ffa07a', neutral: '#ffdead', btnText: '#8B4513' } },
+            olive: { name: "Olive", colors: { bg: '#556B2F', text: '#F5F5DC', accent: '#BDB76B', neutral: '#6B8E23', btnText: '#FFFFFF' } },
+            grape: { name: "Grape", colors: { bg: '#483D8B', text: '#E6E6FA', accent: '#9370DB', neutral: '#312A5C', btnText: '#FFFFFF' } },
+            mocha: { name: "Mocha", colors: { bg: '#8B4513', text: '#F5DEB3', accent: '#D2691E', neutral: '#A0522D', btnText: '#FFFFFF' } },
+            teal: { name: "Teal", colors: { bg: '#008080', text: '#E0FFFF', accent: '#48D1CC', neutral: '#20B2AA', btnText: '#FFFFFF' } },
+            maroon: { name: "Maroon", colors: { bg: '#800000', text: '#FFE4E1', accent: '#B22222', neutral: '#8B0000', btnText: '#FFFFFF' } },
+            charcoal: { name: "Charcoal", colors: { bg: '#36454F', text: '#DCDCDC', accent: '#778899', neutral: '#2F4F4F', btnText: '#FFFFFF' } },
+            honey: { name: "Honey", colors: { bg: '#FFD700', text: '#614126', accent: '#FFA500', neutral: '#FFEC8B', btnText: '#614126' } },
+            sky: { name: "Sky", colors: { bg: '#87CEEB', text: '#00008B', accent: '#00BFFF', neutral: '#ADD8E6', btnText: '#FFFFFF' } },
+            rose_gold: { name: "Rose Gold", colors: { bg: '#B76E79', text: '#FFFFFF', accent: '#E1A9B0', neutral: '#C88C95', btnText: '#4A2A2E' } },
+            emerald: { name: "Emerald", colors: { bg: '#006A4E', text: '#F0FFF0', accent: '#50C878', neutral: '#2E8B57', btnText: '#FFFFFF' } },
+            ruby: { name: "Ruby", colors: { bg: '#E0115F', text: '#FFFFFF', accent: '#FF69B4', neutral: '#C71585', btnText: '#FFFFFF' } },
+            sapphire: { name: "Sapphire", colors: { bg: '#0F52BA', text: '#F0F8FF', accent: '#6495ED', neutral: '#4169E1', btnText: '#FFFFFF' } },
+            amethyst: { name: "Amethyst", colors: { bg: '#9966CC', text: '#F3E5AB', accent: '#BA55D3', neutral: '#8A2BE2', btnText: '#FFFFFF' } },
+            clay: { name: "Clay", colors: { bg: '#E3735E', text: '#FFF5EE', accent: '#CD5C5C', neutral: '#F08080', btnText: '#8B4513' } },
+            
+            // --- Special Themes ---
+            bottom_bar: { name: "Bottom Bar", feature: 'bottomBar', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            particle_flow: { name: "Particle Flow", feature: 'particleFlow', colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } },
+            retro_terminal: { name: "Retro Terminal", feature: 'retroTerminal', colors: { bg: '#000000', text: '#00FF41', accent: '#00A329', neutral: '#050505', btnText: '#000000' } },
+            floating_toolbar: { name: "Floating Toolbar", feature: 'floatingToolbar', colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } },
+            minimalist: { name: "Minimalist", feature: 'minimalist', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+            ocean_deep: { name: "Ocean Deep", feature: 'oceanDeep', colors: { bg: '#0A2E36', text: '#E0F4F2', accent: '#2E8B57', neutral: '#144552', btnText: '#FFFFFF' } },
+            sakura_blossom: { name: "Sakura Blossom", feature: 'sakuraBlossom', colors: { bg: '#fff0f3', text: '#5e3d42', accent: '#e8959e', neutral: '#ffe0e7', btnText: '#5e3d42' } },
+            glitchy: { name: "Glitchy", feature: 'glitchy', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            flipped_mode: { name: "Flipped Mode", feature: 'flippedMode', colors: { bg: '#282828', text: '#ebdbb2', accent: '#fabd2f', neutral: '#3c3836', btnText: '#282828' } },
+            translucent_ui: { name: "Translucent UI", feature: 'translucentUi', colors: { bg: '#212121', text: '#ffffff', accent: '#82aaff', neutral: '#292929', btnText: '#ffffff' } },
+            aurora: { name: "Aurora", feature: 'aurora', colors: { bg: '#000', text: '#fff', accent: '#00e5ff', neutral: '#111', btnText: '#000' } },
+            dynamic_grid: { name: "Dynamic Grid", feature: 'dynamicGrid', colors: { bg: '#101010', text: '#f0f0f0', accent: '#f72585', neutral: '#1a1a1a', btnText: '#FFFFFF' } },
+            vintage_paper: { name: "Vintage Paper", feature: 'vintagePaper', colors: { bg: '#f3eacb', text: '#5b4636', accent: '#8c6c5a', neutral: '#e9dcc0', btnText: '#f3eacb' } },
+            holographic: { name: "Holographic", feature: 'holographic', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            system_match: { name: "System Match", feature: 'systemMatch', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+            tilt_3d: { name: "3D Tilt", feature: 'tilt3d', colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } },
+            comic_book: { name: "Comic Book", feature: 'comicBook', colors: { bg: '#e5e5e5', text: '#000000', accent: '#3498db', neutral: '#ffffff', btnText: '#ffffff' } },
+            crt_scanlines: { name: "CRT Scanlines", feature: 'crtScanlines', colors: { bg: '#080808', text: '#1ff739', accent: '#16c72e', neutral: '#111111', btnText: '#080808' } },
+            skewed_look: { name: "Skewed Look", feature: 'skewedLook', colors: { bg: '#1a1b36', text: '#c5c8e6', accent: '#6a79f7', neutral: '#292e52', btnText: '#FFFFFF' } },
+            text_pop: { name: "Text Pop", feature: 'textPop', colors: { bg: '#23272A', text: '#FFFFFF', accent: '#ff00c8', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            focus_mode: { name: "Focus Mode", feature: 'focusMode', colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } },
+            inverted_ui: { name: "Inverted UI", feature: 'invertedUi', colors: { bg: '#ddddd3', text: '#1f1f18', accent: '#80a50f', neutral: '#c3c7c9', btnText: '#1f1f18' } },
+            mouse_glow: { name: "Mouse Glow", feature: 'mouseGlow', colors: { bg: '#010101', text: '#f0f0f0', accent: '#f72585', neutral: '#111111', btnText: '#FFFFFF' } },
+            stealth_mode: { name: "Stealth Mode", feature: 'stealthMode', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
+            old_newspaper: { name: "Old Newspaper", feature: 'oldNewspaper', colors: { bg: '#f5e8d7', text: '#5a4d3f', accent: '#7a6a59', neutral: '#e9dacb', btnText: '#FFFFFF' } },
+            page_curl: { name: "Page Curl", feature: 'pageCurl', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
+            spotlight: { name: "Spotlight", feature: 'spotlight', colors: { bg: '#000000', text: '#f1f1f1', accent: '#BB86FC', neutral: '#111111', btnText: '#000000' } },
+            blueprint: { name: "Blueprint", feature: 'blueprint', colors: { bg: '#0d2b45', text: '#90e0ef', accent: '#caf0f8', neutral: '#0c3d61', btnText: '#0d2b45' } },
+            notebook_paper: { name: "Notebook Paper", feature: 'notebookPaper', colors: { bg: '#fefefe', text: '#2b2b2b', accent: '#59a5d8', neutral: '#ffffff', btnText: '#ffffff' } },
+            zoom_hover: { name: "Zoom Hover", feature: 'zoomHover', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            shaky_text: { name: "Shaky Text", feature: 'shakyText', colors: { bg: '#2a2a2a', text: '#e0e0e0', accent: '#f44336', neutral: '#3c3c3c', btnText: '#ffffff' } },
+            rainbow_text: { name: "Rainbow Text", feature: 'rainbowText', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
+            bouncing_ui: { name: "Bouncing UI", feature: 'bouncingUi', colors: { bg: '#2C3E50', text: '#FAD7A0', accent: '#E74C3C', neutral: '#34495E', btnText: '#FFFFFF' } },
+            '8_bit_gamer': { name: "8-Bit Gamer", feature: '8bitGamer', colors: { bg: '#000000', text: '#ffffff', accent: '#ff0000', neutral: '#333333', btnText: '#000000' } },
+            under_construction: { name: "Under Construction", feature: 'underConstruction', colors: { bg: '#424242', text: '#ffffff', accent: '#fdd835', neutral: '#313131', btnText: '#000000' } },
+            ghostly: { name: "Ghostly", feature: 'ghostly', colors: { bg: '#0d1117', text: '#e6edf3', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            typewriter: { name: "Typewriter", feature: 'typewriter', colors: { bg: '#f3eacb', text: '#5b4636', accent: '#8c6c5a', neutral: '#e9dcc0', btnText: '#f3eacb' } },
+            static_noise: { name: "Static Noise", feature: 'staticNoise', colors: { bg: '#111111', text: '#e0e0e0', accent: '#9e9e9e', neutral: '#212121', btnText: '#000000' } },
+            color_cycle_bg: { name: "Color Cycle BG", feature: 'colorCycleBg', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
+            mirror_world: { name: "Mirror World", feature: 'mirrorWorld', colors: { bg: '#1a1b26', text: '#a9b1d6', accent: '#7aa2f7', neutral: '#292e42', btnText: '#FFFFFF' } },
+            lens_flare: { name: "Lens Flare", feature: 'lensFlare', colors: { bg: '#0d0221', text: '#f0f0f0', accent: '#f72585', neutral: '#261a3b', btnText: '#FFFFFF' } },
+            command_prompt: { name: "Command Prompt", feature: 'commandPrompt', colors: { bg: '#0c0c0c', text: '#cccccc', accent: '#ffffff', neutral: '#0c0c0c', btnText: '#0c0c0c' } },
+            perspective_ui: { name: "Perspective UI", feature: 'perspectiveUi', colors: { bg: '#2E3440', text: '#D8DEE9', accent: '#88C0D0', neutral: '#3B4252', btnText: '#2E3440' } },
+            text_focus: { name: "Text Focus", feature: 'textFocus', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#FFFFFF' } },
+            gradient_border: { name: "Gradient Border", feature: 'gradientBorder', colors: { bg: '#0d1117', text: '#c9d1d9', accent: '#58a6ff', neutral: '#161b22', btnText: '#ffffff' } },
+            wobbly_ui: { name: "Wobbly UI", feature: 'wobblyUi', colors: { bg: '#2d3a32', text: '#e6e2dd', accent: '#588157', neutral: '#344e41', btnText: '#FFFFFF' } },
+            keyboard_shortcuts: { name: "Keyboard Shortcuts", feature: 'keyboardShortcuts', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } }
+        };
+
+
+        // --- DOM ELEMENT REFERENCES ---
+        let contentIframeEl, searchBarEl, homeButtonEl, backButtonEl, forwardButtonEl, refreshButtonEl,
+            fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl, bookmarkMenuEl, 
+            historyMenuEl, settingsMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl, 
+            addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, 
+            themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
+            searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
+            customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
+            homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl,
+            customThemeSettingsContainerEl, customThemeBgBaseEl, customThemeAccentBaseEl, applyCustomThemeButtonEl,
+            customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl;
+
+        let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
+        
+        // --- PARTICLE ENGINE & INTERACTIVITY---
+        let particleAnimationId = null;
+        const canvasEl = document.getElementById('canvas');
+        const canvasCtx = canvasEl.getContext('2d');
+        let particles = [];
+        let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+
+        function resizeCanvas() { canvasEl.width = window.innerWidth; canvasEl.height = window.innerHeight; }
+        function stopAllParticles() { if (particleAnimationId) { cancelAnimationFrame(particleAnimationId); particleAnimationId = null; } particles = []; canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height); canvasEl.style.display = 'none'; }
+        
+        function startParticleEffect(type) {
+            stopAllParticles();
+            canvasEl.style.display = 'block';
+            resizeCanvas();
+            let config = {};
+            switch(type) {
+                case 'particleFlow': config = { count: 150, shape: 'line', speed: 1, maxSize: 4, color: 'rgba(247, 37, 133, 0.7)' }; break;
+                case 'oceanDeep': config = { count: 100, shape: 'circle', speed: 0.5, maxSize: 8, color: 'rgba(224, 244, 242, 0.5)', vertical: true }; break;
+                case 'sakuraBlossom': config = { count: 30, shape: 'text', text: '🌸', speed: 1, maxSize: 25, color: '#FFB7C5' }; break;
+                case 'dynamicGrid': config = { count: 40, shape: 'grid', speed: 0.5, maxSize: 1.5, color: 'rgba(247, 37, 133, 0.5)'}; break;
+                case 'aurora': config = { shape: 'aurora' }; break;
+                case 'mouseGlow': config = { shape: 'mouseGlow' }; break;
+                case 'staticNoise': config = { shape: 'staticNoise' }; break;
+                default: stopAllParticles(); return;
+            }
+            if(config.count) {
+                for (let i = 0; i < config.count; i++) { particles.push({ x: Math.random() * canvasEl.width, y: Math.random() * canvasEl.height, size: Math.random() * config.maxSize + 1, speedX: (Math.random() * 2 - 1) * config.speed, speedY: (Math.random() * 2 - 1) * config.speed, ...config }); }
+            } else {
+                particles.push(config);
+            }
+            animateParticles();
+        }
+
+        let auroraTime = 0;
+        function animateParticles() {
+            canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+            
+            if (particles.length > 0) {
+                const p = particles[0];
+                if (p.shape === 'mouseGlow') {
+                    const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
+                    const accentColor = document.documentElement.style.getPropertyValue('--current-theme-accent') || '#7F5AF0';
+                    const accentRGB = hexToRgb(accentColor);
+                    if (accentRGB) {
+                       gradient.addColorStop(0, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0.3)`);
+                       gradient.addColorStop(1, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0)`);
+                       canvasCtx.fillStyle = gradient;
+                       canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                    }
+                    particleAnimationId = requestAnimationFrame(animateParticles);
+                    return; 
+                } else if (p.shape === 'staticNoise') {
+                    const imageData = canvasCtx.createImageData(canvasEl.width, canvasEl.height);
+                    const buffer = new Uint32Array(imageData.data.buffer);
+                    const len = buffer.length - 1;
+                    for(let i=0; i < len; i++) {
+                        if (Math.random() < 0.5) {
+                            buffer[i] = 0xffffffff;
+                        } else {
+                            buffer[i] = 0xff000000;
+                        }
+                    }
+                    canvasCtx.putImageData(imageData, 0, 0);
+                    particleAnimationId = requestAnimationFrame(animateParticles);
+                    return;
+                }
+            }
+
+
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+
+                if(p.shape === 'aurora'){
+                    auroraTime += 0.01;
+                    const gradient = canvasCtx.createLinearGradient(0, 0, canvasEl.width, canvasEl.height);
+                    const color1 = `hsla(${180 + Math.sin(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                    const color2 = `hsla(${260 + Math.cos(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                    gradient.addColorStop(0, color1);
+                    gradient.addColorStop(1, color2);
+                    canvasCtx.fillStyle = gradient;
+                    canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                    continue;
+                }
+
+                p.x += p.speedX; p.y += p.speedY;
+                if (p.x > canvasEl.width + p.size) p.x = -p.size; else if (p.x < -p.size) p.x = canvasEl.width + p.size;
+                if (p.y > canvasEl.height + p.size) p.y = -p.size; else if (p.y < -p.size) p.y = canvasEl.height + p.size;
+                
+                canvasCtx.fillStyle = p.color; canvasCtx.strokeStyle = p.color;
+
+                if (p.shape === 'circle') { canvasCtx.beginPath(); canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2); canvasCtx.fill(); } 
+                else if (p.shape === 'line') { canvasCtx.lineWidth = p.size / 2; canvasCtx.beginPath(); canvasCtx.moveTo(p.x, p.y); canvasCtx.lineTo(p.x + p.speedX * 5, p.y + p.speedY * 5); canvasCtx.stroke(); } 
+                else if (p.shape === 'text') { canvasCtx.font = p.size + 'px sans-serif'; canvasCtx.fillText(p.text, p.x, p.y); }
+                else if (p.shape === 'grid') {
+                    canvasCtx.beginPath();
+                    canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    canvasCtx.fill();
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const other = particles[j];
+                        const dist = Math.hypot(p.x - other.x, p.y - other.y);
+                        if(dist < 150){
+                            canvasCtx.beginPath();
+                            canvasCtx.moveTo(p.x, p.y);
+                            canvasCtx.lineTo(other.x, other.y);
+                            canvasCtx.lineWidth = 0.5;
+                            canvasCtx.strokeStyle = `rgba(247, 37, 133, ${1 - dist / 150})`;
+                            canvasCtx.stroke();
+                        }
+                    }
+                }
+            }
+            particleAnimationId = requestAnimationFrame(animateParticles);
+        }
+
+        // --- CORE LOGIC ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            assignDOMElements();
+            populateThemeSelector();
+            populateCloakSelector();
+            populateSearchEngineSelector();
+            await initUV();
+            loadSettings();
+            setupEventListeners();
+            pruneHistory();
+            loadBookmarks();
+            loadHistory();
+            updateSaveButtonText();
+            // Force homepage on initial load instead of last visited URL
+            navigateTo('about:blank');
+        });
+
+        function assignDOMElements() {
+            toolbarEl = document.getElementById('toolbar'); contentIframeEl = document.getElementById('content-iframe'); searchBarEl = document.getElementById('search-bar'); homeButtonEl = document.getElementById('home-button'); backButtonEl = document.getElementById('back-button'); forwardButtonEl = document.getElementById('forward-button'); refreshButtonEl = document.getElementById('refresh-button'); fullscreenButtonEl = document.getElementById('fullscreen-button'); settingsButtonEl = document.getElementById('settings-button'); bookmarkButtonEl = document.getElementById('bookmark-button'); historyButtonEl = document.getElementById('history-button');
+            bookmarkMenuEl = document.getElementById('bookmark-menu'); historyMenuEl = document.getElementById('history-menu'); settingsMenuEl = document.getElementById('settings-menu');
+            bookmarksListPopupEl = document.getElementById('bookmarks-list-popup'); newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup'); addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
+            historyListPopupEl = document.getElementById('history-list-popup'); historySearchBarEl = document.getElementById('history-search-bar');
+            themeSelectorEl = document.getElementById('theme-selector'); searchEngineSelectorEl = document.getElementById('search-engine-selector'); historyLifespanSelectorEl = document.getElementById('history-lifespan-selector'); cloakPresetSelectorEl = document.getElementById('cloak-preset-selector');
+            customCloakSettingsContainerEl = document.getElementById('custom-cloak-settings-container'); customCloakTitleEl = document.getElementById('custom-cloak-title'); customCloakUrlEl = document.getElementById('custom-cloak-url'); applyCustomCloakButtonEl = document.getElementById('apply-custom-cloak-button');
+            clearBrowserDataButtonEl = document.getElementById('clear-browser-data-button');
+            bookmarkItemTemplate = document.getElementById('bookmark-item-template');
+            historyItemTemplate = document.getElementById('history-item-template');
+            historyGroupTemplate = document.getElementById('history-group-template');
+            homepageEl = document.getElementById('homepage'); homepageSearchBarEl = document.getElementById('homepage-search-bar'); searchSuggestionsEl = document.getElementById('search-suggestions');
+            homepageSearchIconEl = document.getElementById('homepage-search-icon');
+            adFreeToggleEl = document.getElementById('ad-free-toggle');
+            saveConfigButtonEl = document.getElementById('save-config-button');
+            saveTimestampEl = document.getElementById('save-timestamp');
+
+            // Assign new/modified elements
+            customThemeSettingsContainerEl = document.getElementById('custom-theme-settings-container');
+            customThemeBgBaseEl = document.getElementById('custom-theme-bg-base');
+            customThemeAccentBaseEl = document.getElementById('custom-theme-accent-base');
+            applyCustomThemeButtonEl = document.getElementById('apply-custom-theme-button');
+            customHistoryDaysContainerEl = document.getElementById('custom-history-days-container');
+            customHistoryDaysInputEl = document.getElementById('custom-history-days-input');
+            applyCustomHistoryDaysButtonEl = document.getElementById('apply-custom-history-days-button');
+        }
+        
+        async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
+
+        function loadSettings() {
+            // Theme
+            const savedTheme = localStorage.getItem('vernTheme') || 'main';
+            applyTheme(savedTheme);
+            themeSelectorEl.value = savedTheme;
+            toggleCustomThemeView(savedTheme === 'custom');
+            
+            // Load the two base colors for the Smart Theme Generator
+            customThemeBgBaseEl.value = localStorage.getItem('vernCustomThemeBaseBg') || '#23272A';
+            customThemeAccentBaseEl.value = localStorage.getItem('vernCustomThemeBaseAccent') || '#7F5AF0';
+
+
+            // Search Engine
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
+            searchEngineSelectorEl.value = currentSearchEngineKey;
+            
+            // History Lifespan
+            const savedLifespan = localStorage.getItem('vernHistoryLifespan') || '14';
+            const standardLifespans = ['0', '1', '3', '7', '14'];
+            if (standardLifespans.includes(savedLifespan)) {
+                historyLifespanSelectorEl.value = savedLifespan;
+                toggleCustomHistoryView(false);
+            } else {
+                historyLifespanSelectorEl.value = 'custom';
+                customHistoryDaysInputEl.value = savedLifespan;
+                toggleCustomHistoryView(true);
+            }
+            
+            // Ad-Free Toggle
+            const adFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
+            adFreeToggleEl.checked = adFreeEnabled;
+
+            // Cloak
+            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
+            cloakPresetSelectorEl.value = currentCloakPresetKey;
+            customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
+            customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
+            applyBrowserCloak();
+            toggleCustomCloakView(currentCloakPresetKey === 'custom');
+        }
+
+        function setupEventListeners() {
+            fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
+            searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
+            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
+            refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank' && !contentIframeEl.src.endsWith('#')) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
+            contentIframeEl.addEventListener('load', handleIframeLoad);
+            
+            settingsButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleSettingsMenu(); });
+            bookmarkButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleBookmarkMenu(); });
+            historyButtonEl.addEventListener('click', (e) => { e.stopPropagation(); toggleHistoryMenu(); });
+            document.addEventListener('click', (e) => {
+                closeAllMenus(e);
+                if (!homepageSearchBarEl.contains(e.target)) {
+                    searchSuggestionsEl.style.display = 'none';
+                }
+            });
+            
+            addCurrentBookmarkButtonPopupEl.addEventListener('click', handleAddCurrentBookmark);
+            bookmarksListPopupEl.addEventListener('click', handleBookmarkClick);
+            historyListPopupEl.addEventListener('click', handleHistoryClick);
+            historySearchBarEl.addEventListener('input', () => loadHistory(historySearchBarEl.value));
+
+            themeSelectorEl.addEventListener('change', (e) => {
+                const themeKey = e.target.value;
+                applyTheme(themeKey);
+                localStorage.setItem('vernTheme', themeKey);
+                toggleCustomThemeView(themeKey === 'custom');
+            });
+            searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
+            historyLifespanSelectorEl.addEventListener('change', (e) => {
+                const value = e.target.value;
+                toggleCustomHistoryView(value === 'custom');
+                if (value !== 'custom') {
+                    localStorage.setItem('vernHistoryLifespan', value);
+                    pruneHistory();
+                    loadHistory();
+                }
+            });
+            adFreeToggleEl.addEventListener('change', (e) => { localStorage.setItem('vernAdFreeToggle', e.target.checked); });
+
+            cloakPresetSelectorEl.addEventListener('change', (e) => {
+                currentCloakPresetKey = e.target.value;
+                localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
+                applyBrowserCloak();
+                toggleCustomCloakView(currentCloakPresetKey === 'custom');
+            });
+
+            // New listeners
+            applyCustomThemeButtonEl.addEventListener('click', applyAndSaveCustomTheme);
+            applyCustomHistoryDaysButtonEl.addEventListener('click', applyAndSaveCustomHistoryDays);
+            applyCustomCloakButtonEl.addEventListener('click', applyAndSaveCustomCloak);
+            
+            clearBrowserDataButtonEl.addEventListener('click', clearAllData);
+            saveConfigButtonEl.addEventListener('click', saveConfiguration);
+
+            homepageSearchBarEl.addEventListener('input', handleSearchInput);
+            homepageSearchBarEl.addEventListener('focus', () => {
+                if(document.body.classList.contains('theme-typewriter')) {
+                    startTypewriter(homepageSearchBarEl, homepageSearchBarEl.placeholder);
+                }
+            });
+            searchBarEl.addEventListener('focus', () => {
+                if(document.body.classList.contains('theme-typewriter')) {
+                    startTypewriter(searchBarEl, searchBarEl.placeholder);
+                }
+            });
+            homepageSearchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
+            homepageSearchIconEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value));
+            searchSuggestionsEl.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'LI') {
+                    navigateTo(e.target.textContent);
+                }
+            });
+
+            document.addEventListener('keydown', handleGlobalKeyDown);
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                if (document.querySelector('.mini-menu.show')) closeAllMenus(new MouseEvent('click'));
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                const bodyClassList = document.body.classList;
+                const r = document.documentElement;
+                if (bodyClassList.contains('theme-mouseglow')) {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                }
+                if (bodyClassList.contains('theme-tilt3d')) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+                    const y = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+                    r.style.setProperty('--tilt-x', `${-y * 10}deg`);
+                    r.style.setProperty('--tilt-y', `${x * 10}deg`);
+                }
+                if (bodyClassList.contains('theme-spotlight')) {
+                    r.style.setProperty('--spotlight-x', e.clientX + 'px');
+                    r.style.setProperty('--spotlight-y', e.clientY + 'px');
+                }
+                if (bodyClassList.contains('theme-lensflare')) {
+                    const x = (e.clientX / window.innerWidth) * 100;
+                    const y = (e.clientY / window.innerHeight) * 100;
+                    r.style.setProperty('--flare-x', x + '%');
+                    r.style.setProperty('--flare-y', y + '%');
+                }
+            });
+        }
+
+        // --- NAVIGATION & PROXY ---
+        function navigateTo(urlInput) {
+            isLoading = true;
+            searchSuggestionsEl.style.display = 'none';
+            let targetUrl = 'about:blank';
+            const trimmedInput = urlInput ? urlInput.trim() : '';
+            if (trimmedInput !== '' && trimmedInput !== 'about:blank') {
+                const formatted = formatUrlInput(trimmedInput);
+                targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(trimmedInput));
+            }
+            if (targetUrl === 'about:blank') {
+                showHomepage();
+            } else {
+                hideHomepage();
+                contentIframeEl.src = proxyUrl(targetUrl);
+            }
+        }
+
+        function handleIframeLoad() {
+            isLoading = false;
+            if (isRefreshing) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.remove('spinning'); isRefreshing = false; }
+            
+            let finalUrl = 'about:blank', finalTitle = 'New Tab';
+            try {
+                if(contentIframeEl.contentWindow.location.href === "about:blank") throw new Error();
+                if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.__uv && contentIframeEl.contentWindow.__uv.location.href !== 'about:blank') {
+                    finalUrl = contentIframeEl.contentWindow.__uv.location.href;
+                    finalTitle = contentIframeEl.contentDocument.title || new URL(finalUrl).hostname;
+                }
+            } catch (e) { 
+                finalUrl = 'about:blank';
+                finalTitle = 'New Tab';
+            }
+
+            // Anti-Google Vignette Logic
+            const isAdFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
+            if (isAdFreeEnabled && finalUrl.includes('/#google_vignette')) {
+                const cleanUrl = finalUrl.split('/#google_vignette')[0];
+                navigateTo(cleanUrl);
+                return; // Stop processing this "dirty" URL load
+            }
+            
+            if(finalUrl === 'about:blank' || contentIframeEl.src.endsWith('#')){
+                showHomepage();
+                searchBarEl.value = '';
+                currentUrl = 'about:blank';
+            } else {
+                hideHomepage();
+                currentUrl = finalUrl;
+                searchBarEl.value = finalUrl;
+            }
+
+            currentTitle = finalTitle;
+            localStorage.setItem('vernLastUrl', currentUrl);
+            applyBrowserCloak();
+            if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
+        }
+
+        function proxyUrl(urlToProxy) {
+            if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
+            if (urlToProxy.startsWith('data:')) return urlToProxy;
+            if (typeof __uv$config === 'undefined') { return urlToProxy; }
+            try { return self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); } 
+            catch (e) { return urlToProxy; }
+        }
+        
+        function formatUrlInput(input) { const trimmed = input.trim(); if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) return trimmed; if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed)) return 'https://' + trimmed; return null; }
+
+        // --- HOMEPAGE & SEARCH SUGGESTIONS ---
+        function showHomepage() {
+            homepageEl.style.display = 'flex';
+            contentIframeEl.style.display = 'none';
+            if(contentIframeEl.src !== 'about:blank#') contentIframeEl.src = 'about:blank#';
+        }
+
+        function hideHomepage() {
+            homepageEl.style.display = 'none';
+            contentIframeEl.style.display = 'block';
+        }
+
+        function handleSearchInput() {
+            const query = homepageSearchBarEl.value;
+            if (query.length > 0) {
+                fetch(`https://api.allorigins.win/raw?url=https://www.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`)
+                    .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
+                    .then(data => {
+                        const suggestions = data[1];
+                        searchSuggestionsEl.innerHTML = '';
+                        suggestions.forEach(suggestion => {
+                            const li = document.createElement('li');
+                            li.textContent = suggestion;
+                            searchSuggestionsEl.appendChild(li);
+                        });
+                        searchSuggestionsEl.style.display = 'block';
+                    }).catch(error => {
+                        console.warn("Could not fetch search suggestions:", error);
+                        searchSuggestionsEl.style.display = 'none';
+                    });
+            } else {
+                searchSuggestionsEl.style.display = 'none';
+            }
+        }
+
+        // --- HISTORY & BOOKMARK MANAGEMENT ---
+        function getHistory() { return JSON.parse(localStorage.getItem('vernHistory') || '[]'); }
+        function saveHistory(history) { localStorage.setItem('vernHistory', JSON.stringify(history)); }
+        function addToHistory(title, url) {
+            if (localStorage.getItem('vernHistoryLifespan') === '0') return;
+            let history = getHistory();
+            if (history.length > 0 && history[history.length - 1].url === url) return;
+            history.push({ title: title || url, url, timestamp: new Date().toISOString() });
+            saveHistory(history);
+            loadHistory(historySearchBarEl.value);
+        }
+        function loadHistory(searchTerm = '') {
+            const filtered = getHistory().filter(item => searchTerm ? ((item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase())) || (item.url && item.url.toLowerCase().includes(searchTerm.toLowerCase()))) : true);
+            renderHistory(filtered);
+        }
+        function renderHistory(history) {
+            const fragment = document.createDocumentFragment();
+            if (history.length === 0) { const li = document.createElement('li'); li.textContent = 'No history found.'; li.style.cssText = 'cursor: default; text-align: center; opacity: 0.7;'; fragment.appendChild(li); } 
+            else { const grouped = {}; [...history].reverse().forEach(item => { const groupKey = new Date(item.timestamp).toDateString(); if (!grouped[groupKey]) grouped[groupKey] = []; grouped[groupKey].push(item); });
+                for (const groupKey in grouped) { const headerTpl = historyGroupTemplate.content.cloneNode(true); headerTpl.querySelector('.history-group-header').textContent = groupKey; fragment.appendChild(headerTpl); 
+                    grouped[groupKey].forEach(item => { const itemTpl = historyItemTemplate.content.cloneNode(true); const li = itemTpl.querySelector('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}`; li.querySelector('.item-name').textContent = item.title; li.querySelector('.item-url').textContent = item.url; fragment.appendChild(itemTpl); }); }
+            }
+            historyListPopupEl.innerHTML = ''; historyListPopupEl.appendChild(fragment);
+        }
+        function pruneHistory() {
+            const lifespanDays = Number(localStorage.getItem('vernHistoryLifespan') || 14);
+            if (lifespanDays === 0) return;
+            const cutoffDate = new Date(); cutoffDate.setDate(cutoffDate.getDate() - lifespanDays);
+            saveHistory(getHistory().filter(item => new Date(item.timestamp) >= cutoffDate));
+        }
+        function loadBookmarks() { const bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); bookmarksListPopupEl.innerHTML = ''; bms.forEach(renderBookmarkItem); }
+        function saveBookmarks(bms) { localStorage.setItem('vernBookmarks', JSON.stringify(bms)); }
+        function renderBookmarkItem(bm) { const li = bookmarkItemTemplate.content.cloneNode(true).firstElementChild; li.dataset.url = bm.url; li.title = `${bm.name}\n${bm.url}`; li.querySelector('.item-name').textContent = bm.name; li.querySelector('.item-url').textContent = bm.url; li.querySelector('.item-remove-button').onclick = (e) => { e.stopPropagation(); removeBookmark(bm.url); }; bookmarksListPopupEl.appendChild(li); }
+        function handleAddCurrentBookmark() { if (!currentUrl || currentUrl.startsWith('about:')) return alert("Cannot bookmark this page."); const name = newBookmarkNameInputPopupEl.value.trim() || currentTitle; let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); if (bms.some(b => b.url === currentUrl)) return alert("This page is already bookmarked."); bms.push({ name, url: currentUrl }); saveBookmarks(bms); renderBookmarkItem({ name, url: currentUrl }); newBookmarkNameInputPopupEl.value = ''; }
+        function removeBookmark(url) { let bms = JSON.parse(localStorage.getItem('vernBookmarks') || '[]'); saveBookmarks(bms.filter(b => b.url !== url)); loadBookmarks(); }
+        
+        // --- DATA & SETTINGS MANAGEMENT ---
+        function clearAllData() {
+            if (confirm("Are you sure you want to clear ALL browser data? This will delete all bookmarks, history, and settings and cannot be undone.")) {
+                Object.keys(localStorage).filter(k => k.startsWith('vern')).forEach(k => localStorage.removeItem(k));
+                alert("All browser data has been cleared."); window.location.reload();
+            }
+        }
+        function applyAndSaveCustomCloak() {
+            localStorage.setItem('vernCustomCloakTitle', customCloakTitleEl.value);
+            localStorage.setItem('vernCustomCloakUrl', customCloakUrlEl.value);
+            currentCloakPresetKey = 'custom'; cloakPresetSelectorEl.value = 'custom';
+            localStorage.setItem('vernCloakPreset', 'custom'); applyBrowserCloak();
+            alert('Custom cloak applied and saved!');
+        }
+
+        // --- NEW THEME GENERATION LOGIC ---
+        function hexToRgb(hex) {
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function getLuminance(hex) {
+            const rgb = hexToRgb(hex);
+            if (!rgb) return 0;
+            const a = [rgb.r, rgb.g, rgb.b].map(function (v) {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+        
+        function adjustColor(hex, percent) {
+            const rgb = hexToRgb(hex);
+            if(!rgb) return hex;
+            
+            // For darkening, we use a negative percentage. Multiplying by a value > 1 lightens.
+            // For a background, a small additive change is better than multiplicative to avoid oversaturation.
+            const amount = Math.floor(2.55 * percent); // percent is -100 to 100
+
+            rgb.r = Math.round(Math.max(0, Math.min(255, rgb.r + amount)));
+            rgb.g = Math.round(Math.max(0, Math.min(255, rgb.g + amount)));
+            rgb.b = Math.round(Math.max(0, Math.min(255, rgb.b + amount)));
+            
+            const toHex = c => ('00' + c.toString(16)).slice(-2);
+
+            return `#${toHex(rgb.r)}${toHex(rgb.g)}${toHex(rgb.b)}`;
+        }
+        
+        function generateSmartTheme(baseBg, baseAccent) {
+            const bgLuminance = getLuminance(baseBg);
+            const accentLuminance = getLuminance(baseAccent);
+
+            // Determine neutral color by slightly adjusting the background
+            // If background is dark, lighten the neutral. If light, darken it.
+            const neutral = adjustColor(baseBg, bgLuminance < 0.5 ? 8 : -8);
+
+            // Determine text color based on background contrast
+            const textColor = bgLuminance > 0.4 ? '#111111' : '#FFFFFF';
+
+            // Determine button text color based on accent contrast
+            const btnTextColor = accentLuminance > 0.4 ? '#111111' : '#FFFFFF';
+
+            return {
+                bg: baseBg,
+                text: textColor,
+                accent: baseAccent,
+                neutral: neutral,
+                btnText: btnTextColor
+            };
+        }
+
+        function applyAndSaveCustomTheme() {
+            // Save the user's two chosen colors
+            localStorage.setItem('vernCustomThemeBaseBg', customThemeBgBaseEl.value);
+            localStorage.setItem('vernCustomThemeBaseAccent', customThemeAccentBaseEl.value);
+
+            // Generate the full theme from the two base colors
+            const generatedColors = generateSmartTheme(customThemeBgBaseEl.value, customThemeAccentBaseEl.value);
+
+            // Save the generated 5-color theme
+            localStorage.setItem('vernCustomThemeColors', JSON.stringify(generatedColors));
+            
+            // Set the current theme to 'custom' and apply it
+            localStorage.setItem('vernTheme', 'custom');
+            themeSelectorEl.value = 'custom';
+            applyTheme('custom');
+            alert('Smart theme applied and saved!');
+        }
+
+        function applyAndSaveCustomHistoryDays() {
+            const days = parseInt(customHistoryDaysInputEl.value, 10);
+            if (isNaN(days) || days < 0 || days > 14) {
+                alert('Please enter a number between 0 and 14.');
+                return;
+            }
+            localStorage.setItem('vernHistoryLifespan', days.toString());
+            historyLifespanSelectorEl.value = 'custom';
+            pruneHistory();
+            loadHistory();
+            alert(`History lifespan set to ${days} days.`);
+        }
+
+        function saveConfiguration() {
+            const now = new Date();
+            localStorage.setItem('vernConfigSaveTimestamp', now.toISOString());
+            updateSaveButtonText();
+            
+            const originalText = saveConfigButtonEl.firstChild.textContent;
+            saveConfigButtonEl.firstChild.textContent = 'Configuration Saved! ';
+            setTimeout(() => {
+                saveConfigButtonEl.firstChild.textContent = originalText;
+            }, 1500);
+        }
+
+        function updateSaveButtonText() {
+            const savedTimestampISO = localStorage.getItem('vernConfigSaveTimestamp');
+            if (!savedTimestampISO) {
+                saveTimestampEl.textContent = '';
+                return;
+            }
+
+            const savedDate = new Date(savedTimestampISO);
+            const now = new Date();
+
+            const isToday = savedDate.toDateString() === now.toDateString();
+
+            let formattedTimestamp;
+            if (isToday) {
+                const hours = String(savedDate.getHours()).padStart(2, '0');
+                const minutes = String(savedDate.getMinutes()).padStart(2, '0');
+                const seconds = String(savedDate.getSeconds()).padStart(2, '0');
+                formattedTimestamp = `${hours}:${minutes}:${seconds}`;
+            } else {
+                const month = savedDate.getMonth() + 1;
+                const day = savedDate.getDate();
+                const year = savedDate.getFullYear();
+                formattedTimestamp = `${month}/${day}/${year}`;
+            }
+            saveTimestampEl.textContent = `(${formattedTimestamp})`;
+        }
+
+
+        // --- UI, MENU, & THEME HELPERS ---
+        function clearSpecialFeatures() {
+            // Clear spotlight
+            const existingSpotlight = document.getElementById('spotlight-overlay');
+            if (existingSpotlight) existingSpotlight.remove();
+
+            // Clear typewriter
+            if(typewriterInterval) clearInterval(typewriterInterval);
+
+            // Clear keyboard shortcuts
+            document.querySelectorAll('.shortcut-text').forEach(el => el.remove());
+            document.querySelectorAll('.nav-button, .toolbar-button').forEach(btn => {
+                const icon = btn.querySelector('.icon-img');
+                if (icon) icon.style.display = 'block';
+            });
+        }
+
+        function applyKeyboardShortcuts() {
+            const shortcuts = {
+                'back-button': 'Alt+←',
+                'forward-button': 'Alt+→',
+                'refresh-button': 'Ctrl+R',
+            };
+            for(const [id, key] of Object.entries(shortcuts)) {
+                const btn = document.getElementById(id);
+                if(btn) {
+                    btn.querySelector('.icon-img').style.display = 'none';
+                    const span = document.createElement('span');
+                    span.className = 'shortcut-text';
+                    span.textContent = key;
+                    btn.appendChild(span);
+                }
+            }
+        }
+
+        function startTypewriter(element, text) {
+            if (typewriterInterval) clearInterval(typewriterInterval);
+            let i = 0;
+            element.value = '';
+            typewriterInterval = setInterval(() => {
+                if (i < text.length) {
+                    element.value += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typewriterInterval);
+                }
+            }, 50);
+        }
+
+        function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
+        function toggleCustomThemeView(show) { customThemeSettingsContainerEl.classList.toggle('visible', show); }
+        function toggleCustomHistoryView(show) { customHistoryDaysContainerEl.classList.toggle('visible', show); }
+
+        function closeAllMenus(event) {
+             if (!event || (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event?.target) && !bookmarkButtonEl.contains(event?.target))) bookmarkMenuEl.classList.remove('show');
+             if (!event || (historyMenuEl.classList.contains('show') && !historyMenuEl.contains(event?.target) && !historyButtonEl.contains(event?.target))) historyMenuEl.classList.remove('show');
+             if (!event || (settingsMenuEl.classList.contains('show') && !settingsMenuEl.contains(event?.target) && !settingsButtonEl.contains(event?.target))) settingsMenuEl.classList.remove('show');
+        }
+        function positionMenuUnderButton(menuEl, buttonEl) {
+            const btnRect = buttonEl.getBoundingClientRect();
+            const isBottomBar = document.body.classList.contains('theme-bottom-bar');
+            if (isBottomBar) {
+                menuEl.style.top = 'auto';
+                menuEl.style.bottom = (window.innerHeight - btnRect.top + 5) + 'px';
+            } else {
+                menuEl.style.bottom = 'auto';
+                menuEl.style.top = (btnRect.bottom + 5) + 'px';
+            }
+            menuEl.style.right = (document.documentElement.clientWidth - btnRect.right) + 'px';
+            menuEl.style.left = 'auto';
+        }
+        function toggleMenu(menuEl, buttonEl) {
+            const isShowing = menuEl.classList.contains('show');
+            closeAllMenus();
+            if (!isShowing) {
+                menuEl.classList.add('show');
+                positionMenuUnderButton(menuEl, buttonEl);
+            }
+        }
+        function toggleBookmarkMenu() { toggleMenu(bookmarkMenuEl, bookmarkButtonEl); }
+        function toggleHistoryMenu() { toggleMenu(historyMenuEl, historyButtonEl); if(historyMenuEl.classList.contains('show')) historySearchBarEl.focus(); }
+        function toggleSettingsMenu() { toggleMenu(settingsMenuEl, settingsButtonEl); }
+        
+        function populateThemeSelector() {
+            themeSelectorEl.innerHTML = '';
+            const customThemesGroup = document.createElement('optgroup');
+            customThemesGroup.label = 'Custom';
+            customThemesGroup.appendChild(new Option('Custom Theme', 'custom'));
+            themeSelectorEl.appendChild(customThemesGroup);
+
+            const standardThemesGroup = document.createElement('optgroup');
+            standardThemesGroup.label = 'Standard Themes';
+            const specialThemesGroup = document.createElement('optgroup');
+            specialThemesGroup.label = 'Special Themes';
+            
+            Object.keys(THEMES).forEach(key => {
+                const theme = THEMES[key];
+                const option = new Option(theme.name, key);
+                if (theme.feature) { specialThemesGroup.appendChild(option); } 
+                else { standardThemesGroup.appendChild(option); }
+            });
+            themeSelectorEl.appendChild(standardThemesGroup);
+            themeSelectorEl.appendChild(specialThemesGroup);
+        }
+        function applyTheme(themeKey) {
+            const r = document.documentElement;
+            clearSpecialFeatures();
+            stopAllParticles();
+            document.body.className = '';
+            r.style.setProperty('--font-family-main', "'PrimaryFont', sans-serif");
+            r.style.removeProperty('--tilt-x');
+            r.style.removeProperty('--tilt-y');
+            
+            let theme;
+            if (themeKey === 'custom') {
+                const customColorsJSON = localStorage.getItem('vernCustomThemeColors');
+                if (customColorsJSON) {
+                    theme = { name: "Custom", colors: JSON.parse(customColorsJSON) };
+                } else {
+                    // Fallback if no custom theme is saved yet
+                    theme = { name: "Custom (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } };
+                }
+            } else {
+                 theme = THEMES[themeKey] || THEMES.main;
+            }
+
+            if (theme.feature === 'systemMatch') {
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                theme.colors = prefersDark ? THEMES.dark.colors : THEMES.light.colors;
+            }
+
+            const colors = theme.colors;
+            r.style.setProperty('--current-theme-bg', colors.bg); r.style.setProperty('--current-theme-text', colors.text);
+            r.style.setProperty('--current-theme-accent', colors.accent); r.style.setProperty('--current-theme-neutral', colors.neutral);
+            r.style.setProperty('--current-theme-button-text', colors.btnText);
+
+            if (theme.feature) {
+                const featureClassName = `theme-${theme.feature.toLowerCase().replace(/_/g, '')}`;
+                document.body.classList.add(featureClassName);
+
+                // Handle JS-based features
+                if (['particleFlow', 'oceanDeep', 'sakuraBlossom', 'dynamicGrid', 'aurora', 'mouseGlow', 'staticNoise'].includes(theme.feature)) {
+                    startParticleEffect(theme.feature);
+                }
+                if(theme.feature === 'spotlight') {
+                    const spotlight = document.createElement('div');
+                    spotlight.id = 'spotlight-overlay';
+                    document.body.appendChild(spotlight);
+                }
+                if(theme.feature === 'keyboardShortcuts') {
+                    applyKeyboardShortcuts();
+                }
+            }
+        }
+        function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
+        function populateSearchEngineSelector() { Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); }
+        function applyBrowserCloak() {
+            const appFaviconEl = document.getElementById('app-favicon');
+            const selectedPreset = cloakPresets[currentCloakPresetKey];
+            if (currentCloakPresetKey === 'custom') {
+                const customTitle = localStorage.getItem('vernCustomCloakTitle') || 'VERN MAX';
+                const customFaviconUrlSource = localStorage.getItem('vernCustomCloakUrl') || '../images/favicon.png';
+                document.title = customTitle; appFaviconEl.href = getFaviconUrl(customFaviconUrlSource);
+            } else if (selectedPreset && currentCloakPresetKey !== 'none') {
+                document.title = selectedPreset.title; appFaviconEl.href = selectedPreset.faviconUrl;
+            } else {
+                document.title = 'VERN MAX';
+                appFaviconEl.href = '../images/favicon.png';
+            }
+        }
+        function getFaviconUrl(targetUrl) {
+            if (!targetUrl || targetUrl.startsWith('about:')) return '../images/favicon.png';
+            try { const url = new URL(targetUrl); return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`; } 
+            catch (e) { return '../images/favicon.png'; }
+        }
+        
+        // --- EVENT HANDLERS & UTILITIES ---
+        function handleBookmarkClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); closeAllMenus(); } }
+        function handleHistoryClick(e) { const li = e.target.closest('li[data-url]'); if (li) { navigateTo(li.dataset.url); closeAllMenus(); } }
+        function handleGlobalKeyDown(e) { if (e.target.tagName === 'INPUT' || e.target.isContentEditable) return; if (e.altKey && e.key === 'ArrowLeft') backButtonEl.click(); if (e.altKey && e.key === 'ArrowRight') forwardButtonEl.click(); if ((e.ctrlKey || e.metaKey) && e.key === 'r') { e.preventDefault(); refreshButtonEl.click(); } if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); searchBarEl.select(); }}
+        function toggleIframeFullscreen() { if (!document.fullscreenElement) contentIframeEl.requestFullscreen(); else document.exitFullscreen(); }
+        function handleFullscreenChange() {
+            const isFullscreen = !!document.fullscreenElement;
+            document.body.classList.toggle('app-ui-hidden', isFullscreen);
+            document.getElementById('fullscreen-icon-img').src = `../images/zoom-${isFullscreen ? 'out' : 'in'}-white.png`;
+        }
     </script>
-    <!-- Official label -->
-  <span class="footer-label">Official 4SP Proxy</span>
-  </body>
+</body>
 </html>
