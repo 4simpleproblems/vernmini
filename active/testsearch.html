@@ -813,28 +813,17 @@
         </div>
         
         <div id="custom-theme-settings-container">
-            <h3><img src="../images/plus-symbol-white.png" alt="Custom Theme" class="icon-img"> Custom Theme</h3>
+            <h3><img src="../images/plus-symbol-white.png" alt="Custom Theme" class="icon-img"> Smart Theme Generator</h3>
+            <p style="font-size: 0.8em; opacity: 0.8; margin: -5px 5px 15px 5px; text-align: center;">Pick two colors, and the app will intelligently create a full theme for you.</p>
             <div class="menu-setting-item">
-                <label for="custom-theme-bg">Background</label>
-                <input type="color" id="custom-theme-bg" class="menu-input">
+                <label for="custom-theme-bg-base">Background Color</label>
+                <input type="color" id="custom-theme-bg-base" class="menu-input" value="#23272A">
             </div>
             <div class="menu-setting-item">
-                <label for="custom-theme-text">Text</label>
-                <input type="color" id="custom-theme-text" class="menu-input">
+                <label for="custom-theme-accent-base">Accent Color</label>
+                <input type="color" id="custom-theme-accent-base" class="menu-input" value="#7F5AF0">
             </div>
-            <div class="menu-setting-item">
-                <label for="custom-theme-accent">Accent</label>
-                <input type="color" id="custom-theme-accent" class="menu-input">
-            </div>
-            <div class="menu-setting-item">
-                <label for="custom-theme-neutral">Neutral/Toolbar</label>
-                <input type="color" id="custom-theme-neutral" class="menu-input">
-            </div>
-            <div class="menu-setting-item">
-                <label for="custom-theme-btnText">Button Text</label>
-                <input type="color" id="custom-theme-btnText" class="menu-input">
-            </div>
-            <button id="apply-custom-theme-button" class="menu-button">Apply Custom Theme</button>
+            <button id="apply-custom-theme-button" class="menu-button" style="margin-top:10px;">Apply & Save Smart Theme</button>
         </div>
 
         <div class="menu-setting-item">
@@ -1044,8 +1033,7 @@
             searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
             homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl,
-            customThemeSettingsContainerEl, customThemeBgEl, customThemeTextEl, customThemeAccentEl, 
-            customThemeNeutralEl, customThemeBtnTextEl, applyCustomThemeButtonEl,
+            customThemeSettingsContainerEl, customThemeBgBaseEl, customThemeAccentBaseEl, applyCustomThemeButtonEl,
             customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
@@ -1079,7 +1067,7 @@
             if(config.count) {
                 for (let i = 0; i < config.count; i++) { particles.push({ x: Math.random() * canvasEl.width, y: Math.random() * canvasEl.height, size: Math.random() * config.maxSize + 1, speedX: (Math.random() * 2 - 1) * config.speed, speedY: (Math.random() * 2 - 1) * config.speed, ...config }); }
             } else {
-                 particles.push(config);
+                particles.push(config);
             }
             animateParticles();
         }
@@ -1089,32 +1077,34 @@
             canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
             
             if (particles.length > 0) {
-                 const p = particles[0];
-                 if (p.shape === 'mouseGlow') {
-                      const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
-                      const accentColor = THEMES[localStorage.getItem('vernTheme') || 'main'].colors.accent;
-                      const accentRGB = accentColor.match(/\w\w/g).map(x => parseInt(x, 16));
-                      gradient.addColorStop(0, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0.3)`);
-                      gradient.addColorStop(1, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0)`);
-                      canvasCtx.fillStyle = gradient;
-                      canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-                      particleAnimationId = requestAnimationFrame(animateParticles);
-                      return; 
-                 } else if (p.shape === 'staticNoise') {
-                      const imageData = canvasCtx.createImageData(canvasEl.width, canvasEl.height);
-                      const buffer = new Uint32Array(imageData.data.buffer);
-                      const len = buffer.length - 1;
-                      for(let i=0; i < len; i++) {
-                           if (Math.random() < 0.5) {
-                                buffer[i] = 0xffffffff;
-                           } else {
-                                buffer[i] = 0xff000000;
-                           }
-                      }
-                      canvasCtx.putImageData(imageData, 0, 0);
-                      particleAnimationId = requestAnimationFrame(animateParticles);
-                      return;
-                 }
+                const p = particles[0];
+                if (p.shape === 'mouseGlow') {
+                    const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
+                    const accentColor = document.documentElement.style.getPropertyValue('--current-theme-accent') || '#7F5AF0';
+                    const accentRGB = hexToRgb(accentColor);
+                    if (accentRGB) {
+                       gradient.addColorStop(0, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0.3)`);
+                       gradient.addColorStop(1, `rgba(${accentRGB.r}, ${accentRGB.g}, ${accentRGB.b}, 0)`);
+                       canvasCtx.fillStyle = gradient;
+                       canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                    }
+                    particleAnimationId = requestAnimationFrame(animateParticles);
+                    return; 
+                } else if (p.shape === 'staticNoise') {
+                    const imageData = canvasCtx.createImageData(canvasEl.width, canvasEl.height);
+                    const buffer = new Uint32Array(imageData.data.buffer);
+                    const len = buffer.length - 1;
+                    for(let i=0; i < len; i++) {
+                        if (Math.random() < 0.5) {
+                            buffer[i] = 0xffffffff;
+                        } else {
+                            buffer[i] = 0xff000000;
+                        }
+                    }
+                    canvasCtx.putImageData(imageData, 0, 0);
+                    particleAnimationId = requestAnimationFrame(animateParticles);
+                    return;
+                }
             }
 
 
@@ -1122,15 +1112,15 @@
                 let p = particles[i];
 
                 if(p.shape === 'aurora'){
-                     auroraTime += 0.01;
-                     const gradient = canvasCtx.createLinearGradient(0, 0, canvasEl.width, canvasEl.height);
-                     const color1 = `hsla(${180 + Math.sin(auroraTime) * 20}, 100%, 50%, 0.3)`;
-                     const color2 = `hsla(${260 + Math.cos(auroraTime) * 20}, 100%, 50%, 0.3)`;
-                     gradient.addColorStop(0, color1);
-                     gradient.addColorStop(1, color2);
-                     canvasCtx.fillStyle = gradient;
-                     canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-                     continue;
+                    auroraTime += 0.01;
+                    const gradient = canvasCtx.createLinearGradient(0, 0, canvasEl.width, canvasEl.height);
+                    const color1 = `hsla(${180 + Math.sin(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                    const color2 = `hsla(${260 + Math.cos(auroraTime) * 20}, 100%, 50%, 0.3)`;
+                    gradient.addColorStop(0, color1);
+                    gradient.addColorStop(1, color2);
+                    canvasCtx.fillStyle = gradient;
+                    canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                    continue;
                 }
 
                 p.x += p.speedX; p.y += p.speedY;
@@ -1143,21 +1133,21 @@
                 else if (p.shape === 'line') { canvasCtx.lineWidth = p.size / 2; canvasCtx.beginPath(); canvasCtx.moveTo(p.x, p.y); canvasCtx.lineTo(p.x + p.speedX * 5, p.y + p.speedY * 5); canvasCtx.stroke(); } 
                 else if (p.shape === 'text') { canvasCtx.font = p.size + 'px sans-serif'; canvasCtx.fillText(p.text, p.x, p.y); }
                 else if (p.shape === 'grid') {
-                     canvasCtx.beginPath();
-                     canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                     canvasCtx.fill();
-                     for (let j = i + 1; j < particles.length; j++) {
-                          const other = particles[j];
-                          const dist = Math.hypot(p.x - other.x, p.y - other.y);
-                          if(dist < 150){
-                               canvasCtx.beginPath();
-                               canvasCtx.moveTo(p.x, p.y);
-                               canvasCtx.lineTo(other.x, other.y);
-                               canvasCtx.lineWidth = 0.5;
-                               canvasCtx.strokeStyle = `rgba(247, 37, 133, ${1 - dist / 150})`;
-                               canvasCtx.stroke();
-                          }
-                     }
+                    canvasCtx.beginPath();
+                    canvasCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    canvasCtx.fill();
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const other = particles[j];
+                        const dist = Math.hypot(p.x - other.x, p.y - other.y);
+                        if(dist < 150){
+                            canvasCtx.beginPath();
+                            canvasCtx.moveTo(p.x, p.y);
+                            canvasCtx.lineTo(other.x, other.y);
+                            canvasCtx.lineWidth = 0.5;
+                            canvasCtx.strokeStyle = `rgba(247, 37, 133, ${1 - dist / 150})`;
+                            canvasCtx.stroke();
+                        }
+                    }
                 }
             }
             particleAnimationId = requestAnimationFrame(animateParticles);
@@ -1197,13 +1187,10 @@
             saveConfigButtonEl = document.getElementById('save-config-button');
             saveTimestampEl = document.getElementById('save-timestamp');
 
-            // Assign new elements
+            // Assign new/modified elements
             customThemeSettingsContainerEl = document.getElementById('custom-theme-settings-container');
-            customThemeBgEl = document.getElementById('custom-theme-bg');
-            customThemeTextEl = document.getElementById('custom-theme-text');
-            customThemeAccentEl = document.getElementById('custom-theme-accent');
-            customThemeNeutralEl = document.getElementById('custom-theme-neutral');
-            customThemeBtnTextEl = document.getElementById('custom-theme-btnText');
+            customThemeBgBaseEl = document.getElementById('custom-theme-bg-base');
+            customThemeAccentBaseEl = document.getElementById('custom-theme-accent-base');
             applyCustomThemeButtonEl = document.getElementById('apply-custom-theme-button');
             customHistoryDaysContainerEl = document.getElementById('custom-history-days-container');
             customHistoryDaysInputEl = document.getElementById('custom-history-days-input');
@@ -1218,14 +1205,11 @@
             applyTheme(savedTheme);
             themeSelectorEl.value = savedTheme;
             toggleCustomThemeView(savedTheme === 'custom');
-            if (savedTheme === 'custom') {
-                const customColors = JSON.parse(localStorage.getItem('vernCustomThemeColors') || '{}');
-                customThemeBgEl.value = customColors.bg || '#23272A';
-                customThemeTextEl.value = customColors.text || '#E0E1DD';
-                customThemeAccentEl.value = customColors.accent || '#7F5AF0';
-                customThemeNeutralEl.value = customColors.neutral || '#2C2F33';
-                customThemeBtnTextEl.value = customColors.btnText || '#FFFFFF';
-            }
+            
+            // Load the two base colors for the Smart Theme Generator
+            customThemeBgBaseEl.value = localStorage.getItem('vernCustomThemeBaseBg') || '#23272A';
+            customThemeAccentBaseEl.value = localStorage.getItem('vernCustomThemeBaseAccent') || '#7F5AF0';
+
 
             // Search Engine
             currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'google';
@@ -1516,16 +1500,82 @@
             alert('Custom cloak applied and saved!');
         }
 
-        function applyAndSaveCustomTheme() {
-            const customColors = {
-                bg: customThemeBgEl.value, text: customThemeTextEl.value, accent: customThemeAccentEl.value,
-                neutral: customThemeNeutralEl.value, btnText: customThemeBtnTextEl.value
+        // --- NEW THEME GENERATION LOGIC ---
+        function hexToRgb(hex) {
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function getLuminance(hex) {
+            const rgb = hexToRgb(hex);
+            if (!rgb) return 0;
+            const a = [rgb.r, rgb.g, rgb.b].map(function (v) {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+        
+        function adjustColor(hex, percent) {
+            const rgb = hexToRgb(hex);
+            if(!rgb) return hex;
+            
+            // For darkening, we use a negative percentage. Multiplying by a value > 1 lightens.
+            // For a background, a small additive change is better than multiplicative to avoid oversaturation.
+            const amount = Math.floor(2.55 * percent); // percent is -100 to 100
+
+            rgb.r = Math.round(Math.max(0, Math.min(255, rgb.r + amount)));
+            rgb.g = Math.round(Math.max(0, Math.min(255, rgb.g + amount)));
+            rgb.b = Math.round(Math.max(0, Math.min(255, rgb.b + amount)));
+            
+            const toHex = c => ('00' + c.toString(16)).slice(-2);
+
+            return `#${toHex(rgb.r)}${toHex(rgb.g)}${toHex(rgb.b)}`;
+        }
+        
+        function generateSmartTheme(baseBg, baseAccent) {
+            const bgLuminance = getLuminance(baseBg);
+            const accentLuminance = getLuminance(baseAccent);
+
+            // Determine neutral color by slightly adjusting the background
+            // If background is dark, lighten the neutral. If light, darken it.
+            const neutral = adjustColor(baseBg, bgLuminance < 0.5 ? 8 : -8);
+
+            // Determine text color based on background contrast
+            const textColor = bgLuminance > 0.4 ? '#111111' : '#FFFFFF';
+
+            // Determine button text color based on accent contrast
+            const btnTextColor = accentLuminance > 0.4 ? '#111111' : '#FFFFFF';
+
+            return {
+                bg: baseBg,
+                text: textColor,
+                accent: baseAccent,
+                neutral: neutral,
+                btnText: btnTextColor
             };
-            localStorage.setItem('vernCustomThemeColors', JSON.stringify(customColors));
+        }
+
+        function applyAndSaveCustomTheme() {
+            // Save the user's two chosen colors
+            localStorage.setItem('vernCustomThemeBaseBg', customThemeBgBaseEl.value);
+            localStorage.setItem('vernCustomThemeBaseAccent', customThemeAccentBaseEl.value);
+
+            // Generate the full theme from the two base colors
+            const generatedColors = generateSmartTheme(customThemeBgBaseEl.value, customThemeAccentBaseEl.value);
+
+            // Save the generated 5-color theme
+            localStorage.setItem('vernCustomThemeColors', JSON.stringify(generatedColors));
+            
+            // Set the current theme to 'custom' and apply it
             localStorage.setItem('vernTheme', 'custom');
             themeSelectorEl.value = 'custom';
             applyTheme('custom');
-            alert('Custom theme applied and saved!');
+            alert('Smart theme applied and saved!');
         }
 
         function applyAndSaveCustomHistoryDays() {
@@ -1700,6 +1750,7 @@
                 if (customColorsJSON) {
                     theme = { name: "Custom", colors: JSON.parse(customColorsJSON) };
                 } else {
+                    // Fallback if no custom theme is saved yet
                     theme = { name: "Custom (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } };
                 }
             } else {
