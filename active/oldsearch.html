@@ -165,9 +165,21 @@
             align-items: center;
             padding: 4px 5px;
         }
+        .toggle-label-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-right: 10px;
+        }
         .menu-setting-item.toggle-item label {
             padding-left: 0;
             margin-bottom: 0;
+            cursor: pointer;
+        }
+        .toggle-description {
+            font-size: 0.8em;
+            opacity: 0.7;
+            pointer-events: none;
         }
         .toggle-switch {
             position: relative;
@@ -210,6 +222,11 @@
         .toggle-switch input:checked + .slider:before {
             transform: translateX(20px);
             background-color: var(--current-theme-button-text);
+        }
+        #save-timestamp {
+             font-size: 0.8em;
+             opacity: 0.8;
+             margin-left: 8px;
         }
         
         /* Conditional Custom Cloak Section */
@@ -780,9 +797,12 @@
             </select>
         </div>
         <div class="menu-setting-item toggle-item">
-            <label for="vignette-remover-toggle">Anti-Google Vignette</label>
+             <div class="toggle-label-container">
+                <label for="ad-free-toggle">Ad-Free Toggle</label>
+                <small class="toggle-description">Disables Google Vignette ads by reloading the URL.</small>
+            </div>
             <div class="toggle-switch">
-                <input type="checkbox" id="vignette-remover-toggle">
+                <input type="checkbox" id="ad-free-toggle">
                 <span class="slider"></span>
             </div>
         </div>
@@ -804,6 +824,9 @@
             <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
         </div>
 
+        <div class="menu-action-bar">
+            <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
+        </div>
         <div class="menu-action-bar"></div>
         <button id="clear-browser-data-button" class="menu-button clear-button">Clear All Browser Data</button>
     </div>
@@ -954,7 +977,7 @@
             themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
             searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
-            homepageSearchIconEl, vignetteRemoverToggleEl;
+            homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
@@ -999,15 +1022,15 @@
             if (particles.length > 0) {
                  const p = particles[0];
                  if (p.shape === 'mouseGlow') {
-                    const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
-                    const accentColor = THEMES[localStorage.getItem('vernTheme') || 'main'].colors.accent;
-                    const accentRGB = accentColor.match(/\w\w/g).map(x => parseInt(x, 16));
-                    gradient.addColorStop(0, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0.3)`);
-                    gradient.addColorStop(1, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0)`);
-                    canvasCtx.fillStyle = gradient;
-                    canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-                    particleAnimationId = requestAnimationFrame(animateParticles);
-                    return; 
+                     const gradient = canvasCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
+                     const accentColor = THEMES[localStorage.getItem('vernTheme') || 'main'].colors.accent;
+                     const accentRGB = accentColor.match(/\w\w/g).map(x => parseInt(x, 16));
+                     gradient.addColorStop(0, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0.3)`);
+                     gradient.addColorStop(1, `rgba(${accentRGB[0]}, ${accentRGB[1]}, ${accentRGB[2]}, 0)`);
+                     canvasCtx.fillStyle = gradient;
+                     canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+                     particleAnimationId = requestAnimationFrame(animateParticles);
+                     return; 
                  } else if (p.shape === 'staticNoise') {
                      const imageData = canvasCtx.createImageData(canvasEl.width, canvasEl.height);
                      const buffer = new Uint32Array(imageData.data.buffer);
@@ -1083,6 +1106,7 @@
             pruneHistory();
             loadBookmarks();
             loadHistory();
+            updateSaveButtonText();
             // Force homepage on initial load instead of last visited URL
             navigateTo('about:blank');
         });
@@ -1100,7 +1124,9 @@
             historyGroupTemplate = document.getElementById('history-group-template');
             homepageEl = document.getElementById('homepage'); homepageSearchBarEl = document.getElementById('homepage-search-bar'); searchSuggestionsEl = document.getElementById('search-suggestions');
             homepageSearchIconEl = document.getElementById('homepage-search-icon');
-            vignetteRemoverToggleEl = document.getElementById('vignette-remover-toggle');
+            adFreeToggleEl = document.getElementById('ad-free-toggle');
+            saveConfigButtonEl = document.getElementById('save-config-button');
+            saveTimestampEl = document.getElementById('save-timestamp');
         }
         
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
@@ -1115,8 +1141,8 @@
 
             historyLifespanSelectorEl.value = localStorage.getItem('vernHistoryLifespan') || '14';
             
-            const vignetteRemoverEnabled = localStorage.getItem('vernVignetteRemover') === 'true';
-            vignetteRemoverToggleEl.checked = vignetteRemoverEnabled;
+            const adFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
+            adFreeToggleEl.checked = adFreeEnabled;
 
             currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
             cloakPresetSelectorEl.value = currentCloakPresetKey;
@@ -1151,7 +1177,7 @@
             themeSelectorEl.addEventListener('change', (e) => { applyTheme(e.target.value); localStorage.setItem('vernTheme', e.target.value); });
             searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             historyLifespanSelectorEl.addEventListener('change', (e) => { localStorage.setItem('vernHistoryLifespan', e.target.value); pruneHistory(); loadHistory(); });
-            vignetteRemoverToggleEl.addEventListener('change', (e) => { localStorage.setItem('vernVignetteRemover', e.target.checked); });
+            adFreeToggleEl.addEventListener('change', (e) => { localStorage.setItem('vernAdFreeToggle', e.target.checked); });
 
             cloakPresetSelectorEl.addEventListener('change', (e) => {
                 currentCloakPresetKey = e.target.value;
@@ -1161,6 +1187,7 @@
             });
             applyCustomCloakButtonEl.addEventListener('click', applyAndSaveCustomCloak);
             clearBrowserDataButtonEl.addEventListener('click', clearAllData);
+            saveConfigButtonEl.addEventListener('click', saveConfiguration);
 
             homepageSearchBarEl.addEventListener('input', handleSearchInput);
             homepageSearchBarEl.addEventListener('focus', () => {
@@ -1248,8 +1275,8 @@
             }
 
             // Anti-Google Vignette Logic
-            const isVignetteRemoverEnabled = localStorage.getItem('vernVignetteRemover') === 'true';
-            if (isVignetteRemoverEnabled && finalUrl.includes('/#google_vignette')) {
+            const isAdFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
+            if (isAdFreeEnabled && finalUrl.includes('/#google_vignette')) {
                 const cleanUrl = finalUrl.split('/#google_vignette')[0];
                 navigateTo(cleanUrl);
                 return; // Stop processing this "dirty" URL load
@@ -1366,6 +1393,46 @@
             localStorage.setItem('vernCloakPreset', 'custom'); applyBrowserCloak();
             alert('Custom cloak applied and saved!');
         }
+
+        function saveConfiguration() {
+            const now = new Date();
+            localStorage.setItem('vernConfigSaveTimestamp', now.toISOString());
+            updateSaveButtonText();
+            
+            const originalText = saveConfigButtonEl.firstChild.textContent;
+            saveConfigButtonEl.firstChild.textContent = 'Configuration Saved! ';
+            setTimeout(() => {
+                saveConfigButtonEl.firstChild.textContent = originalText;
+            }, 1500);
+        }
+
+        function updateSaveButtonText() {
+            const savedTimestampISO = localStorage.getItem('vernConfigSaveTimestamp');
+            if (!savedTimestampISO) {
+                saveTimestampEl.textContent = '';
+                return;
+            }
+
+            const savedDate = new Date(savedTimestampISO);
+            const now = new Date();
+
+            const isToday = savedDate.toDateString() === now.toDateString();
+
+            let formattedTimestamp;
+            if (isToday) {
+                const hours = String(savedDate.getHours()).padStart(2, '0');
+                const minutes = String(savedDate.getMinutes()).padStart(2, '0');
+                const seconds = String(savedDate.getSeconds()).padStart(2, '0');
+                formattedTimestamp = `${hours}:${minutes}:${seconds}`;
+            } else {
+                const month = savedDate.getMonth() + 1;
+                const day = savedDate.getDate();
+                const year = savedDate.getFullYear();
+                formattedTimestamp = `${month}/${day}/${year}`;
+            }
+            saveTimestampEl.textContent = `(${formattedTimestamp})`;
+        }
+
 
         // --- UI, MENU, & THEME HELPERS ---
         function clearSpecialFeatures() {
