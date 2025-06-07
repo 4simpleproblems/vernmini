@@ -107,7 +107,7 @@
             border-bottom: 1px solid var(--toolbar-border-color); padding-bottom: 8px;
             font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
-        .mini-menu h3 .icon-img { width: 1em; height: 1em; }
+        /* DELETED: .mini-menu h3 .icon-img { width: 1em; height: 1em; } */
         .mini-menu ul { list-style: none; padding: 0; margin: 0; }
         .mini-menu::-webkit-scrollbar, .mini-menu ul::-webkit-scrollbar { width: 5px; }
         .mini-menu::-webkit-scrollbar-thumb, .mini-menu ul::-webkit-scrollbar-thumb { background-color: var(--button-outline-color); border-radius: 8px; }
@@ -227,25 +227,27 @@
             background-color: var(--current-theme-button-text);
         }
         #save-timestamp {
-             font-size: 0.8em;
-             opacity: 0.8;
-             margin-left: 8px;
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-left: 8px;
         }
         
         /* Conditional Custom Sections */
+        /* Updated visibility logic: default hidden for these containers */
         #custom-cloak-settings-container,
         #custom-theme-settings-container,
         #custom-history-days-container {
             opacity: 0; max-height: 0; overflow: hidden;
-            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin-top 0.3s, padding-top 0.3s;
             margin-top: 0; padding-top: 0;
+            border-top: none; /* No border initially */
+            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin-top 0.3s, padding-top 0.3s, border-top 0.3s;
         }
         #custom-cloak-settings-container.visible,
         #custom-theme-settings-container.visible,
         #custom-history-days-container.visible {
-            opacity: 1; max-height: 500px; 
+            opacity: 1; max-height: 500px; /* Adjust max-height as needed */
             margin-top: 15px; padding-top: 10px;
-            border-top: 1px solid var(--toolbar-border-color);
+            border-top: 1px solid var(--toolbar-border-color); /* Add border when visible */
         }
         
         /* Style for color inputs to match other inputs */
@@ -339,11 +341,11 @@
         }
         body.theme-translucent-ui .nav-button,
         body.theme-translucent-ui .toolbar-button {
-             background-color: color-mix(in srgb, var(--button-bg) 60%, transparent);
+            background-color: color-mix(in srgb, var(--button-bg) 60%, transparent);
         }
         body.theme-translucent-ui .mini-menu {
-             background-color: color-mix(in srgb, var(--menu-bg) 60%, transparent);
-             backdrop-filter: blur(8px);
+            background-color: color-mix(in srgb, var(--menu-bg) 60%, transparent);
+            backdrop-filter: blur(8px);
         }
 
         /* --- 10 Previous Special Themes --- */
@@ -369,7 +371,7 @@
             border-radius: 8px !important;
         }
         body.theme-comicbook .mini-menu li {
-             border: 2px solid #000 !important;
+            border: 2px solid #000 !important;
         }
 
         body.theme-crtscanlines { position: relative; --font-family-main: 'Courier New', monospace; }
@@ -410,7 +412,7 @@
                 -2px -2px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff);
         }
         body.theme-textpop #homepage-logo {
-             filter: drop-shadow(5px 5px 0 var(--current-theme-accent)) drop-shadow(-5px -5px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff));
+            filter: drop-shadow(5px 5px 0 var(--current-theme-accent)) drop-shadow(-5px -5px 0 color-mix(in srgb, var(--current-theme-accent) 50%, #00e5ff));
         }
 
         body.theme-focusmode #toolbar {
@@ -703,8 +705,8 @@
         }
 
         #homepage-search-container:focus-within {
-             background-color: var(--input-focus-bg);
-             box-shadow: var(--input-focus-shadow);
+            background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow);
         }
         
         #homepage-search-bar {
@@ -769,6 +771,41 @@
             margin-bottom: 10px;
             padding-left: 5px;
         }
+
+        /* Settings Section Styling */
+        .settings-section {
+            margin-bottom: 20px;
+            padding-top: 10px;
+            border-top: 1px solid var(--toolbar-border-color);
+        }
+
+        .settings-section:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .settings-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-bottom: none; /* Removed redundant border */
+            padding-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 5px; /* Align with label text */
+        }
+        /* ADDED: Padding to all settings menu items */
+        #settings-menu .menu-setting-item,
+        #settings-menu .menu-action-bar {
+            padding: 8px 10px; /* Adjust padding as needed */
+            border-radius: 8px; /* Optional: adds a subtle rounding */
+            background-color: color-mix(in srgb, var(--current-theme-neutral) 50%, var(--current-theme-bg) 20%); /* Optional: subtle background for sections */
+            margin-bottom: 10px; /* Spacing between padded items */
+        }
+        #settings-menu .menu-setting-item:last-child {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -801,7 +838,7 @@
     </div>
 
     <div id="bookmark-menu" class="mini-menu">
-        <h3><img src="../images/star-white.png" alt="Bookmarks" class="icon-img"> Bookmarks</h3>
+        <h3>Bookmarks</h3>
         <ul id="bookmarks-list-popup"></ul>
         <div class="menu-action-bar">
             <input type="text" id="new-bookmark-name-popup" class="menu-input" placeholder="Bookmark Name (optional)">
@@ -810,92 +847,150 @@
     </div>
     
     <div id="history-menu" class="mini-menu">
-        <h3><img src="../images/clock-white.png" alt="History" class="icon-img"> History</h3>
+        <h3>History</h3>
         <input type="text" id="history-search-bar" class="menu-input" placeholder="Search history">
         <ul id="history-list-popup"></ul>
     </div>
 
     <div id="settings-menu" class="mini-menu">
-        <h3><img src="../images/gear-white.png" alt="Settings" class="icon-img"> Settings</h3>
+        <h3>Settings</h3>
         
-        <div class="menu-setting-item">
-            <label for="theme-selector">Theme</label>
-            <select id="theme-selector" class="menu-select"></select>
-        </div>
-        
-        <div id="custom-theme-settings-container">
-            <h3><img src="../images/plus-symbol-white.png" alt="Custom Theme" class="icon-img"> Smart Theme Generator</h3>
-            <p style="font-size: 0.8em; opacity: 0.8; margin: -5px 5px 15px 5px; text-align: center;">Pick two colors, and the app will intelligently create a full theme for you.</p>
+        <div class="settings-section">
+            <h3>Appearance</h3>
             <div class="menu-setting-item">
-                <label for="custom-theme-bg-base">Background Color</label>
-                <input type="color" id="custom-theme-bg-base" class="menu-input" value="#23272A">
+                <label for="theme-selector">Theme</label>
+                <select id="theme-selector" class="menu-select"></select>
             </div>
-            <div class="menu-setting-item">
-                <label for="custom-theme-accent-base">Accent Color</label>
-                <input type="color" id="custom-theme-accent-base" class="menu-input" value="#7F5AF0">
+            
+            <div id="custom-theme-settings-container">
+                <h3>Smart Theme Generator</h3>
+                <p style="font-size: 0.8em; opacity: 0.8; margin: -5px 5px 15px 5px; text-align: center;">Pick two colors, and the app will intelligently create a full theme for you.</p>
+                <div class="menu-setting-item">
+                    <label for="custom-theme-bg-base">Background Color</label>
+                    <input type="color" id="custom-theme-bg-base" class="menu-input" value="#23272A">
+                </div>
+                <div class="menu-setting-item">
+                    <label for="custom-theme-accent-base">Accent Color</label>
+                    <input type="color" id="custom-theme-accent-base" class="menu-input" value="#7F5AF0">
+                </div>
+                <button id="apply-custom-theme-button" class="menu-button" style="margin-top:10px;">Apply & Save Smart Theme</button>
             </div>
-            <button id="apply-custom-theme-button" class="menu-button" style="margin-top:10px;">Apply & Save Smart Theme</button>
         </div>
 
-        <div class="menu-setting-item">
-            <label for="search-engine-selector">Search Engine</label>
-            <select id="search-engine-selector" class="menu-select"></select>
-            <p class="search-engine-explanation">Google cannot be used due to security restrictions when using a proxy.</p>
-        </div>
-         <div class="menu-setting-item">
-            <label for="history-lifespan-selector">Clear History After</label>
-            <select id="history-lifespan-selector" class="menu-select">
-                <option value="0">Never</option>
-                <option value="1">1 Day</option>
-                <option value="3">3 Days</option>
-                <option value="7">7 Days</option>
-                <option value="14">14 Days</option>
-                <option value="custom">Custom...</option>
-            </select>
+        <div class="settings-section">
+            <h3>General</h3>
+            <div class="menu-setting-item">
+                <label for="search-engine-selector">Search Engine</label>
+                <select id="search-engine-selector" class="menu-select"></select>
+                <p class="search-engine-explanation">Google cannot be used due to security restrictions when using a proxy.</p>
+            </div>
+
+            <div class="menu-setting-item toggle-item">
+                <div class="toggle-label-container">
+                    <label for="https-enforce-toggle" style="cursor: pointer;">Always Use HTTPS</label>
+                    <small class="toggle-description">Attempts to force HTTPS for all navigated URLs.</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="https-enforce-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="menu-setting-item">
+                <label for="homepage-url-input">Custom Homepage</label>
+                <input type="text" id="homepage-url-input" class="menu-input" placeholder="e.g., about:blank or a URL">
+                <button id="set-current-page-as-homepage-button" class="menu-button" style="margin-top:-5px;">Set Current Page as Homepage</button>
+                <button id="reset-homepage-button" class="menu-button clear-button" style="margin-top:5px;">Reset Homepage</button>
+            </div>
+
+            <div class="menu-setting-item toggle-item">
+                <div class="toggle-label-container">
+                    <label for="restore-session-toggle" style="cursor: pointer;">Restore Last Session</label>
+                    <small class="toggle-description">Opens your last visited page when the app starts.</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="restore-session-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
 
-        <div id="custom-history-days-container">
-            <h3><img src="../images/plus-symbol-white.png" alt="Custom History" class="icon-img"> Custom Lifespan</h3>
+        <div class="settings-section">
+            <h3>Privacy</h3>
             <div class="menu-setting-item">
-                <label for="custom-history-days-input">Days (0-14)</label>
-                <input type="number" id="custom-history-days-input" class="menu-input" min="0" max="14" placeholder="e.g., 5">
+                <label for="history-lifespan-selector">Clear History After</label>
+                <select id="history-lifespan-selector" class="menu-select">
+                    <option value="0">Never</option>
+                    <option value="1">1 Day</option>
+                    <option value="3">3 Days</option>
+                    <option value="7">7 Days</option>
+                    <option value="14">14 Days</option>
+                    <option value="custom">Custom...</option>
+                </select>
             </div>
-            <button id="apply-custom-history-days-button" class="menu-button">Set Custom Days</button>
-       </div>
 
-        <div class="menu-setting-item toggle-item">
-            <div class="toggle-label-container">
-                <label for="ad-free-toggle" style="cursor: pointer;">Ad-Free Toggle</label>
-                <small class="toggle-description">Disables Google Vignette ads by reloading the URL automatically.</small>
+            <div id="custom-history-days-container">
+                <h3>Custom Lifespan</h3>
+                <div class="menu-setting-item">
+                    <label for="custom-history-days-input">Days (0-14)</label>
+                    <input type="number" id="custom-history-days-input" class="menu-input" min="0" max="14" placeholder="e.g., 5">
+                </div>
+                <button id="apply-custom-history-days-button" class="menu-button">Set Custom Days</button>
+           </div>
+
+            <div class="menu-setting-item toggle-item">
+                <div class="toggle-label-container">
+                    <label for="ad-free-toggle" style="cursor: pointer;">Ad-Free Toggle</label>
+                    <small class="toggle-description">Disables Google Vignette ads by reloading the URL automatically.</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="ad-free-toggle">
+                    <span class="slider"></span>
+                </label>
             </div>
-            <label class="toggle-switch">
-                <input type="checkbox" id="ad-free-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="menu-setting-item">
-            <label for="cloak-preset-selector">Tab Cloak Preset</label>
-            <select id="cloak-preset-selector" class="menu-select"></select>
-        </div>
-        
-        <div id="custom-cloak-settings-container">
-            <h3><img src="../images/plus-symbol-white.png" alt="Custom Cloak" class="icon-img"> Custom Cloak</h3>
+
             <div class="menu-setting-item">
-                <label for="custom-cloak-title">Custom Title</label>
-                <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
+                <label for="cloak-preset-selector">Tab Cloak Preset</label>
+                <select id="cloak-preset-selector" class="menu-select"></select>
             </div>
-            <div class="menu-setting-item">
-                <label for="custom-cloak-url">Favicon URL</label>
-                <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
+            
+            <div id="custom-cloak-settings-container">
+                <h3>Custom Cloak</h3>
+                <div class="menu-setting-item">
+                    <label for="custom-cloak-title">Custom Title</label>
+                    <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
+                </div>
+                <div class="menu-setting-item">
+                    <label for="custom-cloak-url">Favicon URL</label>
+                    <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
+                </div>
+                <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
             </div>
-            <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
+
+            <div class="menu-action-bar" id="cookie-management-container">
+                <h3>Cookie Management</h3>
+                <button id="clear-current-site-cookies-button" class="menu-button">Clear Current Site Cookies</button>
+                <button id="clear-all-browser-cookies-button" class="menu-button clear-button" style="margin-top:10px;">Clear All Browser Cookies</button>
+                <div class="menu-setting-item toggle-item" style="margin-top: 15px;">
+                    <div class="toggle-label-container">
+                        <label for="block-third-party-cookies-toggle" style="cursor: pointer;">Block Third-Party Cookies</label>
+                        <small class="toggle-description">Prevents third-party sites from setting cookies.</small>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="block-third-party-cookies-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
         </div>
 
-        <div class="menu-action-bar">
-            <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
+        <div class="settings-section">
+            <h3>Data Management</h3>
+            <div class="menu-action-bar">
+                <button id="save-config-button" class="menu-button">Save Configuration <span id="save-timestamp"></span></button>
+            </div>
+            <button id="clear-browser-data-button" class="menu-button clear-button">Clear All Browser Data</button>
         </div>
-        <div class="menu-action-bar"></div>
-        <button id="clear-browser-data-button" class="menu-button clear-button">Clear All Browser Data</button>
     </div>
 
     <div id="content-container">
@@ -931,7 +1026,6 @@
 
         const cloakPresets = {
             'none': { displayName: "None (Static VERN MAX)" },
-            'custom': { displayName: "Custom (Manual)" },
             'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
             'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
             'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
@@ -940,8 +1034,9 @@
             'hac': { displayName: "Home Access Center", title: 'Home Access Center', faviconUrl: 'https://hac.doe.k12.de.us/HomeAccess/Content/Images/favicon.ico' },
             'google_drive': { displayName: "My Drive", title: 'My Drive - Google Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
             'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
+            'custom': { displayName: "Custom (Manual)" }, // Moved custom to the end for better default ordering
         };
-        let currentCloakPresetKey = 'none';
+        let currentCloakPresetKey = 'google_docs'; // Default changed to Google Docs
 
         const THEMES = {
             // --- Normal Themes ---
@@ -1014,7 +1109,7 @@
             page_curl: { name: "Page Curl", feature: 'pageCurl', colors: { bg: '#F5F7FA', text: '#333333', accent: '#3498DB', neutral: '#FFFFFF', btnText: '#FFFFFF' } },
             spotlight: { name: "Spotlight", feature: 'spotlight', colors: { bg: '#000000', text: '#f1f1f1', accent: '#BB86FC', neutral: '#111111', btnText: '#000000' } },
             blueprint: { name: "Blueprint", feature: 'blueprint', colors: { bg: '#0d2b45', text: '#90e0ef', accent: '#caf0f8', neutral: '#0c3d61', btnText: '#0d2b45' } },
-            notebook_paper: { name: "Notebook Paper", feature: 'notebookPaper', colors: { bg: '#fefefe', text: '#2b2b2b', accent: '#59a5d8', neutral: '#ffffff', btnText: '#ffffff' } },
+            notebook_paper: { name: "Notebook Paper", feature: 'notebookPaper', colors: { bg: '#fefefe', text: '#2b2b2b', accent: '#59a5d8', neutral: '#ffffff', btnToext: '#ffffff' } },
             zoom_hover: { name: "Zoom Hover", feature: 'zoomHover', colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } },
             shaky_text: { name: "Shaky Text", feature: 'shakyText', colors: { bg: '#2a2a2a', text: '#e0e0e0', accent: '#f44336', neutral: '#3c3c3c', btnText: '#ffffff' } },
             rainbow_text: { name: "Rainbow Text", feature: 'rainbowText', colors: { bg: '#1E1E1E', text: '#F1F1F1', accent: '#BB86FC', neutral: '#2A2A2A', btnText: '#000000' } },
@@ -1046,7 +1141,11 @@
             customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
             homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl,
             customThemeSettingsContainerEl, customThemeBgBaseEl, customThemeAccentBaseEl, applyCustomThemeButtonEl,
-            customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl;
+            customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl,
+            // NEW DOM Elements
+            httpsEnforceToggleEl, homepageUrlInputEl, setCurrentPageAsHomepageButtonEl, resetHomepageButtonEl,
+            restoreSessionToggleEl, clearCurrentSiteCookiesButtonEl, clearAllBrowserCookiesButtonEl,
+            blockThirdPartyCookiesToggleEl, cookieManagementContainerEl;
 
         let bookmarkItemTemplate, historyItemTemplate, historyGroupTemplate;
         
@@ -1178,8 +1277,18 @@
             loadBookmarks();
             loadHistory();
             updateSaveButtonText();
-            // Force homepage on initial load instead of last visited URL
-            navigateTo('about:blank');
+            
+            // Initial navigation logic considering session restore
+            const restoreSession = localStorage.getItem('vernRestoreSession') === 'true';
+            const lastUrl = localStorage.getItem('vernLastUrl');
+            if (restoreSession && lastUrl && lastUrl !== 'about:blank' && lastUrl !== 'about:blank#') {
+                navigateTo(lastUrl);
+            } else {
+                navigateTo(getHomepageUrl()); // Use getHomepageUrl() for initial load
+            }
+
+            // Save session on page unload
+            window.addEventListener('beforeunload', saveSession);
         });
 
         function assignDOMElements() {
@@ -1207,6 +1316,15 @@
             customHistoryDaysContainerEl = document.getElementById('custom-history-days-container');
             customHistoryDaysInputEl = document.getElementById('custom-history-days-input');
             applyCustomHistoryDaysButtonEl = document.getElementById('apply-custom-history-days-button');
+            httpsEnforceToggleEl = document.getElementById('https-enforce-toggle');
+            homepageUrlInputEl = document.getElementById('homepage-url-input');
+            setCurrentPageAsHomepageButtonEl = document.getElementById('set-current-page-as-homepage-button');
+            resetHomepageButtonEl = document.getElementById('reset-homepage-button');
+            restoreSessionToggleEl = document.getElementById('restore-session-toggle');
+            clearCurrentSiteCookiesButtonEl = document.getElementById('clear-current-site-cookies-button');
+            clearAllBrowserCookiesButtonEl = document.getElementById('clear-all-browser-cookies-button');
+            blockThirdPartyCookiesToggleEl = document.getElementById('block-third-party-cookies-toggle');
+            cookieManagementContainerEl = document.getElementById('cookie-management-container');
         }
         
         async function initUV() { try { await registerSW(); } catch (err) { console.error("SW registration failed:", err); }}
@@ -1216,7 +1334,8 @@
             const savedTheme = localStorage.getItem('vernTheme') || 'main';
             applyTheme(savedTheme);
             themeSelectorEl.value = savedTheme;
-            toggleCustomThemeView(savedTheme === 'custom');
+            // Call the toggle function on load to ensure correct initial visibility
+            toggleCustomThemeView(false); // Default to custom theme section closed
             
             // Load the two base colors for the Smart Theme Generator
             customThemeBgBaseEl.value = localStorage.getItem('vernCustomThemeBaseBg') || '#23272A';
@@ -1224,38 +1343,54 @@
 
 
             // Search Engine
-            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; // Default changed
+            currentSearchEngineKey = localStorage.getItem('vernSearchEngine') || 'duckduckgo'; // Default changed to DuckDuckGo
             searchEngineSelectorEl.value = currentSearchEngineKey;
             
+            // NEW: HTTPS Enforcement
+            httpsEnforceToggleEl.checked = false; // Default off
+
+            // NEW: Custom Homepage
+            homepageUrlInputEl.value = localStorage.getItem('vernCustomHomepage') || '';
+
+            // NEW: Persistent Tabs/Session Restore
+            restoreSessionToggleEl.checked = false; // Default off
+
             // History Lifespan
             const savedLifespan = localStorage.getItem('vernHistoryLifespan') || '14';
             const standardLifespans = ['0', '1', '3', '7', '14'];
             if (standardLifespans.includes(savedLifespan)) {
                 historyLifespanSelectorEl.value = savedLifespan;
-                toggleCustomHistoryView(false);
+                // Call the toggle function on load
+                toggleCustomHistoryView(false); // Default to custom history section closed
             } else {
                 historyLifespanSelectorEl.value = 'custom';
                 customHistoryDaysInputEl.value = savedLifespan;
-                toggleCustomHistoryView(true);
+                // Call the toggle function on load
+                toggleCustomHistoryView(false); // Default to custom history section closed
             }
             
             // Ad-Free Toggle
-            const adFreeEnabled = localStorage.getItem('vernAdFreeToggle') === 'true';
-            adFreeToggleEl.checked = adFreeEnabled;
+            adFreeToggleEl.checked = false; // Default off
 
             // Cloak
-            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'none';
+            currentCloakPresetKey = 'google_docs'; // Default changed to Google Docs
+            localStorage.setItem('vernCloakPreset', currentCloakPresetKey); // Ensure it's saved
             cloakPresetSelectorEl.value = currentCloakPresetKey;
             customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
             customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
             applyBrowserCloak();
-            toggleCustomCloakView(currentCloakPresetKey === 'custom');
+            // Call the toggle function on load
+            toggleCustomCloakView(false); // Default to custom cloak section closed
+
+            // NEW: Block Third-Party Cookies
+            blockThirdPartyCookiesToggleEl.checked = false; // Default off
         }
 
         function setupEventListeners() {
             fullscreenButtonEl.addEventListener('click', toggleIframeFullscreen); document.addEventListener('fullscreenchange', handleFullscreenChange);
             searchBarEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateTo(e.target.value); });
-            homeButtonEl.addEventListener('click', () => navigateTo('about:blank')); backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
+            homeButtonEl.addEventListener('click', () => navigateTo(getHomepageUrl())); // Updated to use custom homepage
+            backButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.back()); forwardButtonEl.addEventListener('click', () => contentIframeEl.contentWindow.history.forward());
             refreshButtonEl.addEventListener('click', () => { if (contentIframeEl.src !== 'about:blank' && !contentIframeEl.src.endsWith('#')) { const icon = refreshButtonEl.querySelector('.icon-img'); icon.classList.add('spinning'); isRefreshing = true; contentIframeEl.contentWindow.location.reload(true); } });
             contentIframeEl.addEventListener('load', handleIframeLoad);
             
@@ -1278,12 +1413,12 @@
                 const themeKey = e.target.value;
                 applyTheme(themeKey);
                 localStorage.setItem('vernTheme', themeKey);
-                toggleCustomThemeView(themeKey === 'custom');
+                toggleCustomThemeView(themeKey === 'custom'); // Call on change
             });
             searchEngineSelectorEl.addEventListener('change', (e) => { currentSearchEngineKey = e.target.value; localStorage.setItem('vernSearchEngine', e.target.value); });
             historyLifespanSelectorEl.addEventListener('change', (e) => {
                 const value = e.target.value;
-                toggleCustomHistoryView(value === 'custom');
+                toggleCustomHistoryView(value === 'custom'); // Call on change
                 if (value !== 'custom') {
                     localStorage.setItem('vernHistoryLifespan', value);
                     pruneHistory();
@@ -1296,7 +1431,7 @@
                 currentCloakPresetKey = e.target.value;
                 localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
                 applyBrowserCloak();
-                toggleCustomCloakView(currentCloakPresetKey === 'custom');
+                toggleCustomCloakView(currentCloakPresetKey === 'custom'); // Call on change
             });
 
             // New listeners
@@ -1356,20 +1491,83 @@
                     r.style.setProperty('--flare-y', y + '%');
                 }
             });
+
+            // NEW: HTTPS Enforcement Toggle
+            httpsEnforceToggleEl.addEventListener('change', (e) => {
+                localStorage.setItem('vernHttpsEnforce', e.target.checked);
+            });
+
+            // NEW: Custom Homepage Buttons
+            homepageUrlInputEl.addEventListener('input', () => {
+                localStorage.setItem('vernCustomHomepage', homepageUrlInputEl.value.trim());
+            });
+            setCurrentPageAsHomepageButtonEl.addEventListener('click', () => {
+                if (currentUrl && currentUrl !== 'about:blank' && currentUrl !== 'about:blank#') {
+                    homepageUrlInputEl.value = currentUrl;
+                    localStorage.setItem('vernCustomHomepage', currentUrl);
+                    alert('Current page set as homepage!');
+                } else {
+                    alert('Cannot set "about:blank" or empty page as homepage.');
+                }
+            });
+            resetHomepageButtonEl.addEventListener('click', () => {
+                homepageUrlInputEl.value = '';
+                localStorage.removeItem('vernCustomHomepage');
+                alert('Homepage reset to default.');
+            });
+
+            // NEW: Persistent Tabs/Session Restore Toggle
+            restoreSessionToggleEl.addEventListener('change', (e) => {
+                localStorage.setItem('vernRestoreSession', e.target.checked);
+            });
+
+            // NEW: Cookie Management Buttons
+            clearCurrentSiteCookiesButtonEl.addEventListener('click', () => {
+                if (confirm("Are you sure you want to clear cookies for the current site? This may log you out of the site.")) {
+                    clearCookiesForCurrentSite();
+                    alert("Attempted to clear cookies for the current site.");
+                }
+            });
+            clearAllBrowserCookiesButtonEl.addEventListener('click', () => {
+                if (confirm("Are you sure you want to clear ALL browser cookies? This will log you out of all sites.")) {
+                    clearAllBrowserCookies();
+                    alert("All browser cookies cleared.");
+                }
+            });
+            blockThirdPartyCookiesToggleEl.addEventListener('change', (e) => {
+                localStorage.setItem('vernBlockThirdPartyCookies', e.target.checked);
+                alert("Please note: Blocking third-party cookies is highly browser-dependent and may not be fully effective in all proxy environments. It's primarily a preference setting.");
+            });
         }
 
         // --- NAVIGATION & PROXY ---
         function navigateTo(urlInput) {
             isLoading = true;
             searchSuggestionsEl.style.display = 'none';
-            let targetUrl = 'about:blank';
-            const trimmedInput = urlInput ? urlInput.trim() : '';
-            if (trimmedInput !== '' && trimmedInput !== 'about:blank') {
-                const formatted = formatUrlInput(trimmedInput);
-                targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(trimmedInput));
+            let targetUrl = urlInput ? urlInput.trim() : '';
+
+            // NEW: HTTPS Enforcement
+            if (localStorage.getItem('vernHttpsEnforce') === 'true') {
+                if (targetUrl.startsWith('http://')) {
+                    targetUrl = 'https://' + targetUrl.substring(7);
+                } else if (!targetUrl.startsWith('https://') && !targetUrl.startsWith('about:') && !targetUrl.startsWith('data:')) {
+                    // Only prepend https if no protocol or http is explicitly used.
+                    // This avoids breaking local paths or data URIs
+                    if (!/^[a-zA-Z]+:\/\//.test(targetUrl)) { // Check if no protocol is explicitly given
+                            targetUrl = 'https://' + targetUrl;
+                    }
+                }
             }
-            if (targetUrl === 'about:blank') {
+            
+            if (targetUrl !== '' && targetUrl !== 'about:blank' && targetUrl !== 'about:blank#') {
+                const formatted = formatUrlInput(targetUrl);
+                targetUrl = formatted ? formatted : searchEngines[currentSearchEngineKey].url.replace('%s', encodeURIComponent(targetUrl));
+            }
+            
+            if (targetUrl === 'about:blank' || targetUrl === 'about:blank#') {
                 showHomepage();
+                searchBarEl.value = '';
+                currentUrl = 'about:blank';
             } else {
                 hideHomepage();
                 contentIframeEl.src = proxyUrl(targetUrl);
@@ -1411,7 +1609,10 @@
             }
 
             currentTitle = finalTitle;
-            localStorage.setItem('vernLastUrl', currentUrl);
+            // Only update last visited URL if session restore is enabled
+            if (localStorage.getItem('vernRestoreSession') === 'true') {
+                localStorage.setItem('vernLastUrl', currentUrl);
+            }
             applyBrowserCloak();
             if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
         }
@@ -1425,6 +1626,19 @@
         }
         
         function formatUrlInput(input) { const trimmed = input.trim(); if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) return trimmed; if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed)) return 'https://' + trimmed; return null; }
+
+        // NEW: Get Homepage URL
+        function getHomepageUrl() {
+            const customHomepage = localStorage.getItem('vernCustomHomepage');
+            return customHomepage && customHomepage.trim() !== '' ? customHomepage : 'about:blank';
+        }
+
+        // NEW: Save Session
+        function saveSession() {
+            if (localStorage.getItem('vernRestoreSession') === 'true') {
+                localStorage.setItem('vernLastUrl', currentUrl);
+            }
+        }
 
         // --- HOMEPAGE & SEARCH SUGGESTIONS ---
         function showHomepage() {
@@ -1512,6 +1726,66 @@
             localStorage.setItem('vernCloakPreset', 'custom'); applyBrowserCloak();
             alert('Custom cloak applied and saved!');
         }
+
+        // NEW: Cookie Management Functions
+        function clearCookiesForCurrentSite() {
+            // This can only clear cookies for the main document's domain.
+            // For proxied content inside the iframe, direct access is limited by same-origin policy.
+            // A more robust solution for proxied content would involve the service worker or backend.
+            const cookies = document.cookie.split(';');
+            const currentDomain = window.location.hostname; // This refers to the proxy's domain, not the proxied site's.
+
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                // Attempt to delete for various paths and the current domain
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + currentDomain;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=." + currentDomain; // For subdomains
+            }
+            // For content inside the iframe, clearing document.cookie of the *iframe* is necessary,
+            // but directly accessing that is blocked by same-origin.
+            // A refresh might be needed to reflect changes.
+            if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.location.href !== 'about:blank') {
+                    try {
+                        // This attempts to clear cookies for the iframe's *visible* origin.
+                        // It might still be blocked by sandbox attributes or browser policies.
+                        contentIframeEl.contentWindow.document.cookie.split(';').forEach(function(c) {
+                            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                        });
+                        contentIframeEl.contentWindow.location.reload(true); // Force reload to apply cookie changes
+                    } catch (e) {
+                        console.warn("Could not directly clear iframe cookies due to security restrictions:", e);
+                        alert("Note: Clearing cookies for the proxied site might be limited by browser security policies. You may need to manually clear site data.");
+                    }
+            }
+        }
+
+        function clearAllBrowserCookies() {
+            // This clears all cookies for the *proxy's domain*.
+            // It doesn't clear cookies for websites *accessed through* the proxy within the iframe's sandbox.
+            // For a complete clear, browser settings would be required, or a very sophisticated proxy.
+            const allCookies = document.cookie.split(';');
+            for (let i = 0; i < allCookies.length; i++) {
+                const cookie = allCookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+            }
+            // Attempt to clear cookies for the iframe's content if possible (same limitations apply)
+            if (contentIframeEl.contentWindow) {
+                try {
+                    contentIframeEl.contentWindow.document.cookie.split(';').forEach(function(c) {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+                } catch (e) {
+                    console.warn("Could not directly clear iframe cookies during all-clear:", e);
+                }
+            }
+            window.location.reload(); // Reload the page to reflect cookie changes
+        }
+
 
         // --- NEW THEME GENERATION LOGIC ---
         function hexToRgb(hex) {
@@ -1692,9 +1966,13 @@
             }, 50);
         }
 
+        // Modified: These functions now only control visibility based on 'custom' selection
         function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomThemeView(show) { customThemeSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomHistoryView(show) { customHistoryDaysContainerEl.classList.toggle('visible', show); }
+        // NEW: Toggle Cookie Management Visibility (added for consistency, though not conditional yet)
+        function toggleCookieManagementView(show) { cookieManagementContainerEl.classList.toggle('visible', show); }
+
 
         function closeAllMenus(event) {
              if (!event || (bookmarkMenuEl.classList.contains('show') && !bookmarkMenuEl.contains(event?.target) && !bookmarkButtonEl.contains(event?.target))) bookmarkMenuEl.classList.remove('show');
@@ -1766,7 +2044,7 @@
                     theme = { name: "Custom (Default)", colors: { bg: '#23272A', text: '#E0E1DD', accent: '#7F5AF0', neutral: '#2C2F33', btnText: '#FFFFFF' } };
                 }
             } else {
-                    theme = THEMES[themeKey] || THEMES.main;
+                        theme = THEMES[themeKey] || THEMES.main;
             }
 
             if (theme.feature === 'systemMatch') {
