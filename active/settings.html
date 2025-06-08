@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - VERN MAX</title>
-    <link rel="icon" type="image/x-icon" href="logo.png" id="app-favicon" />
-    <style>
-        /* Define the default theme variables so the page loads with a style */
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VERN MAX</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" type="image/x-icon" href="../images/favicon.png" id="app-favicon" />
+    <style id="custom-styles">
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Crete+Round&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+        /* Core Theme Variables & Component Mappings */
         :root {
             --current-theme-bg: #23272A;
             --current-theme-text: #E0E1DD;
@@ -14,493 +19,354 @@
             --current-theme-neutral: #2C2F33;
             --current-theme-button-text: #FFFFFF;
             --current-theme-shadow-rgb: 0, 0, 0;
+            --current-theme-shadow-opacity-strong: 0.4;
             --current-theme-shadow-opacity-medium: 0.25;
+            --current-theme-shadow-opacity-light: 0.15;
             --current-theme-focus-ring-color: var(--current-theme-accent);
+
+            --bg-color: var(--current-theme-bg);
+            --text-color: var(--current-theme-text);
+            --iframe-bg: var(--current-theme-bg);
+            --font-family-main: 'PrimaryFont', sans-serif;
+
+            --toolbar-bg: var(--current-theme-neutral);
+            --toolbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
+            --toolbar-border-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
+
+            --button-bg: var(--current-theme-accent);
+            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, var(--current-theme-text));
+            --button-text-color: var(--current-theme-button-text);
+            --button-outline-color: color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
+
+            --input-bg: color-mix(in srgb, var(--current-theme-neutral) 90%, var(--current-theme-bg));
+            --input-focus-bg: var(--current-theme-bg);
+            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 50%, transparent);
+
+            --menu-bg: var(--input-bg);
+            --menu-item-hover-bg: var(--button-hover-bg);
+            --menu-text-color: var(--text-color);
+            --menu-shadow: 0 4px 12px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
+            --menu-border-color: var(--button-outline-color);
         }
 
         /* Base Styles */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--current-theme-bg);
-            color: var(--current-theme-text);
-            margin: 0;
-            padding: 2rem;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            display: flex;
+        html, body {
+            margin: 0; padding: 0; border: none; box-sizing: border-box;
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: var(--font-family-main);
+            background-color: var(--bg-color); color: var(--text-color);
+            display: flex; flex-direction: column;
+        }
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; display: none; pointer-events: none; }
+
+        /* Toolbar */
+        #toolbar {
+            display: flex; align-items: center; padding: 8px 10px;
+            background-color: var(--toolbar-bg); box-shadow: var(--toolbar-shadow);
+            border-bottom: 1px solid var(--toolbar-border-color); z-index: 1000; position: relative;
+        }
+        .nav-button, .toolbar-button {
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
+            cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
+            box-shadow: 0 0 0 1px var(--button-outline-color); font-size: 20px;
+            position: relative; flex-shrink: 0;
+        }
+        .nav-button:hover, .toolbar-button:hover { background-color: var(--button-hover-bg); }
+        .nav-button .icon-img, .toolbar-button .icon-img {
+            width: 20px; height: 20px; user-select: none; pointer-events: none;
+        }
+        #search-bar {
+            flex: 1; height: 36px; border-radius: 8px; border: none; background-color: var(--input-bg);
+            color: var(--text-color); padding: 0 15px; font-size: 14px;
+            box-shadow: 0 0 0 1px var(--button-outline-color); font-family: var(--font-family-main);
+            margin-right: 8px;
+        }
+        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+
+        /* Main Content */
+        #content-container { flex: 1; position: relative; background-color: var(--iframe-bg); overflow: hidden; }
+        #content-iframe { width: 100%; height: 100%; border: none; display: block; }
+        
+        /* Animations & States */
+        #refresh-button .icon-img.spinning { animation: spinRefreshIcon 0.7s linear infinite; }
+        @keyframes spinRefreshIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        body.app-ui-hidden #toolbar { display: none !important; }
+
+        /* Homepage Styles */
+        #homepage {
+            display: none;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-        }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
             height: 100%;
-            z-index: -1;
-            display: none; /* Hidden by default, enabled by animated themes */
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background-color: var(--current-theme-neutral);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
-            border: 1px solid color-mix(in srgb, var(--current-theme-neutral) 80%, var(--current-theme-text));
-        }
-
-        /* Header & Navigation */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 2rem;
-            color: var(--current-theme-text);
-        }
-
-        .back-button {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            background-color: var(--current-theme-accent);
-            color: var(--current-theme-button-text);
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background-color 0.2s ease;
-            border: 1px solid color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
-        }
-        .back-button:hover {
-            background-color: color-mix(in srgb, var(--current-theme-accent) 80%, #fff);
-        }
-
-        /* Settings Sections */
-        .settings-section {
-            margin-bottom: 2.5rem;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid color-mix(in srgb, var(--current-theme-neutral) 50%, var(--current-theme-text));
-        }
-
-        /* Theme Selector Styles */
-        .theme-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-
-        .theme-button {
-            padding: 1rem;
-            border: 2px solid var(--current-theme-neutral);
-            border-radius: 8px;
-            cursor: pointer;
             text-align: center;
-            font-weight: 500;
-            background-color: color-mix(in srgb, var(--current-theme-bg) 50%, var(--current-theme-neutral));
-            transition: border-color 0.2s ease, transform 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .theme-button:hover {
-            transform: translateY(-2px);
-        }
-        .theme-button.active {
-            border-color: var(--current-theme-accent);
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--current-theme-accent) 50%, transparent);
-        }
-        .theme-button .color-preview {
-            display: flex;
-            height: 40px;
-            border-radius: 4px;
-            margin-bottom: 0.75rem;
-            overflow: hidden;
-            border: 1px solid rgba(var(--current-theme-shadow-rgb), 0.1);
-        }
-        .theme-button .color-preview span {
-            flex: 1;
+            background-color: var(--bg-color);
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        /* Custom Color Picker */
-        .custom-color-picker {
+        #homepage-logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        #homepage-search-container {
+            position: relative;
+            width: 100%;
+            max-width: 584px;
+            height: 38px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem;
-        }
-        .custom-color-picker input[type="color"] {
-            width: 44px;
-            height: 44px;
+            border-radius: 8px;
+            background-color: var(--input-bg);
             border: none;
-            padding: 0;
-            border-radius: 8px;
-            cursor: pointer;
-            background-color: transparent;
-        }
-        /* Hides default input UI for a clean look */
-        .custom-color-picker input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        .custom-color-picker input[type="color"]::-webkit-color-swatch {
-            border-radius: 6px;
-            border: 2px solid var(--current-theme-accent);
+            box-shadow: 0 0 0 1px var(--button-outline-color);
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
 
-        /* Animated Theme Placeholders */
-        .animated-preview {
-            background-size: 200% 200%;
+        #homepage-search-container:focus-within {
+            background-color: var(--input-focus-bg);
+            box-shadow: var(--input-focus-shadow);
         }
-        .gradient-preview {
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            animation: gradient-bg 10s ease infinite;
-        }
-        .matrix-preview {
-            background-color: #000;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text x="0" y="15" font-family="monospace" font-size="12" fill="%2300FF41" opacity="0.3">1</text></svg>');
-        }
-        @keyframes gradient-bg {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Cloak Settings */
-        .cloak-selector {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            background-color: color-mix(in srgb, var(--current-theme-bg) 50%, var(--current-theme-neutral));
-            color: var(--current-theme-text);
-            border: 1px solid color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .cloak-selector:focus {
+        
+        #homepage-search-bar {
+            flex: 1;
+            height: 36px;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            padding: 0 15px;
+            font-size: 14px;
+            box-sizing: border-box;
             outline: none;
-            box-shadow: 0 0 0 2px var(--current-theme-focus-ring-color);
+            font-family: var(--font-family-main);
         }
+
+        #homepage-search-icon {
+            width: 18px;
+            height: 18px;
+            padding: 9px;
+            border-radius: 50%;
+            margin-right: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #homepage-search-icon:hover {
+            background-color: rgba(var(--current-theme-shadow-rgb), 0.1);
+        }
+
+        #search-suggestions {
+            display: none;
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            background-color: var(--menu-bg);
+            border: 1px solid var(--menu-border-color);
+            border-radius: 12px;
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            text-align: left;
+            z-index: 100;
+            box-shadow: var(--menu-shadow);
+        }
+        #search-suggestions li { padding: 10px 20px; cursor: pointer; color: var(--menu-text-color); }
+        #search-suggestions li:hover { background-color: var(--menu-item-hover-bg); color: var(--button-text-color); }
+        .search-engine-explanation { font-size: 0.8em; color: var(--text-color); opacity: 0.7; margin-top: -8px; /* Adjust as needed to position it correctly */ margin-bottom: 10px; padding-left: 5px; }
 
     </style>
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
+    <canvas id="canvas"></canvas>
 
-    <div class="container">
-        <div class="header">
-            <h1>Settings</h1>
-            <a href="search.html" class="back-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-                </svg>
-                Back to Browser
-            </a>
-        </div>
+    <div id="toolbar">
+        <div class="nav-button" id="home-button" title="Home"><img src="../images/home-white.png" alt="Home" class="icon-img"></div>
+        <div class="nav-button" id="refresh-button" title="Refresh"><img src="../images/refresh-white.png" alt="Refresh" class="icon-img"></div>
+        <input type="text" id="search-bar" placeholder="Search or type a URL">
+    </div>
 
-        <div class="settings-section">
-            <h2>Appearance & Themes</h2>
-            <div class="theme-grid" id="theme-grid">
-                </div>
-        </div>
-
-        <div class="settings-section">
-            <h2>Tab Cloaking</h2>
-            <p style="opacity: 0.8; margin-top: -1rem; margin-bottom: 1rem;">Change the browser tab's title and icon to disguise the page.</p>
-            <select id="cloak-selector" class="cloak-selector">
-                </select>
+    <div id="content-container">
+        <iframe id="content-iframe" src="about:blank"></iframe>
+        <div id="homepage">
+            <img src="../images/vernmax-logo.png" alt="VERN MAX Logo" id="homepage-logo">
+            <div id="homepage-search-container">
+                <img src="../images/search-white.png" alt="Search" id="homepage-search-icon">
+                <input type="text" id="homepage-search-bar" placeholder="Search or type a URL">
+            </div>
+            <ul id="search-suggestions"></ul>
+            <p class="search-engine-explanation">Powered by DuckDuckGo</p>
         </div>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
         // --- DOM ELEMENTS ---
-        const themeGrid = document.getElementById('theme-grid');
-        const cloakSelector = document.getElementById('cloak-selector');
-        const appFavicon = document.getElementById('app-favicon');
-        const bgCanvas = document.getElementById('bg-canvas');
-        let ctx = bgCanvas.getContext('2d');
-        let animationFrameId;
+        const homeButtonEl = document.getElementById('home-button');
+        const refreshButtonEl = document.getElementById('refresh-button');
+        const searchBarEl = document.getElementById('search-bar');
+        const contentIframeEl = document.getElementById('content-iframe');
+        const homepageEl = document.getElementById('homepage');
+        const homepageSearchBarEl = document.getElementById('homepage-search-bar');
+        const homepageSearchIconEl = document.getElementById('homepage-search-icon');
+        const searchSuggestionsEl = document.getElementById('search-suggestions');
+        const appFaviconEl = document.getElementById('app-favicon');
 
-        // --- DATA DEFINITIONS ---
+        // --- STATE ---
+        let currentUrl = 'about:blank';
+        let isHomepageVisible = true;
 
-        const themes = {
-            'vern_dark': {
-                name: 'Vern Dark',
-                colors: { '--current-theme-bg': '#23272A', '--current-theme-text': '#E0E1DD', '--current-theme-accent': '#7F5AF0', '--current-theme-neutral': '#2C2F33', '--current-theme-button-text': '#FFFFFF' }
-            },
-            'light': {
-                name: 'Light',
-                colors: { '--current-theme-bg': '#F0F2F5', '--current-theme-text': '#1C1E21', '--current-theme-accent': '#1877F2', '--current-theme-neutral': '#FFFFFF', '--current-theme-button-text': '#FFFFFF' }
-            },
-            'ocean': {
-                name: 'Ocean',
-                colors: { '--current-theme-bg': '#0B192F', '--current-theme-text': '#CCD6F6', '--current-theme-accent': '#64FFDA', '--current-theme-neutral': '#112240', '--current-theme-button-text': '#0B192F' }
-            },
-            'forest': {
-                name: 'Forest',
-                colors: { '--current-theme-bg': '#1A2A27', '--current-theme-text': '#E4EFE7', '--current-theme-accent': '#5CDB95', '--current-theme-neutral': '#2C4A3F', '--current-theme-button-text': '#1A2A27' }
-            },
-            'sunset': {
-                name: 'Sunset',
-                colors: { '--current-theme-bg': '#2E1C2B', '--current-theme-text': '#F9EBE0', '--current-theme-accent': '#FF8C61', '--current-theme-neutral': '#4A2A42', '--current-theme-button-text': '#2E1C2B' }
-            },
-            'crimson': {
-                name: 'Crimson',
-                colors: { '--current-theme-bg': '#1c1c1c', '--current-theme-text': '#f2f2f2', '--current-theme-accent': '#e60023', '--current-theme-neutral': '#333333', '--current-theme-button-text': '#ffffff' }
-            },
-            'amethyst': {
-                name: 'Amethyst',
-                colors: { '--current-theme-bg': '#2a2135', '--current-theme-text': '#eaddff', '--current-theme-accent': '#c792ea', '--current-theme-neutral': '#3e304f', '--current-theme-button-text': '#ffffff' }
-            },
-            'copper': {
-                name: 'Copper',
-                colors: { '--current-theme-bg': '#3D2B24', '--current-theme-text': '#EAE0D5', '--current-theme-accent': '#D98A69', '--current-theme-neutral': '#5C4033', '--current-theme-button-text': '#3D2B24' }
-            },
-            'rose': {
-                name: 'Rosé',
-                colors: { '--current-theme-bg': '#3C1827', '--current-theme-text': '#F5E6E8', '--current-theme-accent': '#D87093', '--current-theme-neutral': '#6B2B43', '--current-theme-button-text': '#FFFFFF' }
-            },
-            'cyber': {
-                name: 'Cyber',
-                colors: { '--current-theme-bg': '#0c0c14', '--current-theme-text': '#e0ffff', '--current-theme-accent': '#00f7ff', '--current-theme-neutral': '#1a1a2e', '--current-theme-button-text': '#0c0c14' }
-            },
-            'monochrome': {
-                name: 'Monochrome',
-                colors: { '--current-theme-bg': '#121212', '--current-theme-text': '#EAEAEA', '--current-theme-accent': '#FFFFFF', '--current-theme-neutral': '#282828', '--current-theme-button-text': '#121212' }
-            },
-            'nord': {
-                name: 'Nord',
-                colors: { '--current-theme-bg': '#2E3440', '--current-theme-text': '#ECEFF4', '--current-theme-accent': '#88C0D0', '--current-theme-neutral': '#3B4252', '--current-theme-button-text': '#2E3440' }
-            },
-             'animated_gradient': {
-                name: 'Gradient Flow',
-                special: true, // Flag for special handling
-                colors: themes.vern_dark.colors // Use a base theme for UI elements
-            },
-            'animated_matrix': {
-                name: 'Matrix',
-                special: true,
-                colors: { '--current-theme-bg': '#000000', '--current-theme-text': '#00FF41', '--current-theme-accent': '#33FF66', '--current-theme-neutral': '#050505', '--current-theme-button-text': '#000000' }
-            },
-            'custom_color': {
-                name: 'Custom Accent',
-                special: true
-            }
-        };
-
-        const cloakPresets = {
-            'none': { title: "Settings - VERN MAX", favicon: "logo.png" },
-            'google': { title: "Google", favicon: "https://www.google.com/favicon.ico" },
-            'google_classroom': { title: "Classes", favicon: "https://ssl.gstatic.com/classroom/favicon.ico" },
-            'google_drive': { title: "My Drive - Google Drive", favicon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
-            'clever': { title: "Clever | Portal", favicon: "https://assets.clever.com/launchpad/18324f4b9/favicon.ico?1" },
-            'canvas': { title: "Dashboard", favicon: "https://www.instructure.com/themes/instructure/favicon.ico" },
-            'schoology': { title: "Home | Schoology", favicon: "https://www.schoology.com/sites/all/themes/schoology_theme/favicon.ico" },
-            'wikipedia': { title: "Wikipedia", favicon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" },
-            'docs': { title: "Google Docs", favicon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
-            'sheets': { title: "Google Sheets", favicon: "https://ssl.gstatic.com/images/branding/product/1x/sheets_2020q4_32dp.png" },
-            'slides': { title: "Google Slides", favicon: "https://ssl.gstatic.com/images/branding/product/1x/slides_2020q4_32dp.png" },
-            'edpuzzle': { title: "Edpuzzle", favicon: "https://edpuzzle.imgix.net/favicons/favicon-32.png" },
-            'kahoot': { title: "Kahoot!", favicon: "https://kahoot.it/favicon.ico" },
-            'quizlet': { title: "Quizlet", favicon: "https://quizlet.com/favicon.ico" },
-            'github': { title: "GitHub", favicon: "https://github.githubassets.com/favicons/favicon.svg" },
-            'bing': { title: "Bing", favicon: "https://www.bing.com/favicon.ico" },
-            'powerschool': { title: "Student and Parent Sign In", favicon: "https://www.powerschool.com/favicon.ico" },
-            'gmail': { title: "Gmail", favicon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" },
-            'khan_academy': { title: "Khan Academy", favicon: "https://www.khanacademy.org/favicon.ico" },
-            'new_tab': { title: "New Tab", favicon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAA3klEQVR42mNkAIY/lAL9kv9/YCatgQ6w849//1F9CPd///6z9p+dof8/s/YfA83/f3Yew/+ZkQCKf/8nE032D8P/T0eSMEH+z4pBxQeM3/+BITg4QfL/n4mCgv8/MwYyQAX//kMksgokAOKf/wRiscgYgMj/nzQDZMAJmP/9GBMQAsn/PyYGyECg/0+SwYgQLv9nQjJkY8iA5P/fjANSA8n/PzMDdMBAkv9/ZgySgBQQGf+z/N9/BiSAQvxv/D9PZgYIAIT5X0Z8FADKzw0TzRTwNQAAAABJRU5ErkJggg==" },
-        };
-
-        // --- FUNCTIONS ---
-
-        function stopAllAnimations() {
-            // Stop Matrix animation
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-            // Hide canvas and remove gradient class
-            bgCanvas.style.display = 'none';
-            document.body.classList.remove('theme-animated-gradient');
-        }
-
-        function applyTheme(key, customColor = null) {
-            stopAllAnimations();
-
-            let themeData = themes[key];
-            if (!themeData) themeData = themes['vern_dark'];
-
-            let colorsToApply = themeData.colors;
-
-            // Handle custom accent color theme
-            if (key === 'custom_color') {
-                const baseTheme = themes['vern_dark'].colors; // Use dark theme as a base
-                const accent = customColor || localStorage.getItem('vernCustomAccent') || '#7F5AF0';
-                colorsToApply = { ...baseTheme, '--current-theme-accent': accent };
-            }
-
-            // Apply the color variables
-            if (colorsToApply) {
-                 for (const [property, value] of Object.entries(colorsToApply)) {
-                    document.documentElement.style.setProperty(property, value);
+        // --- CORE NAVIGATION & DISPLAY ---
+        function navigateTo(url, saveHistory = true) {
+            let targetUrl = url;
+            if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://') && !targetUrl.startsWith('about:') && !targetUrl.startsWith('data:')) {
+                if (targetUrl.includes('.')) {
+                    targetUrl = 'https://' + targetUrl;
+                } else {
+                    targetUrl = `https://duckduckgo.com/?q=${encodeURIComponent(targetUrl)}`;
                 }
             }
-            
-            // Handle special animated themes
-            if (key === 'animated_gradient') {
-                document.body.classList.add('theme-animated-gradient');
-            } else if (key === 'animated_matrix') {
-                bgCanvas.style.display = 'block';
-                startMatrixAnimation();
-            }
+            contentIframeEl.src = targetUrl;
+            searchBarEl.value = targetUrl;
+            currentUrl = targetUrl;
+            hideHomepage();
+            updateFavicon(targetUrl);
+        }
 
-            // Update active class on buttons
-            document.querySelectorAll('.theme-button').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.themeKey === key);
+        function showHomepage() {
+            homepageEl.style.display = 'flex';
+            contentIframeEl.style.display = 'none';
+            searchBarEl.value = ''; // Clear search bar when on homepage
+            homepageSearchBarEl.value = '';
+            isHomepageVisible = true;
+            updateFavicon('about:blank');
+        }
+
+        function hideHomepage() {
+            homepageEl.style.display = 'none';
+            contentIframeEl.style.display = 'block';
+            isHomepageVisible = false;
+        }
+
+        function refreshPage() {
+            refreshButtonEl.querySelector('.icon-img').classList.add('spinning');
+            contentIframeEl.contentWindow.location.reload();
+            setTimeout(() => {
+                refreshButtonEl.querySelector('.icon-img').classList.remove('spinning');
+            }, 700); // Remove spinning class after 0.7 seconds
+        }
+
+        function updateFavicon(url) {
+            if (url.startsWith('about:')) return '../images/favicon.png';
+            try { const urlObj = new URL(url); appFaviconEl.href = `https://icons.duckduckgo.com/ip3/${urlObj.hostname}.ico`; }
+            catch (e) { appFaviconEl.href = '../images/favicon.png'; }
+        }
+
+        // --- EVENT HANDLERS & UTILITIES ---
+        function handleHomeClick() { showHomepage(); }
+        function handleRefreshClick() { refreshPage(); }
+
+        function handleSearchBarEnter(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                navigateTo(searchBarEl.value);
+                searchBarEl.blur(); // Remove focus after search
+                searchSuggestionsEl.style.display = 'none'; // Hide suggestions
+            }
+        }
+
+        function handleHomepageSearchBarEnter(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                navigateTo(homepageSearchBarEl.value);
+                homepageSearchBarEl.blur(); // Remove focus after search
+                searchSuggestionsEl.style.display = 'none'; // Hide suggestions
+            }
+        }
+
+        function handleHomepageSearchIconClick() {
+            navigateTo(homepageSearchBarEl.value);
+            searchSuggestionsEl.style.display = 'none'; // Hide suggestions
+        }
+
+        function fetchSuggestions(query) {
+            if (query.length < 2) {
+                searchSuggestionsEl.style.display = 'none';
+                return;
+            }
+            fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`)
+                .then(response => response.json())
+                .then(data => {
+                    displaySuggestions(data);
+                })
+                .catch(error => console.error('Error fetching search suggestions:', error));
+        }
+
+        function displaySuggestions(suggestions) {
+            searchSuggestionsEl.innerHTML = '';
+            if (suggestions.length === 0) {
+                searchSuggestionsEl.style.display = 'none';
+                return;
+            }
+            suggestions.forEach(s => {
+                const li = document.createElement('li');
+                li.textContent = s.phrase;
+                li.addEventListener('click', () => {
+                    if (isHomepageVisible) {
+                        homepageSearchBarEl.value = s.phrase;
+                        navigateTo(s.phrase);
+                    } else {
+                        searchBarEl.value = s.phrase;
+                        navigateTo(s.phrase);
+                    }
+                    searchSuggestionsEl.style.display = 'none';
+                });
+                searchSuggestionsEl.appendChild(li);
             });
+            searchSuggestionsEl.style.display = 'block';
         }
 
-        function saveAndApplyTheme(key, customColor = null) {
-            applyTheme(key, customColor);
-            localStorage.setItem('vernTheme', key);
-            if (key === 'custom_color' && customColor) {
-                localStorage.setItem('vernCustomAccent', customColor);
+        // Close suggestions if clicked outside
+        document.addEventListener('click', (e) => {
+            if (!searchSuggestionsEl.contains(e.target) && e.target !== searchBarEl && e.target !== homepageSearchBarEl) {
+                searchSuggestionsEl.style.display = 'none';
             }
-        }
-        
-        function applyCloak(key) {
-            const preset = cloakPresets[key] || cloakPresets['none'];
-            document.title = preset.title;
-            appFavicon.href = preset.favicon;
-        }
-
-        function saveAndApplyCloak(key) {
-            applyCloak(key);
-            localStorage.setItem('vernCloakPreset', key);
-        }
+        });
 
         // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            homeButtonEl.addEventListener('click', handleHomeClick);
+            refreshButtonEl.addEventListener('click', handleRefreshClick);
 
-        // Populate Theme Grid
-        Object.keys(themes).forEach(key => {
-            const theme = themes[key];
-            const button = document.createElement('div');
-            button.className = 'theme-button';
-            button.dataset.themeKey = key;
-            
-            if (key === 'custom_color') {
-                button.innerHTML = `
-                    <div class="custom-color-picker">
-                        <span>${theme.name}</span>
-                        <input type="color" id="custom-color-input" value="${localStorage.getItem('vernCustomAccent') || '#7F5AF0'}">
-                    </div>
-                `;
-                button.addEventListener('click', (e) => {
-                    if (e.target.type !== 'color') {
-                        document.getElementById('custom-color-input').click();
-                    }
-                });
-                themeGrid.appendChild(button);
+            searchBarEl.addEventListener('keydown', handleSearchBarEnter);
+            searchBarEl.addEventListener('input', () => fetchSuggestions(searchBarEl.value));
 
-                const colorInput = document.getElementById('custom-color-input');
-                colorInput.addEventListener('input', (e) => {
-                    saveAndApplyTheme('custom_color', e.target.value);
-                });
-                colorInput.addEventListener('change', (e) => { // Save final value
-                    localStorage.setItem('vernCustomAccent', e.target.value);
-                });
+            homepageSearchBarEl.addEventListener('keydown', handleHomepageSearchBarEnter);
+            homepageSearchBarEl.addEventListener('input', () => fetchSuggestions(homepageSearchBarEl.value));
+            homepageSearchIconEl.addEventListener('click', handleHomepageSearchIconClick);
 
-            } else {
-                 let previewHTML = '<div class="color-preview">';
-                if (key === 'animated_gradient') {
-                    previewHTML += '<div class="animated-preview gradient-preview"></div>';
-                } else if (key === 'animated_matrix') {
-                     previewHTML += '<div class="animated-preview matrix-preview"></div>';
+            showHomepage(); // Start on the homepage
+        });
+
+        // Update search bar value when iframe navigates (e.g., via links)
+        contentIframeEl.addEventListener('load', () => {
+            try {
+                // Check for about:blank first to avoid security errors trying to access contentWindow.location
+                if (contentIframeEl.contentWindow.location.href !== 'about:blank') {
+                    searchBarEl.value = contentIframeEl.contentWindow.location.href;
+                    currentUrl = contentIframeEl.contentWindow.location.href;
+                    updateFavicon(currentUrl);
                 }
-                else {
-                    previewHTML += `
-                        <span style="background-color: ${theme.colors['--current-theme-bg']}"></span>
-                        <span style="background-color: ${theme.colors['--current-theme-neutral']}"></span>
-                        <span style="background-color: ${theme.colors['--current-theme-accent']}"></span>
-                        <span style="background-color: ${theme.colors['--current-theme-text']}"></span>
-                    `;
-                }
-                previewHTML += '</div>';
-
-                button.innerHTML = `${previewHTML}<span>${theme.name}</span>`;
-                button.addEventListener('click', () => saveAndApplyTheme(key));
-                themeGrid.appendChild(button);
+            } catch (e) {
+                // Handle cross-origin issues
+                searchBarEl.value = contentIframeEl.src;
+                currentUrl = contentIframeEl.src;
+                updateFavicon(currentUrl);
             }
         });
 
-        // Populate Cloak Selector
-        Object.keys(cloakPresets).forEach(key => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = cloakPresets[key].title.split(' - ')[0].split(' | ')[0]; // Show a clean name
-            cloakSelector.appendChild(option);
-        });
-        cloakSelector.addEventListener('change', (e) => saveAndApplyCloak(e.target.value));
-        
-
-        // Load and apply saved settings on startup
-        const savedTheme = localStorage.getItem('vernTheme') || 'vern_dark';
-        const savedCloak = localStorage.getItem('vernCloakPreset') || 'none';
-        
-        applyTheme(savedTheme);
-        cloakSelector.value = savedCloak;
-        applyCloak(savedCloak);
-    
-        // --- MATRIX ANIMATION LOGIC ---
-        function startMatrixAnimation() {
-            bgCanvas.width = window.innerWidth;
-            bgCanvas.height = window.innerHeight;
-            
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}';
-            const fontSize = 14;
-            const columns = bgCanvas.width / fontSize;
-            const drops = Array(Math.floor(columns)).fill(1);
-            const matrixTheme = themes['animated_matrix'].colors;
-
-            function drawMatrix() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
-                ctx.fillStyle = matrixTheme['--current-theme-text'] || '#00FF41';
-                ctx.font = `${fontSize}px monospace`;
-
-                for (let i = 0; i < drops.length; i++) {
-                    const text = letters[Math.floor(Math.random() * letters.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    if (drops[i] * fontSize > bgCanvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
-                }
-                animationFrameId = requestAnimationFrame(drawMatrix);
-            }
-            drawMatrix();
-        }
-        window.addEventListener('resize', () => {
-            if (bgCanvas.style.display !== 'none') {
-                if (animationFrameId) cancelAnimationFrame(animationFrameId);
-                startMatrixAnimation();
-            }
-        });
-    });
     </script>
 </body>
 </html>
