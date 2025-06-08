@@ -234,7 +234,6 @@
         
         /* Conditional Custom Sections */
         /* Updated visibility logic: default hidden for these containers */
-        #custom-cloak-settings-container,
         #custom-theme-settings-container,
         #custom-history-days-container {
             opacity: 0; max-height: 0; overflow: hidden;
@@ -242,7 +241,6 @@
             border-top: none; /* No border initially */
             transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin-top 0.3s, padding-top 0.3s, border-top 0.3s;
         }
-        #custom-cloak-settings-container.visible,
         #custom-theme-settings-container.visible,
         #custom-history-days-container.visible {
             opacity: 1; max-height: 500px; /* Adjust max-height as needed */
@@ -950,21 +948,10 @@
             </div>
 
             <div class="menu-setting-item">
-                <label for="cloak-preset-selector">Tab Cloak Preset</label>
-                <select id="cloak-preset-selector" class="menu-select"></select>
-            </div>
-            
-            <div id="custom-cloak-settings-container">
-                <h3>Custom Cloak</h3>
-                <div class="menu-setting-item">
-                    <label for="custom-cloak-title">Custom Title</label>
-                    <input type="text" id="custom-cloak-title" class="menu-input" placeholder="e.g., Google Docs">
-                </div>
-                <div class="menu-setting-item">
-                    <label for="custom-cloak-url">Favicon URL</label>
-                    <input type="text" id="custom-cloak-url" class="menu-input" placeholder="e.g., https://google.com">
-                </div>
-                <button id="apply-custom-cloak-button" class="menu-button">Apply Custom Cloak</button>
+                <label style="margin-bottom: 4px;">Tab Title & Icon</label>
+                <p style="font-size: 0.8em; opacity: 0.7; margin: 0; padding: 0 5px; line-height: 1.4;">
+                    Only the 4SP website itself is allowed to modify the icon and title of the URL.
+                </p>
             </div>
 
             <div class="menu-action-bar" id="cookie-management-container">
@@ -1023,20 +1010,6 @@
             'yahoo': { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=%s' } // Replaced Google
         };
         let currentSearchEngineKey = 'duckduckgo'; // Default changed to DuckDuckGo
-
-        const cloakPresets = {
-            'none': { displayName: "None (Static VERN MAX)" },
-            'google_docs': { displayName: "Google Docs", title: 'Google Docs', faviconUrl: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
-            'google_slides': { displayName: "Google Slides", title: 'Google Slides', faviconUrl: 'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico' },
-            'google_classroom': { displayName: "Google Classroom", title: 'Home', faviconUrl: 'https://ssl.gstatic.com/classroom/favicon.png' },
-            'gmail': { displayName: "Gmail", title: 'Inbox', faviconUrl: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico' },
-            'clever': { displayName: "Clever", title: 'Clever | Portal', faviconUrl: 'https://assets.clever.com/launchpad/1a74895/favicon.ico?1' },
-            'hac': { displayName: "Home Access Center", title: 'Home Access Center', faviconUrl: 'https://hac.doe.k12.de.us/HomeAccess/Content/Images/favicon.ico' },
-            'google_drive': { displayName: "My Drive", title: 'My Drive - Google Drive', faviconUrl: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
-            'wikipedia': { displayName: "Wikipedia", title: 'Wikipedia', faviconUrl: 'https://en.wikipedia.org/static/favicon/wikipedia.ico' },
-            'custom': { displayName: "Custom (Manual)" }, // Moved custom to the end for better default ordering
-        };
-        let currentCloakPresetKey = 'google_docs'; // Default changed to Google Docs
 
         const THEMES = {
             // --- Normal Themes ---
@@ -1150,9 +1123,8 @@
             fullscreenButtonEl, settingsButtonEl, bookmarkButtonEl, historyButtonEl, bookmarkMenuEl, 
             historyMenuEl, settingsMenuEl, bookmarksListPopupEl, newBookmarkNameInputPopupEl, 
             addCurrentBookmarkButtonPopupEl, historyListPopupEl, toolbarEl, 
-            themeSelectorEl, cloakPresetSelectorEl, customCloakTitleEl, customCloakUrlEl, applyCustomCloakButtonEl,
-            searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
-            customCloakSettingsContainerEl, homepageEl, homepageSearchBarEl, searchSuggestionsEl,
+            themeSelectorEl, searchEngineSelectorEl, historyLifespanSelectorEl, clearBrowserDataButtonEl, historySearchBarEl,
+            homepageEl, homepageSearchBarEl, searchSuggestionsEl,
             homepageSearchIconEl, adFreeToggleEl, saveConfigButtonEl, saveTimestampEl,
             customThemeSettingsContainerEl, customThemeBgBaseEl, customThemeAccentBaseEl, applyCustomThemeButtonEl,
             customHistoryDaysContainerEl, customHistoryDaysInputEl, applyCustomHistoryDaysButtonEl,
@@ -1333,7 +1305,6 @@
         document.addEventListener('DOMContentLoaded', async () => {
             assignDOMElements();
             populateThemeSelector();
-            populateCloakSelector();
             populateSearchEngineSelector();
             await initUV();
             loadSettings();
@@ -1361,8 +1332,7 @@
             bookmarkMenuEl = document.getElementById('bookmark-menu'); historyMenuEl = document.getElementById('history-menu'); settingsMenuEl = document.getElementById('settings-menu');
             bookmarksListPopupEl = document.getElementById('bookmarks-list-popup'); newBookmarkNameInputPopupEl = document.getElementById('new-bookmark-name-popup'); addCurrentBookmarkButtonPopupEl = document.getElementById('add-current-bookmark-button-popup');
             historyListPopupEl = document.getElementById('history-list-popup'); historySearchBarEl = document.getElementById('history-search-bar');
-            themeSelectorEl = document.getElementById('theme-selector'); searchEngineSelectorEl = document.getElementById('search-engine-selector'); historyLifespanSelectorEl = document.getElementById('history-lifespan-selector'); cloakPresetSelectorEl = document.getElementById('cloak-preset-selector');
-            customCloakSettingsContainerEl = document.getElementById('custom-cloak-settings-container'); customCloakTitleEl = document.getElementById('custom-cloak-title'); customCloakUrlEl = document.getElementById('custom-cloak-url'); applyCustomCloakButtonEl = document.getElementById('apply-custom-cloak-button');
+            themeSelectorEl = document.getElementById('theme-selector'); searchEngineSelectorEl = document.getElementById('search-engine-selector'); historyLifespanSelectorEl = document.getElementById('history-lifespan-selector');
             clearBrowserDataButtonEl = document.getElementById('clear-browser-data-button');
             bookmarkItemTemplate = document.getElementById('bookmark-item-template');
             historyItemTemplate = document.getElementById('history-item-template');
@@ -1437,14 +1407,10 @@
             // Ad-Free Toggle
             adFreeToggleEl.checked = localStorage.getItem('vernAdFreeToggle') === 'true';
 
-            // Cloak
-            currentCloakPresetKey = localStorage.getItem('vernCloakPreset') || 'google_docs';
-            cloakPresetSelectorEl.value = currentCloakPresetKey;
-            customCloakTitleEl.value = localStorage.getItem('vernCustomCloakTitle') || '';
-            customCloakUrlEl.value = localStorage.getItem('vernCustomCloakUrl') || '';
-            applyBrowserCloak();
-            // Call the toggle function on load
-            toggleCustomCloakView(currentCloakPresetKey === 'custom');
+            // Set default tab title and icon on load
+            document.title = 'VERN MAX';
+            document.getElementById('app-favicon').href = '../images/favicon.png';
+
 
             // NEW: Block Third-Party Cookies
             blockThirdPartyCookiesToggleEl.checked = localStorage.getItem('vernBlockThirdPartyCookies') === 'true';
@@ -1494,19 +1460,11 @@
                 if (e.target.checked) {
                     runAdBlocker(contentIframeEl); // Run blocker immediately if turned on
                 }
-             });
-
-            cloakPresetSelectorEl.addEventListener('change', (e) => {
-                currentCloakPresetKey = e.target.value;
-                localStorage.setItem('vernCloakPreset', currentCloakPresetKey);
-                applyBrowserCloak();
-                toggleCustomCloakView(currentCloakPresetKey === 'custom'); // Call on change
             });
 
             // New listeners
             applyCustomThemeButtonEl.addEventListener('click', applyAndSaveCustomTheme);
             applyCustomHistoryDaysButtonEl.addEventListener('click', applyAndSaveCustomHistoryDays);
-            applyCustomCloakButtonEl.addEventListener('click', applyAndSaveCustomCloak);
             
             clearBrowserDataButtonEl.addEventListener('click', clearAllData);
             saveConfigButtonEl.addEventListener('click', saveConfiguration);
@@ -1692,7 +1650,11 @@
             if (localStorage.getItem('vernRestoreSession') === 'true') {
                 localStorage.setItem('vernLastUrl', currentUrl);
             }
-            applyBrowserCloak();
+            
+            // Set default title and icon on every load
+            document.title = 'VERN MAX';
+            document.getElementById('app-favicon').href = '../images/favicon.png';
+
             if (currentUrl && !currentUrl.startsWith('about:')) addToHistory(currentTitle, currentUrl);
 
             // --- AD BLOCKER: Element Hiding ---
@@ -1780,7 +1742,7 @@
             if (history.length === 0) { const li = document.createElement('li'); li.textContent = 'No history found.'; li.style.cssText = 'cursor: default; text-align: center; opacity: 0.7;'; fragment.appendChild(li); } 
             else { const grouped = {}; [...history].reverse().forEach(item => { const groupKey = new Date(item.timestamp).toDateString(); if (!grouped[groupKey]) grouped[groupKey] = []; grouped[groupKey].push(item); });
                 for (const groupKey in grouped) { const headerTpl = historyGroupTemplate.content.cloneNode(true); headerTpl.querySelector('.history-group-header').textContent = groupKey; fragment.appendChild(headerTpl); 
-                    grouped[groupKey].forEach(item => { const itemTpl = historyItemTemplate.content.cloneNode(true); const li = itemTpl.querySelector('li'); li.dataset.url = item.url; li.title = `<span class="math-inline">\{item\.title\}\\n</span>{item.url}`; li.querySelector('.item-name').textContent = item.title; li.querySelector('.item-url').textContent = item.url; fragment.appendChild(itemTpl); }); }
+                    grouped[groupKey].forEach(item => { const itemTpl = historyItemTemplate.content.cloneNode(true); const li = itemTpl.querySelector('li'); li.dataset.url = item.url; li.title = `${item.title}\n${item.url}`; li.querySelector('.item-name').textContent = item.title; li.querySelector('.item-url').textContent = item.url; fragment.appendChild(itemTpl); }); }
             }
             historyListPopupEl.innerHTML = ''; historyListPopupEl.appendChild(fragment);
         }
@@ -1802,13 +1764,6 @@
                 Object.keys(localStorage).filter(k => k.startsWith('vern')).forEach(k => localStorage.removeItem(k));
                 alert("All browser data has been cleared."); window.location.reload();
             }
-        }
-        function applyAndSaveCustomCloak() {
-            localStorage.setItem('vernCustomCloakTitle', customCloakTitleEl.value);
-            localStorage.setItem('vernCustomCloakUrl', customCloakUrlEl.value);
-            currentCloakPresetKey = 'custom'; cloakPresetSelectorEl.value = 'custom';
-            localStorage.setItem('vernCloakPreset', 'custom'); applyBrowserCloak();
-            alert('Custom cloak applied and saved!');
         }
 
         // NEW: Cookie Management Functions
@@ -2051,7 +2006,6 @@
         }
 
         // Modified: These functions now only control visibility based on 'custom' selection
-        function toggleCustomCloakView(show) { customCloakSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomThemeView(show) { customThemeSettingsContainerEl.classList.toggle('visible', show); }
         function toggleCustomHistoryView(show) { customHistoryDaysContainerEl.classList.toggle('visible', show); }
         // NEW: Toggle Cookie Management Visibility (added for consistency, though not conditional yet)
@@ -2159,29 +2113,9 @@
                 }
             }
         }
-        function populateCloakSelector() { Object.keys(cloakPresets).forEach(key => cloakPresetSelectorEl.add(new Option(cloakPresets[key].displayName, key))); }
         function populateSearchEngineSelector() { 
             searchEngineSelectorEl.innerHTML = ''; // Clear existing options
             Object.keys(searchEngines).forEach(key => searchEngineSelectorEl.add(new Option(searchEngines[key].name, key))); 
-        }
-        function applyBrowserCloak() {
-            const appFaviconEl = document.getElementById('app-favicon');
-            const selectedPreset = cloakPresets[currentCloakPresetKey];
-            if (currentCloakPresetKey === 'custom') {
-                const customTitle = localStorage.getItem('vernCustomCloakTitle') || 'VERN MAX';
-                const customFaviconUrlSource = localStorage.getItem('vernCustomCloakUrl') || '../images/favicon.png';
-                document.title = customTitle; appFaviconEl.href = getFaviconUrl(customFaviconUrlSource);
-            } else if (selectedPreset && currentCloakPresetKey !== 'none') {
-                document.title = selectedPreset.title; appFaviconEl.href = selectedPreset.faviconUrl;
-            } else {
-                document.title = 'VERN MAX';
-                appFaviconEl.href = '../images/favicon.png';
-            }
-        }
-        function getFaviconUrl(targetUrl) {
-            if (!targetUrl || targetUrl.startsWith('about:')) return '../images/favicon.png';
-            try { const url = new URL(targetUrl); return `https://icons.duckduckgo.com/ip3/${url.hostname}.ico`; } 
-            catch (e) { return '../images/favicon.png'; }
         }
         
         // --- EVENT HANDLERS & UTILITIES ---
