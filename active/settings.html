@@ -2,50 +2,18 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VERN MAX</title> <link rel="stylesheet" href="../css/style.css" />
+    <title>VERN MINI</title>
     <link rel="icon" type="image/x-icon" href="../images/favicon.png" id="app-favicon" />
     <style id="custom-styles">
-        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Crete+Round&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
-
-        /* Core Theme Variables & Component Mappings */
+        /* Core Theme Variables */
         :root {
-            --current-theme-bg: #23272A;
-            --current-theme-text: #E0E1DD;
-            --current-theme-accent: #7F5AF0;
-            --current-theme-neutral: #2C2F33;
-            --current-theme-button-text: #FFFFFF;
-            --current-theme-shadow-rgb: 0, 0, 0;
-            --current-theme-shadow-opacity-strong: 0.4;
-            --current-theme-shadow-opacity-medium: 0.25;
-            --current-theme-shadow-opacity-light: 0.15;
-            --current-theme-focus-ring-color: var(--current-theme-accent);
-
-            --bg-color: var(--current-theme-bg);
-            --text-color: var(--current-theme-text);
-            --iframe-bg: var(--current-theme-bg);
-            --font-family-main: 'PrimaryFont', sans-serif;
-
-            --toolbar-bg: var(--current-theme-neutral);
-            --toolbar-shadow: 0 2px 5px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-medium));
-            --toolbar-border-color: color-mix(in srgb, var(--current-theme-neutral) 70%, var(--current-theme-text));
-
-            --button-bg: var(--current-theme-accent);
-            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, var(--current-theme-text));
-            --button-text-color: var(--current-theme-button-text);
-            --button-outline-color: color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
-
-            --input-bg: color-mix(in srgb, var(--current-theme-neutral) 90%, var(--current-theme-bg));
-            --input-focus-bg: var(--current-theme-bg);
-            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 50%, transparent);
-
-            --menu-bg: var(--input-bg);
-            --menu-item-hover-bg: var(--button-hover-bg);
-            --menu-text-color: var(--text-color);
-            --menu-shadow: 0 4px 12px rgba(var(--current-theme-shadow-rgb), var(--current-theme-shadow-opacity-strong));
-            --menu-border-color: var(--button-outline-color);
+            --bg-color: #23272A;
+            --text-color: #E0E1DD;
+            --accent-color: #7F5AF0;
+            --neutral-color: #2C2F33;
+            --button-text-color: #FFFFFF;
+            --shadow-rgb: 0, 0, 0;
+            --font-family-main: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
         }
 
         /* Base Styles */
@@ -56,331 +24,294 @@
             background-color: var(--bg-color); color: var(--text-color);
             display: flex; flex-direction: column;
         }
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; display: none; pointer-events: none; }
 
         /* Toolbar */
         #toolbar {
             display: flex; align-items: center; padding: 8px 10px;
-            background-color: var(--toolbar-bg); box-shadow: var(--toolbar-shadow);
-            border-bottom: 1px solid var(--toolbar-border-color); z-index: 1000; position: relative;
+            background-color: var(--neutral-color);
+            box-shadow: 0 2px 5px rgba(var(--shadow-rgb), 0.25);
+            border-bottom: 1px solid color-mix(in srgb, var(--neutral-color) 70%, var(--text-color));
+            z-index: 1000; position: relative;
         }
-        .nav-button, .toolbar-button {
+        .nav-button {
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-            margin-right: 8px; border-radius: 25%; background-color: var(--button-bg);
-            cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s, color 0.2s;
-            box-shadow: 0 0 0 1px var(--button-outline-color); font-size: 20px;
-            position: relative; flex-shrink: 0;
+            margin-right: 8px; border-radius: 25%; background-color: var(--accent-color);
+            cursor: pointer; color: var(--button-text-color); transition: background-color 0.2s;
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-color) 60%, transparent);
+            font-size: 20px; flex-shrink: 0;
         }
-        .nav-button:hover, .toolbar-button:hover { background-color: var(--button-hover-bg); }
-        .nav-button .icon-img, .toolbar-button .icon-img {
+        .nav-button:hover { background-color: color-mix(in srgb, var(--accent-color) 80%, var(--text-color)); }
+        .nav-button .icon-img {
             width: 20px; height: 20px; user-select: none; pointer-events: none;
         }
         #search-bar {
-            flex: 1; height: 36px; border-radius: 8px; border: none; background-color: var(--input-bg);
+            flex: 1; height: 36px; border-radius: 8px; border: none;
+            background-color: color-mix(in srgb, var(--neutral-color) 90%, var(--bg-color));
             color: var(--text-color); padding: 0 15px; font-size: 14px;
-            box-shadow: 0 0 0 1px var(--button-outline-color); font-family: var(--font-family-main);
-            margin-right: 8px;
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-color) 60%, transparent);
+            font-family: var(--font-family-main); margin-right: 8px;
         }
-        #search-bar:focus { outline: none; background-color: var(--input-focus-bg); box-shadow: var(--input-focus-shadow); }
+        #search-bar:focus {
+            outline: none;
+            background-color: var(--bg-color);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 50%, transparent);
+        }
 
         /* Main Content */
-        #content-container { flex: 1; position: relative; background-color: var(--iframe-bg); overflow: hidden; }
+        #content-container { flex: 1; position: relative; background-color: var(--bg-color); overflow: hidden; }
         #content-iframe { width: 100%; height: 100%; border: none; display: block; }
         
-        /* Animations & States */
-        #refresh-button .icon-img.spinning { animation: spinRefreshIcon 0.7s linear infinite; }
-        @keyframes spinRefreshIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        body.app-ui-hidden #toolbar { display: none !important; }
-
         /* Homepage Styles */
         #homepage {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            text-align: center;
-            background-color: var(--bg-color);
-            padding: 20px;
-            box-sizing: border-box;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            height: 100%; text-align: center; background-color: var(--bg-color);
+            padding: 20px; box-sizing: border-box;
         }
-
         #homepage-logo {
-            max-width: 280px;
-            height: auto;
-            margin-bottom: 30px;
+            max-width: 280px; height: auto; margin-bottom: 30px;
         }
-
         #homepage-search-container {
-            position: relative;
-            width: 100%;
-            max-width: 584px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            border-radius: 8px;
-            background-color: var(--input-bg);
-            border: none;
-            box-shadow: 0 0 0 1px var(--button-outline-color);
+            position: relative; width: 100%; max-width: 584px; height: 38px;
+            display: flex; align-items: center; border-radius: 8px;
+            background-color: color-mix(in srgb, var(--neutral-color) 90%, var(--bg-color));
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-color) 60%, transparent);
             transition: background-color 0.2s, box-shadow 0.2s;
         }
-
         #homepage-search-container:focus-within {
-            background-color: var(--input-focus-bg);
-            box-shadow: var(--input-focus-shadow);
+            background-color: var(--bg-color);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 50%, transparent);
         }
-        
         #homepage-search-bar {
-            flex: 1;
-            height: 36px;
-            border: none;
-            background: transparent;
-            color: var(--text-color);
-            padding: 0 15px;
-            font-size: 14px;
-            box-sizing: border-box;
-            outline: none;
-            font-family: var(--font-family-main);
+            flex: 1; height: 36px; border: none; background: transparent;
+            color: var(--text-color); padding: 0 15px; font-size: 14px;
+            box-sizing: border-box; outline: none; font-family: var(--font-family-main);
         }
-
         #homepage-search-icon {
-            width: 18px;
-            height: 18px;
-            padding: 9px;
-            border-radius: 50%;
-            margin-right: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            width: 18px; height: 18px; padding: 9px; border-radius: 50%;
+            margin-right: 5px; cursor: pointer; transition: background-color 0.2s;
         }
-
         #homepage-search-icon:hover {
-            background-color: rgba(var(--current-theme-shadow-rgb), 0.1);
+            background-color: rgba(var(--shadow-rgb), 0.1);
+        }
+        #search-suggestions {
+            display: none; position: absolute; top: calc(100% + 5px);
+            left: 0; right: 0; background-color: var(--neutral-color);
+            border: 1px solid color-mix(in srgb, var(--accent-color) 60%, transparent);
+            border-radius: 12px; list-style: none; padding: 10px 0;
+            margin: 0; text-align: left; z-index: 100;
+            box-shadow: 0 4px 12px rgba(var(--shadow-rgb), 0.4);
+        }
+        #search-suggestions li {
+            padding: 10px 20px; cursor: pointer; color: var(--text-color);
+        }
+        #search-suggestions li:hover {
+            background-color: color-mix(in srgb, var(--accent-color) 80%, var(--text-color));
+            color: var(--button-text-color);
         }
 
-        #search-suggestions {
-            display: none;
-            position: absolute;
-            top: calc(100% + 5px);
-            left: 0;
-            right: 0;
-            background-color: var(--menu-bg);
-            border: 1px solid var(--menu-border-color);
-            border-radius: 12px;
-            list-style: none;
-            padding: 10px 0;
-            margin: 0;
-            text-align: left;
-            z-index: 100;
-            box-shadow: var(--menu-shadow);
+        /* Animation for Refresh Button */
+        #refresh-button .icon-img.spinning {
+             animation: spinRefreshIcon 0.7s linear infinite;
         }
-        #search-suggestions li { padding: 10px 20px; cursor: pointer; color: var(--menu-text-color); }
-        #search-suggestions li:hover { background-color: var(--menu-item-hover-bg); color: var(--button-text-color); }
-        .search-engine-explanation { font-size: 0.8em; color: var(--text-color); opacity: 0.7; margin-top: -8px; /* Adjust as needed to position it correctly */ margin-bottom: 10px; padding-left: 5px; }
+        @keyframes spinRefreshIcon {
+             from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+        }
 
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-
     <div id="toolbar">
         <div class="nav-button" id="home-button" title="Home"><img src="../images/home-white.png" alt="Home" class="icon-img"></div>
         <div class="nav-button" id="refresh-button" title="Refresh"><img src="../images/refresh-white.png" alt="Refresh" class="icon-img"></div>
-        <input type="text" id="search-bar" placeholder="Search or type a URL">
+        <input type="text" id="search-bar" placeholder="Search DuckDuckGo or type a URL">
     </div>
 
     <div id="content-container">
-        <iframe id="content-iframe" src="about:blank"></iframe>
         <div id="homepage">
-            <img src="../images/vernmax-logo.png" alt="VERN MAX Logo" id="homepage-logo">
+            <img id="homepage-logo" src="../images/title.png" alt="VERN MINI">
             <div id="homepage-search-container">
-                <img src="../images/search-white.png" alt="Search" id="homepage-search-icon">
-                <input type="text" id="homepage-search-bar" placeholder="Search or type a URL">
+                <input type="text" id="homepage-search-bar" placeholder="Search DuckDuckGo or type a URL">
+                <img id="homepage-search-icon" src="../images/magnify-white.png" alt="Search">
+                <ul id="search-suggestions"></ul>
             </div>
-            <ul id="search-suggestions"></ul>
-            <p class="search-engine-explanation">Powered by DuckDuckGo</p>
         </div>
+        <iframe id="content-iframe" title="Content View" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-popups-to-escape-sandbox"></iframe>
     </div>
 
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script>
     <script>
-        // --- DOM ELEMENTS ---
-        const homeButtonEl = document.getElementById('home-button');
-        const refreshButtonEl = document.getElementById('refresh-button');
-        const searchBarEl = document.getElementById('search-bar');
-        const contentIframeEl = document.getElementById('content-iframe');
-        const homepageEl = document.getElementById('homepage');
-        const homepageSearchBarEl = document.getElementById('homepage-search-bar');
-        const homepageSearchIconEl = document.getElementById('homepage-search-icon');
-        const searchSuggestionsEl = document.getElementById('search-suggestions');
-        const appFaviconEl = document.getElementById('app-favicon'); // Kept for consistency, but its src will be static.
+        // --- DOM ELEMENT REFERENCES ---
+        let contentIframeEl, searchBarEl, homeButtonEl, refreshButtonEl,
+            homepageEl, homepageSearchBarEl, searchSuggestionsEl, homepageSearchIconEl;
 
-        // --- STATE ---
-        let currentUrl = 'about:blank';
-        let isHomepageVisible = true;
+        // --- CORE LOGIC ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Assign DOM elements
+            contentIframeEl = document.getElementById('content-iframe');
+            searchBarEl = document.getElementById('search-bar');
+            homeButtonEl = document.getElementById('home-button');
+            refreshButtonEl = document.getElementById('refresh-button');
+            homepageEl = document.getElementById('homepage');
+            homepageSearchBarEl = document.getElementById('homepage-search-bar');
+            searchSuggestionsEl = document.getElementById('search-suggestions');
+            homepageSearchIconEl = document.getElementById('homepage-search-icon');
+            
+            // Register service worker for proxy
+            try { await registerSW(); } catch (err) { console.error("Service Worker registration failed:", err); }
 
-        // --- CORE NAVIGATION & DISPLAY ---
-        function navigateTo(url) { // Removed saveHistory as history is not maintained
-            let targetUrl = url;
-            if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://') && !targetUrl.startsWith('about:') && !targetUrl.startsWith('data:')) {
-                if (targetUrl.includes('.')) {
-                    targetUrl = 'https://' + targetUrl;
-                } else {
-                    targetUrl = `https://duckduckgo.com/?q=${encodeURIComponent(targetUrl)}`;
+            setupEventListeners();
+            navigateTo('about:blank'); // Start on the homepage
+        });
+
+        function setupEventListeners() {
+            // Toolbar search
+            searchBarEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') navigateTo(e.target.value);
+            });
+
+            // Homepage search
+            homepageSearchBarEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') navigateTo(e.target.value);
+            });
+            homepageSearchIconEl.addEventListener('click', () => navigateTo(homepageSearchBarEl.value));
+
+            // Navigation buttons
+            homeButtonEl.addEventListener('click', () => navigateTo('about:blank'));
+            refreshButtonEl.addEventListener('click', () => {
+                if (contentIframeEl.src && contentIframeEl.src !== 'about:blank' && !contentIframeEl.src.endsWith('#')) {
+                    const icon = refreshButtonEl.querySelector('.icon-img');
+                    icon.classList.add('spinning');
+                    contentIframeEl.contentWindow.location.reload(true);
                 }
-            }
-            contentIframeEl.src = targetUrl;
-            searchBarEl.value = targetUrl;
-            currentUrl = targetUrl;
-            hideHomepage();
-            // Removed updateFavicon call here to keep favicon static
+            });
+
+            // Iframe loading handler
+            contentIframeEl.addEventListener('load', handleIframeLoad);
+            
+            // Search suggestions
+            homepageSearchBarEl.addEventListener('input', handleSearchInput);
+            document.addEventListener('click', (e) => {
+                if (!homepageSearchBarEl.contains(e.target)) {
+                    searchSuggestionsEl.style.display = 'none';
+                }
+            });
+            searchSuggestionsEl.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'LI') {
+                    navigateTo(e.target.textContent);
+                }
+            });
         }
 
+        // --- NAVIGATION & PROXY ---
+        function navigateTo(urlInput) {
+            searchSuggestionsEl.style.display = 'none';
+            let targetUrl = urlInput ? urlInput.trim() : '';
+
+            if (targetUrl === '' || targetUrl === 'about:blank' || targetUrl === 'about:blank#') {
+                showHomepage();
+                searchBarEl.value = '';
+                document.title = 'VERN MINI';
+                document.getElementById('app-favicon').href = '../images/favicon.png';
+                return;
+            }
+
+            // Check if it's a valid URL or a search term
+            const formattedUrl = formatUrlInput(targetUrl);
+            const finalUrl = formattedUrl ? formattedUrl : 'https://duckduckgo.com/?q=' + encodeURIComponent(targetUrl);
+            
+            hideHomepage();
+            contentIframeEl.src = proxyUrl(finalUrl);
+        }
+
+        function handleIframeLoad() {
+            // Stop spinning refresh icon
+            const icon = refreshButtonEl.querySelector('.icon-img');
+            if (icon.classList.contains('spinning')) {
+                icon.classList.remove('spinning');
+            }
+
+            let finalUrl = 'about:blank';
+            let finalTitle = 'VERN MINI';
+
+            try {
+                // Use the __uv object to get the real URL from the proxy
+                if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.__uv && contentIframeEl.contentWindow.__uv.location.href !== 'about:blank') {
+                    finalUrl = contentIframeEl.contentWindow.__uv.location.href;
+                    finalTitle = contentIframeEl.contentDocument.title || new URL(finalUrl).hostname;
+                }
+            } catch (e) {
+                // Error reading from iframe, likely due to cross-origin policies. Default to blank.
+            }
+            
+            if (finalUrl === 'about:blank' || contentIframeEl.src.endsWith('#')) {
+                showHomepage();
+                searchBarEl.value = '';
+                document.title = 'VERN MINI';
+            } else {
+                hideHomepage();
+                searchBarEl.value = finalUrl;
+                document.title = finalTitle;
+            }
+        }
+
+        function proxyUrl(urlToProxy) {
+            if (!urlToProxy || typeof urlToProxy !== 'string' || urlToProxy.trim() === '') return null;
+            if (typeof __uv$config === 'undefined') { return urlToProxy; }
+            try { return self.location.origin + __uv$config.prefix + __uv$config.encodeUrl(urlToProxy); }
+            catch (e) { return urlToProxy; }
+        }
+
+        function formatUrlInput(input) {
+            const trimmed = input.trim();
+            // Check for scheme (http, https, ftp, etc.)
+            if (/^(?:[a-z]+:)?\/\//i.test(trimmed)) {
+                return trimmed;
+            }
+            // Check for a pattern like domain.tld or ip address
+            if (/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)*$/.test(trimmed) || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(trimmed)) {
+                return 'https://' + trimmed;
+            }
+            return null; // It's likely a search term
+        }
+
+        // --- HOMEPAGE & SEARCH SUGGESTIONS ---
         function showHomepage() {
             homepageEl.style.display = 'flex';
             contentIframeEl.style.display = 'none';
-            searchBarEl.value = ''; // Clear search bar when on homepage
-            homepageSearchBarEl.value = '';
-            isHomepageVisible = true;
-            // Removed updateFavicon call here to keep favicon static
+            // Use about:blank# to prevent iframe from being added to browser history
+            if (contentIframeEl.src !== 'about:blank#') contentIframeEl.src = 'about:blank#';
         }
 
         function hideHomepage() {
             homepageEl.style.display = 'none';
             contentIframeEl.style.display = 'block';
-            isHomepageVisible = false;
         }
 
-        function refreshPage() {
-            refreshButtonEl.querySelector('.icon-img').classList.add('spinning');
-            // Check if iframe has loaded a page before attempting to reload
-            if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.location.href !== 'about:blank') {
-                 try {
-                    contentIframeEl.contentWindow.location.reload();
-                } catch (e) {
-                    console.warn("Could not reload iframe due to cross-origin restrictions or other error:", e);
-                    // Fallback for cross-origin if reload fails
-                    contentIframeEl.src = contentIframeEl.src;
-                }
+        function handleSearchInput() {
+            const query = homepageSearchBarEl.value;
+            if (query.length > 0) {
+                // Use DuckDuckGo suggestions via a CORS proxy to avoid browser blocking
+                fetch(`https://api.allorigins.win/raw?url=https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`)
+                    .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
+                    .then(data => {
+                        const suggestions = data.map(item => item.phrase);
+                        searchSuggestionsEl.innerHTML = '';
+                        suggestions.forEach(suggestion => {
+                            const li = document.createElement('li');
+                            li.textContent = suggestion;
+                            searchSuggestionsEl.appendChild(li);
+                        });
+                        searchSuggestionsEl.style.display = 'block';
+                    }).catch(error => {
+                        console.warn("Could not fetch search suggestions:", error);
+                        searchSuggestionsEl.style.display = 'none';
+                    });
             } else {
-                // If on about:blank or homepage, just remove spinning class
-                console.log("No page loaded to refresh.");
-            }
-            setTimeout(() => {
-                refreshButtonEl.querySelector('.icon-img').classList.remove('spinning');
-            }, 700); // Remove spinning class after 0.7 seconds
-        }
-
-        // Favicon will *always* be ../images/favicon.png
-        function updateFavicon(url) {
-            // This function is now static and always sets the default favicon.
-            // It's kept for logical clarity if it were ever called, but it should not be.
-            appFaviconEl.href = '../images/favicon.png';
-        }
-
-        // --- EVENT HANDLERS & UTILITIES ---
-        function handleHomeClick() { showHomepage(); }
-        function handleRefreshClick() { refreshPage(); }
-
-        function handleSearchBarEnter(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                navigateTo(searchBarEl.value);
-                searchBarEl.blur(); // Remove focus after search
-                searchSuggestionsEl.style.display = 'none'; // Hide suggestions
-            }
-        }
-
-        function handleHomepageSearchBarEnter(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                navigateTo(homepageSearchBarEl.value);
-                homepageSearchBarEl.blur(); // Remove focus after search
-                searchSuggestionsEl.style.display = 'none'; // Hide suggestions
-            }
-        }
-
-        function handleHomepageSearchIconClick() {
-            navigateTo(homepageSearchBarEl.value);
-            searchSuggestionsEl.style.display = 'none'; // Hide suggestions
-        }
-
-        function fetchSuggestions(query) {
-            if (query.length < 2) {
-                searchSuggestionsEl.style.display = 'none';
-                return;
-            }
-            // Using DuckDuckGo for suggestions
-            fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`)
-                .then(response => response.json())
-                .then(data => {
-                    displaySuggestions(data);
-                })
-                .catch(error => console.error('Error fetching search suggestions:', error));
-        }
-
-        function displaySuggestions(suggestions) {
-            searchSuggestionsEl.innerHTML = '';
-            if (suggestions.length === 0) {
-                searchSuggestionsEl.style.display = 'none';
-                return;
-            }
-            suggestions.forEach(s => {
-                const li = document.createElement('li');
-                li.textContent = s.phrase;
-                li.addEventListener('click', () => {
-                    // Update the correct search bar based on which one is visible/active
-                    if (isHomepageVisible) {
-                        homepageSearchBarEl.value = s.phrase;
-                        navigateTo(s.phrase);
-                    } else {
-                        searchBarEl.value = s.phrase;
-                        navigateTo(s.phrase);
-                    }
-                    searchSuggestionsEl.style.display = 'none';
-                });
-                searchSuggestionsEl.appendChild(li);
-            });
-            searchSuggestionsEl.style.display = 'block';
-        }
-
-        // Close suggestions if clicked outside
-        document.addEventListener('click', (e) => {
-            if (!searchSuggestionsEl.contains(e.target) && e.target !== searchBarEl && e.target !== homepageSearchBarEl) {
                 searchSuggestionsEl.style.display = 'none';
             }
-        });
-
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            homeButtonEl.addEventListener('click', handleHomeClick);
-            refreshButtonEl.addEventListener('click', handleRefreshClick);
-
-            searchBarEl.addEventListener('keydown', handleSearchBarEnter);
-            searchBarEl.addEventListener('input', () => fetchSuggestions(searchBarEl.value));
-
-            homepageSearchBarEl.addEventListener('keydown', handleHomepageSearchBarEnter);
-            homepageSearchBarEl.addEventListener('input', () => fetchSuggestions(homepageSearchBarEl.value));
-            homepageSearchIconEl.addEventListener('click', handleHomepageSearchIconClick);
-
-            showHomepage(); // Start on the homepage
-            updateFavicon(); // Ensure favicon is set to default on load
-        });
-
-        // This listener will *not* update the favicon or title. It only updates the search bar.
-        contentIframeEl.addEventListener('load', () => {
-            try {
-                // Check for about:blank first to avoid security errors trying to access contentWindow.location
-                if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.location.href !== 'about:blank') {
-                    searchBarEl.value = contentIframeEl.contentWindow.location.href;
-                    currentUrl = contentIframeEl.contentWindow.location.href;
-                }
-            } catch (e) {
-                // Handle cross-origin issues - can't read iframe.contentWindow.location.href
-                console.warn("Could not access iframe contentWindow.location.href due to cross-origin restrictions:", e);
-                searchBarEl.value = contentIframeEl.src;
-                currentUrl = contentIframeEl.src;
-            }
-        });
-
+        }
     </script>
 </body>
 </html>
