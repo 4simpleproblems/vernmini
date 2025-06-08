@@ -2,8 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VERN MAX</title>
-    <link rel="stylesheet" href="../css/style.css" />
+    <title>VERN MAX</title> <link rel="stylesheet" href="../css/style.css" />
     <link rel="icon" type="image/x-icon" href="../images/favicon.png" id="app-favicon" />
     <style id="custom-styles">
         @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
@@ -212,14 +211,14 @@
         const homepageSearchBarEl = document.getElementById('homepage-search-bar');
         const homepageSearchIconEl = document.getElementById('homepage-search-icon');
         const searchSuggestionsEl = document.getElementById('search-suggestions');
-        const appFaviconEl = document.getElementById('app-favicon');
+        const appFaviconEl = document.getElementById('app-favicon'); // Kept for consistency, but its src will be static.
 
         // --- STATE ---
         let currentUrl = 'about:blank';
         let isHomepageVisible = true;
 
         // --- CORE NAVIGATION & DISPLAY ---
-        function navigateTo(url, saveHistory = true) {
+        function navigateTo(url) { // Removed saveHistory as history is not maintained
             let targetUrl = url;
             if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://') && !targetUrl.startsWith('about:') && !targetUrl.startsWith('data:')) {
                 if (targetUrl.includes('.')) {
@@ -232,7 +231,7 @@
             searchBarEl.value = targetUrl;
             currentUrl = targetUrl;
             hideHomepage();
-            updateFavicon(targetUrl);
+            // Removed updateFavicon call here to keep favicon static
         }
 
         function showHomepage() {
@@ -241,7 +240,7 @@
             searchBarEl.value = ''; // Clear search bar when on homepage
             homepageSearchBarEl.value = '';
             isHomepageVisible = true;
-            updateFavicon('about:blank');
+            // Removed updateFavicon call here to keep favicon static
         }
 
         function hideHomepage() {
@@ -252,16 +251,29 @@
 
         function refreshPage() {
             refreshButtonEl.querySelector('.icon-img').classList.add('spinning');
-            contentIframeEl.contentWindow.location.reload();
+            // Check if iframe has loaded a page before attempting to reload
+            if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.location.href !== 'about:blank') {
+                 try {
+                    contentIframeEl.contentWindow.location.reload();
+                } catch (e) {
+                    console.warn("Could not reload iframe due to cross-origin restrictions or other error:", e);
+                    // Fallback for cross-origin if reload fails
+                    contentIframeEl.src = contentIframeEl.src;
+                }
+            } else {
+                // If on about:blank or homepage, just remove spinning class
+                console.log("No page loaded to refresh.");
+            }
             setTimeout(() => {
                 refreshButtonEl.querySelector('.icon-img').classList.remove('spinning');
             }, 700); // Remove spinning class after 0.7 seconds
         }
 
+        // Favicon will *always* be ../images/favicon.png
         function updateFavicon(url) {
-            if (url.startsWith('about:')) return '../images/favicon.png';
-            try { const urlObj = new URL(url); appFaviconEl.href = `https://icons.duckduckgo.com/ip3/${urlObj.hostname}.ico`; }
-            catch (e) { appFaviconEl.href = '../images/favicon.png'; }
+            // This function is now static and always sets the default favicon.
+            // It's kept for logical clarity if it were ever called, but it should not be.
+            appFaviconEl.href = '../images/favicon.png';
         }
 
         // --- EVENT HANDLERS & UTILITIES ---
@@ -296,6 +308,7 @@
                 searchSuggestionsEl.style.display = 'none';
                 return;
             }
+            // Using DuckDuckGo for suggestions
             fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`)
                 .then(response => response.json())
                 .then(data => {
@@ -314,6 +327,7 @@
                 const li = document.createElement('li');
                 li.textContent = s.phrase;
                 li.addEventListener('click', () => {
+                    // Update the correct search bar based on which one is visible/active
                     if (isHomepageVisible) {
                         homepageSearchBarEl.value = s.phrase;
                         navigateTo(s.phrase);
@@ -348,22 +362,22 @@
             homepageSearchIconEl.addEventListener('click', handleHomepageSearchIconClick);
 
             showHomepage(); // Start on the homepage
+            updateFavicon(); // Ensure favicon is set to default on load
         });
 
-        // Update search bar value when iframe navigates (e.g., via links)
+        // This listener will *not* update the favicon or title. It only updates the search bar.
         contentIframeEl.addEventListener('load', () => {
             try {
                 // Check for about:blank first to avoid security errors trying to access contentWindow.location
-                if (contentIframeEl.contentWindow.location.href !== 'about:blank') {
+                if (contentIframeEl.contentWindow && contentIframeEl.contentWindow.location.href !== 'about:blank') {
                     searchBarEl.value = contentIframeEl.contentWindow.location.href;
                     currentUrl = contentIframeEl.contentWindow.location.href;
-                    updateFavicon(currentUrl);
                 }
             } catch (e) {
-                // Handle cross-origin issues
+                // Handle cross-origin issues - can't read iframe.contentWindow.location.href
+                console.warn("Could not access iframe contentWindow.location.href due to cross-origin restrictions:", e);
                 searchBarEl.value = contentIframeEl.src;
                 currentUrl = contentIframeEl.src;
-                updateFavicon(currentUrl);
             }
         });
 
