@@ -1,179 +1,352 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-    <title>Vern Browser | Error</title>
-    <meta name="description" content="Vern Browser is a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers. Unblock sites today!" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a" />
-    <meta name="googlebot" content="noindex, nofollow, nosnippet" />
-    <base href="/" />
-    <link rel="shortcut icon" href="logo.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VERN MAX | 404 Not Found</title>
+    <meta name="description" content="The page you were looking for was not found on VERN MAX, a sophisticated proxy for evading internet censorship." />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/png" href="../images/title-mini.png" />
+    <link rel="shortcut icon" type="image/png" href="../images/title-mini.png" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <style>
-        /* Base Elements - Matching Vern Browser styling */
+        @font-face {
+            font-family: 'PrimaryFont';
+            src: url('../fonts/primary.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         :root {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --navbar-bg: rgba(15, 15, 15, 1);
-            --navbar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            --button-bg: rgba(10, 10, 10, 0.8);
-            --button-hover-bg: rgba(15, 15, 15, 0.9);
-            --button-active-bg: rgba(45, 45, 45, 0.9);
-            --font-family-main: 'Roboto Mono', monospace;
+            --current-theme-bg: #1e1e20;
+            --current-theme-text: #E0E1DD;
+            --current-theme-accent: #7F5AF0;
+            --current-theme-neutral: #2a2d30;
+            --current-theme-button-text: #FFFFFF;
+            --font-family-main: 'PrimaryFont', sans-serif;
+            --input-bg: #303438;
+            --input-text-color: var(--current-theme-text);
+            --input-placeholder-color: color-mix(in srgb, var(--current-theme-text) 50%, transparent);
+            --input-border-color: #40454a;
+            --input-focus-border-color: var(--current-theme-accent);
+            --input-focus-shadow: 0 0 0 2px color-mix(in srgb, var(--current-theme-focus-ring-color) 30%, transparent);
+            --button-bg: var(--current-theme-accent);
+            --button-hover-bg: color-mix(in srgb, var(--current-theme-accent) 80%, #000000);
+            --button-outline-color: color-mix(in srgb, var(--current-theme-accent) 60%, transparent);
+            --radius-small: 12px;
         }
 
         html, body {
             margin: 0;
             padding: 0;
-            border: none;
-            box-sizing: border-box;
             width: 100%;
             height: 100%;
-            font-family: var(--font-family-main);
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: var(--font-family-main); /* Use PrimaryFont for everything */
+            background-color: var(--current-theme-bg);
+            color: var(--current-theme-text);
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .logo-wrapper {
-            margin-bottom: 2rem;
-        }
-
-        .logo-wrapper h1 {
-            font-size: 2.5rem;
-            margin: 0;
-            padding: 0;
-            font-weight: 700;
-        }
-
-        .desc {
-            margin-bottom: 2rem;
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        .desc p {
-            margin: 1rem 0;
-        }
-
-        code {
-            display: block;
-            background-color: rgba(10, 10, 10, 0.8);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            white-space: pre-wrap;
-            text-align: left;
-            font-family: var(--font-family-main);
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
-        button {
-            background-color: var(--button-bg);
-            color: var(--text-color);
-            border: none;
-            border-radius: 30px;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            font-family: var(--font-family-main);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
-            margin: 1rem 0;
-        }
-
-        button:hover {
-            background-color: var(--button-hover-bg);
-        }
-
-        button:active {
-            background-color: var(--button-active-bg);
-            transform: scale(0.98);
-        }
-
-        footer {
-            background-color: var(--navbar-bg);
-            padding: 1rem;
-            text-align: center;
-            box-shadow: var(--navbar-shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-        }
-
-        footer a {
-            color: var(--text-color);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        footer a:hover {
-            opacity: 1;
-        }
-
-        canvas {
+        #starsCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -2;
         }
 
-        @media (max-width: 768px) {
-            .logo-wrapper h1 {
-                font-size: 1.8rem;
-            }
+        #error-page-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            z-index: 1;
         }
+
+        #error-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 25px;
+            opacity: 0.7;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        #error-page-container p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        #search-bar-container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin: 0 auto 25px auto;
+            display: flex;
+            align-items: center;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 14px 48px 14px 22px; /* Add padding to the right for icon */
+            font-size: 1rem;
+            border-radius: var(--radius-small);
+            border: 2.5px solid var(--input-border-color);
+            background-color: var(--input-bg);
+            color: var(--input-text-color);
+            font-family: var(--font-family-main);
+        }
+        #search-input::placeholder { color: var(--input-placeholder-color); }
+        #search-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border-color);
+            box-shadow: var(--input-focus-shadow);
+        }
+        
+        #search-icon {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            padding: 8px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #search-icon:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-button {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background-color: var(--button-bg);
+            cursor: pointer;
+            color: var(--current-theme-button-text);
+            transition: background-color 0.2s;
+            box-shadow: 0 0 0 1px var(--button-outline-color);
+            font-size: 20px;
+            position: relative;
+            flex-shrink: 0;
+            margin: 20px auto;
+        }
+        .nav-button:hover { background-color: var(--button-hover-bg); }
+        .nav-button .icon-img {
+            width: 22px;
+            height: 22px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .footer-label {
+            position: fixed;
+            bottom: 8px;
+            right: 8px;
+            font-size: 0.9rem;
+            color: color-mix(in srgb, var(--current-theme-text) 50%, transparent);
+            z-index: 1001;
+        }
+
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <canvas id="starsCanvas"></canvas>
+    
+    <div id="error-page-container">
+        <img src="../images/title.png" alt="VERN MAX Logo" id="error-logo" />
+        <h1>404 - Not Found</h1>
+        <p>The page you requested could not be found. Try searching below or return home.</p>
+        
+        <div id="search-bar-container">
+            <input id="search-input" type="text" placeholder="Search the web or type a URL" />
+            <img id="search-icon" src="../images/magnify-white.png" alt="Search">
+        </div>
 
-    <div class="content-wrapper">
-        <div class="logo-wrapper">
-            <h1>Vern Browser | Error</h1>
-        </div>
-        <div class="desc">
-            <p>Please Register Service Worker By Pressing The Button Below, And Then Reloading The Page.</p>
-            <p id="uv-error"></p>
-            <code id="uv-error-code"></code>
-            <button id="uv-register-sw">
-                <i class="fas fa-sync-alt"></i> Register ServiceWorker
-            </button>
-        </div>
+        <a href="/" title="Home" style="text-decoration: none;">
+             <div class="nav-button" id="home-button">
+                <img src="../images/home-white.png" alt="Home" class="icon-img">
+            </div>
+        </a>
     </div>
 
-    <footer>
-        <span>Official 4SP Proxy</span>
-        <span>Vern Browser &copy; 2025</span>
-        <a title="License information" href="credits.html">Credits</a>
-    </footer>
+    <span class="footer-label">Vern Max</span>
 
-    <script src="uv/uv.bundle.js" charset="UTF-8"></script>
-    <script src="uv/uv.config.js"></script>
-    <script src="register-sw.js"></script>
-    <script src="error.js"></script>
-    <script src="stars.js"></script>
+    <script src="uv/uv.bundle.js" charset="UTF-8" defer></script>
+    <script src="uv/uv.config.js" charset="UTF-8" defer></script>
+    <script src="register-sw.js" charset="UTF-8" defer></script>
+    <script>
+        function encodePlainTextUrlForQuery(plainUrl) {
+            if (!plainUrl) return '';
+            try {
+                const utf8Bytes = new TextEncoder().encode(plainUrl);
+                let binaryString = '';
+                utf8Bytes.forEach(byte => { binaryString += String.fromCharCode(byte); });
+                return btoa(binaryString);
+            } catch (e) {
+                console.error("Base64 encoding failed for:", plainUrl, e);
+                return '';
+            }
+        }
+
+        function isUrl(input) {
+            if (!input) return false;
+            if (input.includes('.') && !input.includes(' ') && !input.startsWith('?') && !input.startsWith('#')) {
+                if (/^(https?:\/\/|www\.)/i.test(input) || /\.[a-z]{2,}$/i.test(input.split('/')[0].split('?')[0])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function handleSearch(query) {
+            if (!query || query.trim() === "") return;
+            query = query.trim();
+            let targetUrl;
+
+            if (isUrl(query)) {
+                targetUrl = query.startsWith('http://') || query.startsWith('https://') ? query : 'https://' + query;
+            } else {
+                targetUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+            }
+
+            const encodedValue = encodePlainTextUrlForQuery(targetUrl);
+            if (encodedValue) {
+                window.location.href = `search.html?eurl=${encodedValue}`;
+            } else {
+                alert("Error: Could not process your search query.");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search-input');
+            const searchIcon = document.getElementById('search-icon');
+
+            if (searchInput) {
+                searchInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        handleSearch(searchInput.value);
+                    }
+                });
+            }
+            
+            if (searchIcon) {
+                searchIcon.addEventListener('click', () => {
+                    handleSearch(searchInput.value);
+                });
+            }
+        });
+
+        const canvas = document.getElementById('starsCanvas');
+        const ctx = canvas.getContext('2d');
+        let STAR_COLOR = 'rgba(200, 200, 220, 0.5)';
+        const STAR_COUNT = 60;
+        const STAR_SPEED_MIN = 0.2;
+        const STAR_SPEED_MAX = 1.2;
+        const STAR_LENGTH_MIN = 10;
+        const STAR_LENGTH_MAX = 40;
+        const STAR_WIDTH = 1.2;
+        const NEW_STAR_INTERVAL = 120;
+        let stars = [];
+
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Star {
+            constructor() { this.reset(); }
+            reset() {
+                this.speed = Math.random() * (STAR_SPEED_MAX - STAR_SPEED_MIN) + STAR_SPEED_MIN;
+                const angle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(angle) * this.speed;
+                this.vy = Math.sin(angle) * this.speed;
+                this.length = Math.random() * (STAR_LENGTH_MAX - STAR_LENGTH_MIN) + STAR_LENGTH_MIN;
+                this.opacity = 0.1 + Math.random() * 0.4;
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+            }
+            draw() {
+                if (this.speed === 0) return;
+                const tailX = this.x - this.vx * this.length / this.speed;
+                const tailY = this.y - this.vy * this.length / this.speed;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(tailX, tailY);
+                ctx.strokeStyle = STAR_COLOR.replace(/,\s*\d?\.?\d*\)$/, `, ${this.opacity})`);
+                ctx.lineWidth = STAR_WIDTH;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.opacity -= 0.0008;
+
+                if (this.x + this.length < 0 || this.x - this.length > canvas.width ||
+                    this.y + this.length < 0 || this.y - this.length > canvas.height ||
+                    this.opacity <= 0) {
+                    this.reset();
+                    const edge = Math.floor(Math.random() * 4);
+                    if (edge === 0) { this.x = 0; this.y = Math.random() * canvas.height; this.vx = Math.abs(this.vx); }
+                    else if (edge === 1) { this.x = canvas.width; this.y = Math.random() * canvas.height; this.vx = -Math.abs(this.vx); }
+                    else if (edge === 2) { this.x = Math.random() * canvas.width; this.y = 0; this.vy = Math.abs(this.vy); }
+                    else { this.x = Math.random() * canvas.width; this.y = canvas.height; this.vy = -Math.abs(this.vy); }
+                    this.opacity = 0.1 + Math.random() * 0.4;
+                }
+            }
+        }
+        function initStars() {
+            stars = [];
+            setCanvasSize();
+            for (let i = 0; i < STAR_COUNT; i++) {
+                setTimeout(() => stars.push(new Star()), i * NEW_STAR_INTERVAL * Math.random());
+            }
+        }
+        function animateStars() {
+            if (canvas.width > 0 && canvas.height > 0) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => { star.update(); star.draw(); });
+            }
+            requestAnimationFrame(animateStars);
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                setCanvasSize();
+            }, 200);
+        });
+
+        if (document.fonts) {
+            document.fonts.ready.then(() => {
+                initStars();
+                animateStars();
+            });
+        } else {
+            initStars();
+            animateStars();
+        }
+    </script>
 </body>
 </html>
